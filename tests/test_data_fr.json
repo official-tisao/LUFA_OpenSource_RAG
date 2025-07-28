@@ -1,2 +1,9 @@
 [
+  {
+    "id": "test_fr_001",
+    "question": "Quel est le but principal de la convention collective ?",
+    "expected_answer": "Le but est d'établir des relations de travail ordonnées entre l'Université et les membres du corps professoral, et de définir les conditions d'emploi.",
+    "category": "Dispositions générales",
+    "difficulty": "easy"
+  },
 ]
