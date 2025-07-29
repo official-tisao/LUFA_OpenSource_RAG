@@ -6,4 +6,11 @@
     "category": "Dispositions générales",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_002",
+    "question": "Qui est reconnu comme l'agent négociateur exclusif des professeurs ?",
+    "expected_answer": "L'Association des professeures et professeurs de l'Université Laurentienne (APPUL) est reconnue comme l'agent négociateur exclusif.",
+    "category": "Reconnaissance syndicale",
+    "difficulty": "easy"
+  },
 ]
