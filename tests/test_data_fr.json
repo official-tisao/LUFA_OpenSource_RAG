@@ -13,4 +13,11 @@
     "category": "Reconnaissance syndicale",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_003",
+    "question": "Les droits de la direction sont-ils soumis à la convention collective ?",
+    "expected_answer": "Oui, les droits de la direction doivent être exercés conformément aux dispositions stipulées dans la convention collective.",
+    "category": "Droits de la direction",
+    "difficulty": "medium"
+  },
 ]
