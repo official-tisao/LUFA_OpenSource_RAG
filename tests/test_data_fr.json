@@ -20,4 +20,11 @@
     "category": "Droits de la direction",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_004",
+    "question": "Comment la liberté universitaire est-elle définie ?",
+    "expected_answer": "La liberté universitaire est le droit de chercher la vérité, d'acquérir des connaissances et d'exprimer librement ce que l'on croit, sans censure institutionnelle.",
+    "category": "Liberté académique",
+    "difficulty": "easy"
+  },
 ]
