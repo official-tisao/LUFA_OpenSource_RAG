@@ -27,4 +27,11 @@
     "category": "Liberté académique",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_005",
+    "question": "La liberté universitaire protège-t-elle les professeurs dans leur recherche ?",
+    "expected_answer": "Oui, elle protège les professeurs de toute sanction ou censure lors de l'exercice de leur liberté dans le cadre de leurs recherches.",
+    "category": "Liberté académique",
+    "difficulty": "medium"
+  },
 ]
