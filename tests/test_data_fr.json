@@ -41,4 +41,11 @@
     "category": "Non-discrimination",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_007",
+    "question": "Est-il permis de discriminer un membre en raison de son affiliation politique ?",
+    "expected_answer": "Non, la convention interdit expressément la discrimination basée sur les croyances ou l'affiliation politique.",
+    "category": "Non-discrimination",
+    "difficulty": "easy"
+  },
 ]
