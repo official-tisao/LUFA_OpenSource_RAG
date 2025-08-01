@@ -34,4 +34,11 @@
     "category": "Liberté académique",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_006",
+    "question": "Quels sont les motifs de discrimination interdits ?",
+    "expected_answer": "La discrimination est interdite pour des motifs tels que la race, l'origine, la couleur, la religion, le sexe, l'orientation sexuelle, l'âge, l'état matrimonial et le handicap.",
+    "category": "Non-discrimination",
+    "difficulty": "medium"
+  },
 ]
