@@ -48,4 +48,11 @@
     "category": "Non-discrimination",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_008",
+    "question": "L'Université a-t-elle le devoir d'accommoder les membres handicapés ?",
+    "expected_answer": "Oui, l'employeur a l'obligation légale et contractuelle d'accommoder les membres ayant un handicap jusqu'à la limite de la contrainte excessive.",
+    "category": "Non-discrimination",
+    "difficulty": "easy"
+  },
 ]
