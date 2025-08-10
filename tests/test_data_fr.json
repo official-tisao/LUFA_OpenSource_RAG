@@ -62,4 +62,11 @@
     "category": "Non-discrimination",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_010",
+    "question": "Qu'est-ce qu'un grief ?",
+    "expected_answer": "Un grief est un différend ou une plainte concernant l'interprétation, l'application, l'administration ou la violation alléguée de la convention collective.",
+    "category": "Griefs et Arbitrage",
+    "difficulty": "easy"
+  },
 ]
