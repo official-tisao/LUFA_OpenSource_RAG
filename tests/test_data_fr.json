@@ -55,4 +55,11 @@
     "category": "Non-discrimination",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_009",
+    "question": "Comment le harcèlement est-il traité ?",
+    "expected_answer": "Les plaintes de harcèlement sont traitées par le biais d'une politique conjointe garantissant la confidentialité, une enquête indépendante et le respect de la procédure régulière.",
+    "category": "Non-discrimination",
+    "difficulty": "medium"
+  },
 ]
