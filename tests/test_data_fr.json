@@ -69,4 +69,11 @@
     "category": "Griefs et Arbitrage",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_011",
+    "question": "Quelles sont les étapes formelles de la procédure de grief ?",
+    "expected_answer": "La procédure inclut une plainte informelle, puis des étapes écrites soumises au Doyen, puis au Vice-recteur académique, avant d'aller en arbitrage si non résolu.",
+    "category": "Griefs et Arbitrage",
+    "difficulty": "medium"
+  },
 ]
