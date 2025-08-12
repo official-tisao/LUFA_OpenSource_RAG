@@ -76,4 +76,11 @@
     "category": "Griefs et Arbitrage",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_012",
+    "question": "L'APPUL peut-elle déposer un grief de principe ?",
+    "expected_answer": "Oui, le syndicat peut déposer un grief de principe directement à l'étape formelle si l'affaire concerne une politique générale affectant plusieurs membres.",
+    "category": "Griefs et Arbitrage",
+    "difficulty": "medium"
+  },
 ]
