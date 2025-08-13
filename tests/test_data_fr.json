@@ -83,4 +83,11 @@
     "category": "Griefs et Arbitrage",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_013",
+    "question": "Quel est le rôle d'un arbitre ?",
+    "expected_answer": "L'arbitre entend les griefs non résolus et rend une décision finale et exécutoire sans avoir le pouvoir de modifier ou d'amender la convention.",
+    "category": "Griefs et Arbitrage",
+    "difficulty": "easy"
+  },
 ]
