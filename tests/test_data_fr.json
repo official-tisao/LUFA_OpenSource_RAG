@@ -90,4 +90,11 @@
     "category": "Griefs et Arbitrage",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_014",
+    "question": "Comment l'APPUL perçoit-elle les cotisations syndicales ?",
+    "expected_answer": "L'employeur déduit les cotisations syndicales directement du salaire de tous les membres de l'unité de négociation et les remet à l'Association (Formule Rand).",
+    "category": "Droits syndicaux",
+    "difficulty": "medium"
+  },
 ]
