@@ -97,4 +97,11 @@
     "category": "Droits syndicaux",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_015",
+    "question": "L'APPUL a-t-elle droit à un bureau sur le campus ?",
+    "expected_answer": "Oui, l'université s'engage à fournir gratuitement un espace de bureau équipé à l'APPUL pour mener ses activités.",
+    "category": "Droits syndicaux",
+    "difficulty": "easy"
+  },
 ]
