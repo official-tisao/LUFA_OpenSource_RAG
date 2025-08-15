@@ -104,4 +104,11 @@
     "category": "Droits syndicaux",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_016",
+    "question": "Qu'est-ce que le Comité paritaire (JCAA) ?",
+    "expected_answer": "C'est un comité conjoint patronal-syndical établi pour examiner les questions découlant de l'administration et de l'application de la convention collective.",
+    "category": "Relations de travail",
+    "difficulty": "hard"
+  },
 ]
