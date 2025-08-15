@@ -111,4 +111,11 @@
     "category": "Relations de travail",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_017",
+    "question": "Y a-t-il un droit de grève pendant la convention ?",
+    "expected_answer": "Non, pendant la durée de la convention collective, les parties conviennent qu'il n'y aura ni grève ni lock-out.",
+    "category": "Relations de travail",
+    "difficulty": "medium"
+  },
 ]
