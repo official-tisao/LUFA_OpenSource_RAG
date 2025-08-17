@@ -118,4 +118,11 @@
     "category": "Relations de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_018",
+    "question": "Les professeurs peuvent-ils consulter leur dossier personnel ?",
+    "expected_answer": "Oui, les membres ont le droit de consulter leur dossier personnel officiel pendant les heures de bureau normales et de demander des copies des documents.",
+    "category": "Dossier personnel",
+    "difficulty": "easy"
+  },
 ]
