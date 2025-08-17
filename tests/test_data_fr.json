@@ -125,4 +125,11 @@
     "category": "Dossier personnel",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_019",
+    "question": "Les plaintes anonymes peuvent-elles être ajoutées au dossier personnel ?",
+    "expected_answer": "Non, le matériel anonyme ne peut être ni versé au dossier ni utilisé dans des procédures d'évaluation ou de discipline, à l'exception des évaluations globales des étudiants.",
+    "category": "Dossier personnel",
+    "difficulty": "medium"
+  },
 ]
