@@ -132,4 +132,11 @@
     "category": "Dossier personnel",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_020",
+    "question": "Un membre peut-il ajouter des commentaires à son dossier personnel ?",
+    "expected_answer": "Oui, le membre a le droit de joindre une réponse écrite ou un commentaire à tout document figurant dans son dossier.",
+    "category": "Dossier personnel",
+    "difficulty": "medium"
+  },
 ]
