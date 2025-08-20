@@ -139,4 +139,11 @@
     "category": "Dossier personnel",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_021",
+    "question": "Quels sont les rangs pour les professeurs ?",
+    "expected_answer": "Les rangs sont chargé d'enseignement (Lecturer), professeur adjoint, professeur agrégé et professeur titulaire.",
+    "category": "Nominations",
+    "difficulty": "easy"
+  },
 ]
