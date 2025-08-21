@@ -153,4 +153,11 @@
     "category": "Nominations",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_023",
+    "question": "Quelle est la durée de la période d'essai pour un professeur adjoint ?",
+    "expected_answer": "La période d'essai initiale est généralement de trois ans, sujette à un renouvellement avant la décision de permanence.",
+    "category": "Permanence",
+    "difficulty": "medium"
+  },
 ]
