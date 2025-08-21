@@ -146,4 +146,11 @@
     "category": "Nominations",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_022",
+    "question": "Qu'est-ce qu'une nomination à durée déterminée (LTA) ?",
+    "expected_answer": "C'est une nomination à temps plein pour une période spécifique, généralement d'un à trois ans, sans possibilité de permanence.",
+    "category": "Nominations",
+    "difficulty": "medium"
+  },
 ]
