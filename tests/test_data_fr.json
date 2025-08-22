@@ -160,4 +160,11 @@
     "category": "Permanence",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_024",
+    "question": "Quand un membre doit-il demander la permanence ?",
+    "expected_answer": "La demande de permanence doit généralement être faite durant la dernière année de la période d'essai, souvent la cinquième ou sixième année d'emploi.",
+    "category": "Permanence",
+    "difficulty": "medium"
+  },
 ]
