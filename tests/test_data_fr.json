@@ -167,4 +167,11 @@
     "category": "Permanence",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_025",
+    "question": "Quels sont les critères pour obtenir la permanence ?",
+    "expected_answer": "Les critères incluent les qualifications académiques, l'efficacité de l'enseignement, les réalisations en recherche et le service à la communauté universitaire.",
+    "category": "Permanence",
+    "difficulty": "easy"
+  },
 ]
