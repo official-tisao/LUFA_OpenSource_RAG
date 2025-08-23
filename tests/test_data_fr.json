@@ -174,4 +174,11 @@
     "category": "Permanence",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_026",
+    "question": "Qui fait l'évaluation initiale pour la permanence ?",
+    "expected_answer": "L'évaluation initiale est effectuée par le comité d'évaluation du département ou de l'unité.",
+    "category": "Permanence",
+    "difficulty": "medium"
+  },
 ]
