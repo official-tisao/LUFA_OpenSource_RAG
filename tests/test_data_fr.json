@@ -181,4 +181,11 @@
     "category": "Permanence",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_027",
+    "question": "Que se passe-t-il si la permanence est refusée ?",
+    "expected_answer": "En cas de refus, le membre se voit généralement offrir un contrat terminal d'un an.",
+    "category": "Permanence",
+    "difficulty": "medium"
+  },
 ]
