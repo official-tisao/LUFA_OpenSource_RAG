@@ -188,4 +188,11 @@
     "category": "Permanence",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_028",
+    "question": "Quelles sont les conditions pour la promotion au rang de professeur titulaire ?",
+    "expected_answer": "La promotion exige un dossier d'excellence soutenue en recherche et en enseignement, ainsi qu'une reconnaissance nationale ou internationale dans la discipline.",
+    "category": "Promotion",
+    "difficulty": "hard"
+  },
 ]
