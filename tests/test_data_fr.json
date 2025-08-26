@@ -195,4 +195,11 @@
     "category": "Promotion",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_029",
+    "question": "Des évaluateurs externes sont-ils requis pour les promotions ?",
+    "expected_answer": "Oui, les demandes de promotion aux rangs d'agrégé et de titulaire nécessitent des évaluations de la part d'arbitres académiques externes indépendants.",
+    "category": "Promotion",
+    "difficulty": "medium"
+  },
 ]
