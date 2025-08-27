@@ -209,4 +209,11 @@
     "category": "Nominations",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_031",
+    "question": "Qu'est-ce qu'une nomination tripartite ?",
+    "expected_answer": "C'est une nomination classique qui exige des tâches en enseignement, en recherche et en service.",
+    "category": "Nominations",
+    "difficulty": "easy"
+  },
 ]
