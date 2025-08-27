@@ -202,4 +202,11 @@
     "category": "Promotion",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_030",
+    "question": "Qu'est-ce qu'une nomination bipartite ?",
+    "expected_answer": "C'est une nomination où la charge de travail se compose principalement d'enseignement et de service, sans attente formelle en matière de recherche.",
+    "category": "Nominations",
+    "difficulty": "medium"
+  },
 ]
