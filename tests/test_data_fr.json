@@ -223,4 +223,11 @@
     "category": "Nominations",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_033",
+    "question": "Quelle est la charge normale d'enseignement pour un professeur menant à la permanence ?",
+    "expected_answer": "La charge normale est évaluée en crédits, équivalant couramment à 15 crédits ou cinq cours de 3 crédits par année universitaire.",
+    "category": "Charge de travail",
+    "difficulty": "medium"
+  },
 ]
