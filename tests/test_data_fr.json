@@ -216,4 +216,11 @@
     "category": "Nominations",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_032",
+    "question": "Un membre bipartite peut-il devenir tripartite ?",
+    "expected_answer": "Les transferts sont possibles mais exigent le consentement mutuel du membre, du département et du doyen.",
+    "category": "Nominations",
+    "difficulty": "hard"
+  },
 ]
