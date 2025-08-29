@@ -237,4 +237,11 @@
     "category": "Charge de travail",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_035",
+    "question": "Comment obtenir une réduction de la charge de travail ?",
+    "expected_answer": "Des réductions peuvent être accordées pour des tâches administratives importantes, un rendement de recherche extraordinaire ou des responsabilités syndicales.",
+    "category": "Charge de travail",
+    "difficulty": "medium"
+  },
 ]
