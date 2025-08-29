@@ -230,4 +230,11 @@
     "category": "Charge de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_034",
+    "question": "Les professeurs doivent-ils participer à la gouvernance de l'université ?",
+    "expected_answer": "Oui, le service à la communauté universitaire, incluant les comités départementaux, est une composante normale de la charge de travail.",
+    "category": "Charge de travail",
+    "difficulty": "easy"
+  },
 ]
