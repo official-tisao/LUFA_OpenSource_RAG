@@ -251,4 +251,11 @@
     "category": "Charge de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_037",
+    "question": "Comment la charge pour les cours en ligne est-elle calculée ?",
+    "expected_answer": "Les cours en ligne ou à distance comptent dans la charge normale d'enseignement de manière équivalente aux cours en présentiel.",
+    "category": "Charge de travail",
+    "difficulty": "medium"
+  },
 ]
