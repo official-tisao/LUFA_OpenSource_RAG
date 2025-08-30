@@ -244,4 +244,11 @@
     "category": "Charge de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_036",
+    "question": "La direction peut-elle forcer un membre à enseigner un cours hors de son champ d'expertise ?",
+    "expected_answer": "Non, les cours doivent être attribués en consultation avec le membre et correspondre à ses compétences académiques.",
+    "category": "Charge de travail",
+    "difficulty": "medium"
+  },
 ]
