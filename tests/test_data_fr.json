@@ -258,4 +258,11 @@
     "category": "Charge de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_038",
+    "question": "Que se passe-t-il si un cours est annulé pour manque d'étudiants ?",
+    "expected_answer": "La charge de travail peut être réaffectée à un autre cours ou à une autre tâche par le doyen, en consultation avec le directeur du département.",
+    "category": "Charge de travail",
+    "difficulty": "medium"
+  },
 ]
