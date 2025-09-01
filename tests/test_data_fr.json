@@ -265,4 +265,11 @@
     "category": "Charge de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_039",
+    "question": "Les membres doivent-ils être sur le campus l'été ?",
+    "expected_answer": "Si un membre n'est pas à l'horaire pour enseigner l'été, il a le droit à une période dédiée à la recherche et aux vacances hors campus.",
+    "category": "Conditions de travail",
+    "difficulty": "easy"
+  },
 ]
