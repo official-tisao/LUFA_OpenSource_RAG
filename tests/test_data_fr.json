@@ -279,4 +279,11 @@
     "category": "Conditions de travail",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_041",
+    "question": "L'employeur garantit-il le soutien technique pour l'enseignement en ligne ?",
+    "expected_answer": "Oui, l'université a l'obligation de fournir le soutien technologique, logistique et pédagogique adéquat pour les cours en ligne.",
+    "category": "Conditions de travail",
+    "difficulty": "medium"
+  },
 ]
