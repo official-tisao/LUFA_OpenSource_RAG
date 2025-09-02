@@ -272,4 +272,11 @@
     "category": "Conditions de travail",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_040",
+    "question": "Quelles sont les obligations concernant les heures de bureau ?",
+    "expected_answer": "Les professeurs sont tenus de maintenir des heures de bureau régulières pour assurer des consultations avec les étudiants.",
+    "category": "Conditions de travail",
+    "difficulty": "easy"
+  },
 ]
