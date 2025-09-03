@@ -286,4 +286,11 @@
     "category": "Conditions de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_042",
+    "question": "Les courriels des professeurs sont-ils surveillés ?",
+    "expected_answer": "Bien que l'université fournisse le système de messagerie, la convention garantit la confidentialité des communications, sous réserve des mandats légaux.",
+    "category": "Conditions de travail",
+    "difficulty": "hard"
+  },
 ]
