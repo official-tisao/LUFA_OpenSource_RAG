@@ -293,4 +293,11 @@
     "category": "Conditions de travail",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_043",
+    "question": "Un membre peut-il être transféré d'un campus à l'autre ?",
+    "expected_answer": "Tout transfert vers un campus géographique différent nécessite le consentement du membre et la consultation du syndicat.",
+    "category": "Conditions de travail",
+    "difficulty": "medium"
+  },
 ]
