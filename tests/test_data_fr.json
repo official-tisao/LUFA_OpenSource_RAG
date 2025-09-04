@@ -307,4 +307,11 @@
     "category": "Discipline",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_045",
+    "question": "Le syndicat doit-il être présent lors d'une rencontre disciplinaire ?",
+    "expected_answer": "Oui, le membre a le droit explicite d'être accompagné par un représentant de l'APPUL lors de toute réunion à caractère disciplinaire.",
+    "category": "Discipline",
+    "difficulty": "easy"
+  },
 ]
