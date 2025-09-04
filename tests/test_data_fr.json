@@ -300,4 +300,11 @@
     "category": "Conditions de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_044",
+    "question": "Qu'est-ce qui constitue une cause juste pour une mesure disciplinaire ?",
+    "expected_answer": "Une cause juste implique une faute grave, une incompétence flagrante ou le refus répété de s'acquitter de ses fonctions académiques.",
+    "category": "Discipline",
+    "difficulty": "medium"
+  },
 ]
