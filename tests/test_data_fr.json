@@ -314,4 +314,11 @@
     "category": "Discipline",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_046",
+    "question": "Qu'est-ce que la discipline progressive ?",
+    "expected_answer": "C'est l'application de sanctions de plus en plus sévères (ex: avertissement verbal, écrit, suspension) pour corriger le comportement avant d'en arriver au congédiement.",
+    "category": "Discipline",
+    "difficulty": "hard"
+  },
 ]
