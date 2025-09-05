@@ -321,4 +321,11 @@
     "category": "Discipline",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_047",
+    "question": "Les professeurs sont-ils évalués sur leur enseignement ?",
+    "expected_answer": "Oui, l'efficacité de l'enseignement est évaluée notamment par les questionnaires aux étudiants et l'examen par les pairs.",
+    "category": "Évaluation",
+    "difficulty": "easy"
+  },
 ]
