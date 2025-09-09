@@ -1,2 +1,9 @@
 [
+  {
+    "id": "test_en_001",
+    "question": "What is the primary purpose of the collective agreement?",
+    "expected_answer": "The purpose is to establish an orderly collective bargaining relationship between the University and its faculty members, and to define the terms and conditions of employment.",
+    "category": "General Provisions",
+    "difficulty": "easy"
+  },
 ]
