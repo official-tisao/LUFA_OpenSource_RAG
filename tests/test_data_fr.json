@@ -328,4 +328,11 @@
     "category": "Évaluation",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_048",
+    "question": "Les évaluations étudiantes sont-elles le seul critère pour juger l'enseignement ?",
+    "expected_answer": "Non, elles doivent être considérées avec d'autres preuves comme les plans de cours et les innovations pédagogiques.",
+    "category": "Évaluation",
+    "difficulty": "medium"
+  },
 ]
