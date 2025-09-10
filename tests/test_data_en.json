@@ -6,4 +6,11 @@
     "category": "General Provisions",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_002",
+    "question": "Who is recognized as the exclusive bargaining agent for full-time faculty?",
+    "expected_answer": "The Laurentian University Faculty Association (LUFA) is recognized as the exclusive bargaining agent.",
+    "category": "Union Recognition",
+    "difficulty": "easy"
+  },
 ]
