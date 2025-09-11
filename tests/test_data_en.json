@@ -13,4 +13,11 @@
     "category": "Union Recognition",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_003",
+    "question": "Does the University of Sudbury collective agreement cover part-time instructors?",
+    "expected_answer": "The agreement specifically defines the bargaining unit, typically separating full-time faculty from sessional or part-time instructors depending on the certification order.",
+    "category": "Bargaining Unit",
+    "difficulty": "medium"
+  },
 ]
