@@ -20,4 +20,11 @@
     "category": "Bargaining Unit",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_004",
+    "question": "How is academic freedom defined?",
+    "expected_answer": "Academic freedom is the right to search for truth, knowledge, and understanding and to express freely what one believes.",
+    "category": "Academic Freedom",
+    "difficulty": "easy"
+  },
 ]
