@@ -27,4 +27,11 @@
     "category": "Academic Freedom",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_005",
+    "question": "Does academic freedom protect faculty from disciplinary action for their research?",
+    "expected_answer": "Yes, faculty are protected from institutional censorship or discipline when exercising their academic freedom in research and teaching.",
+    "category": "Academic Freedom",
+    "difficulty": "medium"
+  },
 ]
