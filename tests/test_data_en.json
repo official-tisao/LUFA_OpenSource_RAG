@@ -34,4 +34,11 @@
     "category": "Academic Freedom",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_006",
+    "question": "What constitutes a grievance?",
+    "expected_answer": "A grievance is any dispute or difference arising out of the application, interpretation, administration, or alleged violation of the provisions of the collective agreement.",
+    "category": "Grievance",
+    "difficulty": "easy"
+  },
 ]
