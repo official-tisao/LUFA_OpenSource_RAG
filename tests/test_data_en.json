@@ -41,4 +41,11 @@
     "category": "Grievance",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_007",
+    "question": "What are the steps in the grievance procedure?",
+    "expected_answer": "The grievance procedure typically involves an informal complaint stage, followed by formal written steps presented to the Dean and then the Vice-President Academic, before proceeding to arbitration.",
+    "category": "Grievance",
+    "difficulty": "medium"
+  },
 ]
