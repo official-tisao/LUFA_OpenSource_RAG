@@ -48,4 +48,11 @@
     "category": "Grievance",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_008",
+    "question": "Can the Union file a policy grievance on behalf of multiple members?",
+    "expected_answer": "Yes, the Union has the right to file a policy grievance directly at the formal stage if the matter involves a general policy or affects multiple members.",
+    "category": "Grievance",
+    "difficulty": "medium"
+  },
 ]
