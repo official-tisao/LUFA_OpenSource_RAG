@@ -55,4 +55,11 @@
     "category": "Grievance",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_009",
+    "question": "What is the role of an arbitrator?",
+    "expected_answer": "An arbitrator hears unresolved grievances and makes a final, binding decision without the power to alter, amend, or change the terms of the collective agreement.",
+    "category": "Arbitration",
+    "difficulty": "easy"
+  },
 ]
