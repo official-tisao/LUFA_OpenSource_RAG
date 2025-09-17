@@ -62,4 +62,11 @@
     "category": "Arbitration",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_010",
+    "question": "Is discrimination on the basis of political affiliation permitted?",
+    "expected_answer": "No, the agreement prohibits discrimination on several grounds, including political affiliation and beliefs.",
+    "category": "Non-Discrimination",
+    "difficulty": "easy"
+  },
 ]
