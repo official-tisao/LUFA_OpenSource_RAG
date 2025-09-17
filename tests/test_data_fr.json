@@ -335,4 +335,11 @@
     "category": "Évaluation",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_049",
+    "question": "Comment le travail communautaire est-il évalué ?",
+    "expected_answer": "Le service à la communauté, surtout s'il est lié à l'expertise du membre, est reconnu dans la composante 'service' de l'évaluation.",
+    "category": "Évaluation",
+    "difficulty": "medium"
+  },
 ]
