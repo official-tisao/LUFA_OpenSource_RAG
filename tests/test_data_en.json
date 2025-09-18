@@ -69,4 +69,11 @@
     "category": "Non-Discrimination",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_011",
+    "question": "What grounds of discrimination are prohibited?",
+    "expected_answer": "Prohibited grounds include race, ancestry, place of origin, colour, ethnic origin, citizenship, creed, sex, sexual orientation, age, marital status, family status, and disability.",
+    "category": "Non-Discrimination",
+    "difficulty": "medium"
+  },
 ]
