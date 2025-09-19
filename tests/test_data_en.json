@@ -76,4 +76,11 @@
     "category": "Non-Discrimination",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_012",
+    "question": "What is the standard normal teaching load for a tenure-track faculty member?",
+    "expected_answer": "The normal teaching load is typically evaluated based on course credits, commonly equivalent to 15 credits or five 3-credit courses per academic year.",
+    "category": "Workload",
+    "difficulty": "medium"
+  },
 ]
