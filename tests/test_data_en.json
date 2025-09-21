@@ -90,4 +90,11 @@
     "category": "Workload",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_014",
+    "question": "Are faculty members required to participate in university governance?",
+    "expected_answer": "Yes, service to the university community, including participation in governance and departmental committees, is a standard component of a faculty member's workload.",
+    "category": "Workload",
+    "difficulty": "easy"
+  },
 ]
