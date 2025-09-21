@@ -83,4 +83,11 @@
     "category": "Workload",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_013",
+    "question": "How are workload reductions granted?",
+    "expected_answer": "Workload reductions can be granted for significant administrative duties, extraordinary research output, or union leadership responsibilities.",
+    "category": "Workload",
+    "difficulty": "medium"
+  },
 ]
