@@ -97,4 +97,11 @@
     "category": "Workload",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_015",
+    "question": "What is the procedure for establishing a new faculty position?",
+    "expected_answer": "The establishment of a new position requires consultation with the relevant department and approval from the academic administration or Senate.",
+    "category": "Appointments",
+    "difficulty": "hard"
+  },
 ]
