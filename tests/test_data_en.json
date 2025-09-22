@@ -104,4 +104,11 @@
     "category": "Appointments",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_016",
+    "question": "What are the ranks of faculty appointments?",
+    "expected_answer": "The ranks are Lecturer, Assistant Professor, Associate Professor, and Full Professor.",
+    "category": "Appointments",
+    "difficulty": "easy"
+  },
 ]
