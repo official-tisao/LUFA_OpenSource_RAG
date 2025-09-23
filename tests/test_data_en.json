@@ -111,4 +111,11 @@
     "category": "Appointments",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_017",
+    "question": "How long is the initial probationary period for a tenure-track Assistant Professor?",
+    "expected_answer": "The initial probationary period is typically three years, subject to renewal prior to the tenure decision.",
+    "category": "Tenure",
+    "difficulty": "medium"
+  },
 ]
