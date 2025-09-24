@@ -118,4 +118,11 @@
     "category": "Tenure",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_018",
+    "question": "When must a faculty member apply for tenure?",
+    "expected_answer": "A faculty member must generally apply for tenure during the final year of their probationary period, usually the fifth or sixth year of appointment.",
+    "category": "Tenure",
+    "difficulty": "medium"
+  },
 ]
