@@ -125,4 +125,11 @@
     "category": "Tenure",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_019",
+    "question": "What criteria are evaluated for granting tenure?",
+    "expected_answer": "Tenure criteria include academic qualifications, teaching effectiveness, scholarly or research accomplishments, and service to the university and community.",
+    "category": "Tenure",
+    "difficulty": "easy"
+  },
 ]
