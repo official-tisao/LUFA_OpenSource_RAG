@@ -342,4 +342,11 @@
     "category": "Évaluation",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_050",
+    "question": "Comment un membre en congé de maladie est-il évalué pour la permanence ?",
+    "expected_answer": "Les évaluations doivent tenir compte de la période de congé de maladie pour éviter que le membre ne soit pénalisé pour son absence.",
+    "category": "Évaluation",
+    "difficulty": "hard"
+  },
 ]
