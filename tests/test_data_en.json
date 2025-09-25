@@ -132,4 +132,11 @@
     "category": "Tenure",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_020",
+    "question": "Who assesses the tenure application initially?",
+    "expected_answer": "The initial assessment is conducted by a Departmental or Unit Evaluation Committee.",
+    "category": "Tenure",
+    "difficulty": "medium"
+  },
 ]
