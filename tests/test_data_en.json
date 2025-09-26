@@ -139,4 +139,11 @@
     "category": "Tenure",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_021",
+    "question": "What happens if tenure is denied?",
+    "expected_answer": "If tenure is denied, the faculty member is typically offered a one-year terminal contract.",
+    "category": "Tenure",
+    "difficulty": "medium"
+  },
 ]
