@@ -153,4 +153,11 @@
     "category": "Promotion",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_023",
+    "question": "Can external referees be used in the promotion process?",
+    "expected_answer": "Yes, applications for promotion to Associate and Full Professor require assessments from independent, external academic referees.",
+    "category": "Promotion",
+    "difficulty": "medium"
+  },
 ]
