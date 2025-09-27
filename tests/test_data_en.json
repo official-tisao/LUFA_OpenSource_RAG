@@ -146,4 +146,11 @@
     "category": "Tenure",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_022",
+    "question": "What is required for promotion to Full Professor?",
+    "expected_answer": "Promotion to Full Professor requires a record of sustained excellence in research and teaching, and national or international recognition in the candidate's field.",
+    "category": "Promotion",
+    "difficulty": "hard"
+  },
 ]
