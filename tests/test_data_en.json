@@ -167,4 +167,11 @@
     "category": "Appointments",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_025",
+    "question": "How are base salaries determined?",
+    "expected_answer": "Base salaries are determined by a negotiated salary grid which accounts for rank and years of experience (steps).",
+    "category": "Compensation",
+    "difficulty": "easy"
+  },
 ]
