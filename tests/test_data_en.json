@@ -160,4 +160,11 @@
     "category": "Promotion",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_024",
+    "question": "What is a Limited Term Appointment (LTA)?",
+    "expected_answer": "An LTA is a full-time contract appointment for a specified period, typically ranging from one to three years, without the prospect of tenure.",
+    "category": "Appointments",
+    "difficulty": "easy"
+  },
 ]
