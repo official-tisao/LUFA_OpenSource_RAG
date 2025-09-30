@@ -181,4 +181,11 @@
     "category": "Compensation",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_027",
+    "question": "Are faculty members eligible for overload teaching pay?",
+    "expected_answer": "Yes, faculty members who teach courses beyond their normal agreed workload are entitled to an overload stipend.",
+    "category": "Compensation",
+    "difficulty": "medium"
+  },
 ]
