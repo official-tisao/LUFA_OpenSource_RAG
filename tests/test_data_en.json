@@ -174,4 +174,11 @@
     "category": "Compensation",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_026",
+    "question": "What is a Career Development Increment (CDI)?",
+    "expected_answer": "A CDI is an annual step increase in base salary awarded for satisfactory performance until the faculty member reaches the ceiling for their rank.",
+    "category": "Compensation",
+    "difficulty": "medium"
+  },
 ]
