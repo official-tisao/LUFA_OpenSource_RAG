@@ -349,4 +349,11 @@
     "category": "Évaluation",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_051",
+    "question": "Comment les salaires de base sont-ils établis ?",
+    "expected_answer": "Ils sont déterminés par une grille salariale négociée qui tient compte du rang académique et des années d'expérience (échelons).",
+    "category": "Rémunération",
+    "difficulty": "easy"
+  },
 ]
