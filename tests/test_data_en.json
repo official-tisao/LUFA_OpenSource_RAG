@@ -188,4 +188,11 @@
     "category": "Compensation",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_028",
+    "question": "What happens to the salary grid under the mediated term sheet?",
+    "expected_answer": "The mediation term sheet sets out specific amendments, such as potential wage freezes, salary rollbacks, or adjusted grid advancements depending on the CCAA restructuring terms.",
+    "category": "Compensation",
+    "difficulty": "hard"
+  },
 ]
