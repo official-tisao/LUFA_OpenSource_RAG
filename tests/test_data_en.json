@@ -195,4 +195,11 @@
     "category": "Compensation",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_029",
+    "question": "Does the university provide health and dental benefits?",
+    "expected_answer": "Yes, the university provides a comprehensive health and dental benefit plan for full-time members and their dependents.",
+    "category": "Benefits",
+    "difficulty": "easy"
+  },
 ]
