@@ -209,4 +209,11 @@
     "category": "Benefits",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_031",
+    "question": "What is the professional development allowance (PER)?",
+    "expected_answer": "It is an annual reimbursement account allocated to each member to cover expenses related to their research, teaching, and academic professional development.",
+    "category": "Benefits",
+    "difficulty": "medium"
+  },
 ]
