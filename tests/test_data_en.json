@@ -202,4 +202,11 @@
     "category": "Benefits",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_030",
+    "question": "Is the pension plan a defined benefit or defined contribution plan?",
+    "expected_answer": "The collective agreement outlines the specific parameters of the Laurentian University Retirement Plan, which has historically been a contributory defined benefit or hybrid pension plan.",
+    "category": "Benefits",
+    "difficulty": "hard"
+  },
 ]
