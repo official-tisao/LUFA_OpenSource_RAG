@@ -216,4 +216,11 @@
     "category": "Benefits",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_032",
+    "question": "When is a faculty member eligible for a sabbatical leave?",
+    "expected_answer": "A member is typically eligible for a 12-month sabbatical leave after six years of continuous full-time service.",
+    "category": "Leaves",
+    "difficulty": "easy"
+  },
 ]
