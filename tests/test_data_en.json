@@ -223,4 +223,11 @@
     "category": "Leaves",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_033",
+    "question": "What percentage of salary is paid during a 12-month sabbatical?",
+    "expected_answer": "Members on a 12-month sabbatical usually receive a percentage of their regular salary, often set at 80% to 85% depending on the specific terms.",
+    "category": "Leaves",
+    "difficulty": "medium"
+  },
 ]
