@@ -230,4 +230,11 @@
     "category": "Leaves",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_034",
+    "question": "Can a member take a 6-month sabbatical instead?",
+    "expected_answer": "Yes, after three years of service, a member may apply for a 6-month sabbatical leave.",
+    "category": "Leaves",
+    "difficulty": "medium"
+  },
 ]
