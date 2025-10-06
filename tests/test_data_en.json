@@ -237,4 +237,11 @@
     "category": "Leaves",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_035",
+    "question": "Does the collective agreement offer pregnancy/maternity leave?",
+    "expected_answer": "Yes, the agreement provides pregnancy leave in accordance with provincial employment standards, often supplemented by a university top-up plan.",
+    "category": "Leaves",
+    "difficulty": "easy"
+  },
 ]
