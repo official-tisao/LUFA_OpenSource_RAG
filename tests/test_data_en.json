@@ -251,4 +251,11 @@
     "category": "Leaves",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_037",
+    "question": "Is there a provision for parental leave?",
+    "expected_answer": "Yes, parental leave is available to all parents and includes a period of unpaid leave or partially topped-up leave.",
+    "category": "Leaves",
+    "difficulty": "easy"
+  },
 ]
