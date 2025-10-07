@@ -244,4 +244,11 @@
     "category": "Leaves",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_036",
+    "question": "How long does the supplemental employment benefit (top-up) last for maternity leave?",
+    "expected_answer": "The top-up is typically provided for the duration of the employment insurance maternity benefits, aligning the member's income close to their regular salary for a specified number of weeks.",
+    "category": "Leaves",
+    "difficulty": "hard"
+  },
 ]
