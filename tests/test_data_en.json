@@ -258,4 +258,11 @@
     "category": "Leaves",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_038",
+    "question": "What is the policy for sick leave?",
+    "expected_answer": "Members are entitled to a defined period of sick leave at full pay for short-term illnesses, usually up to 105 or 119 days, before long-term disability applies.",
+    "category": "Leaves",
+    "difficulty": "medium"
+  },
 ]
