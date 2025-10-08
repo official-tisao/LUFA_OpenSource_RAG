@@ -356,4 +356,11 @@
     "category": "Rémunération",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_052",
+    "question": "Qu'est-ce que l'Indemnité de développement de carrière (IDC) ?",
+    "expected_answer": "C'est une augmentation annuelle de l'échelon salarial accordée pour un rendement satisfaisant jusqu'à ce que le membre atteigne le plafond de son rang.",
+    "category": "Rémunération",
+    "difficulty": "medium"
+  },
 ]
