@@ -265,4 +265,11 @@
     "category": "Leaves",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_039",
+    "question": "Are members entitled to bereavement leave?",
+    "expected_answer": "Yes, paid bereavement leave is provided for a specified number of days upon the death of an immediate family member.",
+    "category": "Leaves",
+    "difficulty": "easy"
+  },
 ]
