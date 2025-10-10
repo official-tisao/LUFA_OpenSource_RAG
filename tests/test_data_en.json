@@ -272,4 +272,11 @@
     "category": "Leaves",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_040",
+    "question": "Can a faculty member take an unpaid leave of absence?",
+    "expected_answer": "Yes, members can apply for an unpaid leave of absence subject to operational requirements and approval by the administration.",
+    "category": "Leaves",
+    "difficulty": "medium"
+  },
 ]
