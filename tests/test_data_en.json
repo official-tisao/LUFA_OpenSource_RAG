@@ -279,4 +279,11 @@
     "category": "Leaves",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_041",
+    "question": "What constitutes 'just cause' for discipline?",
+    "expected_answer": "Discipline or dismissal can only be imposed for just cause, which involves serious misconduct, gross incompetence, or repeated failure to fulfill academic duties.",
+    "category": "Discipline",
+    "difficulty": "medium"
+  },
 ]
