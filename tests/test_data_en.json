@@ -286,4 +286,11 @@
     "category": "Discipline",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_042",
+    "question": "Does the member have the right to union representation during disciplinary meetings?",
+    "expected_answer": "Yes, a member has the explicit right to be accompanied by a LUFA representative at any meeting where disciplinary action is to be discussed.",
+    "category": "Discipline",
+    "difficulty": "easy"
+  },
 ]
