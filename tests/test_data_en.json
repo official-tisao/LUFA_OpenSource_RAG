@@ -293,4 +293,11 @@
     "category": "Discipline",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_043",
+    "question": "What is progressive discipline?",
+    "expected_answer": "Progressive discipline requires that penalties increase in severity (e.g., verbal warning, written warning, suspension) in response to repeated offenses, aiming to correct behavior before dismissal.",
+    "category": "Discipline",
+    "difficulty": "hard"
+  },
 ]
