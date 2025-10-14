@@ -307,4 +307,11 @@
     "category": "Intellectual Property",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_045",
+    "question": "Who owns the patent if a member creates a patentable invention using university resources?",
+    "expected_answer": "The collective agreement sets out a sharing formula for patent revenues and specifies the rights of the creator and the university when significant university resources are utilized.",
+    "category": "Intellectual Property",
+    "difficulty": "hard"
+  },
 ]
