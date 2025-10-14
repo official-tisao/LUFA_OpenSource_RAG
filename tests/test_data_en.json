@@ -300,4 +300,11 @@
     "category": "Discipline",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_044",
+    "question": "How are intellectual property rights managed?",
+    "expected_answer": "Faculty members generally retain copyright and intellectual property rights over the works and course materials they create, subject to specific university licenses or exceptions.",
+    "category": "Intellectual Property",
+    "difficulty": "medium"
+  },
 ]
