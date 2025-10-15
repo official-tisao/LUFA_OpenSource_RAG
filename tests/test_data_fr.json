@@ -363,4 +363,11 @@
     "category": "Rémunération",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_053",
+    "question": "Les membres reçoivent-ils une paie pour les cours en surcharge ?",
+    "expected_answer": "Oui, un membre qui enseigne des cours au-delà de sa charge normale a droit à une allocation de surcharge.",
+    "category": "Rémunération",
+    "difficulty": "medium"
+  },
 ]
