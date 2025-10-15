@@ -314,4 +314,11 @@
     "category": "Intellectual Property",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_046",
+    "question": "Are faculty members evaluated on their teaching?",
+    "expected_answer": "Yes, teaching effectiveness is evaluated through mechanisms such as student questionnaires and peer reviews.",
+    "category": "Evaluation",
+    "difficulty": "easy"
+  },
 ]
