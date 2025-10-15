@@ -321,4 +321,11 @@
     "category": "Evaluation",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_047",
+    "question": "Can student evaluations be the sole metric for teaching performance?",
+    "expected_answer": "No, student evaluations must be considered alongside other evidence of teaching effectiveness, such as course syllabi and pedagogical innovations.",
+    "category": "Evaluation",
+    "difficulty": "medium"
+  },
 ]
