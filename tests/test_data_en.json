@@ -328,4 +328,11 @@
     "category": "Evaluation",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_048",
+    "question": "What is the role of a Department Chair?",
+    "expected_answer": "The Chair is responsible for the administrative functioning of the department, course scheduling, and advising the Dean, while maintaining their status as a faculty member in the bargaining unit.",
+    "category": "Department Chair",
+    "difficulty": "medium"
+  },
 ]
