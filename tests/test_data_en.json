@@ -335,4 +335,11 @@
     "category": "Department Chair",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_049",
+    "question": "How is a Department Chair selected?",
+    "expected_answer": "Chairs are typically elected by the faculty members of the department and then recommended to the Dean and Vice-President for formal appointment.",
+    "category": "Department Chair",
+    "difficulty": "medium"
+  },
 ]
