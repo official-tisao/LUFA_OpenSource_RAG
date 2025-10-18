@@ -342,4 +342,11 @@
     "category": "Department Chair",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_050",
+    "question": "Do Chairs receive additional compensation?",
+    "expected_answer": "Yes, Department Chairs receive an administrative stipend and/or a reduction in teaching workload.",
+    "category": "Department Chair",
+    "difficulty": "easy"
+  },
 ]
