@@ -349,4 +349,11 @@
     "category": "Department Chair",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_051",
+    "question": "Is there a retirement age specified?",
+    "expected_answer": "Mandatory retirement at age 65 was eliminated by provincial law, allowing members to continue working beyond 65 without losing their tenured status.",
+    "category": "Retirement",
+    "difficulty": "medium"
+  },
 ]
