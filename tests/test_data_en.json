@@ -356,4 +356,11 @@
     "category": "Retirement",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_052",
+    "question": "Are phased retirement options available?",
+    "expected_answer": "Yes, members may apply for a phased retirement program that allows them to gradually reduce their workload over a few years prior to full retirement.",
+    "category": "Retirement",
+    "difficulty": "medium"
+  },
 ]
