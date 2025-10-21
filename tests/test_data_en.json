@@ -363,4 +363,11 @@
     "category": "Retirement",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_053",
+    "question": "What happens in the event of financial exigency?",
+    "expected_answer": "The collective agreement outlines a strict procedure requiring independent financial audits before any faculty layoffs can occur due to a declared financial crisis.",
+    "category": "Job Security",
+    "difficulty": "hard"
+  },
 ]
