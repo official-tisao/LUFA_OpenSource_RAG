@@ -370,4 +370,11 @@
     "category": "Rémunération",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_054",
+    "question": "Comment la restructuration (Loi LACC) a-t-elle affecté les salaires ?",
+    "expected_answer": "Le contrat imposé a introduit des dispositions d'exception qui ont imposé des gels salariaux ou des modifications aux avancements d'échelon.",
+    "category": "Rémunération",
+    "difficulty": "hard"
+  },
 ]
