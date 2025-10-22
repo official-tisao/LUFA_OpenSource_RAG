@@ -370,4 +370,11 @@
     "category": "Job Security",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_054",
+    "question": "How did the CCAA mediation term sheet affect financial exigency clauses?",
+    "expected_answer": "The mediated term sheet overridden standard financial exigency processes to implement immediate restructuring and program closures under the Companies' Creditors Arrangement Act.",
+    "category": "Job Security",
+    "difficulty": "hard"
+  },
 ]
