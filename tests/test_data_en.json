@@ -384,4 +384,11 @@
     "category": "Outside Activities",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_056",
+    "question": "Do members need to report their outside professional activities?",
+    "expected_answer": "Members are generally required to disclose substantial outside professional activities to their Dean to ensure there is no conflict of commitment.",
+    "category": "Outside Activities",
+    "difficulty": "medium"
+  },
 ]
