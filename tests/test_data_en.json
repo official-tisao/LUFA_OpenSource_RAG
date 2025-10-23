@@ -377,4 +377,11 @@
     "category": "Job Security",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_055",
+    "question": "Are faculty members allowed to engage in outside professional activities?",
+    "expected_answer": "Yes, members may engage in paid outside consulting or professional activities provided it does not interfere with their university duties or constitute a conflict of interest.",
+    "category": "Outside Activities",
+    "difficulty": "medium"
+  },
 ]
