@@ -391,4 +391,11 @@
     "category": "Outside Activities",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_057",
+    "question": "Is health and safety the responsibility of the university?",
+    "expected_answer": "Yes, the employer must provide a safe working environment in accordance with the Occupational Health and Safety Act.",
+    "category": "Health and Safety",
+    "difficulty": "easy"
+  },
 ]
