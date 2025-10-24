@@ -398,4 +398,11 @@
     "category": "Health and Safety",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_058",
+    "question": "Is there a Joint Health and Safety Committee?",
+    "expected_answer": "Yes, a joint committee including LUFA representatives operates to monitor and address workplace safety issues.",
+    "category": "Health and Safety",
+    "difficulty": "easy"
+  },
 ]
