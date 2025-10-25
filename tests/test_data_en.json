@@ -405,4 +405,11 @@
     "category": "Health and Safety",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_059",
+    "question": "What access do members have to their personnel files?",
+    "expected_answer": "Members have the right to review their official personnel files during regular office hours and may request copies of documents contained within.",
+    "category": "Personnel Files",
+    "difficulty": "medium"
+  },
 ]
