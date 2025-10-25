@@ -412,4 +412,11 @@
     "category": "Personnel Files",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_060",
+    "question": "Can anonymous complaints be added to a member's personnel file?",
+    "expected_answer": "No, anonymous material cannot be placed in a member's personnel file nor used in disciplinary or evaluation proceedings, with the exception of aggregated student teaching evaluations.",
+    "category": "Personnel Files",
+    "difficulty": "medium"
+  },
 ]
