@@ -419,4 +419,11 @@
     "category": "Personnel Files",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_061",
+    "question": "How is the distance education or online teaching workload determined?",
+    "expected_answer": "Courses taught via distance or online methods are credited towards the normal teaching workload equivalently to face-to-face courses.",
+    "category": "Workload",
+    "difficulty": "medium"
+  },
 ]
