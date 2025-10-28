@@ -433,4 +433,11 @@
     "category": "Working Conditions",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_063",
+    "question": "What happens if a scheduled class is cancelled due to low enrollment?",
+    "expected_answer": "If a class is cancelled, the member's workload may be reallocated to another course or task by the Dean in consultation with the Chair.",
+    "category": "Workload",
+    "difficulty": "medium"
+  },
 ]
