@@ -426,4 +426,11 @@
     "category": "Workload",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_062",
+    "question": "Is technical support guaranteed for online courses?",
+    "expected_answer": "The university is obligated to provide adequate technical, logistical, and pedagogical support for members teaching online courses.",
+    "category": "Working Conditions",
+    "difficulty": "medium"
+  },
 ]
