@@ -440,4 +440,11 @@
     "category": "Workload",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_064",
+    "question": "Are faculty members expected to be on campus during the summer term?",
+    "expected_answer": "If a member is not scheduled to teach in the summer, they have the right to a dedicated research and vacation period off-campus.",
+    "category": "Working Conditions",
+    "difficulty": "easy"
+  },
 ]
