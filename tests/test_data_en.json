@@ -447,4 +447,11 @@
     "category": "Working Conditions",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_065",
+    "question": "How many vacation days do faculty members receive?",
+    "expected_answer": "Faculty members are typically entitled to one month (often calculated as 22 working days) of paid vacation per academic year.",
+    "category": "Leaves",
+    "difficulty": "easy"
+  },
 ]
