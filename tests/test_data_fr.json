@@ -377,4 +377,11 @@
     "category": "Rémunération",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_055",
+    "question": "L'université offre-t-elle une assurance santé ?",
+    "expected_answer": "Oui, une couverture complète pour les soins médicaux et dentaires est offerte aux membres à temps plein et à leurs personnes à charge.",
+    "category": "Avantages sociaux",
+    "difficulty": "easy"
+  },
 ]
