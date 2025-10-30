@@ -454,4 +454,11 @@
     "category": "Leaves",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_066",
+    "question": "Is it possible to carry forward unused vacation days?",
+    "expected_answer": "Vacation days must generally be taken within the academic year and cannot be carried forward to the next year without special permission.",
+    "category": "Leaves",
+    "difficulty": "medium"
+  },
 ]
