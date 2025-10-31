@@ -461,4 +461,11 @@
     "category": "Leaves",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_067",
+    "question": "What is the Joint Committee on the Administration of the Agreement (JCAA)?",
+    "expected_answer": "The JCAA is a joint union-management committee established to review matters arising from the administration, interpretation, and operation of the collective agreement.",
+    "category": "Labor Relations",
+    "difficulty": "hard"
+  },
 ]
