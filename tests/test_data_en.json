@@ -468,4 +468,11 @@
     "category": "Labor Relations",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_068",
+    "question": "How are union dues collected?",
+    "expected_answer": "The employer deducts LUFA membership dues directly from the salaries of all members of the bargaining unit and remits them to the Association (Rand Formula).",
+    "category": "Union Rights",
+    "difficulty": "medium"
+  },
 ]
