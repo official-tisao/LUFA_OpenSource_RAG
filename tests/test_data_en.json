@@ -475,4 +475,11 @@
     "category": "Union Rights",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_069",
+    "question": "Does the Union get space on campus?",
+    "expected_answer": "Yes, the university agrees to provide the Union with serviced office space free of charge to conduct its business.",
+    "category": "Union Rights",
+    "difficulty": "easy"
+  },
 ]
