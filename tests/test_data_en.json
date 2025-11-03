@@ -489,4 +489,11 @@
     "category": "Leaves",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_071",
+    "question": "Is there a provision for court leave?",
+    "expected_answer": "Yes, a member who is called for jury duty or subpoenaed as a witness is entitled to paid leave for the required time.",
+    "category": "Leaves",
+    "difficulty": "easy"
+  },
 ]
