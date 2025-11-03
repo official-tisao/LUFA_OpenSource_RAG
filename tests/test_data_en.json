@@ -482,4 +482,11 @@
     "category": "Union Rights",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_070",
+    "question": "What happens if a holiday falls on a member's scheduled vacation?",
+    "expected_answer": "If a statutory holiday falls during a member's vacation, that day is not counted as a vacation day.",
+    "category": "Leaves",
+    "difficulty": "easy"
+  },
 ]
