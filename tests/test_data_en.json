@@ -496,4 +496,11 @@
     "category": "Leaves",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_072",
+    "question": "How is a complaint of harassment handled?",
+    "expected_answer": "Harassment complaints are handled through a specific joint policy that ensures confidentiality, an independent investigation, and due process for all parties.",
+    "category": "Non-Discrimination",
+    "difficulty": "medium"
+  },
 ]
