@@ -510,4 +510,11 @@
     "category": "Union Rights",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_074",
+    "question": "What was the context of the LUFA Term Sheet?",
+    "expected_answer": "The term sheet was executed as a mediation settlement due to Laurentian University entering insolvency proceedings under the CCAA.",
+    "category": "Term Sheet",
+    "difficulty": "medium"
+  },
 ]
