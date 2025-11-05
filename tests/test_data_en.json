@@ -503,4 +503,11 @@
     "category": "Non-Discrimination",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_073",
+    "question": "Can the Union access information about the university's financial status?",
+    "expected_answer": "Yes, the administration is obligated to provide LUFA with audited financial statements and other data necessary for collective bargaining.",
+    "category": "Union Rights",
+    "difficulty": "medium"
+  },
 ]
