@@ -384,4 +384,11 @@
     "category": "Avantages sociaux",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_056",
+    "question": "Y a-t-il une allocation pour le perfectionnement professionnel (PER) ?",
+    "expected_answer": "Oui, c'est un compte de remboursement annuel pour couvrir les dépenses liées à la recherche, à l'enseignement et au développement professionnel.",
+    "category": "Avantages sociaux",
+    "difficulty": "medium"
+  },
 ]
