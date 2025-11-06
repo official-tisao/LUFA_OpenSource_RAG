@@ -517,4 +517,11 @@
     "category": "Term Sheet",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_075",
+    "question": "Are there specific provisions for Indigenous faculty?",
+    "expected_answer": "Recent agreements increasingly recognize the specific cultural and community responsibilities of Indigenous faculty, allowing these to count toward service workloads.",
+    "category": "Workload",
+    "difficulty": "hard"
+  },
 ]
