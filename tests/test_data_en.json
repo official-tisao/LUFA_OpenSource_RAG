@@ -524,4 +524,11 @@
     "category": "Workload",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_076",
+    "question": "Can a faculty member be forced to move to a different campus?",
+    "expected_answer": "Any transfer of a member to a different geographical campus requires the member's consent and consultation with the Union.",
+    "category": "Working Conditions",
+    "difficulty": "medium"
+  },
 ]
