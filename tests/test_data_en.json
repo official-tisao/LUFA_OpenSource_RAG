@@ -531,4 +531,11 @@
     "category": "Working Conditions",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_077",
+    "question": "Who defines the curriculum for a degree program?",
+    "expected_answer": "The development and approval of curriculum are the primary responsibility of the academic departments, subject to Senate approval.",
+    "category": "Academic Rights",
+    "difficulty": "medium"
+  },
 ]
