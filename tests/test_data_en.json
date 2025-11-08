@@ -538,4 +538,11 @@
     "category": "Academic Rights",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_078",
+    "question": "Does the employer provide moving expenses for new faculty?",
+    "expected_answer": "Yes, newly appointed full-time faculty members are reimbursed for reasonable moving and relocation expenses up to a specified maximum limit.",
+    "category": "Appointments",
+    "difficulty": "easy"
+  },
 ]
