@@ -545,4 +545,11 @@
     "category": "Appointments",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_079",
+    "question": "What is a bipartite appointment?",
+    "expected_answer": "A bipartite appointment is a position where the workload consists primarily of teaching and service, with no expected research component.",
+    "category": "Appointments",
+    "difficulty": "medium"
+  },
 ]
