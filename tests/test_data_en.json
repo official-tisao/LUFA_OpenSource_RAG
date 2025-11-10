@@ -552,4 +552,11 @@
     "category": "Appointments",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_080",
+    "question": "What is a tripartite appointment?",
+    "expected_answer": "A tripartite appointment consists of teaching, research, and service.",
+    "category": "Appointments",
+    "difficulty": "easy"
+  },
 ]
