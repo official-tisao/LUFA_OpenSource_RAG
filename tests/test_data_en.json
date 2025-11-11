@@ -566,4 +566,11 @@
     "category": "Appointments",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_082",
+    "question": "How are cross-appointments handled?",
+    "expected_answer": "A member appointed to more than one department will have a designated 'home' department for administrative purposes, tenure, and promotion evaluations.",
+    "category": "Appointments",
+    "difficulty": "medium"
+  },
 ]
