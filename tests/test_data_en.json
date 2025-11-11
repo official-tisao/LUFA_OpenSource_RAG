@@ -559,4 +559,11 @@
     "category": "Appointments",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_081",
+    "question": "Can a bipartite member transition to a tripartite appointment?",
+    "expected_answer": "Transfers between bipartite and tripartite roles are possible but require mutual agreement between the member, the department, and the Dean.",
+    "category": "Appointments",
+    "difficulty": "hard"
+  },
 ]
