@@ -580,4 +580,11 @@
     "category": "Academic Rights",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_084",
+    "question": "How is a strike or lockout resolved under the collective agreement?",
+    "expected_answer": "During the term of the collective agreement, the parties agree that there shall be no strikes or lockouts.",
+    "category": "Labor Relations",
+    "difficulty": "medium"
+  },
 ]
