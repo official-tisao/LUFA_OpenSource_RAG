@@ -391,4 +391,11 @@
     "category": "Avantages sociaux",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_057",
+    "question": "Les frais de scolarité des enfants des membres sont-ils couverts ?",
+    "expected_answer": "Oui, les membres à temps plein et leurs personnes à charge ont droit à une exonération des frais de scolarité pour les cours crédités à l'université.",
+    "category": "Avantages sociaux",
+    "difficulty": "easy"
+  },
 ]
