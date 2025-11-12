@@ -573,4 +573,11 @@
     "category": "Appointments",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_083",
+    "question": "Does the collective agreement protect whistleblower activity?",
+    "expected_answer": "While academic freedom protects free expression, explicit whistleblower protections are generally handled under specific university policies integrated with the collective agreement.",
+    "category": "Academic Rights",
+    "difficulty": "hard"
+  },
 ]
