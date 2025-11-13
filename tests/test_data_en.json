@@ -594,4 +594,11 @@
     "category": "Benefits",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_086",
+    "question": "Is the University of Sudbury collective agreement separate from Laurentian?",
+    "expected_answer": "Yes, although historically federated with Laurentian, the University of Sudbury negotiates its own distinct collective agreement with its faculty.",
+    "category": "General Provisions",
+    "difficulty": "medium"
+  },
 ]
