@@ -587,4 +587,11 @@
     "category": "Labor Relations",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_085",
+    "question": "Can the university change the pension plan without union consent?",
+    "expected_answer": "No, significant changes to the pension plan design or contribution rates must be negotiated with the faculty association.",
+    "category": "Benefits",
+    "difficulty": "medium"
+  },
 ]
