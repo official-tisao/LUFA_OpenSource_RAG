@@ -601,4 +601,11 @@
     "category": "General Provisions",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_087",
+    "question": "Are tuition waivers provided for dependents?",
+    "expected_answer": "Yes, full-time members, their spouses, and their dependents are often entitled to a tuition fee waiver for credit courses taken at the university.",
+    "category": "Benefits",
+    "difficulty": "easy"
+  },
 ]
