@@ -615,4 +615,11 @@
     "category": "Employment Changes",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_089",
+    "question": "How is the performance of a faculty member who is on sick leave evaluated?",
+    "expected_answer": "Evaluations for tenure, promotion, or merit pay must accommodate the period of sick leave, ensuring the member is not penalized for time away.",
+    "category": "Evaluation",
+    "difficulty": "hard"
+  },
 ]
