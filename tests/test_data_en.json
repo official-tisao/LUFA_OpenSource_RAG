@@ -608,4 +608,11 @@
     "category": "Benefits",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_088",
+    "question": "What happens if a member resigns?",
+    "expected_answer": "A member intending to resign must provide written notice to the Dean and President, typically at least three to six months prior to the effective date.",
+    "category": "Employment Changes",
+    "difficulty": "medium"
+  },
 ]
