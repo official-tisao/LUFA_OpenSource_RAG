@@ -629,4 +629,11 @@
     "category": "Union Recognition",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_091",
+    "question": "What role does the Senate play in collective bargaining?",
+    "expected_answer": "The Senate does not bargain the collective agreement; its authority is strictly over academic matters, while the Board of Governors negotiates employment conditions.",
+    "category": "Labor Relations",
+    "difficulty": "medium"
+  },
 ]
