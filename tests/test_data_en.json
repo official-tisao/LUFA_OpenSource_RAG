@@ -622,4 +622,11 @@
     "category": "Evaluation",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_090",
+    "question": "What is a 'Member of the Bargaining Unit'?",
+    "expected_answer": "A member is any academic staff person who falls within the scope of the bargaining unit definition as certified by the Ontario Labour Relations Board.",
+    "category": "Union Recognition",
+    "difficulty": "easy"
+  },
 ]
