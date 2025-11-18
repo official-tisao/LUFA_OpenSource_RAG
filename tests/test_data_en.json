@@ -636,4 +636,11 @@
     "category": "Labor Relations",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_092",
+    "question": "Can management assign a course to a member outside their area of expertise?",
+    "expected_answer": "No, courses must be assigned in consultation with the member and must fall within their academic competence and disciplinary expertise.",
+    "category": "Workload",
+    "difficulty": "medium"
+  },
 ]
