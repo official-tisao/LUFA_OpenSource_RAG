@@ -643,4 +643,11 @@
     "category": "Workload",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_093",
+    "question": "Are library faculty covered by this agreement?",
+    "expected_answer": "Yes, professional librarians are typically members of the LUFA bargaining unit and are covered under specific sections tailored to their roles.",
+    "category": "Bargaining Unit",
+    "difficulty": "medium"
+  },
 ]
