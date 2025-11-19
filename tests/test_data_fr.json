@@ -398,4 +398,11 @@
     "category": "Avantages sociaux",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_058",
+    "question": "L'université peut-elle modifier le régime de retraite unilatéralement ?",
+    "expected_answer": "Non, les modifications importantes concernant la conception ou les cotisations du régime de retraite doivent être négociées avec le syndicat.",
+    "category": "Avantages sociaux",
+    "difficulty": "medium"
+  },
 ]
