@@ -657,4 +657,11 @@
     "category": "Appointments",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_095",
+    "question": "Does the term sheet affect pension contributions?",
+    "expected_answer": "Under the CCAA restructuring mediation, the term sheet included provisions for the university's contribution rates or payment schedules regarding the pension fund.",
+    "category": "Term Sheet",
+    "difficulty": "hard"
+  },
 ]
