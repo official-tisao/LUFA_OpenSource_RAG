@@ -650,4 +650,11 @@
     "category": "Bargaining Unit",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_094",
+    "question": "What is the probationary period for a professional librarian?",
+    "expected_answer": "Librarians generally serve a probationary period before being granted continuing appointment, similar to the tenure process for teaching faculty.",
+    "category": "Appointments",
+    "difficulty": "hard"
+  },
 ]
