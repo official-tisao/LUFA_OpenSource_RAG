@@ -664,4 +664,11 @@
     "category": "Term Sheet",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_096",
+    "question": "Can the university hire non-union contractors to perform faculty work?",
+    "expected_answer": "The agreement protects bargaining unit work and restricts the university from contracting out academic duties that belong to LUFA members.",
+    "category": "Job Security",
+    "difficulty": "medium"
+  },
 ]
