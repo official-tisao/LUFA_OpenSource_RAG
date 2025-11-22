@@ -678,4 +678,11 @@
     "category": "General Provisions",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_098",
+    "question": "Is the university required to accommodate members with disabilities?",
+    "expected_answer": "Yes, the employer has a legal and contractual duty to accommodate members with disabilities up to the point of undue hardship.",
+    "category": "Non-Discrimination",
+    "difficulty": "easy"
+  },
 ]
