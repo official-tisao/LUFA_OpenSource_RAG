@@ -671,4 +671,11 @@
     "category": "Job Security",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_097",
+    "question": "What happens if a conflict arises between university policy and the collective agreement?",
+    "expected_answer": "In the event of a conflict, the provisions of the collective agreement supersede university policies.",
+    "category": "General Provisions",
+    "difficulty": "easy"
+  },
 ]
