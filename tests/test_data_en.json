@@ -685,4 +685,11 @@
     "category": "Non-Discrimination",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_099",
+    "question": "Are faculty members evaluated on community service?",
+    "expected_answer": "Yes, service to the broader community, especially when related to the member's academic expertise, is recognized and evaluated as part of the service component.",
+    "category": "Evaluation",
+    "difficulty": "medium"
+  },
 ]
