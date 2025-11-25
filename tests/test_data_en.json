@@ -692,4 +692,11 @@
     "category": "Evaluation",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_100",
+    "question": "Does the agreement regulate the use of university email?",
+    "expected_answer": "Yes, while the university provides the email system, the agreement guarantees the privacy of member communications subject only to legal warrants or extreme operational necessity.",
+    "category": "Working Conditions",
+    "difficulty": "hard"
+  },
 ]
