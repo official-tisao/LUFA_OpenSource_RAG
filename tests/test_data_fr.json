@@ -405,4 +405,11 @@
     "category": "Avantages sociaux",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_059",
+    "question": "Le contrat imposé a-t-il affecté les cotisations de retraite ?",
+    "expected_answer": "Oui, dans le cadre de la médiation LACC, le contrat a établi de nouvelles directives pour les contributions ou les paiements de l'employeur au régime de retraite.",
+    "category": "Avantages sociaux",
+    "difficulty": "hard"
+  },
 ]
