@@ -699,4 +699,11 @@
     "category": "Working Conditions",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_101",
+    "question": "What is the duration of the LUFA 2017-2020 agreement?",
+    "expected_answer": "The agreement is valid from its date of ratification until its expiration in 2020, though its terms remain in effect during the negotiation of a subsequent agreement.",
+    "category": "General Provisions",
+    "difficulty": "easy"
+  },
 ]
