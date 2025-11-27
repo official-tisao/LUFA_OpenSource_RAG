@@ -706,4 +706,11 @@
     "category": "General Provisions",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_102",
+    "question": "What are the office hours requirements for faculty members?",
+    "expected_answer": "Faculty members are expected to maintain regular office hours for student consultation.",
+    "category": "Working Conditions",
+    "difficulty": "easy"
+  },
 ]
