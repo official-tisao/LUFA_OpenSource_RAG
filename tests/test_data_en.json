@@ -713,4 +713,11 @@
     "category": "Working Conditions",
     "difficulty": "easy"
   },
+  {
+    "id": "test_en_103",
+    "question": "What is the policy on academic freedom?",
+    "expected_answer": "Academic freedom is protected under the collective agreement.",
+    "category": "Academic Rights",
+    "difficulty": "medium"
+  },
 ]
