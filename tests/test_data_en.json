@@ -720,4 +720,11 @@
     "category": "Academic Rights",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_104",
+    "question": "How is teaching load calculated?",
+    "expected_answer": "Teaching load is calculated based on course credits and student numbers.",
+    "category": "Workload",
+    "difficulty": "medium"
+  },
 ]
