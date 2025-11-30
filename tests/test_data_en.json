@@ -734,4 +734,11 @@
     "category": "Leave",
     "difficulty": "hard"
   },
+  {
+    "id": "test_en_106",
+    "question": "What is the grievance procedure?",
+    "expected_answer": "The grievance procedure is outlined in the collective agreement with specific steps and timelines.",
+    "category": "Dispute Resolution",
+    "difficulty": "medium"
+  }
 ]
