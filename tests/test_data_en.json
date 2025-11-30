@@ -727,4 +727,11 @@
     "category": "Workload",
     "difficulty": "medium"
   },
+  {
+    "id": "test_en_105",
+    "question": "What are the provisions for sabbatical leave?",
+    "expected_answer": "Faculty members may apply for sabbatical leave according to the terms specified in the agreement.",
+    "category": "Leave",
+    "difficulty": "hard"
+  },
 ]
