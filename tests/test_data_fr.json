@@ -419,4 +419,11 @@
     "category": "Congés",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_061",
+    "question": "Quelle est la rémunération pendant un congé sabbatique de 12 mois ?",
+    "expected_answer": "Le membre reçoit généralement un pourcentage de son salaire régulier, souvent fixé entre 80 % et 85 %.",
+    "category": "Congés",
+    "difficulty": "medium"
+  },
 ]
