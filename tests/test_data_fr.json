@@ -412,4 +412,11 @@
     "category": "Avantages sociaux",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_060",
+    "question": "Quand un membre a-t-il droit à un congé sabbatique de 12 mois ?",
+    "expected_answer": "Généralement, après six années de service continu à temps plein, le membre est admissible à demander un congé de 12 mois.",
+    "category": "Congés",
+    "difficulty": "easy"
+  },
 ]
