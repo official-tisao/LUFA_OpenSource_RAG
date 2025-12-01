@@ -426,4 +426,11 @@
     "category": "Congés",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_062",
+    "question": "Peut-on prendre un congé sabbatique de 6 mois ?",
+    "expected_answer": "Oui, un membre peut faire la demande d'un congé sabbatique de 6 mois après trois ans de service.",
+    "category": "Congés",
+    "difficulty": "medium"
+  },
 ]
