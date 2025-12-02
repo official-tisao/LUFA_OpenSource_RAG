@@ -433,4 +433,11 @@
     "category": "Congés",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_063",
+    "question": "Y a-t-il des dispositions pour le congé de maternité ?",
+    "expected_answer": "Oui, la convention prévoit un congé de maternité conforme aux normes d'emploi, complété par un régime de prestations supplémentaires de l'université.",
+    "category": "Congés",
+    "difficulty": "easy"
+  },
 ]
