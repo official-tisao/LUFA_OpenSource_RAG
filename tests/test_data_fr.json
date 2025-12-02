@@ -440,4 +440,11 @@
     "category": "Congés",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_064",
+    "question": "Comment fonctionne la prestation supplémentaire (top-up) pour le congé de maternité ?",
+    "expected_answer": "L'université verse une prestation qui, ajoutée aux prestations d'assurance-emploi, maintient le revenu du membre près de son plein salaire pour un nombre de semaines déterminé.",
+    "category": "Congés",
+    "difficulty": "hard"
+  },
 ]
