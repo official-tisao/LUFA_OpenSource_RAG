@@ -447,4 +447,11 @@
     "category": "Congés",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_065",
+    "question": "Le congé parental est-il prévu dans l'entente ?",
+    "expected_answer": "Oui, le congé parental est accessible à tous les parents pour une période de congé sans solde ou partiellement subventionnée.",
+    "category": "Congés",
+    "difficulty": "easy"
+  },
 ]
