@@ -454,4 +454,11 @@
     "category": "Congés",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_066",
+    "question": "Quelle est la politique pour les congés de maladie ?",
+    "expected_answer": "Les membres ont droit à un congé de maladie payé pour une période donnée (ex. 105 à 119 jours) avant que l'assurance invalidité de longue durée ne s'applique.",
+    "category": "Congés",
+    "difficulty": "medium"
+  },
 ]
