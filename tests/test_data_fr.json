@@ -461,4 +461,11 @@
     "category": "Congés",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_067",
+    "question": "Les membres ont-ils droit à un congé de deuil ?",
+    "expected_answer": "Oui, la convention accorde un congé de deuil payé pour quelques jours suite au décès d'un membre de la famille immédiate.",
+    "category": "Congés",
+    "difficulty": "easy"
+  },
 ]
