@@ -475,4 +475,11 @@
     "category": "Congés",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_069",
+    "question": "Combien de jours de vacances les professeurs ont-ils ?",
+    "expected_answer": "Les membres ont généralement droit à un mois (calculé comme 22 jours ouvrables) de vacances payées par année académique.",
+    "category": "Congés",
+    "difficulty": "easy"
+  },
 ]
