@@ -468,4 +468,11 @@
     "category": "Congés",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_068",
+    "question": "Un professeur peut-il obtenir un congé sans solde ?",
+    "expected_answer": "Oui, sous réserve des exigences opérationnelles et de l'approbation de l'administration, un membre peut obtenir un congé sans solde.",
+    "category": "Congés",
+    "difficulty": "medium"
+  },
 ]
