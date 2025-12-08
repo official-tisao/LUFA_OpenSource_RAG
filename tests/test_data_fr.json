@@ -482,4 +482,11 @@
     "category": "Congés",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_070",
+    "question": "Peut-on reporter ses jours de vacances à l'année suivante ?",
+    "expected_answer": "En principe, les vacances doivent être prises pendant l'année académique et ne peuvent être reportées sans une autorisation spéciale.",
+    "category": "Congés",
+    "difficulty": "medium"
+  },
 ]
