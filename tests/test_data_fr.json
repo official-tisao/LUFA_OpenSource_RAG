@@ -496,4 +496,11 @@
     "category": "Congés",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_072",
+    "question": "Y a-t-il un congé prévu pour une assignation à témoigner au tribunal ?",
+    "expected_answer": "Oui, un membre assigné comme juré ou témoin a droit à un congé payé pour la durée requise.",
+    "category": "Congés",
+    "difficulty": "easy"
+  },
 ]
