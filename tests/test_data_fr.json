@@ -489,4 +489,11 @@
     "category": "Congés",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_071",
+    "question": "Que se passe-t-il si un jour férié tombe pendant les vacances ?",
+    "expected_answer": "Si un jour férié tombe pendant les vacances du membre, ce jour n'est pas décompté de sa banque de jours de vacances.",
+    "category": "Congés",
+    "difficulty": "easy"
+  },
 ]
