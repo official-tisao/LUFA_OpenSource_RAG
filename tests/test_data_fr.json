@@ -503,4 +503,11 @@
     "category": "Congés",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_073",
+    "question": "Qui détient les droits d'auteur sur les plans de cours ?",
+    "expected_answer": "Les professeurs conservent généralement les droits d'auteur sur leurs œuvres et le matériel pédagogique qu'ils créent.",
+    "category": "Propriété intellectuelle",
+    "difficulty": "medium"
+  },
 ]
