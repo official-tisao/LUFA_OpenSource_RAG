@@ -510,4 +510,11 @@
     "category": "Propriété intellectuelle",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_074",
+    "question": "Qui possède les revenus d'une invention brevetable ?",
+    "expected_answer": "La convention prévoit une formule de partage des revenus entre le créateur et l'université si d'importantes ressources universitaires ont été utilisées.",
+    "category": "Propriété intellectuelle",
+    "difficulty": "hard"
+  },
 ]
