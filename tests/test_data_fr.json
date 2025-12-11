@@ -517,4 +517,11 @@
     "category": "Propriété intellectuelle",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_075",
+    "question": "Les professeurs peuvent-ils exercer des activités professionnelles extérieures (consultation) ?",
+    "expected_answer": "Oui, les membres peuvent effectuer des consultations rémunérées pourvu que cela ne crée pas de conflit d'intérêts et n'entrave pas leurs tâches universitaires.",
+    "category": "Conditions de travail",
+    "difficulty": "medium"
+  },
 ]
