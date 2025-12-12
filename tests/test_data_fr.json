@@ -531,4 +531,11 @@
     "category": "Conditions de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_077",
+    "question": "Quel est le rôle du directeur de département ?",
+    "expected_answer": "Il gère le fonctionnement administratif du département, l'horaire des cours et conseille le doyen, tout en restant membre de l'unité de négociation.",
+    "category": "Directeurs de département",
+    "difficulty": "medium"
+  },
 ]
