@@ -524,4 +524,11 @@
     "category": "Conditions de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_076",
+    "question": "Faut-il déclarer ses activités extérieures ?",
+    "expected_answer": "Les membres sont tenus de divulguer au doyen toute activité professionnelle extérieure importante pour s'assurer qu'il n'y a pas de conflit d'engagement.",
+    "category": "Conditions de travail",
+    "difficulty": "medium"
+  },
 ]
