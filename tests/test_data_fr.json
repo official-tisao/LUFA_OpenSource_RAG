@@ -545,4 +545,11 @@
     "category": "Directeurs de département",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_079",
+    "question": "Les directeurs reçoivent-ils une prime ?",
+    "expected_answer": "Oui, ils reçoivent une prime administrative financière et/ou une réduction de leur charge d'enseignement.",
+    "category": "Directeurs de département",
+    "difficulty": "easy"
+  },
 ]
