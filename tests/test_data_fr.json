@@ -538,4 +538,11 @@
     "category": "Directeurs de département",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_078",
+    "question": "Comment devient-on directeur de département ?",
+    "expected_answer": "Le directeur est généralement élu par les professeurs du département, puis recommandé au doyen pour une nomination officielle.",
+    "category": "Directeurs de département",
+    "difficulty": "medium"
+  },
 ]
