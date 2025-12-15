@@ -552,4 +552,11 @@
     "category": "Directeurs de département",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_080",
+    "question": "Quel est l'âge de retraite obligatoire ?",
+    "expected_answer": "Il n'y a plus d'âge de retraite obligatoire à 65 ans suite aux modifications des lois provinciales.",
+    "category": "Retraite",
+    "difficulty": "medium"
+  },
 ]
