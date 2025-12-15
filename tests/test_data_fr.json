@@ -559,4 +559,11 @@
     "category": "Retraite",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_081",
+    "question": "La retraite progressive est-elle permise ?",
+    "expected_answer": "Oui, un membre peut demander un programme de retraite progressive lui permettant de réduire graduellement sa charge de travail avant la retraite complète.",
+    "category": "Retraite",
+    "difficulty": "medium"
+  },
 ]
