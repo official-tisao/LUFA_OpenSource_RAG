@@ -573,4 +573,11 @@
     "category": "Sécurité d'emploi",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_083",
+    "question": "Comment le contrat imposé a-t-il modifié les règles de l'exigence financière ?",
+    "expected_answer": "Le contrat issu de la LACC a annulé les processus standards de crise financière pour permettre des restructurations immédiates et la fermeture de programmes.",
+    "category": "Sécurité d'emploi",
+    "difficulty": "hard"
+  },
 ]
