@@ -566,4 +566,11 @@
     "category": "Retraite",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_082",
+    "question": "Qu'est-ce qu'une exigence financière (crise financière) ?",
+    "expected_answer": "C'est une procédure stricte, nécessitant des audits indépendants, qui justifie les licenciements de professeurs en cas de crise financière extrême de l'institution.",
+    "category": "Sécurité d'emploi",
+    "difficulty": "hard"
+  },
 ]
