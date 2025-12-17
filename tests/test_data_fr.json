@@ -587,4 +587,11 @@
     "category": "Santé et sécurité",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_085",
+    "question": "Y a-t-il un comité de santé et sécurité ?",
+    "expected_answer": "Oui, un comité conjoint incluant des représentants de l'APPUL surveille et adresse les enjeux de sécurité.",
+    "category": "Santé et sécurité",
+    "difficulty": "easy"
+  },
 ]
