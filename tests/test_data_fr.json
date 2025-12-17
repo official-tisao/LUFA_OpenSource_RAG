@@ -580,4 +580,11 @@
     "category": "Sécurité d'emploi",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_084",
+    "question": "L'employeur est-il responsable de la santé et sécurité au travail ?",
+    "expected_answer": "Oui, il doit offrir un environnement sécuritaire en vertu de la Loi sur la santé et la sécurité au travail.",
+    "category": "Santé et sécurité",
+    "difficulty": "easy"
+  },
 ]
