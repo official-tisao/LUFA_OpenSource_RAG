@@ -601,4 +601,11 @@
     "category": "Sécurité d'emploi",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_087",
+    "question": "L'employeur paie-t-il les frais de déménagement des nouveaux engagés ?",
+    "expected_answer": "Oui, les nouveaux professeurs à temps plein sont remboursés pour les frais de déménagement raisonnables jusqu'à un maximum défini.",
+    "category": "Nominations",
+    "difficulty": "easy"
+  },
 ]
