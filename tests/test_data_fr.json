@@ -594,4 +594,11 @@
     "category": "Santé et sécurité",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_086",
+    "question": "Les professeurs peuvent-ils être remplacés par des sous-traitants ?",
+    "expected_answer": "La convention protège le travail de l'unité de négociation et restreint la sous-traitance des tâches académiques incombant aux membres.",
+    "category": "Sécurité d'emploi",
+    "difficulty": "medium"
+  },
 ]
