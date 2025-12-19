@@ -615,4 +615,11 @@
     "category": "Droits académiques",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_089",
+    "question": "Comment fonctionne une nomination conjointe (cross-appointment) ?",
+    "expected_answer": "Un membre nommé dans deux départements aura un département 'd'attache' principal pour l'administration et l'évaluation de sa permanence.",
+    "category": "Nominations",
+    "difficulty": "medium"
+  },
 ]
