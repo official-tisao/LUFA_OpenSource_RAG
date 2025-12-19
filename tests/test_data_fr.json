@@ -608,4 +608,11 @@
     "category": "Nominations",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_088",
+    "question": "Qui détermine le curriculum des programmes d'études ?",
+    "expected_answer": "Le développement du curriculum relève principalement des départements académiques, sous réserve de l'approbation du Sénat.",
+    "category": "Droits académiques",
+    "difficulty": "medium"
+  },
 ]
