@@ -622,4 +622,11 @@
     "category": "Nominations",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_090",
+    "question": "Un professeur a-t-il droit de vote au Sénat de l'université ?",
+    "expected_answer": "Les professeurs peuvent être élus comme représentants au Sénat, l'organe responsable des questions académiques.",
+    "category": "Droits académiques",
+    "difficulty": "easy"
+  },
 ]
