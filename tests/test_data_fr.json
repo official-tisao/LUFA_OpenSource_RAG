@@ -629,4 +629,11 @@
     "category": "Droits académiques",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_091",
+    "question": "Le Sénat de l'université participe-t-il aux négociations syndicales ?",
+    "expected_answer": "Non, le Sénat a autorité sur les affaires académiques, tandis que le Bureau des gouverneurs négocie la convention collective.",
+    "category": "Relations de travail",
+    "difficulty": "medium"
+  },
 ]
