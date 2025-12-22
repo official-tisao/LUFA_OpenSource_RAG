@@ -643,4 +643,11 @@
     "category": "Dispositions générales",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_093",
+    "question": "Quelles sont les obligations de l'Université Laurentienne face aux savoirs autochtones ?",
+    "expected_answer": "Les conventions récentes reconnaissent souvent le travail des professeurs autochtones et leurs obligations envers les communautés dans le calcul de la charge de travail.",
+    "category": "Charge de travail",
+    "difficulty": "hard"
+  },
 ]
