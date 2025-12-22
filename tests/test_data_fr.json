@@ -636,4 +636,11 @@
     "category": "Relations de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_092",
+    "question": "Que faire en cas de contradiction entre la convention et une politique de l'université ?",
+    "expected_answer": "En cas de conflit, les dispositions de la convention collective ont préséance sur les politiques unilatérales de l'université.",
+    "category": "Dispositions générales",
+    "difficulty": "easy"
+  },
 ]
