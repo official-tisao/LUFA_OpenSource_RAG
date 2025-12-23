@@ -650,4 +650,11 @@
     "category": "Charge de travail",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_094",
+    "question": "Les bibliothécaires professionnels sont-ils couverts par l'entente ?",
+    "expected_answer": "Oui, les bibliothécaires professionnels sont généralement inclus dans l'unité de négociation de l'APPUL et ont des clauses spécifiques.",
+    "category": "Unité de négociation",
+    "difficulty": "medium"
+  },
 ]
