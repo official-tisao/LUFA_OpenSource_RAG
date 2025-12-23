@@ -657,4 +657,11 @@
     "category": "Unité de négociation",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_095",
+    "question": "Un bibliothécaire doit-il faire une période d'essai ?",
+    "expected_answer": "Oui, ils ont une période d'essai avant d'obtenir une nomination continue, un processus semblable à la permanence des professeurs.",
+    "category": "Nominations",
+    "difficulty": "hard"
+  },
 ]
