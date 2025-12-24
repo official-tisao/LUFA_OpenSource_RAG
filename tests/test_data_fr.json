@@ -664,4 +664,11 @@
     "category": "Nominations",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_096",
+    "question": "Les professeurs à temps partiel ou chargés de cours font-ils partie de la même unité ?",
+    "expected_answer": "La convention définit spécifiquement qui est inclus; historiquement, les chargés de cours à temps partiel font souvent partie d'une unité distincte selon l'ordonnance d'accréditation.",
+    "category": "Unité de négociation",
+    "difficulty": "medium"
+  },
 ]
