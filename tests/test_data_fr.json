@@ -671,4 +671,11 @@
     "category": "Unité de négociation",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_097",
+    "question": "Un membre peut-il démissionner sans préavis ?",
+    "expected_answer": "Non, un membre doit fournir un préavis écrit de démission au doyen, typiquement de trois à six mois avant la date de départ prévue.",
+    "category": "Modifications d'emploi",
+    "difficulty": "medium"
+  },
 ]
