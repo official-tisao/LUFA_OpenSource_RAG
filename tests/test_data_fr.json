@@ -678,4 +678,11 @@
     "category": "Modifications d'emploi",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_098",
+    "question": "L'employeur peut-il accéder aux données personnelles sur un ordinateur de l'université ?",
+    "expected_answer": "La vie privée du membre est protégée. L'employeur ne peut y accéder que sous des conditions extrêmes d'urgence opérationnelle ou avec un mandat.",
+    "category": "Conditions de travail",
+    "difficulty": "hard"
+  },
 ]
