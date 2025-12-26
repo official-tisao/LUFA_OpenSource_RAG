@@ -692,4 +692,11 @@
     "category": "Conditions de travail",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_100",
+    "question": "La convention protège-t-elle les dénonciateurs (whistleblowers) ?",
+    "expected_answer": "Bien que la liberté universitaire offre une protection pour l'expression publique, la dénonciation relève aussi de politiques institutionnelles spécifiques enchâssées.",
+    "category": "Droits académiques",
+    "difficulty": "hard"
+  },
 ]
