@@ -685,4 +685,11 @@
     "category": "Conditions de travail",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_099",
+    "question": "L'employeur est-il tenu de fournir de l'équipement de bureau ?",
+    "expected_answer": "L'université doit fournir l'infrastructure de base (bureau, ordinateur, téléphone) permettant au membre d'accomplir ses tâches.",
+    "category": "Conditions de travail",
+    "difficulty": "easy"
+  },
 ]
