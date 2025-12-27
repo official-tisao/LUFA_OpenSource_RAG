@@ -699,4 +699,11 @@
     "category": "Droits académiques",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_101",
+    "question": "Quelle est la durée d'application du contrat imposé ?",
+    "expected_answer": "Le contrat imposé (suite à la LACC) dicte les conditions pour la période spécifique de 2020 à 2025.",
+    "category": "Dispositions générales",
+    "difficulty": "easy"
+  },
 ]
