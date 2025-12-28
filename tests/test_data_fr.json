@@ -706,4 +706,11 @@
     "category": "Dispositions générales",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_102",
+    "question": "Quelles sont les exigences concernant les heures de bureau pour les professeurs?",
+    "expected_answer": "Les professeurs doivent maintenir des heures de bureau régulières pour les consultations avec les étudiants.",
+    "category": "Conditions de travail",
+    "difficulty": "easy"
+  },
 ]
