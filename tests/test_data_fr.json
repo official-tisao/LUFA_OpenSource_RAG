@@ -713,4 +713,11 @@
     "category": "Conditions de travail",
     "difficulty": "easy"
   },
+  {
+    "id": "test_fr_103",
+    "question": "Quelle est la politique sur la liberté académique?",
+    "expected_answer": "La liberté académique est protégée par la convention collective.",
+    "category": "Droits académiques",
+    "difficulty": "medium"
+  },
 ]
