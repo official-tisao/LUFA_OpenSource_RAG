@@ -720,4 +720,11 @@
     "category": "Droits académiques",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_104",
+    "question": "Comment la charge d'enseignement est-elle calculée?",
+    "expected_answer": "La charge d'enseignement est calculée en fonction des crédits de cours et du nombre d'étudiants.",
+    "category": "Charge de travail",
+    "difficulty": "medium"
+  },
 ]
