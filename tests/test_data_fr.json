@@ -727,4 +727,11 @@
     "category": "Charge de travail",
     "difficulty": "medium"
   },
+  {
+    "id": "test_fr_105",
+    "question": "Quelles sont les dispositions pour le congé sabbatique?",
+    "expected_answer": "Les professeurs peuvent demander un congé sabbatique selon les conditions spécifiées dans l'entente.",
+    "category": "Congés",
+    "difficulty": "hard"
+  },
 ]
