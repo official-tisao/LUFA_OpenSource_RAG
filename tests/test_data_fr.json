@@ -734,4 +734,11 @@
     "category": "Congés",
     "difficulty": "hard"
   },
+  {
+    "id": "test_fr_106",
+    "question": "Quelle est la procédure de grief?",
+    "expected_answer": "La procédure de grief est décrite dans la convention collective avec des étapes et des délais spécifiques.",
+    "category": "Résolution de conflits",
+    "difficulty": "medium"
+  }
 ]
