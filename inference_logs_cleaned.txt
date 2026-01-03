@@ -1,0 +1,14 @@
+
+PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> conda activate
+(base) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> conda deactivate   
+PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> conda activate lufa_rag
+(lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> python -m venv venv
+(lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> venv\Scripts\activate
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> pip install -r requirements.txt
+Collecting llama-index==0.13.0
+  Downloading llama_index-0.13.0-py3-none-any.whl (7.0 kB)
+ERROR: Could not find a version that satisfies the requirement llama-index-llms-ollama==0.3.8 (from versions: 0.0.1, 0.1.0, 0.1.1, 0.1.2, 0.1.3, 0.1.4, 0.1.5, 0.
+1.6, 0.2.0, 0.2.1, 0.2.2, 0.3.0, 0.3.1, 0.3.2, 0.3.3, 0.3.4, 0.3.5, 0.3.6, 0.4.0, 0.4.1, 0.4.2, 0.5.0, 0.5.1, 0.5.2, 0.5.3, 0.5.4, 0.5.5, 0.5.6, 0.6.0, 0.6.1, 0.6.2, 0.7.0, 0.7.1, 0.7.2, 0.7.3, 0.7.4, 0.8.0, 0.9.0, 0.9.1)
+ERROR: No matching distribution found for llama-index-llms-ollama==0.3.8
+[notice] A new release of pip is available: 23.0.1 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
