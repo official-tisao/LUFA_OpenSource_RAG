@@ -12,3 +12,18 @@ ERROR: Could not find a version that satisfies the requirement llama-index-llms-
 ERROR: No matching distribution found for llama-index-llms-ollama==0.3.8
 [notice] A new release of pip is available: 23.0.1 -> 26.0.1
 [notice] To update, run: python.exe -m pip install --upgrade pip
+ 
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> pip install --upgrade pip
+Requirement already satisfied: pip in c:\users\tisao-msi\codebase\lufa_opensource_rag\venv\lib\site-packages (23.0.1)
+Collecting pip
+  Downloading pip-26.0.1-py3-none-any.whl (1.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 329.8 kB/s eta 0:00:00
+ERROR: To modify pip, please run the following command:
+C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\Scripts\python.exe -m pip install --upgrade pip
+[notice] A new release of pip is available: 23.0.1 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> pip install --upgrade pip
+Requirement already satisfied: pip in c:\users\tisao-msi\codebase\lufa_opensource_rag\venv\lib\site-packages (23.0.1)
+Collecting pip
+  Using cached pip-26.0.1-py3-none-any.whl (1.8 MB)
+ERROR: To modify pip, please run the following command:
