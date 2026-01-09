@@ -533,3 +533,10 @@ Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=10.11.0->chromadb>=0.5.
   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
 Collecting greenlet>=1 (from sqlalchemy>=1.4.49->sqlalchemy[asyncio]>=1.4.49->llama-index-core<0.15.0,>=0.14.14->llama-index>=0.10.0->-r requirements.txt (line 1))
   Downloading greenlet-3.3.1-cp310-cp310-win_amd64.whl.metadata (3.8 kB)
+ 
+Collecting huggingface-hub<2.0,>=0.16.4 (from tokenizers>=0.13.2->chromadb>=0.5.0->-r requirements.txt (line 5))
+  Downloading huggingface_hub-1.4.1-py3-none-any.whl.metadata (13 kB)
+Collecting filelock (from huggingface-hub<2.0,>=0.16.4->tokenizers>=0.13.2->chromadb>=0.5.0->-r requirements.txt (line 5))
+  Downloading filelock-3.23.0-py3-none-any.whl.metadata (2.0 kB)
+Collecting hf-xet<2.0.0,>=1.2.0 (from huggingface-hub<2.0,>=0.16.4->tokenizers>=0.13.2->chromadb>=0.5.0->-r requirements.txt (line 5))
+  Downloading hf_xet-1.2.0-cp37-abi3-win_amd64.whl.metadata (5.0 kB)
