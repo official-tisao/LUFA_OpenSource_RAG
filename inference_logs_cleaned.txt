@@ -555,3 +555,8 @@ Collecting watchfiles>=0.13 (from uvicorn[standard]>=0.18.3->chromadb>=0.5.0->-r
   Downloading watchfiles-1.1.1-cp310-cp310-win_amd64.whl.metadata (5.0 kB)
 Collecting websockets>=10.4 (from uvicorn[standard]>=0.18.3->chromadb>=0.5.0->-r requirements.txt (line 5))
   Downloading websockets-16.0-cp310-cp310-win_amd64.whl.metadata (7.0 kB)
+
+Collecting humanfriendly>=9.1 (from coloredlogs->onnxruntime>=1.14.1->chromadb>=0.5.0->-r requirements.txt (line 5))
+  Downloading humanfriendly-10.0-py2.py3-none-any.whl.metadata (9.2 kB)
+Collecting pyreadline3 (from humanfriendly>=9.1->coloredlogs->onnxruntime>=1.14.1->chromadb>=0.5.0->-r requirements.txt (line 5))
+  Downloading pyreadline3-3.5.4-py3-none-any.whl.metadata (4.7 kB)
