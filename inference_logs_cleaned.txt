@@ -565,3 +565,6 @@ Collecting marshmallow<4.0.0,>=3.18.0 (from dataclasses-json->llama-index-core<0
   Downloading marshmallow-3.26.2-py3-none-any.whl.metadata (7.3 kB)
 Collecting griffecli==2.0.0 (from griffe->banks<3,>=2.2.0->llama-index-core<0.15.0,>=0.14.14->llama-index>=0.10.0->-r requirements.txt (line 1))
   Downloading griffecli-2.0.0-py3-none-any.whl.metadata (1.2 kB)
+
+Collecting griffelib==2.0.0 (from griffe->banks<3,>=2.2.0->llama-index-core<0.15.0,>=0.14.14->llama-index>=0.10.0->-r requirements.txt (line 1))
+  Downloading griffelib-2.0.0-py3-none-any.whl.metadata (1.3 kB)
