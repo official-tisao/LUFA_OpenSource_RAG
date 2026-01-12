@@ -582,3 +582,6 @@ Downloading llama_index_core-0.14.14-py3-none-any.whl (11.9 MB)
 Downloading aiohttp-3.13.3-cp310-cp310-win_amd64.whl (456 kB)
 Downloading async_timeout-5.0.1-py3-none-any.whl (6.2 kB)
 Downloading banks-2.4.0-py3-none-any.whl (34 kB)
+ 
+Downloading dirtyjson-1.0.8-py3-none-any.whl (25 kB)
+Downloading filetype-1.2.0-py2.py3-none-any.whl (19 kB)
