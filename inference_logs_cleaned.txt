@@ -585,3 +585,10 @@ Downloading banks-2.4.0-py3-none-any.whl (34 kB)
  
 Downloading dirtyjson-1.0.8-py3-none-any.whl (25 kB)
 Downloading filetype-1.2.0-py2.py3-none-any.whl (19 kB)
+ 
+Downloading llama_index_embeddings_openai-0.5.1-py3-none-any.whl (7.0 kB)
+Downloading llama_index_llms_openai-0.6.18-py3-none-any.whl (26 kB)
+Downloading llama_index_readers_file-0.5.6-py3-none-any.whl (51 kB)
+Downloading pypdf-6.7.0-py3-none-any.whl (330 kB)
+Downloading beautifulsoup4-4.14.3-py3-none-any.whl (107 kB)
+Downloading llama_index_workflows-2.14.2-py3-none-any.whl (97 kB)
