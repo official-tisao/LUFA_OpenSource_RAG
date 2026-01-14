@@ -621,3 +621,12 @@ Downloading chromadb-1.5.0-cp39-abi3-win_amd64.whl (21.7 MB)
 Downloading posthog-5.4.0-py3-none-any.whl (105 kB)
 Downloading requests-2.32.5-py3-none-any.whl (64 kB)
 Downloading charset_normalizer-3.4.4-cp310-cp310-win_amd64.whl (107 kB)
+
+Downloading idna-3.11-py3-none-any.whl (71 kB)
+Downloading urllib3-2.6.3-py3-none-any.whl (131 kB)
+Downloading streamlit-1.54.0-py3-none-any.whl (9.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.1/9.1 MB 4.4 MB/s  0:00:02
+Downloading altair-6.0.0-py3-none-any.whl (795 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 795.4/795.4 kB 6.8 MB/s  0:00:00
+Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+Downloading cachetools-6.2.6-py3-none-any.whl (11 kB)
