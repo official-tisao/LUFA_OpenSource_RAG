@@ -615,3 +615,9 @@ Downloading yarl-1.22.0-cp310-cp310-win_amd64.whl (86 kB)
 Downloading llama_index_llms_ollama-0.9.1-py3-none-any.whl (8.7 kB)
 Downloading llama_index_embeddings_ollama-0.8.6-py3-none-any.whl (6.3 kB)
 Downloading llama_index_vector_stores_chroma-0.5.5-py3-none-any.whl (8.1 kB)
+
+Downloading chromadb-1.5.0-cp39-abi3-win_amd64.whl (21.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 21.7/21.7 MB 2.0 MB/s  0:00:11
+Downloading posthog-5.4.0-py3-none-any.whl (105 kB)
+Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+Downloading charset_normalizer-3.4.4-cp310-cp310-win_amd64.whl (107 kB)
