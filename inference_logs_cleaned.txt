@@ -630,3 +630,17 @@ Downloading altair-6.0.0-py3-none-any.whl (795 kB)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 795.4/795.4 kB 6.8 MB/s  0:00:00
 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
 Downloading cachetools-6.2.6-py3-none-any.whl (11 kB)
+
+Downloading click-8.3.1-py3-none-any.whl (108 kB)
+Downloading gitpython-3.1.46-py3-none-any.whl (208 kB)
+Downloading gitdb-4.0.12-py3-none-any.whl (62 kB)
+Downloading numpy-2.2.6-cp310-cp310-win_amd64.whl (12.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.9/12.9 MB 5.7 MB/s  0:00:02
+Downloading pillow-12.1.1-cp310-cp310-win_amd64.whl (7.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 6.8 MB/s  0:00:01
+Downloading protobuf-6.33.5-cp310-abi3-win_amd64.whl (437 kB)
+Downloading pydeck-0.9.1-py2.py3-none-any.whl (6.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 270.8 kB/s  0:00:25
+Downloading smmap-5.0.2-py3-none-any.whl (24 kB)
+Downloading toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Downloading tornado-6.5.4-cp39-abi3-win_amd64.whl (446 kB)
