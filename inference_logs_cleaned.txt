@@ -659,3 +659,9 @@ Downloading build-1.4.0-py3-none-any.whl (24 kB)
 Downloading certifi-2026.1.4-py3-none-any.whl (152 kB)
 Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
 Downloading exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+
+Downloading frozenlist-1.8.0-cp310-cp310-win_amd64.whl (43 kB)
+Downloading fsspec-2026.2.0-py3-none-any.whl (202 kB)
+Downloading grpcio-1.78.0-cp310-cp310-win_amd64.whl (4.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 236.3 kB/s  0:00:20
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
