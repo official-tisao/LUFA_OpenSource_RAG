@@ -680,3 +680,21 @@ Downloading llama_index_instrumentation-0.4.2-py3-none-any.whl (15 kB)
 Downloading llama_index_readers_llama_parse-0.5.1-py3-none-any.whl (3.2 kB)
 Downloading llama_parse-0.6.54-py3-none-any.whl (4.9 kB)
 Downloading llama_cloud_services-0.6.54-py3-none-any.whl (63 kB)
+
+Downloading platformdirs-4.8.0-py3-none-any.whl (20 kB)
+Downloading python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+Downloading markupsafe-3.0.3-cp310-cp310-win_amd64.whl (15 kB)
+Downloading mmh3-5.2.0-cp310-cp310-win_amd64.whl (41 kB)
+Downloading narwhals-2.16.0-py3-none-any.whl (443 kB)
+Downloading networkx-3.4.2-py3-none-any.whl (1.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 237.3 kB/s  0:00:07
+Downloading nltk-3.9.2-py3-none-any.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 236.9 kB/s  0:00:06
+Downloading ollama-0.6.1-py3-none-any.whl (14 kB)
+Downloading onnxruntime-1.23.2-cp310-cp310-win_amd64.whl (13.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.5/13.5 MB 3.1 MB/s  0:00:04
+Downloading opentelemetry_api-1.39.1-py3-none-any.whl (66 kB)
+Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+Downloading opentelemetry_exporter_otlp_proto_grpc-1.39.1-py3-none-any.whl (19 kB)
+Downloading opentelemetry_exporter_otlp_proto_common-1.39.1-py3-none-any.whl (18 kB)
+Downloading opentelemetry_proto-1.39.1-py3-none-any.whl (72 kB)
