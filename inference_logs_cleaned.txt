@@ -700,3 +700,6 @@ Downloading opentelemetry_exporter_otlp_proto_common-1.39.1-py3-none-any.whl (18
 Downloading opentelemetry_proto-1.39.1-py3-none-any.whl (72 kB)
 
 Downloading googleapis_common_protos-1.72.0-py3-none-any.whl (297 kB)
+
+Downloading opentelemetry_sdk-1.39.1-py3-none-any.whl (132 kB)
+Downloading opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl (219 kB)
