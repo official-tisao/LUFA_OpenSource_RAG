@@ -698,3 +698,5 @@ Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
 Downloading opentelemetry_exporter_otlp_proto_grpc-1.39.1-py3-none-any.whl (19 kB)
 Downloading opentelemetry_exporter_otlp_proto_common-1.39.1-py3-none-any.whl (18 kB)
 Downloading opentelemetry_proto-1.39.1-py3-none-any.whl (72 kB)
+
+Downloading googleapis_common_protos-1.72.0-py3-none-any.whl (297 kB)
