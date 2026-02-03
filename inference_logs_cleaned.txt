@@ -703,3 +703,6 @@ Downloading googleapis_common_protos-1.72.0-py3-none-any.whl (297 kB)
 
 Downloading opentelemetry_sdk-1.39.1-py3-none-any.whl (132 kB)
 Downloading opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl (219 kB)
+
+Downloading orjson-3.11.7-cp310-cp310-win_amd64.whl (125 kB)
+Downloading overrides-7.7.0-py3-none-any.whl (17 kB)
