@@ -706,3 +706,5 @@ Downloading opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl (219 kB)
 
 Downloading orjson-3.11.7-cp310-cp310-win_amd64.whl (125 kB)
 Downloading overrides-7.7.0-py3-none-any.whl (17 kB)
+
+Downloading packaging-26.0-py3-none-any.whl (74 kB)
