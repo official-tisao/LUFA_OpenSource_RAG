@@ -710,3 +710,9 @@ Downloading overrides-7.7.0-py3-none-any.whl (17 kB)
 Downloading packaging-26.0-py3-none-any.whl (74 kB)
 
 Downloading propcache-0.4.1-cp310-cp310-win_amd64.whl (41 kB)
+
+Downloading pyarrow-23.0.0-cp310-cp310-win_amd64.whl (27.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 27.5/27.5 MB 3.5 MB/s  0:00:07
+Downloading pybase64-1.4.3-cp310-cp310-win_amd64.whl (35 kB)
+Downloading pypika-0.51.1-py2.py3-none-any.whl (60 kB)
+Downloading pytest_asyncio-1.3.0-py3-none-any.whl (15 kB)
