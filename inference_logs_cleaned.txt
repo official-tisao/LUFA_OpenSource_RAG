@@ -723,3 +723,9 @@ Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
 
 Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
 Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+
+Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 5.1 MB/s  0:00:00
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+Downloading pyyaml-6.0.3-cp310-cp310-win_amd64.whl (158 kB)
