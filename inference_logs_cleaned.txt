@@ -729,3 +729,5 @@ Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
 Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
 Downloading pyyaml-6.0.3-cp310-cp310-win_amd64.whl (158 kB)
+
+Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
