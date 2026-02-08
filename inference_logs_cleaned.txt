@@ -731,3 +731,6 @@ Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
 Downloading pyyaml-6.0.3-cp310-cp310-win_amd64.whl (158 kB)
 
 Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+
+Downloading regex-2026.1.15-cp310-cp310-win_amd64.whl (277 kB)
+Downloading rich-14.3.2-py3-none-any.whl (309 kB)
