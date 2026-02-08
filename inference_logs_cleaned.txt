@@ -734,3 +734,6 @@ Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
 
 Downloading regex-2026.1.15-cp310-cp310-win_amd64.whl (277 kB)
 Downloading rich-14.3.2-py3-none-any.whl (309 kB)
+
+Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
