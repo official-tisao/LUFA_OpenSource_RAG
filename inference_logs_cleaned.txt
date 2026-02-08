@@ -737,3 +737,7 @@ Downloading rich-14.3.2-py3-none-any.whl (309 kB)
 
 Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
 Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+
+Downloading rpds_py-0.30.0-cp310-cp310-win_amd64.whl (235 kB)
+Using cached setuptools-82.0.0-py3-none-any.whl (1.0 MB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
