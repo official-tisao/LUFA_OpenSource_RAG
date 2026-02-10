@@ -746,3 +746,13 @@ Downloading soupsieve-2.8.3-py3-none-any.whl (37 kB)
 Downloading sqlalchemy-2.0.46-cp310-cp310-win_amd64.whl (2.1 MB)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 2.0 MB/s  0:00:01
 Downloading greenlet-3.3.1-cp310-cp310-win_amd64.whl (226 kB)
+
+Downloading tiktoken-0.12.0-cp310-cp310-win_amd64.whl (879 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 879.4/879.4 kB 240.8 kB/s  0:00:03
+Downloading tokenizers-0.22.2-cp39-abi3-win_amd64.whl (2.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.7/2.7 MB 237.4 kB/s  0:00:11
+Downloading huggingface_hub-1.4.1-py3-none-any.whl (553 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 553.3/553.3 kB 245.1 kB/s  0:00:02
+Downloading hf_xet-1.2.0-cp37-abi3-win_amd64.whl (2.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 236.6 kB/s  0:00:12
+Downloading tomli-2.4.0-py3-none-any.whl (14 kB)
