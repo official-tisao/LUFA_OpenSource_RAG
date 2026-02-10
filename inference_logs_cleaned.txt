@@ -741,3 +741,8 @@ Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
 Downloading rpds_py-0.30.0-cp310-cp310-win_amd64.whl (235 kB)
 Using cached setuptools-82.0.0-py3-none-any.whl (1.0 MB)
 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+
+Downloading soupsieve-2.8.3-py3-none-any.whl (37 kB)
+Downloading sqlalchemy-2.0.46-cp310-cp310-win_amd64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 2.0 MB/s  0:00:01
+Downloading greenlet-3.3.1-cp310-cp310-win_amd64.whl (226 kB)
