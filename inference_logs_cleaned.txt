@@ -756,3 +756,12 @@ Downloading huggingface_hub-1.4.1-py3-none-any.whl (553 kB)
 Downloading hf_xet-1.2.0-cp37-abi3-win_amd64.whl (2.9 MB)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 236.6 kB/s  0:00:12
 Downloading tomli-2.4.0-py3-none-any.whl (14 kB)
+
+
+Downloading typer-0.23.1-py3-none-any.whl (56 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Downloading typing_inspect-0.9.0-py3-none-any.whl (8.8 kB)
+Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading tzdata-2025.3-py2.py3-none-any.whl (348 kB)
