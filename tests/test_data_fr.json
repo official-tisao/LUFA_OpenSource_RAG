@@ -1,0 +1,37 @@
+[
+  {
+    "id": "test_fr_001",
+    "question": "Quelles sont les exigences concernant les heures de bureau pour les professeurs?",
+    "expected_answer": "Les professeurs doivent maintenir des heures de bureau régulières pour les consultations avec les étudiants.",
+    "category": "Conditions de travail",
+    "difficulty": "easy"
+  },
+  {
+    "id": "test_fr_002",
+    "question": "Quelle est la politique sur la liberté académique?",
+    "expected_answer": "La liberté académique est protégée par la convention collective.",
+    "category": "Droits académiques",
+    "difficulty": "medium"
+  },
+  {
+    "id": "test_fr_003",
+    "question": "Comment la charge d'enseignement est-elle calculée?",
+    "expected_answer": "La charge d'enseignement est calculée en fonction des crédits de cours et du nombre d'étudiants.",
+    "category": "Charge de travail",
+    "difficulty": "medium"
+  },
+  {
+    "id": "test_fr_004",
+    "question": "Quelles sont les dispositions pour le congé sabbatique?",
+    "expected_answer": "Les professeurs peuvent demander un congé sabbatique selon les conditions spécifiées dans l'entente.",
+    "category": "Congés",
+    "difficulty": "hard"
+  },
+  {
+    "id": "test_fr_005",
+    "question": "Quelle est la procédure de grief?",
+    "expected_answer": "La procédure de grief est décrite dans la convention collective avec des étapes et des délais spécifiques.",
+    "category": "Résolution de conflits",
+    "difficulty": "medium"
+  }
+]

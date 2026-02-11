@@ -191,6 +191,36 @@ ollama pull bge-m3  # or mxbai-embed-large
 
 This refined plan maintains your open-source approach while adding robust bilingual capabilities. The key advantage is that multilingual embedding models map semantically similar content across languages to nearby vectors, enabling true cross-lingual retrieval without translation overhead.[^7][^8]
 
+### No documents found
+- Ensure documents are placed in `data/english/` or `data/french/`
+- Run ingestion: `python src/ingestion.py`
+- Check for error messages during ingestion
+
+### Import errors
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Reinstall dependencies
+pip install -r requirements.txt
+```
+
+## 📄 License
+
+This project is open source and available under the terms specified in the LICENSE file.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Support
+
+For issues and questions, please open an issue on GitHub.
+
+---
+
+Built with ❤️ using Ollama, LlamaIndex, ChromaDB, and Streamlit
+
 ---
 
 ## Footnotes

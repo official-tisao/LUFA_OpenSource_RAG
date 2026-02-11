@@ -1,0 +1,85 @@
+"""
+Query handler module for language-aware query processing.
+Handles query language detection and routing to appropriate system prompts.
+"""
+
+from typing import Dict, Optional
+from language_detector import detect_language
+
+
+# System prompts for bilingual support
+SYSTEM_PROMPTS = {
+    "en": "You are a helpful assistant answering questions about the Laurentian University Faculty Association collective agreement. Respond in English.",
+    "fr": "Tu es un assistant utile qui répond aux questions sur la convention collective de l'Association des professeur(e)s de l'Université Laurentienne. Réponds en français."
+}
+
+
+class QueryHandler:
+    """
+    Handles query processing with language awareness.
+    """
+    
+    def __init__(self):
+        """Initialize the query handler."""
+        self.system_prompts = SYSTEM_PROMPTS
+    
+    def detect_query_language(self, query: str) -> str:
+        """
+        Detect the language of a user query.
+        
+        Args:
+            query: User query text
+            
+        Returns:
+            Language code ('en' or 'fr')
+        """
+        return detect_language(query)
+    
+    def get_system_prompt(self, language: str) -> str:
+        """
+        Get the appropriate system prompt for the given language.
+        
+        Args:
+            language: Language code ('en' or 'fr')
+            
+        Returns:
+            System prompt string
+        """
+        return self.system_prompts.get(language, self.system_prompts['en'])
+    
+    def create_language_aware_query(self, query: str, language: Optional[str] = None) -> Dict[str, str]:
+        """
+        Create a language-aware query with appropriate system prompt.
+        
+        Args:
+            query: User query text
+            language: Optional language code. If not provided, will be auto-detected.
+            
+        Returns:
+            Dictionary with 'query', 'language', and 'system_prompt'
+        """
+        if language is None:
+            language = self.detect_query_language(query)
+        
+        system_prompt = self.get_system_prompt(language)
+        
+        return {
+            'query': query,
+            'language': language,
+            'system_prompt': system_prompt
+        }
+    
+    def format_response_instruction(self, language: str) -> str:
+        """
+        Create an instruction to ensure response is in the correct language.
+        
+        Args:
+            language: Language code ('en' or 'fr')
+            
+        Returns:
+            Response instruction string
+        """
+        if language == 'fr':
+            return "Réponds en français. "
+        else:
+            return "Respond in English. "
