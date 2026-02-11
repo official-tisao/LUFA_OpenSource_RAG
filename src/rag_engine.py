@@ -94,6 +94,17 @@ class BilingualRAGEngine:
         print("Index loaded successfully")
         return index
     
+    def set_similarity_top_k(self, top_k: int):
+        """
+        Update the number of similar documents to retrieve.
+        
+        Args:
+            top_k: Number of documents to retrieve
+        """
+        self.similarity_top_k = top_k
+        if hasattr(self, 'query_engine') and hasattr(self.query_engine, 'retriever'):
+            self.query_engine.retriever._similarity_top_k = top_k
+    
     def _create_query_engine(self) -> RetrieverQueryEngine:
         """
         Create a query engine with custom retriever and response synthesizer.
@@ -189,8 +200,10 @@ class BilingualRAGEngine:
         if return_sources and hasattr(response, 'source_nodes'):
             sources = []
             for node in response.source_nodes:
+                text = node.node.text
+                preview = text[:200] + ('...' if len(text) > 200 else '')
                 source_info = {
-                    'text': node.node.text[:200] + "...",  # Preview
+                    'text': preview,
                     'score': node.score,
                     'metadata': node.node.metadata,
                 }

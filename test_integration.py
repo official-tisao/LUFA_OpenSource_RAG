@@ -166,7 +166,7 @@ def main():
     print("Bilingual RAG System - Integration Tests")
     print("="*70)
     print("\nNote: Some tests require Ollama to be running with models pulled.")
-    print("Run: ollama pull llama3.2 && ollama pull bge-m3")
+    print("Run: ollama pull llama3.2:latest && ollama pull bge-m3:latest")
     print()
     
     # Check if we're in quick mode (no Ollama required)

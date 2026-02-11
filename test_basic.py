@@ -127,7 +127,8 @@ def test_requirements():
     
     all_present = True
     for package in required_packages:
-        if any(package in req for req in requirements):
+        # More precise matching: check if line starts with package name
+        if any(req.strip().startswith(package) for req in requirements):
             print(f"✓ Package listed: {package}")
         else:
             print(f"✗ Package missing: {package}")

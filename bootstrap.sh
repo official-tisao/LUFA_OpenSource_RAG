@@ -76,7 +76,9 @@ print_info "Checking for required Ollama models..."
 
 check_model() {
     local model=$1
-    if curl -s http://localhost:11434/api/tags | grep -q "\"name\":\"$model\""; then
+    # Check for model with or without :latest tag
+    if curl -s http://localhost:11434/api/tags | grep -q "\"name\":\"$model\"" || \
+       curl -s http://localhost:11434/api/tags | grep -q "\"name\":\"${model}:latest\""; then
         print_info "Model $model is available"
         return 0
     else

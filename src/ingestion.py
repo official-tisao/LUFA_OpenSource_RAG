@@ -119,8 +119,10 @@ def create_multilingual_index(
     all_documents = english_docs + french_docs
     
     if not all_documents:
-        print("No documents found. Creating empty index...")
-        all_documents = [Document(text="Empty placeholder document", metadata={"language": "en"})]
+        raise ValueError(
+            "No documents found in the specified directories. "
+            "Please add documents to data/english/ or data/french/ and try again."
+        )
     
     # Tag documents with language
     print("Tagging documents with language...")

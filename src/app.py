@@ -118,8 +118,8 @@ def main():
             return
         
         # Update top_k if changed
-        if hasattr(rag_engine, 'query_engine') and hasattr(rag_engine.query_engine, 'retriever'):
-            rag_engine.query_engine.retriever._similarity_top_k = top_k
+        if hasattr(rag_engine, 'set_similarity_top_k'):
+            rag_engine.set_similarity_top_k(top_k)
         
         # Display chat history
         for i, chat in enumerate(st.session_state.chat_history):
