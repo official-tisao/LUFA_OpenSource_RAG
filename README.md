@@ -9,7 +9,7 @@ LUFA_OpenSource_RAG
 **Hardware Requirements:**
 
 - Minimum 16GB RAM (32GB recommended for multilingual models)
-- NVIDIA GPU with 8GB+ VRAM (or M1/M2/M3 Mac)
+- NVIDIA GPU with 6GB+ VRAM (or M1/M2/M3 Mac)
 
 **Software Installation:**
 
