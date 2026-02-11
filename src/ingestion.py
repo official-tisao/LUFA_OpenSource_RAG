@@ -74,7 +74,7 @@ def create_multilingual_index(
     french_dir: str = "data/french",
     db_path: str = "db/chroma_db",
     collection_name: str = "multilingual_docs",
-    embedding_model: str = "bge-m3:latest"
+    embedding_model: str = "bge-m3"
 ) -> VectorStoreIndex:
     """
     Create a multilingual vector store index from English and French documents.
