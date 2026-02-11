@@ -211,3 +211,6 @@ db/
 
 # Sample data (optional, comment out if you want to commit sample data)
 # data/
+
+# User configuration
+config.py
