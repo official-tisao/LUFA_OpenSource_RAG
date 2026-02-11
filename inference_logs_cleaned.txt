@@ -768,3 +768,9 @@ Downloading tzdata-2025.3-py2.py3-none-any.whl (348 kB)
 
 Downloading uvicorn-0.40.0-py3-none-any.whl (68 kB)
 Downloading httptools-0.7.1-cp310-cp310-win_amd64.whl (86 kB)
+
+Downloading watchfiles-1.1.1-cp310-cp310-win_amd64.whl (287 kB)
+Downloading websocket_client-1.9.0-py3-none-any.whl (82 kB)
+Downloading websockets-16.0-cp310-cp310-win_amd64.whl (178 kB)
+Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
+Downloading aiosqlite-0.22.1-py3-none-any.whl (17 kB)
