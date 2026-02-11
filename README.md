@@ -21,35 +21,21 @@ LUFA_OpenSource_RAG
 
 ### Phase 2: Bilingual Model Selection
 
-**Multilingual Embedding Model** (choose one):[^1]
+**Multilingual Embedding Model**:[^1]
 
-1. **BGE-M3** (Recommended): Supports 100+ languages with strong French/English performance[^2]
+1. **BGE-M3** : Supports 100+ languages with strong French/English performance[^2]
 
 ```bash
 ollama pull bge-m3
 ```
 
-2. **multilingual-e5-large**: Excellent for cross-lingual retrieval[^3]
+**Multilingual LLM** :[^1]
+
+1. **Llama 3.2** : Officially supports French, English, and 6 other languages[^4]
 
 ```bash
-ollama pull mxbai-embed-large
+ollama pull llama3.2:3b-instruct-q4_K_M
 ```
-
-
-**Multilingual LLM** (choose one):[^1]
-
-1. **Llama 3.2** (Recommended): Officially supports French, English, and 6 other languages[^4]
-
-```bash
-ollama pull llama3.2
-```
-
-2. **Mistral** or **Mixtral**: Strong multilingual capabilities
-
-```bash
-ollama pull mistral
-```
-
 
 ### Phase 3: Enhanced Project Structure
 
@@ -133,7 +119,7 @@ SYSTEM_PROMPTS = {
 - Automatic query language detection
 - Display retrieved chunks with language tags
 - Show source document and page numbers
-- Option to translate answer to other language
+- Option to translate the answer into another language
 
 **UI Elements:**
 
@@ -215,7 +201,7 @@ This refined plan maintains your open-source approach while adding robust biling
 
 [^3]: The multilingual-e5-large model from Microsoft is trained on multilingual data and provides strong semantic search capabilities across different languages.
 
-[^4]: Llama 3.2 officially supports 8 languages including English and French, making it suitable for generating responses in either language while maintaining context and accuracy.
+[^4]: Llama 3.2 officially supports 8 languages, including English and French, making it suitable for generating responses in either language while maintaining context and accuracy.
 
 [^5]: Language detection and metadata tagging ensure that the system can track document provenance while still enabling cross-lingual retrieval through shared embedding space.
 
