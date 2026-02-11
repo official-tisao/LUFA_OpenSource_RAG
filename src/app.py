@@ -29,9 +29,9 @@ def load_rag_engine():
             try:
                 st.session_state.rag_engine = BilingualRAGEngine(
                     db_path="db/chroma_db",
-                    llm_model="llama3.2:latest",
-                    embedding_model="bge-m3:latest",
-                    similarity_top_k=3
+                    llm_model="llama3.2:3b-instruct-q4_K_M",
+                    embedding_model="bge-m3",
+                    similarity_top_k=5
                 )
                 st.success("RAG engine loaded successfully!")
             except Exception as e:
@@ -44,7 +44,7 @@ def load_rag_engine():
 def main():
     """Main application function."""
     st.set_page_config(
-        page_title="Bilingual RAG System",
+        page_title="LUFA Collective Agreement - Bilingual RAG",
         page_icon="🌍",
         layout="wide",
     )
@@ -53,51 +53,71 @@ def main():
     initialize_session_state()
     
     # Header
-    st.title("🌍 Bilingual RAG System (EN/FR)")
+    st.title("🌍 LUFA Collective Agreement - Bilingual RAG (EN/FR)")
     st.markdown("""
-    Welcome to the bilingual RAG system! Ask questions in **English** or **French**, 
-    and get answers from your document collection.
+    Ask questions about the **Laurentian University Faculty Association collective agreement** 
+    in **English** or **French**, and get answers from the document collection.
     
     **Features:**
-    - 🔍 Cross-lingual retrieval
+    - 🔍 Cross-lingual retrieval with BGE-M3
     - 🌐 Auto-detect query language
     - 💬 Responds in your language
+    - 📚 Top 5 most relevant chunks
     """)
     
     # Sidebar
     with st.sidebar:
         st.header("⚙️ Configuration")
         
+        # Language selector
+        language = st.selectbox("Language / Langue", ["English", "Français"], key="ui_language")
+        
         # Display system info
         st.subheader("System Information")
         st.info("""
         **Models:**
-        - LLM: llama3.2:latest
-        - Embeddings: bge-m3:latest
+        - LLM: llama3.2:3b-instruct-q4_K_M
+        - Embeddings: bge-m3
         
         **Database:**
         - ChromaDB (db/chroma_db)
+        
+        **Retrieval:**
+        - Top 5 chunks
+        - 0.7 similarity threshold
         """)
         
         # Advanced settings
         with st.expander("Advanced Settings"):
-            top_k = st.slider("Number of retrieved documents", 1, 10, 3)
+            top_k = st.slider("Number of retrieved documents", 1, 10, 5)
             show_sources = st.checkbox("Show source documents", value=False)
         
         st.divider()
         
         # Instructions
         st.subheader("📖 Instructions")
-        st.markdown("""
-        1. Make sure Ollama is running
-        2. Ensure documents are ingested
-        3. Type your question below
-        4. Get your answer!
+        if language == "English":
+            st.markdown("""
+            1. Make sure Ollama is running
+            2. Ensure documents are ingested
+            3. Type your question below
+            4. Get your answer!
         
-        **Example queries:**
-        - *English:* "What is this about?"
-        - *French:* "De quoi s'agit-il?"
-        """)
+            **Example queries:**
+            - "What are the office hours requirements?"
+            - "What is the policy on academic freedom?"
+            """)
+        else:
+            st.markdown("""
+            1. Assurez-vous qu'Ollama fonctionne
+            2. Assurez-vous que les documents sont ingérés
+            3. Tapez votre question ci-dessous
+            4. Obtenez votre réponse!
+        
+            **Exemples de questions:**
+            - "Quelles sont les exigences concernant les heures de bureau?"
+            - "Quelle est la politique sur la liberté académique?"
+            """)
         
         # Reset button
         if st.button("🔄 Reset Chat History"):
@@ -136,7 +156,10 @@ def main():
                             st.divider()
         
         # Query input
-        query = st.chat_input("Ask a question in English or French...")
+        if language == "English":
+            query = st.chat_input("Ask a question / Posez une question")
+        else:
+            query = st.chat_input("Posez une question / Ask a question")
         
         if query:
             # Add user query to chat

@@ -4,9 +4,11 @@ Handles document loading, language detection, chunking, and vector store indexin
 """
 
 import os
+import json
 from pathlib import Path
+from datetime import datetime
 from typing import List, Dict
-from langdetect import detect, LangDetectException
+from language_detector import detect_language
 from llama_index.core import (
     VectorStoreIndex,
     SimpleDirectoryReader,
@@ -17,27 +19,6 @@ from llama_index.core.node_parser import SentenceSplitter
 from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
 import chromadb
-
-
-def detect_language(text: str) -> str:
-    """
-    Detect the language of a text.
-    
-    Args:
-        text: Input text to detect language
-        
-    Returns:
-        Language code ('en' or 'fr'), defaults to 'en' if detection fails
-    """
-    try:
-        lang = detect(text)
-        # Map detected language to our supported languages
-        if lang == 'fr':
-            return 'fr'
-        else:
-            return 'en'  # Default to English for all other languages
-    except LangDetectException:
-        return 'en'  # Default to English if detection fails
 
 
 def load_documents_from_directory(directory: str) -> List[Document]:
@@ -148,8 +129,8 @@ def create_multilingual_index(
     # Create storage context
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
     
-    # Create text splitter for chunking
-    text_splitter = SentenceSplitter(chunk_size=512, chunk_overlap=50)
+    # Create text splitter for chunking (1024 tokens, 200 overlap as per spec)
+    text_splitter = SentenceSplitter(chunk_size=1024, chunk_overlap=200)
     
     # Create index
     print("Creating vector store index...")
@@ -162,7 +143,61 @@ def create_multilingual_index(
     )
     
     print(f"Index created successfully with {len(all_documents)} documents")
+    
+    # Update metadata.json
+    update_metadata(english_docs, french_docs)
+    
     return index
+
+
+def update_metadata(english_docs: List[Document], french_docs: List[Document]):
+    """
+    Update metadata.json with document information.
+    
+    Args:
+        english_docs: List of English documents
+        french_docs: List of French documents
+    """
+    metadata_path = "data/metadata.json"
+    
+    try:
+        # Load existing metadata
+        if os.path.exists(metadata_path):
+            with open(metadata_path, 'r') as f:
+                metadata = json.load(f)
+        else:
+            metadata = {
+                "documents": [],
+                "ingestion_history": [],
+                "statistics": {
+                    "total_documents": 0,
+                    "english_documents": 0,
+                    "french_documents": 0,
+                    "last_updated": None
+                }
+            }
+        
+        # Update statistics
+        metadata["statistics"]["english_documents"] = len(english_docs)
+        metadata["statistics"]["french_documents"] = len(french_docs)
+        metadata["statistics"]["total_documents"] = len(english_docs) + len(french_docs)
+        metadata["statistics"]["last_updated"] = datetime.now().isoformat()
+        
+        # Add to ingestion history
+        metadata["ingestion_history"].append({
+            "timestamp": datetime.now().isoformat(),
+            "english_count": len(english_docs),
+            "french_count": len(french_docs)
+        })
+        
+        # Save updated metadata
+        with open(metadata_path, 'w') as f:
+            json.dump(metadata, f, indent=2)
+        
+        print(f"Metadata updated: {len(english_docs)} EN, {len(french_docs)} FR documents")
+    
+    except Exception as e:
+        print(f"Warning: Could not update metadata: {e}")
 
 
 def ingest_documents(

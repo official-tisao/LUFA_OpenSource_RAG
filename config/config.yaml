@@ -1,0 +1,56 @@
+# Bilingual RAG Configuration
+# Configuration settings for the Laurentian University Faculty Association
+# collective agreement RAG system
+
+# Language Settings
+languages:
+  supported:
+    - en
+    - fr
+  default: en
+
+# Model Configuration
+models:
+  llm:
+    name: "llama3.2:3b-instruct-q4_K_M"
+    base_url: "http://localhost:11434"
+    request_timeout: 120.0
+  
+  embedding:
+    name: "bge-m3"
+    base_url: "http://localhost:11434"
+
+# Database Configuration
+database:
+  path: "db/chroma_db"
+  collection_name: "multilingual_docs"
+
+# Document Processing
+ingestion:
+  chunk_size: 1024
+  chunk_overlap: 200
+  
+# Retrieval Settings
+retrieval:
+  top_k: 5
+  similarity_threshold: 0.7
+
+# Data Directories
+data:
+  english_dir: "data/english"
+  french_dir: "data/french"
+  metadata_file: "data/metadata.json"
+
+# System Prompts
+prompts:
+  en: "You are a helpful assistant answering questions about the Laurentian University Faculty Association collective agreement. Respond in English."
+  fr: "Tu es un assistant utile qui répond aux questions sur la convention collective de l'Association des professeur(e)s de l'Université Laurentienne. Réponds en français."
+
+# UI Configuration
+ui:
+  page_title: "LUFA Collective Agreement - Bilingual RAG"
+  page_icon: "🌍"
+  layout: "wide"
+  languages:
+    en: "English"
+    fr: "Français"

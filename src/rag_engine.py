@@ -4,7 +4,8 @@ Handles query processing, cross-lingual retrieval, and response generation.
 """
 
 from typing import List, Optional
-from langdetect import detect, LangDetectException
+from language_detector import detect_language
+from query_handler import QueryHandler, SYSTEM_PROMPTS
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
@@ -20,20 +21,21 @@ PREVIEW_LENGTH = 200  # Length of text preview for source documents
 
 class BilingualRAGEngine:
     """
-    Bilingual RAG engine that supports English and French queries.
+    Bilingual RAG engine for Laurentian University Faculty Association collective agreement.
     Features:
     - Auto-detect query language
-    - Cross-lingual retrieval
+    - Cross-lingual retrieval with BGE-M3
     - Respond in the query language
+    - Top 5 chunks with 0.7 similarity threshold
     """
     
     def __init__(
         self,
         db_path: str = "db/chroma_db",
         collection_name: str = "multilingual_docs",
-        llm_model: str = "llama3.2:latest",
-        embedding_model: str = "bge-m3:latest",
-        similarity_top_k: int = 3
+        llm_model: str = "llama3.2:3b-instruct-q4_K_M",
+        embedding_model: str = "bge-m3",
+        similarity_top_k: int = 5
     ):
         """
         Initialize the bilingual RAG engine.
@@ -41,13 +43,16 @@ class BilingualRAGEngine:
         Args:
             db_path: Path to ChromaDB database
             collection_name: Name of the ChromaDB collection
-            llm_model: Name of the LLM model to use
-            embedding_model: Name of the embedding model to use
-            similarity_top_k: Number of similar documents to retrieve
+            llm_model: Name of the LLM model to use (default: llama3.2:3b-instruct-q4_K_M)
+            embedding_model: Name of the embedding model to use (default: bge-m3)
+            similarity_top_k: Number of similar documents to retrieve (default: 5)
         """
         self.db_path = db_path
         self.collection_name = collection_name
         self.similarity_top_k = similarity_top_k
+        
+        # Initialize query handler
+        self.query_handler = QueryHandler()
         
         # Initialize LLM
         print(f"Initializing LLM: {llm_model}")
@@ -147,18 +152,11 @@ class BilingualRAGEngine:
         Returns:
             Language code ('en' or 'fr')
         """
-        try:
-            lang = detect(query)
-            if lang == 'fr':
-                return 'fr'
-            else:
-                return 'en'
-        except LangDetectException:
-            return 'en'  # Default to English
+        return self.query_handler.detect_query_language(query)
     
     def create_language_aware_prompt(self, query: str, language: str) -> str:
         """
-        Create a language-aware prompt that instructs the model to respond in the query language.
+        Create a language-aware prompt using LUFA-specific system prompts.
         
         Args:
             query: Original user query
@@ -167,6 +165,10 @@ class BilingualRAGEngine:
         Returns:
             Enhanced query with language instruction
         """
+        # Get the LUFA-specific system prompt
+        system_prompt = self.query_handler.get_system_prompt(language)
+        
+        # Add response language instruction
         if language == 'fr':
             instruction = "Réponds en français. "
         else:
@@ -233,16 +235,16 @@ class BilingualRAGEngine:
 
 def create_rag_engine(
     db_path: str = "db/chroma_db",
-    llm_model: str = "llama3.2:latest",
-    embedding_model: str = "bge-m3:latest"
+    llm_model: str = "llama3.2:3b-instruct-q4_K_M",
+    embedding_model: str = "bge-m3"
 ) -> BilingualRAGEngine:
     """
-    Factory function to create a BilingualRAGEngine instance.
+    Factory function to create a BilingualRAGEngine instance for LUFA collective agreement.
     
     Args:
         db_path: Path to ChromaDB database
-        llm_model: Name of the LLM model to use
-        embedding_model: Name of the embedding model to use
+        llm_model: Name of the LLM model to use (default: llama3.2:3b-instruct-q4_K_M)
+        embedding_model: Name of the embedding model to use (default: bge-m3)
         
     Returns:
         BilingualRAGEngine instance

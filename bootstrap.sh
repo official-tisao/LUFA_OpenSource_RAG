@@ -69,7 +69,7 @@ pip install -r requirements.txt
 
 # Create necessary directories
 print_info "Creating necessary directories..."
-mkdir -p data/english data/french db
+mkdir -p data/english data/french db config tests
 
 # Check for required Ollama models
 print_info "Checking for required Ollama models..."
@@ -90,8 +90,8 @@ check_model() {
 
 MODELS_OK=true
 
-if ! check_model "llama3.2"; then
-    print_warning "Please pull the llama3.2 model: ollama pull llama3.2"
+if ! check_model "llama3.2:3b-instruct-q4_K_M"; then
+    print_warning "Please pull the llama3.2:3b-instruct-q4_K_M model: ollama pull llama3.2:3b-instruct-q4_K_M"
     MODELS_OK=false
 fi
 
@@ -102,7 +102,7 @@ fi
 
 if [ "$MODELS_OK" = false ]; then
     print_warning "Some models are missing. The system may not work correctly."
-    print_info "Run: ollama pull llama3.2 && ollama pull bge-m3"
+    print_info "Run: ollama pull llama3.2:3b-instruct-q4_K_M && ollama pull bge-m3"
 fi
 
 echo ""

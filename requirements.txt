@@ -6,3 +6,4 @@ chromadb==0.4.22
 streamlit==1.31.1
 pypdf==4.0.1
 langdetect==1.0.9
+pycountry==23.12.11
