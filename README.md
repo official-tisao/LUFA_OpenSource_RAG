@@ -1,205 +1,195 @@
 # LUFA_OpenSource_RAG
+LUFA_OpenSource_RAG
 
-A bilingual (English/French) Retrieval-Augmented Generation (RAG) system built with Ollama, LlamaIndex, ChromaDB, and Streamlit.
 
-> **🔒 Security Update (2026-02-11)**: Dependencies have been updated to address critical vulnerabilities. See [SECURITY.md](SECURITY.md) for details.
+## Refined Bilingual Open-Source RAG Technical Implementation Plan
 
-## 🌟 Features
+### Phase 1: Environment \& Hardware Setup
 
-- **Bilingual Support**: Automatically detects and processes English and French documents
-- **Language Detection**: Auto-detects query language and responds accordingly
-- **Cross-lingual Retrieval**: Search across documents in both languages
-- **Multilingual Embeddings**: Uses BGE-M3 for high-quality multilingual embeddings
-- **User-friendly Interface**: Interactive Streamlit web application
-- **Persistent Storage**: ChromaDB vector store for efficient document retrieval
+**Hardware Requirements:**
 
-## 🏗️ Architecture
+- Minimum 16GB RAM (32GB recommended for multilingual models)
+- NVIDIA GPU with 6GB+ VRAM (or M1/M2/M3 Mac)
+
+**Software Installation:**
+
+- [Ollama](https://ollama.com)
+- Python 3.10+
+- Visual Studio Code
+- Anaconda/Miniconda
+
+
+### Phase 2: Bilingual Model Selection
+
+**Multilingual Embedding Model**:[^1]
+
+1. **BGE-M3** : Supports 100+ languages with strong French/English performance[^2]
+
+```bash
+ollama pull bge-m3
+```
+
+**Multilingual LLM** :[^1]
+
+1. **Llama 3.2:3b-instruct-q4_K_M** : Officially supports French, English, and 6 other languages[^4]
+
+```bash
+ollama pull llama3.2:3b-instruct-q4_K_M
+```
+
+### Phase 3: Enhanced Project Structure
 
 ```
 LUFA_OpenSource_RAG/
 ├── data/
-│   ├── english/          # Place English documents here (PDF, TXT, etc.)
-│   └── french/           # Place French documents here (PDF, TXT, etc.)
+│   ├── english/          # English collective agreements
+│   ├── french/           # French collective agreements
+│   └── metadata.json     # Track document language tags
+├── db/
+│   └── chroma_db/        # Single multilingual vector store
 ├── src/
-│   ├── ingestion.py      # Document ingestion with language detection
-│   ├── rag_engine.py     # RAG engine with multilingual support
-│   └── app.py            # Streamlit web application
-├── db/                   # ChromaDB vector store (auto-generated)
-├── requirements.txt      # Python dependencies
-└── bootstrap.sh          # Setup and run script
+│   ├── ingestion.py      # Bilingual document ingestion
+│   ├── language_detector.py  # Auto-detect document language
+│   ├── rag_engine.py     # Multilingual RAG pipeline
+│   ├── query_handler.py  # Language-aware query processing
+│   └── app.py            # Bilingual Streamlit interface
+├── config/
+│   └── config.yaml       # Language and model settings
+├── tests/
+│   ├── test_data_en.json # English test Q&A pairs
+│   └── test_data_fr.json # French test Q&A pairs
+└── requirements.txt
 ```
 
-## 🚀 Quick Start
 
-### Prerequisites
+### Phase 4: Updated Dependencies
 
-1. **Python 3.8+**: Make sure Python is installed
-2. **Ollama**: Install from [ollama.ai](https://ollama.ai/)
-3. **Required Models**: 
-   - `ollama pull llama3.2` - LLM for text generation
-   - `ollama pull bge-m3` - Multilingual embeddings
+```
+llama-index
+llama-index-llms-ollama
+llama-index-embeddings-ollama
+llama-index-vector-stores-chroma
+chromadb
+streamlit
+pypdf
+langdetect                # Language detection
+pycountry                 # Language code handling
+```
 
-### Installation
 
-1. Clone the repository:
+### Phase 5: Bilingual Ingestion Strategy
+
+**Key Features:**[^5][^1]
+
+1. **Language Detection**: Automatically detect whether each PDF is English or French using `langdetect`
+2. **Metadata Tagging**: Store language metadata with each chunk
+3. **Unified Vector Store**: Both languages in same ChromaDB using multilingual embeddings[^6]
+4. **Document Structure**:
+    - Read both English and French collective agreements from respective folders
+    - Chunk with 1024 tokens, 200 overlap
+    - Tag each chunk with: `{language: "en/fr", source_doc: "filename", page: N}`
+
+### Phase 6: Multilingual RAG Engine
+
+**Core Capabilities:**[^1]
+
+1. **Query Language Detection**: Detect if user asks in English or French
+2. **Cross-Lingual Retrieval**: Multilingual embeddings enable:
+    - English query → retrieves relevant French documents[^6]
+    - French query → retrieves relevant English documents
+    - Same-language retrieval
+3. **Response Generation**: LLM responds in the same language as the query[^4]
+4. **Retrieval Settings**: Top 5 chunks with similarity threshold 0.7
+
+**System Prompts:**
+
+```python
+SYSTEM_PROMPTS = {
+    "en": "You are a helpful assistant answering questions about the Laurentian University Faculty Association collective agreement. Respond in English.",
+    "fr": "Tu es un assistant utile qui répond aux questions sur la convention collective de l'Association des professeur(e)s de l'Université Laurentienne. Réponds en français."
+}
+```
+
+
+### Phase 7: Bilingual User Interface
+
+**Streamlit Features:**[^1]
+
+- Language toggle (EN/FR) for UI labels
+- Automatic query language detection
+- Display retrieved chunks with language tags
+- Show source document and page numbers
+- Option to translate the answer into another language
+
+**UI Elements:**
+
+```python
+# Sidebar: Language preference selector
+language = st.sidebar.selectbox("Language / Langue", ["English", "Français"])
+
+# Main chat: Question input (accepts EN/FR)
+query = st.chat_input("Ask a question / Posez une question")
+
+# Response area: Answer + source citations
+st.write(response)
+st.caption(f"Sources: {source_docs}")
+
+# Metadata display: Show which language documents were retrieved
+st.info(f"Retrieved {len(chunks)} chunks ({lang_counts})")
+```
+
+
+### Phase 8: Evaluation Framework
+
+**Bilingual Test Dataset:**[^1]
+
+1. Create 20 English Q\&A pairs from English collective agreements
+2. Create 20 French Q\&A pairs from French collective agreements
+3. Test cross-lingual scenarios (English query, French source)
+
+**Metrics:**
+
+- Retrieval accuracy per language
+- Answer quality (manual evaluation)
+- Cross-lingual retrieval performance
+- Response time per language
+
+**Optional: RAGAS Evaluation** with local model as judge[^1]
+
+### Phase 9: Technical Documentation Structure
+
+Your thesis documentation should cover:
+
+1. **Architecture Overview**
+    - System diagram showing bilingual data flow
+    - Component interactions
+2. **Multilingual Challenges**
+    - Embedding space alignment for EN/FR
+    - Query-document language mismatch handling
+    - Token counting differences between languages
+3. **Implementation Details**
+    - Model selection rationale (why BGE-M3 or Llama 3.2)
+    - Chunking strategy for French vs English text
+    - Performance optimization for local deployment
+4. **Evaluation Results**
+    - Monolingual performance (EN→EN, FR→FR)
+    - Cross-lingual performance (EN→FR, FR→EN)
+    - Comparison with baseline approaches
+
+### Immediate Next Steps
+
+1. Install Ollama and pull bilingual models:
+
 ```bash
-git clone https://github.com/official-tisao/LUFA_OpenSource_RAG.git
-cd LUFA_OpenSource_RAG
+ollama pull llama3.2:3b-instruct-q4
+ollama pull bge-m3  # or mxbai-embed-large
 ```
 
-2. Run the bootstrap script:
-```bash
-./bootstrap.sh
-```
+2. Set up enhanced project structure with language folders
+3. Implement `language_detector.py` for automatic language detection
+4. Modify `ingestion.py` to handle both English and French PDFs with metadata tagging
 
-This will:
-- Create a Python virtual environment
-- Install all dependencies
-- Set up necessary directories
-- Check for required Ollama models
-
-### Usage
-
-#### Step 1: Add Documents
-
-Place your documents in the appropriate directories:
-- English documents → `data/english/`
-- French documents → `data/french/`
-
-Supported formats: PDF, TXT, MD, and more.
-
-#### Step 2: Ingest Documents
-
-Process and index your documents:
-```bash
-./bootstrap.sh ingest
-# or manually:
-source venv/bin/activate
-python src/ingestion.py
-```
-
-This will:
-- Load documents from both directories
-- Detect language of each document
-- Tag chunks with language metadata
-- Create embeddings using BGE-M3
-- Store in ChromaDB vector store
-
-#### Step 3: Run the Application
-
-Start the Streamlit web interface:
-```bash
-./bootstrap.sh run
-# or manually:
-source venv/bin/activate
-streamlit run src/app.py
-```
-
-The app will open in your browser at `http://localhost:8501`
-
-## 💬 Using the Application
-
-1. **Ask Questions**: Type your question in English or French
-2. **Auto-Detection**: The system detects your query language
-3. **Cross-lingual Search**: Retrieves relevant information from both language collections
-4. **Natural Responses**: Get answers in your query language
-
-### Example Queries
-
-**English:**
-- "What is this document about?"
-- "Summarize the main points"
-- "What are the key findings?"
-
-**French:**
-- "De quoi parle ce document?"
-- "Résume les points principaux"
-- "Quelles sont les principales conclusions?"
-
-## 🛠️ Technical Details
-
-### Models
-
-- **LLM**: `llama3.2:latest` - Local language model via Ollama
-- **Embeddings**: `bge-m3:latest` - Multilingual embeddings (BAAI BGE-M3)
-
-### Technologies
-
-- **LlamaIndex**: RAG framework and orchestration
-- **ChromaDB**: Vector database for embeddings
-- **Ollama**: Local LLM inference
-- **Streamlit**: Web UI framework
-- **langdetect**: Language detection
-- **pypdf**: PDF processing
-
-### How It Works
-
-1. **Document Ingestion**:
-   - Load documents from English and French directories
-   - Detect language using langdetect
-   - Split documents into chunks (512 tokens, 50 overlap)
-   - Generate multilingual embeddings with BGE-M3
-   - Store in ChromaDB with language metadata
-
-2. **Query Processing**:
-   - Detect query language
-   - Generate query embedding
-   - Retrieve top-k similar chunks (cross-lingual)
-   - Synthesize response using LLM
-   - Return answer in query language
-
-3. **Cross-lingual Retrieval**:
-   - BGE-M3 embeddings enable semantic search across languages
-   - Language metadata helps filter and contextualize results
-
-## 📦 Dependencies
-
-Core dependencies (see `requirements.txt`):
-- `llama-index` - RAG framework
-- `llama-index-llms-ollama` - Ollama LLM integration
-- `llama-index-embeddings-ollama` - Ollama embeddings
-- `llama-index-vector-stores-chroma` - ChromaDB integration
-- `chromadb` - Vector database
-- `streamlit` - Web UI
-- `pypdf` - PDF processing
-- `langdetect` - Language detection
-
-## 🔧 Configuration
-
-### Environment Variables
-
-You can customize the configuration by modifying the source files or setting environment variables:
-
-- **Ollama URL**: Default is `http://localhost:11434`
-- **Database Path**: Default is `db/chroma_db`
-- **Collection Name**: Default is `multilingual_docs`
-- **Chunk Size**: Default is 512 tokens
-- **Top-K Retrieval**: Default is 3 documents
-
-### Advanced Configuration
-
-Edit the source files to customize:
-- `src/ingestion.py`: Modify chunking strategy, embedding model
-- `src/rag_engine.py`: Adjust retrieval parameters, prompt templates
-- `src/app.py`: Customize UI, add features
-
-## 🐛 Troubleshooting
-
-### Ollama not running
-```bash
-# Check if Ollama is running
-curl http://localhost:11434/api/tags
-
-# Start Ollama if needed
-ollama serve
-```
-
-### Models not found
-```bash
-# Pull required models
-ollama pull llama3.2
-ollama pull bge-m3
-```
+This refined plan maintains your open-source approach while adding robust bilingual capabilities. The key advantage is that multilingual embedding models map semantically similar content across languages to nearby vectors, enabling true cross-lingual retrieval without translation overhead.[^7][^8]
 
 ### No documents found
 - Ensure documents are placed in `data/english/` or `data/french/`
@@ -230,3 +220,20 @@ For issues and questions, please open an issue on GitHub.
 ---
 
 Built with ❤️ using Ollama, LlamaIndex, ChromaDB, and Streamlit
+---
+
+## Footnotes
+
+[^1]: This approach leverages the inherent multilingual capabilities of modern embedding and LLM models to provide seamless bilingual support without requiring separate pipelines or translation services.
+
+[^2]: BGE-M3 (BAAI General Embedding - Multilingual, Multifunctionality, Multi-Granularity) is specifically designed for cross-lingual retrieval tasks and has been shown to perform well on French and English document pairs.
+
+[^4]: Llama 3.2 officially supports 8 languages, including English and French, making it suitable for generating responses in either language while maintaining context and accuracy.
+
+[^5]: Language detection and metadata tagging ensure that the system can track document provenance while still enabling cross-lingual retrieval through shared embedding space.
+
+[^6]: Using a single unified vector store with multilingual embeddings is more efficient than maintaining separate stores per language and naturally enables cross-lingual retrieval.
+
+[^7]: Cross-lingual retrieval allows users to query in one language (e.g., English) and retrieve relevant documents in another language (e.g., French) based on semantic similarity.
+
+[^8]: Multilingual embedding models are trained to map semantically similar phrases across languages to nearby points in the embedding space, enabling natural cross-lingual information retrieval without explicit translation.
