@@ -138,10 +138,18 @@ SYSTEM_PROMPTS = {
 **UI Elements:**
 
 ```python
-- Sidebar: Language preference selector
-- Main chat: Question input (accepts EN/FR)
-- Response area: Answer + source citations
-- Metadata display: Show which language documents were retrieved
+# Sidebar: Language preference selector
+language = st.sidebar.selectbox("Language / Langue", ["English", "Français"])
+
+# Main chat: Question input (accepts EN/FR)
+query = st.chat_input("Ask a question / Posez une question")
+
+# Response area: Answer + source citations
+st.write(response)
+st.caption(f"Sources: {source_docs}")
+
+# Metadata display: Show which language documents were retrieved
+st.info(f"Retrieved {len(chunks)} chunks ({lang_counts})")
 ```
 
 
