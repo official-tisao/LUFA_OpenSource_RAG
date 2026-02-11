@@ -199,8 +199,6 @@ This refined plan maintains your open-source approach while adding robust biling
 
 [^2]: BGE-M3 (BAAI General Embedding - Multilingual, Multifunctionality, Multi-Granularity) is specifically designed for cross-lingual retrieval tasks and has been shown to perform well on French and English document pairs.
 
-[^3]: The multilingual-e5-large model from Microsoft is trained on multilingual data and provides strong semantic search capabilities across different languages.
-
 [^4]: Llama 3.2 officially supports 8 languages, including English and French, making it suitable for generating responses in either language while maintaining context and accuracy.
 
 [^5]: Language detection and metadata tagging ensure that the system can track document provenance while still enabling cross-lingual retrieval through shared embedding space.
