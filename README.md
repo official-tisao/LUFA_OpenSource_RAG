@@ -220,6 +220,7 @@ For issues and questions, please open an issue on GitHub.
 ---
 
 Built with ❤️ using Ollama, LlamaIndex, ChromaDB, and Streamlit
+
 ---
 
 ## Footnotes
