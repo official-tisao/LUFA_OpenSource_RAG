@@ -1,5 +1,7 @@
 # Implementation Summary
 
+> **🔒 Security Update (2026-02-11)**: All dependencies have been updated to address critical vulnerabilities. See [SECURITY.md](SECURITY.md) for details.
+
 ## ✅ Complete Bilingual EN/FR RAG System
 
 This implementation provides a fully functional bilingual (English/French) Retrieval-Augmented Generation system with all requested features.
@@ -20,13 +22,13 @@ This implementation provides a fully functional bilingual (English/French) Retri
 | Respond in query language | ✅ | Language-aware prompt engineering |
 | Bootstrap generation | ✅ | Complete setup automation |
 
-### 📦 Dependencies - All Included
+### 📦 Dependencies - All Included (Security Patched)
 
-All required packages in `requirements.txt`:
-- ✅ llama-index
-- ✅ llama-index-llms-ollama
-- ✅ llama-index-embeddings-ollama
-- ✅ llama-index-vector-stores-chroma
+All required packages in `requirements.txt` with **latest secure versions**:
+- ✅ llama-index==0.13.0 (patched vulnerabilities)
+- ✅ llama-index-llms-ollama==0.3.8
+- ✅ llama-index-embeddings-ollama==0.4.1
+- ✅ llama-index-vector-stores-chroma==0.4.1
 - ✅ chromadb
 - ✅ streamlit
 - ✅ pypdf
