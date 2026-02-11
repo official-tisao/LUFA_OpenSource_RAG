@@ -13,7 +13,7 @@ LUFA_OpenSource_RAG
 
 **Software Installation:**
 
-- Ollama (ollama.com)
+- [Ollama](https://ollama.com)
 - Python 3.10+
 - Visual Studio Code
 - Anaconda/Miniconda
