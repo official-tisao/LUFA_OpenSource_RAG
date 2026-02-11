@@ -204,3 +204,23 @@ ollama pull bge-m3  # or mxbai-embed-large
 4. Modify `ingestion.py` to handle both English and French PDFs with metadata tagging
 
 This refined plan maintains your open-source approach while adding robust bilingual capabilities. The key advantage is that multilingual embedding models map semantically similar content across languages to nearby vectors, enabling true cross-lingual retrieval without translation overhead.[^7][^8]
+
+---
+
+## Footnotes
+
+[^1]: This approach leverages the inherent multilingual capabilities of modern embedding and LLM models to provide seamless bilingual support without requiring separate pipelines or translation services.
+
+[^2]: BGE-M3 (BAAI General Embedding - Multilingual, Multifunctionality, Multi-Granularity) is specifically designed for cross-lingual retrieval tasks and has been shown to perform well on French and English document pairs.
+
+[^3]: The multilingual-e5-large model from Microsoft is trained on multilingual data and provides strong semantic search capabilities across different languages.
+
+[^4]: Llama 3.2 officially supports 8 languages including English and French, making it suitable for generating responses in either language while maintaining context and accuracy.
+
+[^5]: Language detection and metadata tagging ensure that the system can track document provenance while still enabling cross-lingual retrieval through shared embedding space.
+
+[^6]: Using a single unified vector store with multilingual embeddings is more efficient than maintaining separate stores per language and naturally enables cross-lingual retrieval.
+
+[^7]: Cross-lingual retrieval allows users to query in one language (e.g., English) and retrieve relevant documents in another language (e.g., French) based on semantic similarity.
+
+[^8]: Multilingual embedding models are trained to map semantically similar phrases across languages to nearby points in the embedding space, enabling natural cross-lingual information retrieval without explicit translation.
