@@ -205,3 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ChromaDB database
+db/
+
+# Sample data (optional, comment out if you want to commit sample data)
+# data/
