@@ -14,6 +14,9 @@ from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
 import chromadb
 
+# Constants
+PREVIEW_LENGTH = 200  # Length of text preview for source documents
+
 
 class BilingualRAGEngine:
     """
@@ -103,6 +106,8 @@ class BilingualRAGEngine:
         """
         self.similarity_top_k = top_k
         if hasattr(self, 'query_engine') and hasattr(self.query_engine, 'retriever'):
+            # Note: Direct access to _similarity_top_k is necessary because LlamaIndex
+            # VectorIndexRetriever doesn't provide a public setter method
             self.query_engine.retriever._similarity_top_k = top_k
     
     def _create_query_engine(self) -> RetrieverQueryEngine:
@@ -201,7 +206,7 @@ class BilingualRAGEngine:
             sources = []
             for node in response.source_nodes:
                 text = node.node.text
-                preview = text[:200] + ('...' if len(text) > 200 else '')
+                preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
                 source_info = {
                     'text': preview,
                     'score': node.score,
