@@ -765,3 +765,6 @@ Downloading typing_inspect-0.9.0-py3-none-any.whl (8.8 kB)
 Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
 Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
 Downloading tzdata-2025.3-py2.py3-none-any.whl (348 kB)
+
+Downloading uvicorn-0.40.0-py3-none-any.whl (68 kB)
+Downloading httptools-0.7.1-cp310-cp310-win_amd64.whl (86 kB)
