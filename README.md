@@ -181,7 +181,7 @@ Your thesis documentation should cover:
 1. Install Ollama and pull bilingual models:
 
 ```bash
-ollama pull llama3.2
+ollama pull llama3.2:3b-instruct-q4
 ollama pull bge-m3  # or mxbai-embed-large
 ```
 
