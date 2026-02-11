@@ -2,6 +2,8 @@
 
 A bilingual (English/French) Retrieval-Augmented Generation (RAG) system built with Ollama, LlamaIndex, ChromaDB, and Streamlit.
 
+> **🔒 Security Update (2026-02-11)**: Dependencies have been updated to address critical vulnerabilities. See [SECURITY.md](SECURITY.md) for details.
+
 ## 🌟 Features
 
 - **Bilingual Support**: Automatically detects and processes English and French documents
