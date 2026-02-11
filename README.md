@@ -54,7 +54,7 @@ ollama pull mistral
 ### Phase 3: Enhanced Project Structure
 
 ```
-LUFA_Bilingual_RAG/
+LUFA_OpenSource_RAG/
 ├── data/
 │   ├── english/          # English collective agreements
 │   ├── french/           # French collective agreements
