@@ -774,3 +774,8 @@ Downloading websocket_client-1.9.0-py3-none-any.whl (82 kB)
 Downloading websockets-16.0-cp310-cp310-win_amd64.whl (178 kB)
 Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
 Downloading aiosqlite-0.22.1-py3-none-any.whl (17 kB)
+
+Downloading coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
+Downloading humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
+Downloading dataclasses_json-0.6.7-py3-none-any.whl (28 kB)
+Downloading marshmallow-3.26.2-py3-none-any.whl (50 kB)
