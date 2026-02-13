@@ -11,13 +11,13 @@ This implementation provides a fully functional bilingual (English/French) Retri
 | Requirement | Status | Implementation |
 |------------|--------|----------------|
 | Bilingual EN/FR support | ✅ | Automatic language detection with langdetect |
-| Ollama integration | ✅ | Using llama3.2 and bge-m3 models |
+| Ollama integration | ✅ | Using llama3.2 and nomic-embed-text-v2-moe models |
 | LlamaIndex framework | ✅ | Core RAG orchestration |
 | ChromaDB vector store | ✅ | Persistent vector storage |
 | Streamlit UI | ✅ | Interactive web interface |
 | Auto-detect doc language | ✅ | Language detection in ingestion.py |
 | Tag chunks with language | ✅ | Metadata tagging system |
-| Multilingual vector store | ✅ | BGE-M3 multilingual embeddings |
+| Multilingual vector store | ✅ | nomic-embed-text-v2-moe multilingual embeddings |
 | Cross-lingual retrieval | ✅ | Semantic search across languages |
 | Respond in query language | ✅ | Language-aware prompt engineering |
 | Bootstrap generation | ✅ | Complete setup automation |
@@ -56,7 +56,7 @@ LUFA_OpenSource_RAG/
 - Loads documents from English and French directories
 - Detects language using langdetect library
 - Tags chunks with language metadata
-- Creates embeddings with BGE-M3
+- Creates embeddings with nomic-embed-text-v2-moe
 - Stores in ChromaDB with language preservation
 
 **Key Functions:**
@@ -136,7 +136,7 @@ LUFA_OpenSource_RAG/
 - Fallback to English for ambiguous cases
 
 #### Cross-lingual Retrieval
-- BGE-M3 multilingual embeddings
+- nomic-embed-text-v2-moe multilingual embeddings
 - Semantic similarity across languages
 - Retrieves relevant content regardless of language
 
@@ -163,7 +163,7 @@ LUFA_OpenSource_RAG/
    ```bash
    ./bootstrap.sh
    ollama pull llama3.2
-   ollama pull bge-m3
+   ollama pull nomic-embed-text-v2-moe
    ```
 
 2. **Add Documents**:
@@ -186,7 +186,7 @@ LUFA_OpenSource_RAG/
 ### 🔬 Technical Highlights
 
 #### Multilingual Support
-- BGE-M3: State-of-the-art multilingual embeddings
+- nomic-embed-text-v2-moe: State-of-the-art multilingual embeddings
 - Supports 100+ languages (focused on EN/FR)
 - Cross-lingual semantic understanding
 
@@ -226,7 +226,7 @@ LUFA_OpenSource_RAG/
 
 ✅ **Structure**: Correct directory layout (data/english, data/french, src/, db/)
 ✅ **Dependencies**: All required packages in requirements.txt
-✅ **Models**: Support for llama3.2 and bge-m3
+✅ **Models**: Support for llama3.2 and nomic-embed-text-v2-moe
 ✅ **Language Detection**: Automatic EN/FR detection
 ✅ **Tagging**: Language metadata on all chunks
 ✅ **Vector Store**: Multilingual ChromaDB storage
