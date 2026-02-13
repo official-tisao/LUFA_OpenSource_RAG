@@ -792,3 +792,49 @@ Downloading pyproject_hooks-1.2.0-py3-none-any.whl (10 kB)
 Downloading pyreadline3-3.5.4-py3-none-any.whl (83 kB)
 Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
 Downloading oauthlib-3.3.1-py3-none-any.whl (160 kB)
+
+Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 236.2 kB/s  0:00:26
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 230.9 kB/s  0:00:03
+Downloading typer_slim-0.23.1-py3-none-any.whl (3.4 kB)
+Building wheels for collected packages: langdetect
+  Building wheel for langdetect (pyproject.toml) ... done
+  Created wheel for langdetect: filename=langdetect-1.0.9-py3-none-any.whl size=993363 sha256=342e0a9a43631b5ee2eab3602b8142acf4b43bf32b6f53224400f56fcbbacf6b
+  Stored in directory: c:\users\tisao-msi\appdata\local\pip\cache\wheels\95\03\7d\59ea870c70ce4e5a370638b5462a7711ab78fba2f655d05106
+Successfully built langdetect
+Installing collected packages: striprtf, pytz, mpmath, flatbuffers, filetype, durationpy, dirtyjson, zipp, wrapt, websockets, websocket-client, watchdog, urllib3
+, tzdata, typing-extensions, tornado, tomli, toml, tenacity, sympy, soupsieve, sniffio, smmap, six, shellingham, setuptools, rpds-py, regex, pyyaml, python-doten
+v, pyreadline3, pyproject_hooks, pygments, pycountry, pybase64, pyarrow, protobuf, propcache, pluggy, platformdirs, pillow, packaging, overrides, orjson, oauthli
+b, numpy, networkx, nest-asyncio, narwhals, mypy-extensions, mmh3, mdurl, MarkupSafe, joblib, jiter, iniconfig, importlib-resources, idna, httptools, hf-xet, h11
+, griffelib, greenlet, fsspec, frozenlist, filelock, distro, defusedxml, colorama, charset_normalizer, certifi, cachetools, blinker, bcrypt, backports-asyncio-ru
+nner, backoff, attrs, async-timeout, annotated-types, annotated-doc, aiosqlite, aiohappyeyeballs, typing-inspection, typing-inspect, tqdm, sqlalchemy, requests, 
+referencing, python-dateutil, pypika, pypdf, pydantic-core, opentelemetry-proto, multidict, marshmallow, markdown-it-py, langdetect, jinja2, importlib-metadata, 
+humanfriendly, httpcore, grpcio, griffecli, googleapis-common-protos, gitdb, exceptiongroup, deprecated, click, build, beautifulsoup4, aiosignal, yarl, uvicorn, 
+tiktoken, rich, requests-oauthlib, pytest, pydeck, pydantic, posthog, pandas, opentelemetry-exporter-otlp-proto-common, opentelemetry-api, nltk, jsonschema-specifications, griffe, gitpython, dataclasses-json, coloredlogs, anyio, watchfiles, typer, pytest-asyncio, opentelemetry-semantic-conventions, onnxruntime, llama-index-instrumentation, kubernetes, jsonschema, httpx, banks, aiohttp, typer-slim, opentelemetry-sdk, openai, ollama, llama-index-workflows, llama-cloud, altair, streamlit, opentelemetry-exporter-otlp-proto-grpc, llama-index-core, huggingface-hub, tokenizers, llama-index-readers-file, llama-index-llms-openai, llama-index-llms-ollama, llama-index-indices-managed-llama-cloud, llama-index-embeddings-openai, llama-index-embeddings-ollama, llama-cloud-services, llama-parse, llama-index-cli, chromadb, llama-index-vector-stores-chroma, llama-index-readers-llama-parse, llama-index   
+  Attempting uninstall: setuptools
+    Found existing installation: setuptools 79.0.1
+    Uninstalling setuptools-79.0.1:
+      Successfully uninstalled setuptools-79.0.1
+Successfully installed MarkupSafe-3.0.3 aiohappyeyeballs-2.6.1 aiohttp-3.13.3 aiosignal-1.4.0 aiosqlite-0.22.1 altair-6.0.0 annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.12.1 a
+sync-timeout-5.0.1 attrs-25.4.0 backoff-2.2.1 backports-asyncio-runner-1.2.0 banks-2.4.0 bcrypt-5.0.0 beautifulsoup4-4.14.3 blinker-1.9.0 build-1.4.0 cachetools-6.2.6 certifi-2026.
+1.4 charset_normalizer-3.4.4 chromadb-1.5.0 click-8.3.1 colorama-0.4.6 coloredlogs-15.0.1 dataclasses-json-0.6.7 defusedxml-0.7.1 deprecated-1.2.18 dirtyjson-1.0.8 distro-1.9.0 dur
+ationpy-0.10 exceptiongroup-1.3.1 filelock-3.23.0 filetype-1.2.0 flatbuffers-25.12.19 frozenlist-1.8.0 fsspec-2026.2.0 gitdb-4.0.12 gitpython-3.1.46 googleapis-common-protos-1.72.0
+ greenlet-3.3.1 griffe-2.0.0 griffecli-2.0.0 griffelib-2.0.0 grpcio-1.78.0 h11-0.16.0 hf-xet-1.2.0 httpcore-1.0.9 httptools-0.7.1 httpx-0.28.1 huggingface-hub-1.4.1 humanfriendly-1
+0.0 idna-3.11 importlib-metadata-8.7.1 importlib-resources-6.5.2 iniconfig-2.3.0 jinja2-3.1.6 jiter-0.13.0 joblib-1.5.3 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 kuberne
+tes-35.0.0 langdetect-1.0.9 llama-cloud-0.1.35 llama-cloud-services-0.6.54 llama-index-0.14.14 llama-index-cli-0.5.3 llama-index-core-0.14.14 llama-index-embeddings-ollama-0.8.6 ll
+ama-index-embeddings-openai-0.5.1 llama-index-indices-managed-llama-cloud-0.9.4 llama-index-instrumentation-0.4.2 llama-index-llms-ollama-0.9.1 llama-index-llms-openai-0.6.18 llama
+-index-readers-file-0.5.6 llama-index-readers-llama-parse-0.5.1 llama-index-vector-stores-chroma-0.5.5 llama-index-workflows-2.14.2 llama-parse-0.6.54 markdown-it-py-4.0.0 marshmal
+low-3.26.2 mdurl-0.1.2 mmh3-5.2.0 mpmath-1.3.0 multidict-6.7.1 mypy-extensions-1.1.0 narwhals-2.16.0 nest-asyncio-1.6.0 networkx-3.4.2 nltk-3.9.2 numpy-2.2.6 oauthlib-3.3.1 ollama-
+0.6.1 onnxruntime-1.23.2 openai-2.21.0 opentelemetry-api-1.39.1 opentelemetry-exporter-otlp-proto-common-1.39.1 opentelemetry-exporter-otlp-proto-grpc-1.39.1 opentelemetry-proto-1.
+39.1 opentelemetry-sdk-1.39.1 opentelemetry-semantic-conventions-0.60b1 orjson-3.11.7 overrides-7.7.0 packaging-26.0 pandas-2.3.3 pillow-12.1.1 platformdirs-4.8.0 pluggy-1.6.0 post
+hog-5.4.0 propcache-0.4.1 protobuf-6.33.5 pyarrow-23.0.0 pybase64-1.4.3 pycountry-24.6.1 pydantic-2.12.5 pydantic-core-2.41.5 pydeck-0.9.1 pygments-2.19.2 pypdf-6.7.0 pypika-0.51.1
+ pyproject_hooks-1.2.0 pyreadline3-3.5.4 pytest-9.0.2 pytest-asyncio-1.3.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.1 pytz-2025.2 pyyaml-6.0.3 referencing-0.37.0 regex-2026.1.
+15 requests-2.32.5 requests-oauthlib-2.0.0 rich-14.3.2 rpds-py-0.30.0 setuptools-82.0.0 shellingham-1.5.4 six-1.17.0 smmap-5.0.2 sniffio-1.3.1 soupsieve-2.8.3 sqlalchemy-2.0.46 str
+eamlit-1.54.0 striprtf-0.0.26 sympy-1.14.0 tenacity-9.1.4 tiktoken-0.12.0 tokenizers-0.22.2 toml-0.10.2 tomli-2.4.0 tornado-6.5.4 tqdm-4.67.3 typer-0.23.1 typer-slim-0.23.1 typing-
+extensions-4.15.0 typing-inspect-0.9.0 typing-inspection-0.4.2 tzdata-2025.3 urllib3-2.6.3 uvicorn-0.40.0 watchdog-6.0.0 watchfiles-1.1.1 websocket-client-1.9.0 websockets-16.0 wrapt-1.17.3 yarl-1.22.0 zipp-3.23.0
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> # Make sure venv is active: (venv) in prompt
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> python src/ingestion.py
+Starting document ingestion...
+Loading English documents...
