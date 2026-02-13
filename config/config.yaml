@@ -17,7 +17,7 @@ models:
     request_timeout: 120.0
   
   embedding:
-    name: "bge-m3"
+    name: "nomic-embed-text-v2-moe"
     base_url: "http://localhost:11434"
 
 # Database Configuration
