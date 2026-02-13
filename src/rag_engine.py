@@ -24,7 +24,7 @@ class BilingualRAGEngine:
     Bilingual RAG engine for Laurentian University Faculty Association collective agreement.
     Features:
     - Auto-detect query language
-    - Cross-lingual retrieval with BGE-M3
+    - Cross-lingual retrieval with nomic-embed-text-v2-moe
     - Respond in the query language
     - Top 5 chunks with 0.7 similarity threshold
     """
@@ -34,7 +34,7 @@ class BilingualRAGEngine:
         db_path: str = "db/chroma_db",
         collection_name: str = "multilingual_docs",
         llm_model: str = "llama3.2:3b-instruct-q4_K_M",
-        embedding_model: str = "bge-m3",
+        embedding_model: str = "nomic-embed-text-v2-moe",
         similarity_top_k: int = 5
     ):
         """
@@ -44,7 +44,7 @@ class BilingualRAGEngine:
             db_path: Path to ChromaDB database
             collection_name: Name of the ChromaDB collection
             llm_model: Name of the LLM model to use (default: llama3.2:3b-instruct-q4_K_M)
-            embedding_model: Name of the embedding model to use (default: bge-m3)
+            embedding_model: Name of the embedding model to use (default: nomic-embed-text-v2-moe)
             similarity_top_k: Number of similar documents to retrieve (default: 5)
         """
         self.db_path = db_path
@@ -236,7 +236,7 @@ class BilingualRAGEngine:
 def create_rag_engine(
     db_path: str = "db/chroma_db",
     llm_model: str = "llama3.2:3b-instruct-q4_K_M",
-    embedding_model: str = "bge-m3"
+    embedding_model: str = "nomic-embed-text-v2-moe"
 ) -> BilingualRAGEngine:
     """
     Factory function to create a BilingualRAGEngine instance for LUFA collective agreement.
@@ -244,7 +244,7 @@ def create_rag_engine(
     Args:
         db_path: Path to ChromaDB database
         llm_model: Name of the LLM model to use (default: llama3.2:3b-instruct-q4_K_M)
-        embedding_model: Name of the embedding model to use (default: bge-m3)
+        embedding_model: Name of the embedding model to use (default: nomic-embed-text-v2-moe)
         
     Returns:
         BilingualRAGEngine instance
