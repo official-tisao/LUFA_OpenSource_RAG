@@ -58,7 +58,7 @@ ollama list
 **Solution**: Pull required models
 ```bash
 ollama pull llama3.2
-ollama pull bge-m3
+ollama pull nomic-embed-text-v2-moe
 ```
 
 #### Issue: Models are slow
@@ -132,7 +132,7 @@ streamlit run src/app.py --server.port 8502
 
 **Solutions**:
 1. Start Ollama: `ollama serve`
-2. Pull models: `ollama pull llama3.2 && ollama pull bge-m3`
+2. Pull models: `ollama pull llama3.2 && ollama pull nomic-embed-text-v2-moe`
 3. Run ingestion: `python src/ingestion.py`
 
 #### Issue: Query returns empty results
