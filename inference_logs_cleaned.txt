@@ -788,3 +788,7 @@ Downloading griffelib-2.0.0-py3-none-any.whl (142 kB)
 Downloading importlib_resources-6.5.2-py3-none-any.whl (37 kB)
 Downloading joblib-1.5.3-py3-none-any.whl (309 kB)
 Downloading pyproject_hooks-1.2.0-py3-none-any.whl (10 kB)
+
+Downloading pyreadline3-3.5.4-py3-none-any.whl (83 kB)
+Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
+Downloading oauthlib-3.3.1-py3-none-any.whl (160 kB)
