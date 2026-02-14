@@ -856,3 +856,46 @@ Initializing ChromaDB at db/chroma_db...
  - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
 Creating vector store index...
 Applying transformations: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:05<00:00,  5.77s/it]
+Generating embeddings:   0%|                                                                                                                              | 0/2048 [00:00<?, ?it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 500 Internal Server Error"
+Traceback (most recent call last):
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 224, in <module>
+    ingest_documents()
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 217, in ingest_documents
+    index = create_multilingual_index(english_dir, french_dir, db_path)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 137, in create_multilingual_index
+    index = VectorStoreIndex.from_documents(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\base.py", line 122, in from_documents
+    return cls(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 75, in __init__
+    super().__init__(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\base.py", line 79, in __init__
+    index_struct = self.build_index_from_nodes(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 309, in build_index_from_nodes
+    return self._build_index_from_nodes(content_nodes, **insert_kwargs)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 278, in _build_index_from_nodes
+    self._add_nodes_to_index(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 231, in _add_nodes_to_index
+    nodes_batch = self._get_node_with_embedding(nodes_batch, show_progress)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 138, in _get_node_with_embedding
+    id_to_embed_map = embed_nodes(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\utils.py", line 177, in embed_nodes
+    new_embeddings = embed_model.get_text_embedding_batch(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index_instrumentation\dispatcher.py", line 335, in wrapper
+    result = func(*args, **kwargs)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\base\embeddings\base.py", line 476, in get_text_embedding_batch
+    embeddings = self._get_text_embeddings(cur_batch)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\embeddings\ollama\base.py", line 95, in _get_text_embeddings
+    return self.get_general_text_embeddings(formatted_texts)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\embeddings\ollama\base.py", line 104, in get_general_text_embeddings
+    result = self._client.embed(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\ollama\_client.py", line 393, in embed
+    return self._request(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\ollama\_client.py", line 133, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: failed to encode response: json: unsupported value: NaN (status code: 500)
+Generating embeddings:   0%|▌                                                                                                                     | 9/2048 [00:14<55:34,  1.64s/it]
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> python src/ingestion.py                             
+Starting document ingestion...
+Loading English documents...
