@@ -906,3 +906,52 @@ Loading English documents...
  - WARNING - incorrect startxref pointer(2)
  - WARNING - parsing for Object Streams
  - WARNING - Object 131 0 not defined.
+ - WARNING - Error -3 while decompressing data: invalid distance too far back
+Traceback (most recent call last):
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 224, in <module>
+    ingest_documents()
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 217, in ingest_documents
+    index = create_multilingual_index(english_dir, french_dir, db_path)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 94, in create_multilingual_index
+    english_docs = load_documents_from_directory(english_dir)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 40, in load_documents_from_directory
+    documents = reader.load_data()
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\readers\file\base.py", line 783, in load_data
+    documents.extend(load_file_with_args(input_file))
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\readers\file\base.py", line 613, in load_file
+    docs = reader.load_data(input_file, **kwargs)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+  File "C:\Users\TISAO-MSI\.conda\envs\lufa_rag\lib\concurrent\futures\_base.py", line 451, in result
+    return self.__get_result()
+  File "C:\Users\TISAO-MSI\.conda\envs\lufa_rag\lib\concurrent\futures\_base.py", line 403, in __get_result
+    raise self._exception
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\readers\file\docs\base.py", line 91, in load_data
+    page_text = pdf.pages[page].extract_text()
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\_page.py", line 2044, in extract_text
+    return self._extract_text(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\_page.py", line 1739, in _extract_text
+    for operands, operator in content.operations:
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\generic\_data_structures.py", line 1412, in operations
+    self._parse_content_stream(BytesIO(self._data))
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\generic\_data_structures.py", line 1305, in _parse_content_stream
+    operands.append(read_object(stream, None, self.forced_encoding))
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\generic\_data_structures.py", line 1476, in read_object
+    return NumberObject.read_from_stream(stream)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\generic\_base.py", line 588, in read_from_stream
+    num = read_until_regex(stream, NumberObject.NumberPattern)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\_utils.py", line 259, in read_until_regex
+    tok = stream.read(16)
+KeyboardInterrupt
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> Remove-Item -Recurse -Force db/chroma_db
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> python src/ingestion.py                 
+Starting document ingestion...
+Loading English documents...
