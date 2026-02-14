@@ -973,3 +973,6 @@ Document tagged with language: en
 Document tagged with language: fr
 Initializing embedding model: nomic-embed-text-v2-moe
 Initializing ChromaDB at db/chroma_db...
+ - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+Creating vector store index...
+Applying transformations: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:06<00:00,  6.38s/it]
