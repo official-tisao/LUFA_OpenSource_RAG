@@ -846,3 +846,10 @@ Loading French documents...
  - WARNING - incorrect startxref pointer(2)
  - WARNING - parsing for Object Streams
  - WARNING - Object 131 0 not defined.
+ - WARNING - Error -3 while decompressing data: invalid distance too far back
+Tagging documents with language...
+Document tagged with language: en
+Document tagged with language: fr
+Document tagged with language: en
+Initializing embedding model: bge-m3
+Initializing ChromaDB at db/chroma_db...
