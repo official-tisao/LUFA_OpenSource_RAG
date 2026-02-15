@@ -74,7 +74,7 @@ def create_multilingual_index(
     french_dir: str = "data/french",
     db_path: str = "db/chroma_db",
     collection_name: str = "multilingual_docs",
-    embedding_model: str = "bge-m3"
+    embedding_model: str = "nomic-embed-text-v2-moe"
 ) -> VectorStoreIndex:
     """
     Create a multilingual vector store index from English and French documents.
@@ -109,7 +109,7 @@ def create_multilingual_index(
     print("Tagging documents with language...")
     all_documents = tag_documents_with_language(all_documents)
     
-    # Initialize embedding model (bge-m3 is multilingual)
+    # Initialize embedding model (nomic-embed-text-v2-moe is multilingual)
     print(f"Initializing embedding model: {embedding_model}")
     embed_model = OllamaEmbedding(
         model_name=embedding_model,
