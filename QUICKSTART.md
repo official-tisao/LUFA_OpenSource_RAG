@@ -4,8 +4,9 @@
 
 Before starting, ensure you have:
 - [ ] Python 3.8+ installed
+- [ ] Anaconda/Miniconda installation
 - [ ] Ollama installed and running
-- [ ] Required models pulled (`llama3.2` and `bge-m3`)
+- [ ] Required models pulled (`llama3.2` and `nomic-embed-text-v2-moe`)
 
 ## Setup (5 minutes)
 
@@ -19,7 +20,10 @@ cd LUFA_OpenSource_RAG
 
 # 3. Pull Ollama models (if not already done)
 ollama pull llama3.2
-ollama pull bge-m3
+ollama pull nomic-embed-text-v2-moe
+
+conda create -n lufa_rag python=3.11 -y
+conda init
 ```
 
 ## Using the System (3 steps)
@@ -33,7 +37,8 @@ cp your-french-doc.pdf data/french/
 
 ### Step 2: Ingest Documents
 ```bash
-source venv/bin/activate
+conda activate lufa_rag
+# source venv/bin/activate # Uncomment this to use venv over conda
 python src/ingestion.py
 ```
 
@@ -51,7 +56,8 @@ That's it! Open your browser to http://localhost:8501
 python test_basic.py
 
 # Full tests (after setup)
-source venv/bin/activate
+#source venv/bin/activate
+conda activate lufa_rag
 python test_integration.py
 ```
 
@@ -67,7 +73,7 @@ ollama serve
 ```bash
 # Pull the models
 ollama pull llama3.2
-ollama pull bge-m3
+ollama pull nomic-embed-text-v2-moe
 ```
 
 ### "No documents found"
