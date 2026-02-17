@@ -24,7 +24,7 @@
 │                  │                                               │
 │         ┌────────▼────────┐                                      │
 │         │   ChromaDB      │                                      │
-│         │ (bge-m3 embed)  │                                      │
+│         │ (nomic-embed-text-v2-moe embed)  │                                      │
 │         └────────┬────────┘                                      │
 │                  │                                               │
 │         ┌────────▼────────┐                                      │
@@ -58,7 +58,7 @@
    └─ 50-token overlap for context
 
 4. Embedding Generation
-   ├─ Use BGE-M3 (multilingual)
+   ├─ Use nomic-embed-text-v2-moe (multilingual)
    └─ Generate dense vectors
 
 5. Store in ChromaDB
@@ -79,7 +79,7 @@ User Query (EN or FR)
         ▼
 ┌───────────────┐
 │ Embed Query   │
-│  (BGE-M3)     │
+│  (nomic-embed-text-v2-moe)     │
 └───────┬───────┘
         │
         ▼
@@ -122,7 +122,7 @@ Response in Query Language
 **Technologies**:
 - LlamaIndex: Document loading and processing
 - langdetect: Language identification
-- BGE-M3: Multilingual embeddings
+- nomic-embed-text-v2-moe: Multilingual embeddings
 - ChromaDB: Vector storage
 
 ### 2. rag_engine.py
@@ -181,13 +181,13 @@ Context + LLM → Answer in Query Language
 - Accented characters help identification
 
 ### Cross-lingual Retrieval
-- BGE-M3 embeddings map both languages to same vector space
+- nomic-embed-text-v2-moe embeddings map both languages to same vector space
 - Queries in one language can retrieve docs in either language
 - Semantic similarity transcends language barriers
 
 ## Models
 
-### BGE-M3 (Embeddings)
+### nomic-embed-text-v2-moe (Embeddings)
 - **Purpose**: Multilingual dense embeddings
 - **Languages**: 100+ including EN/FR
 - **Dimension**: 1024
@@ -227,7 +227,7 @@ Context + LLM → Answer in Query Language
 ### Adding New Languages
 1. Update `detect_language()` in ingestion.py
 2. Add language-specific prompts in rag_engine.py
-3. BGE-M3 already supports 100+ languages
+3. nomic-embed-text-v2-moe already supports 100+ languages
 
 ### Custom Documents
 - Place in appropriate language directory
