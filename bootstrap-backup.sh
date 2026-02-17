@@ -109,16 +109,16 @@ if ! check_model "llama3.2:3b-instruct-q4_K_M"; then
     MODELS_OK=false
 fi
 
-if ! check_model "bge-m3"; then
-    print_warning "Please pull the bge-m3 model:"
-    echo "    ollama pull bge-m3"
+if ! check_model "nomic-embed-text-v2-moe"; then
+    print_warning "Please pull the nomic-embed-text-v2-moe model:"
+    echo "    ollama pull nomic-embed-text-v2-moe"
     MODELS_OK=false
 fi
 
 if [ "$MODELS_OK" = false ]; then
     print_warning "Some models are missing. The system may not work correctly."
     print_info "Run:"
-    echo "    ollama pull llama3.2:3b-instruct-q4_K_M && ollama pull bge-m3"
+    echo "    ollama pull llama3.2:3b-instruct-q4_K_M && ollama pull nomic-embed-text-v2-moe"
 fi
 
 # -------- SUMMARY / NEXT STEPS --------
