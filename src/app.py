@@ -30,7 +30,7 @@ def load_rag_engine():
                 st.session_state.rag_engine = BilingualRAGEngine(
                     db_path="db/chroma_db",
                     llm_model="llama3.2:3b-instruct-q4_K_M",
-                    embedding_model="bge-m3",
+                    embedding_model="nomic-embed-text-v2-moe",
                     similarity_top_k=5
                 )
                 st.success("RAG engine loaded successfully!")
@@ -59,7 +59,7 @@ def main():
     in **English** or **French**, and get answers from the document collection.
     
     **Features:**
-    - 🔍 Cross-lingual retrieval with BGE-M3
+    - 🔍 Cross-lingual retrieval with nomic-embed-text-v2-moe
     - 🌐 Auto-detect query language
     - 💬 Responds in your language
     - 📚 Top 5 most relevant chunks
@@ -77,7 +77,7 @@ def main():
         st.info("""
         **Models:**
         - LLM: llama3.2:3b-instruct-q4_K_M
-        - Embeddings: bge-m3
+        - Embeddings: nomic-embed-text-v2-moe
         
         **Database:**
         - ChromaDB (db/chroma_db)
