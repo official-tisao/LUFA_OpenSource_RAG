@@ -8,6 +8,8 @@ from typing import Dict, Optional
 from language_detector import detect_language
 
 
+DEFAULT_AGREEMENT_YEAR_RANGE = "2020 - 2025"
+
 # System prompts for bilingual support
 SYSTEM_PROMPTS = {
     "en": "You are a helpful assistant answering questions about the Laurentian University Faculty Association collective agreement. Respond in English.",
@@ -93,9 +95,9 @@ class QueryHandler:
                 language = self.detect_query_language(user_input)
 
             if language == 'fr':
-                return f"{user_input} convention collective 2020 - 2025"
+                return f"{user_input} convention collective {DEFAULT_AGREEMENT_YEAR_RANGE}"
             else:
-                return f"{user_input} collective agreement 2020 - 2025"
+                return f"{user_input} collective agreement {DEFAULT_AGREEMENT_YEAR_RANGE}"
 
         return user_input
 
