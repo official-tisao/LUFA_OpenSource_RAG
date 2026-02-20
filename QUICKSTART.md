@@ -56,8 +56,18 @@ That's it! Open your browser to http://localhost:8501
 python test_basic.py
 
 # Full tests (after setup)
-#source venv/bin/activate
+
 conda activate lufa_rag
+
+#command for bash
+source venv/bin/activate
+
+#command for powershell
+.\venv\Scripts\Activate.ps1
+
+#command for cmd
+venv\Scripts\activate.bat
+
 python test_integration.py
 ```
 
