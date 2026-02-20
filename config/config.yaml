@@ -34,6 +34,11 @@ ingestion:
 retrieval:
   top_k: 5
   similarity_threshold: 0.7
+  response_mode: "compact"
+
+# Agreement Configuration
+agreement:
+  year_range: "2020 - 2025"
 
 # Data Directories
 data:
@@ -54,3 +59,10 @@ ui:
   languages:
     en: "English"
     fr: "Français"
+
+# Feature Flags
+features:
+  enable_source_display: true
+  enable_language_stats: true
+  enable_chat_history: true
+  show_sources_by_default: true
