@@ -81,6 +81,7 @@ class QueryHandler:
 
         Args:
             user_input: Raw user query string
+            language: Optional language code ('en' or 'fr'). If not provided, will be auto-detected.
 
         Returns:
             Augmented query string, or the original if a year was found
