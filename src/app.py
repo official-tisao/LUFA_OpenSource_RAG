@@ -6,19 +6,12 @@ Provides a user-friendly interface for querying documents in English and French.
 import streamlit as st
 import sys
 import os
-import importlib.util
 from pathlib import Path
 
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-# Load configuration from config.py if available, otherwise fall back to config_template
-_config_spec = importlib.util.find_spec("config")
-if _config_spec is not None and _config_spec.origin is not None:
-    import config as cfg
-else:
-    import config_template as cfg
-
+from config_loader import cfg
 from rag_engine import BilingualRAGEngine
 
 
