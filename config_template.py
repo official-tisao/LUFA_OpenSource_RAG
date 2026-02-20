@@ -26,6 +26,9 @@ RESPONSE_MODE = "compact"  # Options: "compact", "refine", "tree_summarize"
 # Language Detection
 DEFAULT_LANGUAGE = "en"  # Fallback if detection fails
 
+# Agreement Configuration
+DEFAULT_AGREEMENT_YEAR_RANGE = "2020 - 2025"
+
 # Streamlit Configuration
 STREAMLIT_PAGE_TITLE = "Bilingual RAG System"
 STREAMLIT_PAGE_ICON = "🌍"
