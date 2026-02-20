@@ -4,9 +4,18 @@ Handles query language detection and routing to appropriate system prompts.
 """
 
 import re
+import sys
+from pathlib import Path
 from typing import Dict, Optional
 from language_detector import detect_language
 
+# Add project root to path to allow importing config
+_project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(_project_root))
+if (_project_root / 'config.py').exists():
+    from config import DEFAULT_AGREEMENT_YEAR_RANGE
+else:
+    from config_template import DEFAULT_AGREEMENT_YEAR_RANGE
 
 # System prompts for bilingual support
 SYSTEM_PROMPTS = {
@@ -93,9 +102,9 @@ class QueryHandler:
                 language = self.detect_query_language(user_input)
 
             if language == 'fr':
-                return f"{user_input} convention collective 2020 - 2025"
+                return f"{user_input} convention collective {DEFAULT_AGREEMENT_YEAR_RANGE}"
             else:
-                return f"{user_input} collective agreement 2020 - 2025"
+                return f"{user_input} collective agreement {DEFAULT_AGREEMENT_YEAR_RANGE}"
 
         return user_input
 
