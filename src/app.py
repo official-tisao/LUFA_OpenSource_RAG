@@ -6,10 +6,18 @@ Provides a user-friendly interface for querying documents in English and French.
 import streamlit as st
 import sys
 import os
+import importlib.util
 from pathlib import Path
 
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent))
+
+# Load configuration from config.py if available, otherwise fall back to config_template
+_config_spec = importlib.util.find_spec("config")
+if _config_spec is not None and _config_spec.origin is not None:
+    import config as cfg
+else:
+    import config_template as cfg
 
 from rag_engine import BilingualRAGEngine
 
@@ -21,7 +29,7 @@ def initialize_session_state():
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
     if 'show_sources' not in st.session_state:
-        st.session_state.show_sources = True
+        st.session_state.show_sources = cfg.SHOW_SOURCES_BY_DEFAULT
 
 
 def load_rag_engine():
@@ -30,10 +38,10 @@ def load_rag_engine():
         with st.spinner("Loading RAG engine... This may take a moment."):
             try:
                 st.session_state.rag_engine = BilingualRAGEngine(
-                    db_path="db/chroma_db",
-                    llm_model="llama3.2:3b-instruct-q4_K_M",
-                    embedding_model="nomic-embed-text-v2-moe",
-                    similarity_top_k=5
+                    db_path=cfg.DB_PATH,
+                    llm_model=cfg.LLM_MODEL,
+                    embedding_model=cfg.EMBEDDING_MODEL,
+                    similarity_top_k=cfg.SIMILARITY_TOP_K
                 )
                 st.success("RAG engine loaded successfully!")
             except Exception as e:
@@ -46,9 +54,9 @@ def load_rag_engine():
 def main():
     """Main application function."""
     st.set_page_config(
-        page_title="LUFA Collective Agreement - Bilingual RAG",
-        page_icon="🌍",
-        layout="wide",
+        page_title=cfg.STREAMLIT_PAGE_TITLE,
+        page_icon=cfg.STREAMLIT_PAGE_ICON,
+        layout=cfg.STREAMLIT_LAYOUT,
     )
     
     # Initialize session state
@@ -91,8 +99,8 @@ def main():
         
         # Advanced settings
         with st.expander("Advanced Settings"):
-            top_k = st.slider("Number of retrieved documents", 1, 10, 5)
-            show_sources = st.checkbox("Show source documents", value=True, key="show_sources")
+            top_k = st.slider("Number of retrieved documents", 1, 10, cfg.SIMILARITY_TOP_K)
+            show_sources = st.checkbox("Show source documents", value=cfg.SHOW_SOURCES_BY_DEFAULT, key="show_sources")
         
         st.divider()
         
