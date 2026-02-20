@@ -86,7 +86,7 @@ class QueryHandler:
         Returns:
             Augmented query string, or the original if a year was found
         """
-        has_year = re.search(r'\b\d{4}\b', user_input)
+        has_year = re.search(r'\b(19\d{2}|20\d{2})\b', user_input)
 
         if not has_year:
             if language is None:
