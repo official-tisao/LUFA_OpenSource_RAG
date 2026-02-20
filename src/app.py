@@ -20,6 +20,8 @@ def initialize_session_state():
         st.session_state.rag_engine = None
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
+    if 'show_sources' not in st.session_state:
+        st.session_state.show_sources = True
 
 
 def load_rag_engine():
@@ -90,7 +92,7 @@ def main():
         # Advanced settings
         with st.expander("Advanced Settings"):
             top_k = st.slider("Number of retrieved documents", 1, 10, 5)
-            show_sources = st.checkbox("Show source documents", value=False)
+            show_sources = st.checkbox("Show source documents", value=True, key="show_sources")
         
         st.divider()
         
