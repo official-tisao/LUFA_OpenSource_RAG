@@ -62,7 +62,7 @@ class QueryHandler:
         if language is None:
             language = self.detect_query_language(query)
 
-        query = self.augment_query_with_year(query)
+        query = self.augment_query_with_year(query, language)
         
         system_prompt = self.get_system_prompt(language)
         
