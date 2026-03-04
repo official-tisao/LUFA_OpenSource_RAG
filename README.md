@@ -251,3 +251,5 @@ Built with ❤️ using Ollama, LlamaIndex, ChromaDB, and Streamlit
 [^7]: Cross-lingual retrieval allows users to query in one language (e.g., English) and retrieve relevant documents in another language (e.g., French) based on semantic similarity.
 
 [^8]: Multilingual embedding models are trained to map semantically similar phrases across languages to nearby points in the embedding space, enabling natural cross-lingual information retrieval without explicit translation.
+
+---
