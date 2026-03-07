@@ -284,10 +284,10 @@ def test_reflector():
         assert result is False, f"Expected False for UNGROUNDED, got {result}"
         print("✓ UNGROUNDED → False")
 
-        # UNGROUNDED must not match as a substring of GROUNDED (original bug: "GROUNDED" in "UNGROUNDED" was True)
-        result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("UNGROUNDED"))
-        assert result is False, f"Expected False for UNGROUNDED, got {result}"
-        print("✓ UNGROUNDED substring check → False")
+        # UNGROUNDED with punctuation must still not be treated as GROUNDED
+        result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("UNGROUNDED."))
+        assert result is False, f"Expected False for 'UNGROUNDED.', got {result}"
+        print("✓ 'UNGROUNDED.' punctuation check → False")
 
         # Tokens starting with GROUNDED but not exactly equal must not match
         result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("GROUNDEDNESS"))

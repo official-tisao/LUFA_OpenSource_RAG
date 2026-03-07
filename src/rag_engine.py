@@ -37,7 +37,8 @@ class BilingualRAGEngine:
         collection_name: str = "multilingual_docs",
         llm_model: str = "llama3.2:3b-instruct-q4_K_M",
         embedding_model: str = "nomic-embed-text-v2-moe",
-        similarity_top_k: int = 5
+        similarity_top_k: int = 5,
+        max_reflect_attempts: int = 2
     ):
         """
         Initialize the bilingual RAG engine.
@@ -48,10 +49,13 @@ class BilingualRAGEngine:
             llm_model: Name of the LLM model to use (default: llama3.2:3b-instruct-q4_K_M)
             embedding_model: Name of the embedding model to use (default: nomic-embed-text-v2-moe)
             similarity_top_k: Number of similar documents to retrieve (default: 5)
+            max_reflect_attempts: Maximum reflection/re-retrieval attempts (default: 2,
+                set to 1 to disable re-retrieval)
         """
         self.db_path = db_path
         self.collection_name = collection_name
         self.similarity_top_k = similarity_top_k
+        self.max_reflect_attempts = max_reflect_attempts
         
         # Initialize query handler
         self.query_handler = QueryHandler()
@@ -201,9 +205,11 @@ class BilingualRAGEngine:
         # Create language-aware prompt
         enhanced_query = self.create_language_aware_prompt(rewritten_query, detected_language)
 
-        # Execute query with reflection loop (max 2 attempts)
-        MAX_REFLECT_ATTEMPTS = 2
-        for attempt in range(MAX_REFLECT_ATTEMPTS):
+        # Execute query with reflection loop
+        grounded = False
+        reflection_attempts = 0
+        for attempt in range(self.max_reflect_attempts):
+            reflection_attempts = attempt + 1
             response = self.query_engine.query(enhanced_query)
 
             # Extract source chunks for grounding check
@@ -212,18 +218,21 @@ class BilingualRAGEngine:
                 chunks = [node.node.text for node in response.source_nodes]
 
             if reflect(str(response), chunks, self.llm):
+                grounded = True
                 break  # Answer is grounded
 
-            if attempt < MAX_REFLECT_ATTEMPTS - 1:
+            if attempt < self.max_reflect_attempts - 1:
                 print(
                     f"[RAGEngine] Answer not grounded, retrying "
-                    f"({attempt + 1}/{MAX_REFLECT_ATTEMPTS})"
+                    f"({attempt + 1}/{self.max_reflect_attempts})"
                 )
 
         # Prepare result
         result = {
             'response': str(response),
             'detected_language': detected_language,
+            'grounded': grounded,
+            'reflection_attempts': reflection_attempts,
         }
         
         # Add source information if requested
