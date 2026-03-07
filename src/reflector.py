@@ -42,7 +42,8 @@ def reflect(answer: str, chunks: list[str], llm: Ollama) -> bool:
 
     try:
         result = str(llm.complete(prompt)).strip().upper()
-        return "GROUNDED" in result
+        tokens = result.split()
+        return bool(tokens) and tokens[0] == "GROUNDED"
     except Exception as e:
         print(f"[Reflector] Reflection failed: {e}")
         return True  # fail-open: don't loop forever on LLM errors
