@@ -6,6 +6,8 @@ Handles query processing, cross-lingual retrieval, and response generation.
 from typing import List, Optional
 from language_detector import detect_language
 from query_handler import QueryHandler, SYSTEM_PROMPTS
+from query_rewriter import rewrite_query
+from reflector import reflect
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
@@ -190,13 +192,34 @@ class BilingualRAGEngine:
         # Detect query language
         detected_language = self.detect_query_language(query_text)
         print(f"Detected query language: {detected_language}")
-        
+
+        # Rewrite query for more precise retrieval
+        rewritten_query = rewrite_query(query_text, detected_language, self.llm)
+        if rewritten_query != query_text:
+            print(f"[RAGEngine] Query rewritten: {rewritten_query!r}")
+
         # Create language-aware prompt
-        enhanced_query = self.create_language_aware_prompt(query_text, detected_language)
-        
-        # Execute query
-        response = self.query_engine.query(enhanced_query)
-        
+        enhanced_query = self.create_language_aware_prompt(rewritten_query, detected_language)
+
+        # Execute query with reflection loop (max 2 attempts)
+        MAX_REFLECT_ATTEMPTS = 2
+        for attempt in range(MAX_REFLECT_ATTEMPTS):
+            response = self.query_engine.query(enhanced_query)
+
+            # Extract source chunks for grounding check
+            chunks = []
+            if hasattr(response, 'source_nodes'):
+                chunks = [node.node.text for node in response.source_nodes]
+
+            if reflect(str(response), chunks, self.llm):
+                break  # Answer is grounded
+
+            if attempt < MAX_REFLECT_ATTEMPTS - 1:
+                print(
+                    f"[RAGEngine] Answer not grounded, retrying "
+                    f"({attempt + 1}/{MAX_REFLECT_ATTEMPTS})"
+                )
+
         # Prepare result
         result = {
             'response': str(response),

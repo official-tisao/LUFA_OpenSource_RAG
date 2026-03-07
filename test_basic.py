@@ -204,6 +204,116 @@ def test_bootstrap_script():
         return False
 
 
+def test_query_rewriter():
+    """Test query rewriting with a stubbed LLM."""
+    print("\nTesting query rewriter...")
+    try:
+        from query_rewriter import rewrite_query
+
+        class MockLLM:
+            def complete(self, prompt):
+                return "What are the vacation entitlements in the 2020-2025 LUFA collective agreement?"
+
+        # Normal rewrite returns the LLM output
+        result = rewrite_query("vacation?", "en", MockLLM())
+        assert result == "What are the vacation entitlements in the 2020-2025 LUFA collective agreement?", \
+            f"Unexpected rewrite: '{result}'"
+        print(f"✓ Normal rewrite: '{result}'")
+
+        # Exception → falls back to original query
+        class FailingLLM:
+            def complete(self, prompt):
+                raise RuntimeError("LLM error")
+
+        result = rewrite_query("vacation?", "en", FailingLLM())
+        assert result == "vacation?", f"Expected original query on failure, got: '{result}'"
+        print(f"✓ Exception fallback: '{result}'")
+
+        # Empty response → falls back to original query
+        class EmptyLLM:
+            def complete(self, prompt):
+                return ""
+
+        result = rewrite_query("vacation?", "en", EmptyLLM())
+        assert result == "vacation?", f"Expected original query for empty response, got: '{result}'"
+        print(f"✓ Empty response fallback: '{result}'")
+
+        # Overly long response (>= 400 chars) → falls back to original query
+        class LongLLM:
+            def complete(self, prompt):
+                return "x" * 401
+
+        result = rewrite_query("vacation?", "en", LongLLM())
+        assert result == "vacation?", f"Expected original query for long response, got: '{result}'"
+        print(f"✓ Overly long response fallback: '{result}'")
+
+        # French language uses French prompt (verify no crash)
+        result = rewrite_query("vacances?", "fr", MockLLM())
+        assert result == "What are the vacation entitlements in the 2020-2025 LUFA collective agreement?", \
+            f"Unexpected French rewrite: '{result}'"
+        print(f"✓ French language rewrite: '{result}'")
+
+        return True
+    except Exception as e:
+        print(f"✗ Query rewriter test failed: {e}")
+        return False
+
+
+def test_reflector():
+    """Test grounding verification with a stubbed LLM."""
+    print("\nTesting reflector...")
+    try:
+        from reflector import reflect
+
+        CHUNKS = ["The vacation policy states 20 days per year."]
+
+        class MockLLM:
+            def __init__(self, response):
+                self._response = response
+
+            def complete(self, prompt):
+                return self._response
+
+        # GROUNDED → returns True
+        result = reflect("Employees get 20 days vacation.", CHUNKS, MockLLM("GROUNDED"))
+        assert result is True, f"Expected True for GROUNDED, got {result}"
+        print("✓ GROUNDED → True")
+
+        # UNGROUNDED → returns False
+        result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("UNGROUNDED"))
+        assert result is False, f"Expected False for UNGROUNDED, got {result}"
+        print("✓ UNGROUNDED → False")
+
+        # UNGROUNDED must not match as a substring of GROUNDED (original bug: "GROUNDED" in "UNGROUNDED" was True)
+        result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("UNGROUNDED"))
+        assert result is False, f"Expected False for UNGROUNDED, got {result}"
+        print("✓ UNGROUNDED substring check → False")
+
+        # Tokens starting with GROUNDED but not exactly equal must not match
+        result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("GROUNDEDNESS"))
+        assert result is False, f"Expected False for 'GROUNDEDNESS', got {result}"
+        print("✓ 'GROUNDEDNESS' → False (exact token check)")
+
+        # Empty chunks → always False (no source to ground against)
+        result = reflect("Some answer.", [], MockLLM("GROUNDED"))
+        assert result is False, f"Expected False for empty chunks, got {result}"
+        print("✓ Empty chunks → False")
+
+        # Exception → fail-closed (False)
+        class FailingLLM:
+            def complete(self, prompt):
+                raise RuntimeError("LLM error")
+
+        result = reflect("Some answer.", CHUNKS, FailingLLM())
+        assert result is False, f"Expected False (fail-closed) on exception, got {result}"
+        print("✓ Exception → False (fail-closed)")
+
+        return True
+    except Exception as e:
+        print(f"✗ Reflector test failed: {e}")
+        return False
+
+
 def main():
     """Run all tests."""
     print("="*60)
@@ -218,6 +328,8 @@ def main():
         ("Module Imports", test_imports),
         ("Language Detection", test_language_detection),
         ("Augment Query With Year", test_augment_query_with_year),
+        ("Query Rewriter", test_query_rewriter),
+        ("Reflector", test_reflector),
     ]
     
     results = []
