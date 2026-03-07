@@ -6,6 +6,8 @@ Handles query processing, cross-lingual retrieval, and response generation.
 from typing import List, Optional
 from language_detector import detect_language
 from query_handler import QueryHandler, SYSTEM_PROMPTS
+from query_rewriter import rewrite_query
+from reflector import reflect
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
@@ -176,13 +178,14 @@ class BilingualRAGEngine:
         
         return instruction + query
     
-    def query(self, query_text: str, return_sources: bool = False) -> dict:
+    def query(self, query_text: str, return_sources: bool = False, max_reflection_attempts: int = 2) -> dict:
         """
         Process a query and return the response.
         
         Args:
             query_text: User query text
             return_sources: Whether to return source documents
+            max_reflection_attempts: Maximum attempts to get a grounded answer
             
         Returns:
             Dictionary containing response and metadata
@@ -191,16 +194,37 @@ class BilingualRAGEngine:
         detected_language = self.detect_query_language(query_text)
         print(f"Detected query language: {detected_language}")
         
-        # Create language-aware prompt
-        enhanced_query = self.create_language_aware_prompt(query_text, detected_language)
+        # Rewrite query for better retrieval
+        rewritten = rewrite_query(query_text, detected_language, self.llm)
         
-        # Execute query
-        response = self.query_engine.query(enhanced_query)
+        # Create language-aware prompt from rewritten query
+        enhanced_query = self.create_language_aware_prompt(rewritten, detected_language)
+        
+        # Execute query with reflection loop; fall back to original query on retry
+        response = None
+        grounded = False
+        for attempt in range(max_reflection_attempts):
+            response = self.query_engine.query(enhanced_query)
+            
+            # Collect source chunks for grounding check
+            chunks: List[str] = []
+            if hasattr(response, 'source_nodes'):
+                chunks = [node.node.text for node in response.source_nodes]
+            
+            if reflect(str(response), chunks, self.llm):
+                grounded = True
+                break
+            
+            # On last attempt accept what we have; otherwise retry with original query
+            if attempt < max_reflection_attempts - 1:
+                print(f"[RAGEngine] Answer not grounded (attempt {attempt + 1}); retrying with original query.")
+                enhanced_query = self.create_language_aware_prompt(query_text, detected_language)
         
         # Prepare result
         result = {
             'response': str(response),
             'detected_language': detected_language,
+            'grounded': grounded,
         }
         
         # Add source information if requested

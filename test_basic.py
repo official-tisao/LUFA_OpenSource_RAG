@@ -184,6 +184,88 @@ def test_requirements():
     return all_present
 
 
+def test_reflect():
+    """Test reflect() with stubbed LLM for all coverage paths."""
+    print("\nTesting reflect()...")
+    try:
+        from unittest.mock import MagicMock
+        from reflector import reflect
+
+        llm = MagicMock()
+
+        # GROUNDED response → True
+        llm.complete.return_value = "GROUNDED"
+        assert reflect("The answer.", ["chunk one"], llm) is True, "Expected True for GROUNDED"
+        print("✓ GROUNDED response returns True")
+
+        # UNGROUNDED response → False (must not match 'GROUNDED' substring)
+        llm.complete.return_value = "UNGROUNDED"
+        assert reflect("The answer.", ["chunk one"], llm) is False, "Expected False for UNGROUNDED"
+        print("✓ UNGROUNDED response returns False")
+
+        # Exception → False (fail-closed)
+        llm.complete.side_effect = Exception("LLM unavailable")
+        assert reflect("The answer.", ["chunk one"], llm) is False, "Expected False on exception"
+        print("✓ Exception returns False (fail-closed)")
+
+        # Empty chunks → False without calling LLM
+        llm.complete.side_effect = None
+        assert reflect("The answer.", [], llm) is False, "Expected False for empty chunks"
+        print("✓ Empty chunks returns False")
+
+        return True
+    except Exception as e:
+        print(f"✗ reflect() tests failed: {e}")
+        return False
+
+
+def test_rewrite_query():
+    """Test rewrite_query() with stubbed LLM for all coverage paths."""
+    print("\nTesting rewrite_query()...")
+    try:
+        from unittest.mock import MagicMock
+        from query_rewriter import rewrite_query
+
+        llm = MagicMock()
+
+        # Normal rewrite – rewritten text returned
+        rewritten = "What are the vacation entitlements under the collective agreement?"
+        llm.complete.return_value = rewritten
+        result = rewrite_query("vacation?", "en", llm)
+        assert result == rewritten, f"Expected rewritten query, got '{result}'"
+        print("✓ Valid rewrite is returned")
+
+        # Empty response falls back to original query
+        llm.complete.return_value = ""
+        result = rewrite_query("vacation?", "en", llm)
+        assert result == "vacation?", f"Expected original query on empty response, got '{result}'"
+        print("✓ Empty response falls back to original")
+
+        # Overly long response falls back to original query
+        llm.complete.return_value = "x" * 500
+        result = rewrite_query("vacation?", "en", llm)
+        assert result == "vacation?", f"Expected original query for overly long response, got '{result}'"
+        print("✓ Overly long response falls back to original")
+
+        # Exception falls back to original query
+        llm.complete.side_effect = Exception("LLM unavailable")
+        result = rewrite_query("vacation?", "en", llm)
+        assert result == "vacation?", f"Expected original query on exception, got '{result}'"
+        print("✓ Exception falls back to original")
+
+        # French language uses French prompt (verify no KeyError)
+        llm.complete.side_effect = None
+        llm.complete.return_value = "Quels sont les droits aux vacances?"
+        result = rewrite_query("vacances?", "fr", llm)
+        assert result == "Quels sont les droits aux vacances?", f"Unexpected French result: '{result}'"
+        print("✓ French language prompt used correctly")
+
+        return True
+    except Exception as e:
+        print(f"✗ rewrite_query() tests failed: {e}")
+        return False
+
+
 def test_bootstrap_script():
     """Test that bootstrap script exists and is executable."""
     print("\nTesting bootstrap script...")
@@ -218,6 +300,8 @@ def main():
         ("Module Imports", test_imports),
         ("Language Detection", test_language_detection),
         ("Augment Query With Year", test_augment_query_with_year),
+        ("Reflect", test_reflect),
+        ("Rewrite Query", test_rewrite_query),
     ]
     
     results = []

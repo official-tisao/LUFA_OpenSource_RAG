@@ -3,6 +3,8 @@ Reflection module for Agentic RAG.
 Checks whether a generated answer is grounded in the retrieved source chunks.
 """
 
+from typing import List
+
 from llama_index.llms.ollama import Ollama
 
 
@@ -21,7 +23,7 @@ Retrieved source chunks:
 Reply with ONLY one word — either GROUNDED or UNGROUNDED."""
 
 
-def reflect(answer: str, chunks: list[str], llm: Ollama) -> bool:
+def reflect(answer: str, chunks: List[str], llm: Ollama) -> bool:
     """
     Check whether the generated answer is grounded in retrieved chunks.
 
@@ -42,7 +44,8 @@ def reflect(answer: str, chunks: list[str], llm: Ollama) -> bool:
 
     try:
         result = str(llm.complete(prompt)).strip().upper()
-        return "GROUNDED" in result
+        tokens = result.split()
+        return bool(tokens) and tokens[0] == "GROUNDED"
     except Exception as e:
         print(f"[Reflector] Reflection failed: {e}")
-        return True  # fail-open: don't loop forever on LLM errors
+        return False  # fail-closed: on reflection failure, treat answer as ungrounded
