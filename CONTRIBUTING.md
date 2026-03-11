@@ -1,22 +1,27 @@
-# Contributing to LUFA_OpenSource_RAG
+- `db/` - Vector database storage
 
-Thank you for your interest in contributing to the Bilingual RAG System!
+## Testing
 
-## Development Setup
+### Basic Structure Tests (no dependencies required)
+```bash
+python test_basic.py
+```
 
-1. Fork and clone the repository
-2. Run the bootstrap script to set up your environment:
-   ```bash
-   ./bootstrap.sh
-   ```
-3. Activate the virtual environment:
-   ```bash
-   conda activate LUFA_OpenSource_RAG
-   ```
+### Full System Tests (after installation)
+```bash
+conda activate LUFA_OpenSource_RAG
+# Ensure Ollama is running and models are pulled
+python test_integration.py
+```
 
-## Code Structure
+## Code Style
 
-- `src/ingestion.py` - Document processing and indexing
-- `src/rag_engine.py` - RAG query engine
-- `src/app.py` - Streamlit web interface
-- `data/` - Document storage
+- Follow PEP 8 guidelines
+- Add docstrings to all functions
+- Keep functions focused and modular
+- Add type hints where appropriate
+
+## Pull Request Process
+
+1. Create a new branch for your feature
+2. Make your changes
