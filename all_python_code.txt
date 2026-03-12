@@ -1,2598 +1,191 @@
-            n_results=20,
-            where=where_clause,
-            include=["documents"]
-        )
-        db_results = {
-            "ids": query_results["ids"][0] if query_results["ids"] else [],
-            "documents": query_results["documents"][0] if query_results["documents"] else []
-        }
+                gt_lookup[q_id] = row.to_dict()
+    else:
+        print(" -> Info: Ground truth reference file not found. Repair will rely solely on database matching.")
 
-    # 2. Extract and match texts
-    ids = db_results.get("ids", [])
-    docs = db_results.get("documents", [])
-
-    if not ids or not docs:
-        print("   ⚠️  Warning: No database records matched query filters.")
-        return "", "", 0.0
-
-    best_id = ids[0]
-    best_doc = docs[0]
-    max_overlap = -1.0
-
-    for cid, doc_text in zip(ids, docs):
-        overlap = calculate_token_overlap(doc_text, expected_text)
-        if overlap > max_overlap:
-            max_overlap = overlap
-            best_id = cid
-            best_doc = doc_text
-
-    return best_id, best_doc, max_overlap
-
-
-def run_pipeline(csv_path, db_path, collection_name, output_path):
-    print(f"[Initialization] Loading base source text dataset from: {csv_path}")
-    if not Path(csv_path).exists():
-        print(f"Error: Source file {csv_path} does not exist.")
-        return
-
-    df = pd.read_csv(csv_path)
-    total_records = len(df)
-    print(f"[Initialization] Total entries detected to process: {total_records}")
-
-    # Initialize tracking columns
-    df["ground_source_truth_id"] = ""
-    df["ground_source_truth"] = ""
-
-    print(f"[Initialization] Establishing persistent connection to ChromaDB at: {db_path}")
+    print(f" -> Connecting to persistent ChromaDB instance at: {db_path}")
     client = chromadb.PersistentClient(path=db_path)
 
-    print("[Initialization] Instantiating neural layout embedding index models...")
-    engine = create_rag_engine(db_path=db_path)
-    embed_model = engine.embed_model
+    try:
+        collection = client.get_collection(collection_name)
+        db_results = collection.get(include=["documents"])
+        print(f" -> Successfully loaded {len(db_results.get('ids', []))} total text chunks from database.")
+    except Exception as e:
+        print(f" 💥 Error connecting to collection '{collection_name}': {e}")
+        return
 
-    print("\n" + "=" * 80)
-    print("STARTING INTERACTIVE BILINGUAL PROCESSING LOOP")
-    print("=" * 80)
+    print("\n================================================================================")
+    print("STAGE 2: Executing Source ID Repair Loop")
+    print("================================================================================")
 
-    for idx, row in df.iterrows():
+    total_repaired = 0
+    total_fields = 0
+    total_records = len(lufa_df)
+
+    for idx, row in lufa_df.iterrows():
         current_counter = idx + 1
-        question_id = row.get("id", f"row_{idx}")
+        q_id = str(row.get("question_id", "")).strip()
+        print(f"\n[{current_counter}/{total_records}] Analyzing Question ID: {q_id}")
 
-        print(f"\n[{current_counter}/{total_records}] Processing Question ID: {question_id}")
-        print(f"   -> Query Preview: \"{str(row['question'])[:65]}...\"")
-        print(f"   -> Target Collection Table: Connect targeting -> '{collection_name}'")
+        gt_row = gt_lookup.get(q_id, {})
 
-        try:
-            gt_id, gt_text, overlap_pct = find_exact_ground_truth(
-                row=row,
-                client=client,
-                collection_name=collection_name,
-                embed_model=embed_model
-            )
+        for i in range(1, 6):
+            text_col = f"source{i}_text"
+            id_col = f"source{i}_id"
 
-            df.at[idx, "ground_source_truth_id"] = gt_id
-            df.at[idx, "ground_source_truth"] = gt_text
+            source_text = row.get(text_col, "")
+            if pd.isna(source_text) or str(source_text).strip() == "":
+                continue
 
-            if gt_id:
-                print(f"   ✅ Success: Chunk linked successfully.")
-                print(f"      - Database Node UUID: {gt_id}")
-                print(f"      - Text Alignment Score: {overlap_pct:.2%}")
+            total_fields += 1
+            source_clean = str(source_text).strip().lower()
+            repaired_id = ""
+            method_used = ""
+
+            # Strategy 1: Cross-verify Source 1 text with ground truth registry text directly
+            if i == 1 and gt_row:
+                gt_text = str(gt_row.get("ground_source_truth", "")).lower()
+                gt_id = str(gt_row.get("ground_source_truth_id", "")).strip()
+                if gt_text and gt_id:
+                    overlap = calculate_token_overlap(source_clean, gt_text)
+                    if overlap > 0.85 or source_clean in gt_text:
+                        repaired_id = gt_id
+                        method_used = f"Ground Truth Registry Alignment (Score: {overlap:.2%})"
+
+            # Strategy 2: Scan full ChromaDB document pool for matching substrings or overlap token sets
+            if not repaired_id:
+                best_match_id = ""
+                max_overlap = -1.0
+                exact_found = False
+
+                for cid, doc_text in zip(db_results["ids"], db_results["documents"]):
+                    doc_clean = str(doc_text).lower()
+                    if source_clean in doc_clean:
+                        best_match_id = cid
+                        exact_found = True
+                        break
+
+                    overlap = calculate_token_overlap(source_clean, doc_clean)
+                    if overlap > max_overlap:
+                        max_overlap = overlap
+                        best_match_id = cid
+
+                if exact_found:
+                    repaired_id = best_match_id
+                    method_used = "ChromaDB Substring Perfect Fit"
+                elif max_overlap > 0.5:
+                    repaired_id = best_match_id
+                    method_used = f"ChromaDB Vector Token Overlap (Score: {max_overlap:.2%})"
+
+            if repaired_id:
+                old_id = row.get(id_col, "")
+                if str(old_id) != str(repaired_id):
+                    lufa_df.at[idx, id_col] = repaired_id
+                    total_repaired += 1
+                    print(f"   ✅ Repaired {id_col} -> {repaired_id} [{method_used}]")
+                else:
+                    print(f"   · Verified {id_col} is already correct -> {repaired_id}")
             else:
-                print(f"   ❌ Null Extraction: Found no underlying text blocks.")
+                print(f"   ❌ Warning: Could not locate matching chunk ID for {text_col}")
 
-        except Exception as e:
-            print(f"   💥 Pipeline Exception on index row index [{idx}]: {e}")
+    print("\n================================================================================")
+    print("STAGE 3: Saving Repaired Records and Summary")
+    print("================================================================================")
 
-    print("\n" + "=" * 80)
-    print("PROCESSING CYCLE COMPLETED")
-    print("=" * 80)
-
-    # Ensure output folder path workspace exists before writing target file reference
-    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path, index=False)
-    print(f"\n[Export] Integrated data structured table saved cleanly to: {output_path}")
+    lufa_df.to_csv(lufa_path, index=False)
+    print(f" -> Repaired file saved cleanly back to: {lufa_path}")
+    print(f" -> Total source text fields evaluated: {total_fields}")
+    print(f" -> Total source identifier columns updated: {total_repaired}")
+    print("================================================================================")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Find true database ground truth mappings with runtime console feedback.")
-    parser.add_argument("--csv", default=DEFAULT_CSV, help="Path to evaluation test dataset")
-    parser.add_argument("--db", default=DEFAULT_DB, help="ChromaDB persistent file location")
-    parser.add_argument("--collection", default=DEFAULT_COLLECTION, help="ChromaDB target collection")
-    parser.add_argument("--out", default=OUTPUT_CSV, help="Path for the output joined results")
+    parser = argparse.ArgumentParser(description="Repair missing or misplaced source chunk IDs in lufa output logs.")
+    parser.add_argument("--lufa_csv", default=DEFAULT_LUFA_CSV, help="Path to lufa output log sheet")
+    parser.add_argument("--gt_csv", default=DEFAULT_GROUND_TRUTH_CSV, help="Path to ground truth reference sheet")
+    parser.add_argument("--db", default=DEFAULT_DB, help="ChromaDB persistent directory")
+    parser.add_argument("--collection", default=DEFAULT_COLLECTION, help="ChromaDB collection name")
     args = parser.parse_args()
 
-    run_pipeline(args.csv, args.db, args.collection, args.out)
+    repair_dataset(args.lufa_csv, args.gt_csv, args.db, args.collection)
 ```
 
-Filename= src\generate_test_question.py
-CODE:
-```
-import csv
-import random
-import re
-from pathlib import Path
-
-random.seed(42)
-
-INPUT_FILE = "all_corpus_text.txt"
-OUTPUT_FILE = "generated_test_questions.csv"
-
-EN_START = 1
-EN_END = 84754
-FR_START = 84755
-FR_END = 149635
-
-EN_TARGET = 500
-FR_TARGET = 500
-
-EN_Q_TEMPLATES = [
-    "What does the agreement say about {topic}?",
-    "How is {topic} addressed in the collective agreement?",
-    "What are the rules concerning {topic}?",
-    "What does the collective agreement provide regarding {topic}?",
-    "How does the agreement define or describe {topic}?",
-    "What conditions apply to {topic}?",
-    "What is stated about {topic}?",
-    "According to the agreement, what applies to {topic}?",
-]
-
-FR_Q_TEMPLATES = [
-    "Que dit la convention collective au sujet de {topic} ?",
-    "Comment la convention collective traite-t-elle de {topic} ?",
-    "Quelles sont les règles concernant {topic} ?",
-    "Que prévoit la convention collective concernant {topic} ?",
-    "Comment la convention définit-elle ou décrit-elle {topic} ?",
-    "Quelles conditions s’appliquent à {topic} ?",
-    "Qu’est-il indiqué au sujet de {topic} ?",
-    "Selon la convention, qu’est-ce qui s’applique à {topic} ?",
-]
-
-EN_STOP = {
-    "the","and","for","with","that","this","from","shall","will","have","has","are","been",
-    "may","any","all","not","such","their","they","them","his","her","its","but","into",
-    "where","when","what","which","under","between","among","each","every","there","than",
-    "faculty","university","agreement","collective","article","clause","section","member",
-    "members","employee","employees"
-}
-
-FR_STOP = {
-    "les","des","une","un","dans","pour","avec","que","qui","sur","par","est","sont","ont",
-    "être","été","aux","ses","leurs","leur","tout","toute","tous","toutes","ainsi","entre",
-    "selon","comme","plus","moins","convention","collective","université","article","clause",
-    "section","membre","membres","employé","employés","faculté"
-}
-
-EN_CATEGORY_KEYWORDS = {
-    "Salary": [
-        "salary", "salaries", "wage", "wages", "pay", "paid", "stipend",
-        "increment", "increments", "allowance", "allowances", "compensation",
-        "hourly rate", "floor", "starting salary"
-    ],
-    "Promotion": [
-        "promotion", "promoted", "promotion procedures", "associate professor",
-        "full professor", "associate librarian", "full librarian", "rank"
-    ],
-    "Tenure": [
-        "tenure", "tenured", "probationary", "probation", "tenure-track",
-        "tenure evaluation"
-    ],
-    "Grievance": [
-        "grievance", "arbitration", "arbitrator", "joint grievance committee",
-        "complaint", "dispute", "grievance procedure"
-    ],
-    "Leave": [
-        "leave", "sabbatical", "absence", "vacation", "maternity", "parental",
-        "medical leave", "sick leave", "study leave", "compassionate leave"
-    ],
-    "Benefits": [
-        "benefit", "benefits", "insurance", "pension", "health", "dental",
-        "tuition exemption", "reimbursement", "library card"
-    ],
-    "Workload": [
-        "workload", "teaching load", "credits", "course load", "hours of work",
-        "overtime", "assignment of duties", "office hours", "overload"
-    ],
-    "Academic Freedom": [
-        "academic freedom", "freedom of discussion", "freedom", "classroom"
-    ],
-    "Appointments": [
-        "appointment", "appointments", "appointment and renewal", "hiring",
-        "advertised", "letter of appointment", "search committee",
-        "appointee", "reappointment"
-    ],
-    "Discipline": [
-        "discipline", "dismissal", "suspension", "just cause", "penalty",
-        "disciplinary"
-    ],
-    "Research": [
-        "research", "scholarly activity", "scholarship", "publication",
-        "conference", "creative activity", "research fund"
-    ],
-    "Teaching": [
-        "teaching", "course", "students", "grading", "instruction",
-        "evaluation methods", "exam", "syllabus"
-    ],
-    "Seniority": [
-        "seniority", "years of service", "priority of hire", "recall rights"
-    ],
-    "Termination": [
-        "termination", "redundancy", "financial exigency", "lay-off",
-        "severance", "non-renewal", "dismissal procedures"
-    ],
-    "Health and Safety": [
-        "health and safety", "safe", "safety", "security", "workplace"
-    ],
-    "Intellectual Property": [
-        "intellectual property", "patents", "copyright", "proprietary",
-        "personal notes", "course material"
-    ],
-    "Union Recognition": [
-        "union", "association", "bargaining agent", "lufa", "rights and privileges of the union"
-    ],
-    "Bargaining Unit": [
-        "bargaining unit", "recognition of the bargaining unit", "unit"
-    ],
-    "Bilingualism": [
-        "bilingual", "bilingualism", "french", "english", "official languages", "translation"
-    ],
-    "Professional Development": [
-        "professional development", "training", "workshop", "conference"
-    ],
-    "Governance": [
-        "governance", "committee", "senate", "administrative duties"
-    ],
-    "General Provisions": [
-        "purpose", "scope", "application", "rights", "responsibilities", "duties",
-        "definitions", "official languages"
-    ]
-}
-
-FR_CATEGORY_KEYWORDS = {
-    "Salaire": [
-        "salaire", "salaires", "traitement", "rémunération", "paie", "taux horaire",
-        "allocation", "indemnité", "augmentation", "échelon", "salaire de départ"
-    ],
-    "Promotion": [
-        "promotion", "procédure de promotion", "professeur agrégé",
-        "professeur titulaire", "rang"
-    ],
-    "Permanence": [
-        "permanence", "titularisation", "titulaire", "probation", "probatoire",
-        "évaluation de permanence"
-    ],
-    "Grief": [
-        "grief", "arbitrage", "arbitre", "plainte", "différend"
-    ],
-    "Congés": [
-        "congé", "congés", "sabbatique", "absence", "vacances", "maladie",
-        "parental", "maternité", "adoption"
-    ],
-    "Avantages sociaux": [
-        "avantages sociaux", "assurance", "pension", "retraite", "santé",
-        "dentaire", "remboursement"
-    ],
-    "Charge de travail": [
-        "charge de travail", "charge d'enseignement", "heures de travail",
-        "heures supplémentaires", "attribution des tâches", "crédits"
-    ],
-    "Liberté académique": [
-        "liberté académique", "liberté", "discussion", "salle de classe"
-    ],
-    "Nominations": [
-        "nomination", "nominations", "renouvellement", "lettre de nomination",
-        "comité de sélection", "réaffectation"
-    ],
-    "Discipline": [
-        "discipline", "congédiement", "suspension", "cause juste"
-    ],
-    "Recherche": [
-        "recherche", "activité savante", "publication", "érudition",
-        "conférence", "activité créatrice"
-    ],
-    "Enseignement": [
-        "enseignement", "cours", "étudiants", "notes", "évaluation",
-        "examen", "plan de cours"
-    ],
-    "Ancienneté": [
-        "ancienneté", "années de service", "priorité", "rappel"
-    ],
-    "Résiliation": [
-        "résiliation", "redondance", "exigence financière", "mise à pied",
-        "indemnité de départ", "non-renouvellement"
-    ],
-    "Santé et sécurité": [
-        "santé et sécurité", "sécurité", "milieu de travail"
-    ],
-    "Propriété intellectuelle": [
-        "propriété intellectuelle", "brevets", "droit d’auteur", "notes personnelles", "matériel de cours"
-    ],
-    "Reconnaissance syndicale": [
-        "syndicat", "association", "agent négociateur", "lufa"
-    ],
-    "Unité de négociation": [
-        "unité de négociation", "unité"
-    ],
-    "Bilinguisme": [
-        "bilingue", "bilinguisme", "français", "anglais", "langues officielles", "traduction"
-    ],
-    "Perfectionnement professionnel": [
-        "perfectionnement professionnel", "formation", "atelier", "conférence"
-    ],
-    "Gouvernance": [
-        "gouvernance", "comité", "sénat", "fonctions administratives"
-    ],
-    "Dispositions générales": [
-        "objet", "portée", "application", "droits", "responsabilités", "devoirs",
-        "définitions", "langues officielles"
-    ]
-}
-
-EN_ARTICLE_CATEGORY_HINTS = {
-    "official languages": "Bilingualism",
-    "bilingualism": "Bilingualism",
-    "purpose of the collective agreement": "General Provisions",
-    "definitions": "General Provisions",
-    "recognition of the bargaining unit": "Bargaining Unit",
-    "rights and privileges of the union": "Union Recognition",
-    "academic freedom": "Academic Freedom",
-    "health, safety and security": "Health and Safety",
-    "appointment and renewal": "Appointments",
-    "employment equity": "Appointments",
-    "academic workload": "Workload",
-    "tenure evaluation procedures": "Tenure",
-    "promotion procedures": "Promotion",
-    "discipline": "Discipline",
-    "dismissal procedures": "Termination",
-    "resignation": "Termination",
-    "retirement": "Termination",
-    "research and creativity": "Research",
-    "professional development expenditures": "Professional Development",
-    "recognized and other holidays": "Leave",
-    "vacation": "Leave",
-    "absence - general": "Leave",
-    "sabbatical leaves": "Leave",
-    "study leaves": "Leave",
-    "physical and mental illness": "Leave",
-    "pregnancy, parental and adoption leaves": "Leave",
-    "salary structure": "Salary",
-    "benefits": "Benefits",
-    "grievance procedure": "Grievance",
-    "arbitration procedure": "Grievance",
-    "intellectual property": "Intellectual Property",
-    "patents": "Intellectual Property",
-    "copyright": "Intellectual Property"
-}
-
-FR_ARTICLE_CATEGORY_HINTS = {
-    "langues officielles": "Bilinguisme",
-    "bilinguisme": "Bilinguisme",
-    "objet de la convention collective": "Dispositions générales",
-    "définitions": "Dispositions générales",
-    "reconnaissance de l’unité de négociation": "Unité de négociation",
-    "reconnaissance de l'unité de négociation": "Unité de négociation",
-    "liberté académique": "Liberté académique",
-    "santé et sécurité": "Santé et sécurité",
-    "nomination et renouvellement": "Nominations",
-    "charge de travail": "Charge de travail",
-    "évaluation de permanence": "Permanence",
-    "procédures de promotion": "Promotion",
-    "discipline": "Discipline",
-    "résiliation": "Résiliation",
-    "recherche": "Recherche",
-    "perfectionnement professionnel": "Perfectionnement professionnel",
-    "congés": "Congés",
-    "structure salariale": "Salaire",
-    "avantages sociaux": "Avantages sociaux",
-    "grief": "Grief",
-    "arbitrage": "Grief",
-    "propriété intellectuelle": "Propriété intellectuelle",
-    "brevets": "Propriété intellectuelle",
-    "droit d’auteur": "Propriété intellectuelle",
-    "droit d'auteur": "Propriété intellectuelle"
-}
-
-ARTICLE_RE = re.compile(
-    r'^\s*ARTICLE\s+(\d+(?:\.\d+)*)\s*[-–—:\.]?\s*(.+?)\s*$',
-    re.IGNORECASE
-)
-
-ARTICLE_INLINE_RE = re.compile(
-    r'\bARTICLE\s+(\d+(?:\.\d+)*)\s*[-–—:\.]?\s*([A-ZÀ-Ÿ][A-ZÀ-Ÿ0-9 ,/&\-\']{4,})',
-    re.IGNORECASE
-)
-
-def clean_line(line):
-    line = line.strip()
-    line = re.sub(r"\s+", " ", line)
-    return line
-
-def detect_language(text):
-    fr_markers = [" le ", " la ", " les ", " des ", " une ", " un ", " de ", " et ", " est ", " au "]
-    en_markers = [" the ", " and ", " of ", " to ", " is ", " are ", " with ", " for "]
-    t = f" {text.lower()} "
-    fr_score = sum(m in t for m in fr_markers)
-    en_score = sum(m in t for m in en_markers)
-    return "French" if fr_score > en_score else "English"
-
-def normalize_article_title(title):
-    title = re.sub(r"\s+", " ", title).strip(" -–—:.")
-    return title
-
-def detect_article_heading(line):
-    line = clean_line(line)
-    m = ARTICLE_RE.match(line)
-    if m:
-        return {
-            "article_number": m.group(1).strip(),
-            "article_title": normalize_article_title(m.group(2))
-        }
-
-    m2 = ARTICLE_INLINE_RE.search(line)
-    if m2:
-        return {
-            "article_number": m2.group(1).strip(),
-            "article_title": normalize_article_title(m2.group(2))
-        }
-
-    return None
-
-def reconstruct_paragraphs_with_articles(lines, expected_language):
-    blocks = []
-    current_lines = []
-    current_article_number = None
-    current_article_title = None
-
-    def flush_block():
-        nonlocal current_lines
-        if not current_lines:
-            return
-        block = " ".join(current_lines).strip()
-        block = re.sub(r"\s+", " ", block)
-        if len(block) > 80 and detect_language(block) == expected_language:
-            blocks.append({
-                "text": block,
-                "article_number": current_article_number,
-                "article_title": current_article_title
-            })
-        current_lines = []
-
-    for raw in lines:
-        line = clean_line(raw)
-        if not line:
-            flush_block()
-            continue
-
-        article = detect_article_heading(line)
-        if article:
-            flush_block()
-            current_article_number = article["article_number"]
-            current_article_title = article["article_title"]
-            continue
-
-        short_noise = (
-            len(line) < 25 or
-            re.fullmatch(r"page\s+\d+", line.lower()) or
-            re.fullmatch(r"\d+", line)
-        )
-
-        hard_boundary = (
-            short_noise or
-            re.search(r"\bPage\s+\d+\b", line) or
-            re.match(r"^(APPENDIX|Appendix|ANNEXE|SCHEDULE|TABLE OF CONTENTS|INTRODUCTION)\b", line)
-        )
-
-        if hard_boundary:
-            flush_block()
-            continue
-
-        current_lines.append(line)
-
-        if len(current_lines) >= 8:
-            flush_block()
-
-    flush_block()
-    return blocks
-
-def split_sentences(text):
-    parts = re.split(r'(?<=[\.\?!;:])\s+', text)
-    out = []
-    for p in parts:
-        p = p.strip()
-        p = re.sub(r"\s+", " ", p)
-        if 45 <= len(p) <= 450:
-            out.append(p)
-    return out
-
-def extract_topic(text, language, article_title=None):
-    if article_title and len(article_title.split()) <= 7:
-        return article_title.lower()
-
-    words = re.findall(r"[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\-']{3,}", text.lower())
-    stop = FR_STOP if language == "French" else EN_STOP
-    words = [w for w in words if w not in stop]
-
-    if not words:
-        return "this matter" if language == "English" else "cette question"
-
-    freq = {}
-    for w in words:
-        freq[w] = freq.get(w, 0) + 1
-
-    top = sorted(freq.items(), key=lambda x: (-x[1], -len(x[0]), x[0]))[:4]
-    phrase = " ".join([w for w, _ in top[:2]])
-    return phrase if phrase else ("this matter" if language == "English" else "cette question")
-
-def classify_difficulty(answer):
-    wc = len(answer.split())
-    if wc < 18:
-        return "easy"
-    elif wc < 35:
-        return "medium"
-    return "hard"
-
-def category_from_article(article_title, language):
-    if not article_title:
-        return None
-
-    title = article_title.lower()
-    hint_map = FR_ARTICLE_CATEGORY_HINTS if language == "French" else EN_ARTICLE_CATEGORY_HINTS
-
-    best = None
-    best_len = -1
-    for hint, category in hint_map.items():
-        if hint in title and len(hint) > best_len:
-            best = category
-            best_len = len(hint)
-    return best
-
-def map_category(text, language, article_title=None):
-    article_category = category_from_article(article_title, language)
-    if article_category:
-        return article_category
-
-    text_l = text.lower()
-    keyword_map = FR_CATEGORY_KEYWORDS if language == "French" else EN_CATEGORY_KEYWORDS
-    fallback = "Dispositions générales" if language == "French" else "General Provisions"
-
-    scores = {}
-    for category, keywords in keyword_map.items():
-        score = 0
-        for kw in keywords:
-            if kw.lower() in text_l:
-                score += 2 if " " in kw else 1
-        if score > 0:
-            scores[category] = score
-
-    if scores:
-        return sorted(scores.items(), key=lambda x: (-x[1], x[0]))[0][0]
-
-    return fallback
-
-def make_question(answer, language, article_title=None):
-    topic = extract_topic(answer, language, article_title=article_title)
-    template = random.choice(FR_Q_TEMPLATES if language == "French" else EN_Q_TEMPLATES)
-    q = template.format(topic=topic)
-    return q[0].upper() + q[1:] if q else q
-
-def normalize_answer(text):
-    text = text.strip(' "\'')
-    text = re.sub(r"\s+", " ", text)
-    return text[:450].rstrip()
-
-def dedupe_key(question, answer):
-    q = re.sub(r"\W+", "", question.lower())
-    a = re.sub(r"\W+", "", answer.lower())[:160]
-    return q + "|" + a
-
-def load_lines(path):
-    with open(path, "r", encoding="utf-8", errors="ignore") as f:
-        return [line.rstrip("\n") for line in f]
-
-def build_candidates(blocks, expected_language):
-    candidates = []
-
-    for block in blocks:
-        text = block["text"]
-        article_number = block["article_number"]
-        article_title = block["article_title"]
-
-        sents = split_sentences(text)
-
-        for sent in sents:
-            sent = normalize_answer(sent)
-            if 50 <= len(sent) <= 300:
-                candidates.append({
-                    "answer": sent,
-                    "article_number": article_number,
-                    "article_title": article_title,
-                    "language": expected_language
-                })
-
-        if len(sents) >= 2:
-            for i in range(len(sents) - 1):
-                combined = normalize_answer(" ".join(sents[i:i+2]))
-                if 60 <= len(combined) <= 420:
-                    candidates.append({
-                        "answer": combined,
-                        "article_number": article_number,
-                        "article_title": article_title,
-                        "language": expected_language
-                    })
-
-    return candidates
-
-def sample_qa(candidates, n, language, prefix):
-    rows = []
-    seen = set()
-    attempts = 0
-    idx = 1
-
-    while len(rows) < n and attempts < n * 100:
-        attempts += 1
-        item = random.choice(candidates)
-
-        answer = item["answer"]
-        article_number = item["article_number"]
-        article_title = item["article_title"]
-
-        question = make_question(answer, language, article_title=article_title)
-        category = map_category(answer + " " + question, language, article_title=article_title)
-        key = dedupe_key(question, answer)
-
-        if key in seen:
-            continue
-
-        seen.add(key)
-        row_id = f"{prefix}_{idx:03d}"
-
-        rows.append([
-            row_id,
-            question,
-            answer,
-            category,
-            classify_difficulty(answer),
-            language
-        ])
-        idx += 1
-
-    return rows
-
-def main():
-    if not Path(INPUT_FILE).exists():
-        raise FileNotFoundError(f"Could not find {INPUT_FILE}")
-
-    all_lines = load_lines(INPUT_FILE)
-
-    en_lines = all_lines[EN_START - 1:EN_END]
-    fr_lines = all_lines[FR_START - 1:FR_END]
-
-    en_blocks = reconstruct_paragraphs_with_articles(en_lines, "English")
-    fr_blocks = reconstruct_paragraphs_with_articles(fr_lines, "French")
-
-    en_candidates = build_candidates(en_blocks, "English")
-    fr_candidates = build_candidates(fr_blocks, "French")
-
-    if len(en_candidates) < EN_TARGET:
-        raise ValueError(f"Not enough English candidates: {len(en_candidates)}")
-    if len(fr_candidates) < FR_TARGET:
-        raise ValueError(f"Not enough French candidates: {len(fr_candidates)}")
-
-    en_rows = sample_qa(en_candidates, EN_TARGET, "English", "test_en")
-    fr_rows = sample_qa(fr_candidates, FR_TARGET, "French", "test_fr")
-
-    rows = en_rows + fr_rows
-
-    with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(["id", "question", "expected_answer", "category", "difficulty", "language"])
-        writer.writerows(rows)
-
-    print(f"Saved {len(rows)} rows to {OUTPUT_FILE}")
-    print(f"English blocks: {len(en_blocks)}")
-    print(f"French blocks: {len(fr_blocks)}")
-    print(f"English candidates: {len(en_candidates)}")
-    print(f"French candidates: {len(fr_candidates)}")
-
-if __name__ == "__main__":
-    main()
-```
-
-Filename= src\get_lufa_stats.py
+Filename= src\repair_metrics.py
 CODE:
 ```
 #!/usr/bin/env python3
-from pathlib import Path
-import re
-import pdfplumber
-import pandas as pd
-import argparse
-import chromadb
-import importlib.metadata
-import urllib.request
-import json
-import pandas as pd
+"""
+Performance evaluation script for LUFA Agentic RAG system with row-by-row
+checkpoint saving, crash-resumption support, verbose metric logging,
+and live real-time HTML dashboard incremental updates.
+Inspects existing scores and targets rows with zero retrieval metrics for active inline repair.
+"""
+
 import sys
-
-
-ARTICLE_RE = re.compile(r'^(?:ARTICLE|Article)\s+(\d{1,3})\b', re.I)
-CLAUSE_RE = re.compile(r'^(\d{1,3}(?:\.\d+)+(?:\([a-z]+\))?)\b', re.I)
-SECTION_RE = re.compile(r'^(?:PART|SECTION|SCHEDULE|APPENDIX|ANNEXE|PARTIE)\s+[IVX\d]+', re.I)
-PAGE_MARK_RE = re.compile(r'<<<PAGE:(\d+)>>>')
-
-def get_pkg_version(pkg_name):
-    try:
-        return importlib.metadata.version(pkg_name)
-    except importlib.metadata.PackageNotFoundError:
-        return "Not Installed"
-
-
-def get_ollama_info():
-    try:
-        req = urllib.request.Request("http://localhost:11434/api/version")
-        with urllib.request.urlopen(req, timeout=2) as response:
-            data = json.loads(response.read())
-            return data.get("version", "Unknown")
-    except Exception:
-        return "Ollama unreachable"
-
-
-def get_ollama_model_info(model_substring):
-    try:
-        req = urllib.request.Request("http://localhost:11434/api/tags")
-        with urllib.request.urlopen(req, timeout=2) as response:
-            data = json.loads(response.read())
-            models = data.get("models", [])
-            for m in models:
-                if model_substring.lower() in m.get("name", "").lower():
-                    details = m.get("details", {})
-                    quant = details.get("quantization_level", "Unknown")
-                    return f"Installed (GGUF {quant})"
-            return "Not Installed"
-    except Exception:
-        return "Ollama API unreachable"
-
-
-def generate_system_table():
-    python_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
-
-    data = [
-        {
-            "Component": "LLM serving",
-            "Framework/Library": "Ollama",
-            "Version": get_ollama_info()
-        },
-        {
-            "Component": "Agent orchestration",
-            "Framework/Library": "LlamaIndex",
-            "Version": get_pkg_version("llama-index")
-        },
-        {
-            "Component": "Vector database",
-            "Framework/Library": "ChromaDB",
-            "Version": get_pkg_version("chromadb")
-        },
-        {
-            "Component": "Embedding model",
-            "Framework/Library": "BGE-M3 (via Ollama)",
-            "Version": get_ollama_model_info("bge-m3")
-        },
-        {
-            "Component": "Generator model",
-            "Framework/Library": "Llama 3.2 3B (via Ollama)",
-            "Version": get_ollama_model_info("llama3.2")
-        },
-        {
-            "Component": "RAG evaluation",
-            "Framework/Library": "RAGAS",
-            "Version": get_pkg_version("ragas")
-        },
-        {
-            "Component": "BM25 implementation",
-            "Framework/Library": "rank-bm25",
-            "Version": get_pkg_version("rank-bm25")
-        },
-        {
-            "Component": "PDF parsing",
-            "Framework/Library": "PyMuPDF",
-            "Version": get_pkg_version("PyMuPDF")
-        },
-        {
-            "Component": "Experiment tracking",
-            "Framework/Library": "Python logging + JSON",
-            "Version": f"Built-in (Python {python_version})"
-        }
-    ]
-
-    df = pd.DataFrame(data)
-
-    print("\n" + "=" * 85)
-    print(df.to_string(index=False, justify='left'))
-    print("=" * 85 + "\n")
-
-    output_file = "system_components_detected.csv"
-    df.to_csv(output_file, index=False)
-    print(f"Saved dynamically detected system data to {output_file}")
-
-def tokens(text):
-    return len(text.split())
-
-
-def extract_pages(pdf_path):
-    pages = []
-    with pdfplumber.open(str(pdf_path)) as pdf:
-        for i, p in enumerate(pdf.pages, start=1):
-            pages.append((i, p.extract_text(x_tolerance=3, y_tolerance=3) or ''))
-    return pages
-
-
-def build_marked(pages):
-    parts = []
-    for n, txt in pages:
-        parts.append(f'<<<PAGE:{n}>>>')
-        parts.append(txt)
-    return '\n'.join(parts)
-
-
-def detect_lang(text, forced=None):
-    if forced:
-        return forced
-    try:
-        from langdetect import detect, DetectorFactory
-        DetectorFactory.seed = 42
-        return detect(text[:500]) if text.strip() else 'en'
-    except Exception:
-        return 'en'
-
-
-def chunk_pdf(pdf_path, forced_lang=None, min_tokens=30):
-    pages = extract_pages(pdf_path)
-    text = build_marked(pages)
-    lines = text.splitlines()
-    out = []
-    cur_article = '0';
-    cur_clause = '0';
-    cur_title = 'PREAMBLE';
-    cur_page = 1;
-    buf = []
-
-    def flush():
-        nonlocal buf
-        t = '\n'.join(buf).strip()
-        t = PAGE_MARK_RE.sub('', t).strip()
-        if t:
-            out.append({'article_number': cur_article, 'clause_id': cur_clause, 'section_title': cur_title, 'text': t,
-                        'language': detect_lang(t, forced_lang), 'page_no': cur_page, 'tokens': tokens(t)})
-        buf = []
-
-    for line in lines:
-        m = PAGE_MARK_RE.match(line)
-        if m:
-            cur_page = int(m.group(1));
-            buf.append(line);
-            continue
-        s = line.strip()
-        if not s:
-            buf.append(line);
-            continue
-        if SECTION_RE.match(s):
-            cur_title = s;
-            buf.append(line);
-            continue
-        am = ARTICLE_RE.match(s)
-        if am:
-            flush();
-            cur_article = am.group(1);
-            cur_clause = cur_article;
-            buf.append(line);
-            continue
-        cm = CLAUSE_RE.match(s)
-        if cm and cm.group(1).startswith(cur_article + '.'):
-            flush();
-            cur_clause = cm.group(1).replace('(', ' .').replace(')', '').replace(' ', '').replace('..', '.').replace(
-                '. ', ' .').replace(' .', '.')
-            cur_clause = re.sub(r'\(([a-z]+)\)', r'.\1', cur_clause)
-            buf.append(line);
-            continue
-        buf.append(line)
-    flush()
-
-    # merge short clauses into next clause
-    merged = [];
-    pending = [];
-    pending_page = None
-    for c in out:
-        if c['tokens'] < min_tokens:
-            pending.append(c)
-            pending_page = pending_page or c['page_no']
-        else:
-            if pending:
-                prefix = '\n'.join(x['text'] for x in pending)
-                c['text'] = (prefix + '\n' + c['text']).strip()
-                c['tokens'] = tokens(c['text'])
-                c['page_no'] = pending_page or c['page_no']
-                pending = [];
-                pending_page = None
-            merged.append(c)
-    if pending and merged:
-        last = merged[-1]
-        last['text'] = (last['text'] + '\n' + '\n'.join(x['text'] for x in pending)).strip()
-        last['tokens'] = tokens(last['text'])
-    return merged
-
-
-def get_pdf_stats(pdf_path, lang):
-    if not pdf_path or not Path(pdf_path).exists():
-        return {'articles': 0, 'clauses': 0, 'chunks': 0, 'avg_tokens': 0, 'min_tokens': 0, 'max_tokens': 0,
-                'total_tokens': 0, 'appendices': 0}
-
-    nodes = chunk_pdf(Path(pdf_path), lang)
-    df = pd.DataFrame(nodes)
-    if len(df) == 0:
-        return {'articles': 0, 'clauses': 0, 'chunks': 0, 'avg_tokens': 0, 'min_tokens': 0, 'max_tokens': 0,
-                'total_tokens': 0, 'appendices': 0}
-
-    return {
-        'articles': df['article_number'].replace('0', pd.NA).dropna().nunique(),
-        'clauses': df['clause_id'].replace('0', pd.NA).dropna().nunique(),
-        'chunks': len(df),
-        'avg_tokens': round(df['tokens'].mean()),
-        'min_tokens': int(df['tokens'].min()),
-        'max_tokens': int(df['tokens'].max()),
-        'total_tokens': int(df['tokens'].sum()),
-        'appendices': int(
-            df['section_title'].str.contains('SCHEDULE|APPENDIX|ANNEXE|PARTIE', case=False, na=False).sum())
-    }
-
-
-def scan_chroma_db_bilingual(db_path):
-    db_dir = Path(db_path)
-    if not db_dir.exists():
-        print(f"ChromaDB directory not found at {db_path}")
-        return None, None
-
-    print(f"Scanning ChromaDB SQLite database at {db_path}...")
-    client = chromadb.PersistentClient(path=str(db_path))
-
-    stats_en = {'chunks': 0, 'total_tokens': 0, 'articles': set(), 'clauses': set(), 'token_list': [], 'appendices': 0}
-    stats_fr = {'chunks': 0, 'total_tokens': 0, 'articles': set(), 'clauses': set(), 'token_list': [], 'appendices': 0}
-
-    collections = client.list_collections()
-    if not collections:
-        print("No collections found in the database.")
-        return None, None
-
-    for coll_meta in collections:
-        coll_name = coll_meta.name if hasattr(coll_meta, 'name') else coll_meta
-        coll = client.get_collection(coll_name)
-        data = coll.get(include=['documents', 'metadatas'])
-
-        docs = data.get('documents', [])
-        metas = data.get('metadatas', [])
-
-        for doc, meta in zip(docs, metas):
-            if not doc or not meta: continue
-
-            # Determine target dictionary based on language metadata
-            lang = meta.get('language', 'en').lower()
-            target = stats_fr if lang == 'fr' else stats_en
-
-            target['chunks'] += 1
-            tok_count = len(doc.split())
-            target['total_tokens'] += tok_count
-            target['token_list'].append(tok_count)
-
-            # Track unique articles and clauses (ignoring '0')
-            art_no = str(meta.get('article_number', '0'))
-            cl_id = str(meta.get('clause_id', '0'))
-
-            if art_no != '0': target['articles'].add(art_no)
-            if cl_id != '0': target['clauses'].add(cl_id)
-
-            # Track Appendices and schedules
-            sec_title = str(meta.get('section_title', ''))
-            if re.search(r'SCHEDULE|APPENDIX|ANNEXE|PARTIE', sec_title, re.IGNORECASE):
-                target['appendices'] += 1
-
-    def summarize(s):
-        t_list = s['token_list']
-        return {
-            'articles': len(s['articles']),
-            'clauses': len(s['clauses']),
-            'chunks': s['chunks'],
-            'avg_tokens': round(sum(t_list) / len(t_list)) if t_list else 0,
-            'min_tokens': min(t_list) if t_list else 0,
-            'max_tokens': max(t_list) if t_list else 0,
-            'total_tokens': s['total_tokens'],
-            'appendices': s['appendices']
-        }
-
-    return summarize(stats_en), summarize(stats_fr)
-
-
-def generate_comparison_table(stats_en, stats_fr):
-    data = [
-        {
-            'Property': 'Total articles',
-            'English Version': stats_en['articles'],
-            'French Version': stats_fr['articles']
-        },
-        {
-            'Property': 'Total numbered clauses',
-            'English Version': stats_en['clauses'],
-            'French Version': stats_fr['clauses']
-        },
-        {
-            'Property': 'Total chunks after clause-boundary segmentation',
-            'English Version': stats_en['chunks'],
-            'French Version': stats_fr['chunks']
-        },
-        {
-            'Property': 'Average tokens per chunk',
-            'English Version': stats_en['avg_tokens'],
-            'French Version': stats_fr['avg_tokens']
-        },
-        {
-            'Property': 'Minimum tokens per chunk',
-            'English Version': stats_en['min_tokens'],
-            'French Version': stats_fr['min_tokens']
-        },
-        {
-            'Property': 'Maximum tokens per chunk',
-            'English Version': stats_en['max_tokens'],
-            'French Version': stats_fr['max_tokens']
-        },
-        {
-            'Property': 'Total corpus tokens',
-            'English Version': f"{stats_en['total_tokens']:,}",
-            'French Version': f"{stats_fr['total_tokens']:,}"
-        },
-        {
-            'Property': 'Appendices and schedules',
-            'English Version': stats_en['appendices'],
-            'French Version': stats_fr['appendices']
-        }
-    ]
-    return pd.DataFrame(data)
-
-
-def main():
-    ap = argparse.ArgumentParser(description="Generate bilingual stats from PDFs or ChromaDB")
-    ap.add_argument('--en-pdf', help='Path to the English PDF file')
-    ap.add_argument('--fr-pdf', help='Path to the French PDF file')
-    ap.add_argument('--db-path', default='./db/chroma_db',
-                    help='Path to ChromaDB sqlite directory (used if PDFs are not provided)')
-    ap.add_argument('--out', default='lufa_stats_bilingual.csv', help='Output CSV file path')
-    args = ap.parse_args()
-
-    if args.en_pdf or args.fr_pdf:
-        print("Processing PDFs directly...")
-        stats_en = get_pdf_stats(args.en_pdf, 'en')
-        stats_fr = get_pdf_stats(args.fr_pdf, 'fr')
-    else:
-        stats_en, stats_fr = scan_chroma_db_bilingual(args.db_path)
-        if stats_en is None:
-            return
-
-    # Generate the requested comparative DataFrame
-    out_df = generate_comparison_table(stats_en, stats_fr)
-
-    # Save to CSV
-    out_df.to_csv(args.out, index=False)
-
-    # Print the table to terminal matching the screenshot
-    print("\n" + "=" * 80)
-    print(out_df.to_string(index=False, justify='left'))
-    print("=" * 80 + "\n")
-    print(f"Saved comparative data to {args.out}")
-
-
-if __name__ == '__main__':
-    main()
-    generate_system_table()
-```
-
-Filename= src\ingestion.py
-CODE:
-```
-"""
-Document ingestion module for bilingual RAG system.
-Handles clause-boundary document loading, language detection, metadata tagging,
-vector store indexing, and recency-weighted similarity search execution.
-"""
-
-import os
 import json
+import argparse
+import math
+import re
+import warnings
+import os
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any
+from collections import defaultdict
 
-from clause_chunker import ClauseBoundaryChunker
-from recency_reranker import rerank
-
-from llama_index.core import (
-    VectorStoreIndex,
-    StorageContext,
-)
-from llama_index.embeddings.ollama import OllamaEmbedding
-from llama_index.vector_stores.chroma import ChromaVectorStore
-import chromadb
-
-
-def extract_clause_nodes_from_directories(english_dir: str, french_dir: str) -> List[Any]:
-    """
-    Scan corpus directories and extract clause-level TextNodes using ClauseBoundaryChunker.
-    """
-    all_nodes = []
-
-    chunker_en = ClauseBoundaryChunker(language_override="en")
-    chunker_fr = ClauseBoundaryChunker(language_override="fr")
-
-    # Process English Directory Path
-    eng_path = Path(english_dir)
-    if eng_path.exists():
-        print(f"Scanning English corpus path: {english_dir}")
-        for pdf_file in eng_path.rglob("*.pdf"):
-            print(f"  Extracting clauses from: {pdf_file.name}")
-            all_nodes.extend(chunker_en.chunk_pdf(pdf_file))
-
-    # Process French Directory Path
-    fr_path = Path(french_dir)
-    if fr_path.exists():
-        print(f"Scanning French corpus path: {french_dir}")
-        for pdf_file in fr_path.rglob("*.pdf"):
-            print(f"  Extracting clauses from: {pdf_file.name}")
-            all_nodes.extend(chunker_fr.chunk_pdf(pdf_file))
-
-    return all_nodes
-
-
-def create_multilingual_index(
-    english_dir: str = "data/english",
-    french_dir: str = "data/french",
-    db_path: str = "db/chroma_db",
-    collection_name: str = "multilingual_docs",
-    embedding_model: str = "nomic-embed-text-v2-moe"
-) -> VectorStoreIndex:
-    """
-    Create a multilingual vector store index using structural clause nodes.
-    """
-    print("Initiating clause-boundary extraction across data directories...")
-    all_nodes = extract_clause_nodes_from_directories(english_dir, french_dir)
-
-    if not all_nodes:
-        raise ValueError(
-            "No structural clause chunks could be produced. "
-            "Please check that processed text PDFs exist in data/english/ or data/french/."
-        )
-
-    print(f"Successfully extracted {len(all_nodes)} unified clause chunks.")
-
-    print(f"Initializing embedding model: {embedding_model}")
-    embed_model = OllamaEmbedding(
-        model_name=embedding_model,
-        base_url="http://localhost:11434",
-    )
-
-    print(f"Initializing Persistent ChromaDB Client at {db_path}...")
-    chroma_client = chromadb.PersistentClient(path=db_path)
-    chroma_collection = chroma_client.get_or_create_collection(collection_name)
-
-    vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-
-    print("Building vector store index from clause nodes...")
-    index = VectorStoreIndex(
-        nodes=all_nodes,
-        storage_context=storage_context,
-        embed_model=embed_model,
-        show_progress=True,
-    )
-
-    # Calculate file-level metadata tracking counts
-    en_count = len([p for p in Path(english_dir).rglob("*.pdf")])
-    fr_count = len([p for p in Path(french_dir).rglob("*.pdf")])
-    update_metadata(en_count, fr_count)
-
-    print("Vector store indexing process completed successfully.")
-    return index
-
-
-def search_vector_store(
-    query_str: str,
-    db_path: str = "db/chroma_db",
-    collection_name: str = "multilingual_docs",
-    embedding_model: str = "nomic-embed-text-v2-moe",
-    top_k: int = 5
-) -> List[Dict[str, Any]]:
-    """
-    Query pathway for executing vector similarity searches.
-    Generates embedding, queries ChromaDB, and applies the recency tie-breaker reranker.
-    """
-    embed_model = OllamaEmbedding(
-        model_name=embedding_model,
-        base_url="http://localhost:11434",
-    )
-
-    chroma_client = chromadb.PersistentClient(path=db_path)
-    chroma_collection = chroma_client.get_or_create_collection(collection_name)
-
-    # Generate query vectors locally
-    query_embedding = embed_model.get_query_embedding(query_str)
-
-    # Fetch a wider candidate pool (n_results=20) to give the reranker room to sort ties
-    chroma_results = chroma_collection.query(
-        query_embeddings=[query_embedding],
-        n_results=20,
-        include=["documents", "metadatas", "distances", "ids"]
-    )
-
-    # Pass raw results to recency_reranker
-    final_ranked_results = rerank(chroma_results, top_k=top_k)
-    return final_ranked_results
-
-
-def update_metadata(english_count: int, french_count: int):
-    """
-    Update metadata.json with document execution history stats.
-    """
-    metadata_path = "data/metadata.json"
-    try:
-        if os.path.exists(metadata_path):
-            with open(metadata_path, 'r') as f:
-                metadata = json.load(f)
-        else:
-            metadata = {
-                "documents": [],
-                "ingestion_history": [],
-                "statistics": {
-                    "total_documents": 0,
-                    "english_documents": 0,
-                    "french_documents": 0,
-                    "last_updated": None
-                }
-            }
-
-        metadata["statistics"]["english_documents"] = english_count
-        metadata["statistics"]["french_documents"] = french_count
-        metadata["statistics"]["total_documents"] = english_count + french_count
-        metadata["statistics"]["last_updated"] = datetime.now().isoformat()
-
-        metadata["ingestion_history"].append({
-            "timestamp": datetime.now().isoformat(),
-            "english_count": english_count,
-            "french_count": french_count
-        })
-
-        with open(metadata_path, 'w') as f:
-            json.dump(metadata, f, indent=2)
-
-        print(f"Metadata log tracking updated summary saved.")
-    except Exception as e:
-        print(f"Warning: Could not save ingestion metadata overview: {e}")
-
-
-def ingest_documents(
-    english_dir: str = "data/english",
-    french_dir: str = "data/french",
-    db_path: str = "db/chroma_db"
-):
-    print("Starting document ingestion pipeline execution...")
-    index = create_multilingual_index(english_dir, french_dir, db_path)
-    print("Document ingestion pipeline run complete!")
-    return index
-
-
-if __name__ == "__main__":
-    ingest_documents()
-```
-
-Filename= src\language_detector.py
-CODE:
-```
-"""
-Language detection module for bilingual RAG system.
-Automatically detects whether documents are in English or French.
-"""
-
-from langdetect import detect, LangDetectException
-from typing import Optional
-
-
-def detect_language(text: str) -> str:
-    """
-    Detect the language of a text string.
-    
-    Args:
-        text: Input text to analyze
-        
-    Returns:
-        Language code: 'en' for English, 'fr' for French
-        
-    Raises:
-        LangDetectException: If language cannot be detected
-    """
-    try:
-        lang = detect(text)
-        if lang == 'fr':
-            return 'fr'
-        elif lang == 'en':
-            return 'en'
-        else:
-            # Default to English for other languages
-            return 'en'
-    except LangDetectException:
-        # Default to English if detection fails
-        return 'en'
-
-
-def detect_language_with_confidence(text: str) -> tuple[str, float]:
-    """
-    Detect language with confidence score.
-    
-    Args:
-        text: Input text to analyze
-        
-    Returns:
-        Tuple of (language_code, confidence_score)
-    """
-    from langdetect import detect_langs
-    
-    try:
-        langs = detect_langs(text)
-        if langs:
-            top_lang = langs[0]
-            lang_code = 'fr' if top_lang.lang == 'fr' else 'en'
-            return (lang_code, top_lang.prob)
-        else:
-            return ('en', 0.0)
-    except LangDetectException:
-        return ('en', 0.0)
-
-
-def is_french(text: str) -> bool:
-    """
-    Check if text is in French.
-    
-    Args:
-        text: Input text to check
-        
-    Returns:
-        True if text is French, False otherwise
-    """
-    return detect_language(text) == 'fr'
-
-
-def is_english(text: str) -> bool:
-    """
-    Check if text is in English.
-    
-    Args:
-        text: Input text to check
-        
-    Returns:
-        True if text is English, False otherwise
-    """
-    return detect_language(text) == 'en'
-
-
-def get_language_name(lang_code: str) -> str:
-    """
-    Get the full language name from language code.
-    
-    Args:
-        lang_code: Language code ('en' or 'fr')
-        
-    Returns:
-        Full language name
-    """
-    import pycountry
-    
-    try:
-        language = pycountry.languages.get(alpha_2=lang_code)
-        return language.name if language else lang_code.upper()
-    except:
-        return lang_code.upper()
-
-```
-
-Filename= src\pdf_ocr_converter.py
-CODE:
-```
-import os
-import argparse
-from pathlib import Path
-import re
-import sys
-import shutil
-from typing import List
-
-try:
-    import pdfplumber
-    import ocrmypdf
-    from reportlab.pdfgen import canvas
-    from reportlab.pdfbase import pdfmetrics
-    from reportlab.pdfbase.ttfonts import TTFont
-except ImportError as e:
-    print(f"Missing dependency: {e}")
-    print("Please run: pip install pdfplumber ocrmypdf reportlab")
-    sys.exit(1)
-
-try:
-    pdfmetrics.registerFont(TTFont("DejaVuSans", "DejaVuSans.ttf"))
-    DEFAULT_FONT = "DejaVuSans"
-except Exception:
-    DEFAULT_FONT = "Helvetica"
-
-
-def clean_text(s: str) -> str:
-    s = s.replace("\u00a0", " ").replace("\u200b", " ")
-    s = re.sub(r'[ \t]+', ' ', s)
-    s = re.sub(r'\n{3,}', '\n\n', s)
-    return s.strip()
-
-
-def extract_words_split(page, mode="single"):
-    words = page.extract_words(
-        extra_attrs=["x0", "x1", "top", "bottom"],
-        keep_blank_chars=False,
-        use_text_flow=True) or []
-
-    if not words:
-        return [], []
-
-    if mode == "dual":
-        mid = float(page.width) / 2.0
-        left = [w for w in words if (w["x0"] + w["x1"]) / 2.0 < mid]
-        right = [w for w in words if (w["x0"] + w["x1"]) / 2.0 >= mid]
-        return left, right
-    else:
-        return words, []
-
-
-def cluster_lines(words, y_tol=3.5):
-    if not words:
-        return []
-    words = sorted(words, key=lambda w: (round(w["top"], 1), w["x0"]))
-    lines = []
-    cur = [words[0]]
-    cur_y = words[0]["top"]
-
-    for w in words[1:]:
-        if abs(w["top"] - cur_y) <= y_tol:
-            cur.append(w)
-            cur_y = (cur_y * (len(cur) - 1) + w["top"]) / len(cur)
-        else:
-            lines.append(cur)
-            cur = [w]
-            cur_y = w["top"]
-
-    lines.append(cur)
-    return lines
-
-
-def line_text(line):
-    if not line:
-        return ""
-    line = sorted(line, key=lambda x: x["x0"])
-    parts = [line[0]["text"]]
-    prev_x1 = line[0]["x1"]
-
-    for w in line[1:]:
-        gap = w["x0"] - prev_x1
-        if gap > 1.5:
-            parts.append(" ")
-        parts.append(w["text"])
-        prev_x1 = w["x1"]
-
-    return clean_text("".join(parts))
-
-
-def merge_lines(lines):
-    merged = []
-    buf = []
-    for line in lines:
-        t = line_text(line)
-        if not t:
-            if buf:
-                merged.append(" ".join(buf))
-                buf = []
-            merged.append("")
-            continue
-        if buf and (t[0].islower() or t.startswith("—") or t.startswith("-")):
-            buf.append(t)
-        else:
-            if buf:
-                merged.append(" ".join(buf))
-            buf = [t]
-    if buf:
-        merged.append(" ".join(buf))
-
-    cleaned = []
-    for item in merged:
-        if item == "":
-            cleaned.append("")
-        else:
-            ct = clean_text(item)
-            if ct:
-                cleaned.append(ct)
-    return cleaned
-
-
-def extract_column_pages_text(pdf_path: Path, mode: str):
-    primary_pages = []
-    secondary_pages = []
-    with pdfplumber.open(str(pdf_path)) as pdf:
-        for page in pdf.pages:
-            page_text = clean_text(page.extract_text() or "")
-            if not page_text:
-                primary_pages.append([])
-                if mode == "dual":
-                    secondary_pages.append([])
-                continue
-
-            left_words, right_words = extract_words_split(page, mode)
-
-            primary_lines = merge_lines(cluster_lines(left_words))
-            primary_pages.append(primary_lines)
-
-            if mode == "dual":
-                secondary_lines = merge_lines(cluster_lines(right_words))
-                secondary_pages.append(secondary_lines)
-
-    return primary_pages, secondary_pages, pdf.pages[0].width if len(pdf.pages) else 612, pdf.pages[0].height if len(
-        pdf.pages) else 792
-
-
-def write_pdf_from_pages(pages_lines: List[List[str]], out_path: Path, page_sizes: List[tuple] = None):
-    if not pages_lines:
-        return
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    default_w, default_h = (612, 792)
-    first_size = page_sizes[0] if (page_sizes and len(page_sizes) >= 1) else (default_w, default_h)
-
-    c = canvas.Canvas(str(out_path), pagesize=first_size)
-    font_name = DEFAULT_FONT
-    font_size = 10
-    leading = font_size * 1.25
-    left_margin, right_margin, top_margin, bottom_margin = 36, 36, 36, 36
-
-    for page_idx, lines in enumerate(pages_lines):
-        if page_sizes and page_idx < len(page_sizes):
-            c.setPageSize(page_sizes[page_idx])
-
-        width, height = c._pagesize
-        x = left_margin
-        y_start = height - top_margin
-        text_obj = c.beginText(x, y_start)
-        text_obj.setFont(font_name, font_size)
-        text_obj.setLeading(leading)
-
-        for line in lines:
-            if line == "":
-                text_obj.textLine("")
-                continue
-
-            max_width = width - left_margin - right_margin
-            words = line.split(" ")
-            cur = ""
-            for w in words:
-                trial = cur + (" " if cur else "") + w
-                if pdfmetrics.stringWidth(trial, font_name, font_size) <= max_width:
-                    cur = trial
-                else:
-                    text_obj.textLine(cur)
-                    cur = w
-
-                if text_obj.getY() < bottom_margin + leading:
-                    c.drawText(text_obj)
-                    c.showPage()
-                    if page_sizes and page_idx < len(page_sizes):
-                        c.setPageSize(page_sizes[page_idx])
-                    text_obj = c.beginText(x, height - top_margin)
-                    text_obj.setFont(font_name, font_size)
-                    text_obj.setLeading(leading)
-            if cur:
-                text_obj.textLine(cur)
-
-            if text_obj.getY() < bottom_margin + leading:
-                c.drawText(text_obj)
-                c.showPage()
-                if page_sizes and page_idx < len(page_sizes):
-                    c.setPageSize(page_sizes[page_idx])
-                text_obj = c.beginText(x, height - top_margin)
-                text_obj.setFont(font_name, font_size)
-                text_obj.setLeading(leading)
-
-        c.drawText(text_obj)
-        c.showPage()
-    c.save()
-
-
-def is_image_based_pdf(pdf_path: Path) -> bool:
-    try:
-        with pdfplumber.open(str(pdf_path)) as pdf:
-            text_sample = ""
-            for page in pdf.pages[:3]:
-                text_sample += page.extract_text() or ""
-            return len(text_sample.strip()) < 50
-    except Exception:
-        return True
-
-
-def run_ocr_on_file(input_path: Path, output_path: Path, langs: list) -> bool:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        ocrmypdf.ocr(
-            str(input_path),
-            str(output_path),
-            deskew=True,
-            force_ocr=True,
-            language=langs
-        )
-        return True
-    except Exception as e:
-        print(f"    -> OCR execution failed for {input_path.name}: {e}")
-        return False
-
-
-def process_single_file(pdf_path: Path, mode: str, output_opt: str = None, force_lang: str = None) -> bool:
-    if not pdf_path.exists():
-        print(f"Error: File {pdf_path} does not exist.")
-        return False
-
-    stem = pdf_path.stem
-
-    if mode == "dual":
-        if output_opt:
-            out_dir = Path(output_opt)
-            en_out_path = out_dir / f"{stem}_english_ocr.pdf"
-            fr_out_path = out_dir / f"{stem}_french_ocr.pdf"
-        else:
-            en_out_path = Path("data/english") / f"{stem}_english_ocr.pdf"
-            fr_out_path = Path("data/french") / f"{stem}_french_ocr.pdf"
-
-        temp_ocr_path = pdf_path.parent / f"temp_{stem}_searchable.pdf"
-
-        if is_image_based_pdf(pdf_path):
-            print(f"    -> Image layer detected. Initializing dual-language OCR translation...")
-            success = run_ocr_on_file(pdf_path, temp_ocr_path, ["eng", "fra"])
-            if not success:
-                return False
-            active_pdf = temp_ocr_path
-        else:
-            active_pdf = pdf_path
-
-        try:
-            with pdfplumber.open(str(active_pdf)) as pdf:
-                page_sizes = [(p.width, p.height) for p in pdf.pages]
-
-            eng_pages, fr_pages, _, _ = extract_column_pages_text(active_pdf, "dual")
-            write_pdf_from_pages(eng_pages, en_out_path, page_sizes)
-            write_pdf_from_pages(fr_pages, fr_out_path, page_sizes)
-            print(f"    -> Saved extracted channels:\n       {en_out_path}\n       {fr_out_path}")
-            return True
-        except Exception as e:
-            print(f"    -> Error processing layout split metrics: {e}")
-            return False
-        finally:
-            if temp_ocr_path.exists():
-                os.remove(temp_ocr_path)
-
-    else:
-        inferred_lang = force_lang if force_lang else ("fra" if "french" in str(pdf_path).lower() else "eng")
-        suffix = "_french_ocr.pdf" if inferred_lang == "fra" else "_english_ocr.pdf"
-
-        if output_opt:
-            out_p = Path(output_opt)
-            if out_p.is_dir() or not out_p.suffix:
-                final_out = out_p / f"{stem}{suffix}"
-            else:
-                final_out = out_p
-        else:
-            target_folder = "./data/french" if inferred_lang == "fra" else "./data/english"
-            final_out = Path(target_folder) / f"{stem}{suffix}"
-
-        if is_image_based_pdf(pdf_path):
-            print(f"    -> Image layer detected. Injecting missing searchable text layer ({inferred_lang})...")
-            if run_ocr_on_file(pdf_path, final_out, [inferred_lang]):
-                print(f"    -> Saved clean document output target to: {final_out}")
-                return True
-            return False
-        else:
-            with pdfplumber.open(str(pdf_path)) as pdf:
-                page_sizes = [(p.width, p.height) for p in pdf.pages]
-            primary_pages, _, _, _ = extract_column_pages_text(pdf_path, "single")
-            write_pdf_from_pages(primary_pages, final_out, page_sizes)
-            print(f"    -> Saved searchable structured file reference to: {final_out}")
-            return True
-
-
-def archive_original_file(file_path: Path, subfolder_name: str):
-    try:
-        archive_base = Path("data/processed")
-        target_dir = archive_base / subfolder_name
-        target_dir.mkdir(parents=True, exist_ok=True)
-        dest_path = target_dir / file_path.name
-        shutil.move(str(file_path), str(dest_path))
-        print(f"    -> Archived original file cleanly to: {dest_path}")
-    except Exception as e:
-        print(f"    -> Failed to archive processed file {file_path.name}: {e}")
-
-
-def run_automated_batch_pipeline():
-    print("No options specified. Initiating automated repository directory scans...")
-
-    # 1a. Scan ./data/english/
-    eng_dir = Path("data/english")
-    print("\nScanning directory: ./data/english")
-    if eng_dir.exists():
-        files = [p for p in eng_dir.iterdir() if p.suffix.lower() == ".pdf"]
-        if not files:
-            print("  No PDF files found in this directory.")
-        for p in files:
-            print(f"  [Evaluating] File: {p.name}")
-            if p.name.endswith("_english_ocr.pdf") or p.name.endswith("_french_ocr.pdf"):
-                print("    -> Skipped: Already a processed OCR output file.")
-                continue
-
-            if is_image_based_pdf(p):
-                print(f"    -> [Match] Image layer detected. Running English OCR...")
-                out_path = eng_dir / f"{p.stem}_english_ocr.pdf"
-                if run_ocr_on_file(p, out_path, ["eng"]):
-                    print(f"    -> Saved: {out_path}")
-                    archive_original_file(p, "english")
-            else:
-                print("    -> Skipped: PDF already contains native text layer.")
-    else:
-        print("  Directory does not exist. Skipping.")
-
-    # 1b. Scan ./data/french/
-    fr_dir = Path("data/french")
-    print("\nScanning directory: ./data/french")
-    if fr_dir.exists():
-        files = [p for p in fr_dir.iterdir() if p.suffix.lower() == ".pdf"]
-        if not files:
-            print("  No PDF files found in this directory.")
-        for p in files:
-            print(f"  [Evaluating] File: {p.name}")
-            if p.name.endswith("_english_ocr.pdf") or p.name.endswith("_french_ocr.pdf"):
-                print("    -> Skipped: Already a processed OCR output file.")
-                continue
-
-            if is_image_based_pdf(p):
-                print(f"    -> [Match] Image layer detected. Running French OCR...")
-                out_path = fr_dir / f"{p.stem}_french_ocr.pdf"
-                if run_ocr_on_file(p, out_path, ["fra"]):
-                    print(f"    -> Saved: {out_path}")
-                    archive_original_file(p, "french")
-            else:
-                print("    -> Skipped: PDF already contains native text layer.")
-    else:
-        print("  Directory does not exist. Skipping.")
-
-    # 1c. Scan ./data/english_and_french/
-    dual_dir = Path("data/english_and_french")
-    print("\nScanning directory: ./data/english_and_french")
-    if dual_dir.exists():
-        files = [p for p in dual_dir.iterdir() if p.suffix.lower() == ".pdf"]
-        if not files:
-            print("  No PDF files found in this directory.")
-        for p in files:
-            if p.name.startswith("temp_"):
-                continue
-            print(f"  [Evaluating] File: {p.name}")
-            if p.name.endswith("_english_ocr.pdf") or p.name.endswith("_french_ocr.pdf"):
-                print("    -> Skipped: Already a processed OCR output file.")
-                continue
-
-            print("    -> [Match] Dual-column bilingual file target identified.")
-            if process_single_file(p, mode="dual", output_opt=None):
-                archive_original_file(p, "english_and_french")
-    else:
-        print("  Directory does not exist. Skipping.")
-
-
-if __name__ == "__main__":
-    from argparse import RawTextHelpFormatter
-
-    tutorial_guide = """
-EXAMPLES OF HOW TO RUN THIS SCRIPT:
------------------------------------
-1. Run default batch scan operation (Scans all target paths and organizes files automatically):
-   python pdf_ocr_converter.py
-
-2. Process a targeted side-by-side bilingual document file:
-   python pdf_ocr_converter.py -i ./data/english_and_french/document.pdf --mode dual
-
-3. Process a side-by-side file and force outputs to go to a unified specific workspace folder:
-   python pdf_ocr_converter.py -i ./data/english_and_french/document.pdf --mode dual -o ./my_output_dir
-
-4. Process a standard monolingual file manually:
-   python pdf_ocr_converter.py -i ./data/scanned_image.pdf --mode single
-    """
-
-    parser = argparse.ArgumentParser(
-        description="Universal OCR Processing Pipeline and Dual-Column Layout Splitter Engine.",
-        epilog=tutorial_guide,
-        formatter_class=RawTextHelpFormatter
-    )
-
-    parser.add_argument("-i", "--input", default=None, help="Path to an individual target PDF file resource.")
-    parser.add_argument("-o", "--output", default=None,
-                        help="Custom output path choice (Directory for dual mode, File/Directory for single mode).")
-    parser.add_argument("--mode", choices=["single", "dual"], default="single",
-                        help="Layout processing matrix strategy structure selection.")
-    parser.add_argument("--lang", choices=["eng", "fra"], default=None,
-                        help="Force specific language optimization configuration overrides.")
-
-    args = parser.parse_args()
-
-    if args.input is None and args.output is None and args.mode == "single" and args.lang is None:
-        run_automated_batch_pipeline()
-    else:
-        if args.input is None:
-            print(
-                "Error: The -i/--input parameter resource definition attribute is required when applying explicit filter flags.")
-            sys.exit(1)
-        process_single_file(Path(args.input), args.mode, args.output, args.lang)
-
-    print("\nProcessing workflow execution cycle completed.")
-```
-
-Filename= src\query_handler.py
-CODE:
-```
-"""
-Query handler module for language-aware query processing.
-Handles query language detection and routing to appropriate system prompts.
-"""
-
-import re
-import sys
-from pathlib import Path
-from typing import Dict, Optional
-from language_detector import detect_language
-
-# Add project root to path to allow importing config
-_project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(_project_root))
-if (_project_root / 'config.py').exists():
-    from config import DEFAULT_AGREEMENT_YEAR_RANGE
-else:
-    from config_template import DEFAULT_AGREEMENT_YEAR_RANGE
-
-# System prompts for bilingual support
-SYSTEM_PROMPTS = {
-    "en": "You are a helpful assistant answering questions about the Laurentian University Faculty Association collective agreement. Respond in English.",
-    "fr": "Tu es un assistant utile qui répond aux questions sur la convention collective de l'Association des professeur(e)s de l'Université Laurentienne. Réponds en français."
-}
-
-
-class QueryHandler:
-    """
-    Handles query processing with language awareness.
-    """
-    
-    def __init__(self):
-        """Initialize the query handler."""
-        self.system_prompts = SYSTEM_PROMPTS
-    
-    def detect_query_language(self, query: str) -> str:
-        """
-        Detect the language of a user query.
-        
-        Args:
-            query: User query text
-            
-        Returns:
-            Language code ('en' or 'fr')
-        """
-        return detect_language(query)
-    
-    def get_system_prompt(self, language: str) -> str:
-        """
-        Get the appropriate system prompt for the given language.
-        
-        Args:
-            language: Language code ('en' or 'fr')
-            
-        Returns:
-            System prompt string
-        """
-        return self.system_prompts.get(language, self.system_prompts['en'])
-    
-    def create_language_aware_query(self, query: str, language: Optional[str] = None) -> Dict[str, str]:
-        """
-        Create a language-aware query with appropriate system prompt.
-
-        Args:
-            query: User query text
-            language: Optional language code. If not provided, will be auto-detected.
-
-        Returns:
-            Dictionary with 'query', 'language', and 'system_prompt'
-        """
-        if language is None:
-            language = self.detect_query_language(query)
-
-        query = self.augment_query_with_year(query, language)
-        
-        system_prompt = self.get_system_prompt(language)
-        
-        return {
-            'query': query,
-            'language': language,
-            'system_prompt': system_prompt
-        }
-
-    def augment_query_with_year(self, user_input: str, language: Optional[str] = None) -> str:
-        """
-        Augment the user query with a year range if no year is present.
-
-        If the query does not already contain a 4-digit year, appends
-        'collective agreement 2020 - 2025' to help narrow retrieval.
-
-        Args:
-            user_input: Raw user query string
-            language: Optional language code ('en' or 'fr'). If not provided, will be auto-detected.
-
-        Returns:
-            Augmented query string, or the original if a year was found
-        """
-        has_year = re.search(r'\b(19\d{2}|20\d{2})\b', user_input)
-
-        if not has_year:
-            if language is None:
-                language = self.detect_query_language(user_input)
-
-            if language == 'fr':
-                return f"{user_input} convention collective {DEFAULT_AGREEMENT_YEAR_RANGE}"
-            else:
-                return f"{user_input} collective agreement {DEFAULT_AGREEMENT_YEAR_RANGE}"
-
-        return user_input
-
-    def format_response_instruction(self, language: str) -> str:
-        """
-        Create an instruction to ensure response is in the correct language.
-        
-        Args:
-            language: Language code ('en' or 'fr')
-            
-        Returns:
-            Response instruction string
-        """
-        if language == 'fr':
-            return "Réponds en français. "
-        else:
-            return "Respond in English. "
-
-```
-
-Filename= src\query_rewriter.py
-CODE:
-```
-"""
-Query rewriting module for Agentic RAG.
-Rewrites vague or short queries into precise, retrieval-optimised questions.
-"""
-
-from llama_index.llms.ollama import Ollama
-
-
-REWRITE_PROMPT = {
-    "en": """You are a query rewriting assistant for a university collective agreement 
-document retrieval system.
-
-Rewrite the following query to be more specific and precise so it retrieves the 
-most relevant clauses or articles from the agreement. Output ONLY the rewritten 
-query — do not answer it or explain yourself.
-
-Original query: {query}
-Rewritten query:""",
-
-    "fr": """Tu es un assistant de réécriture de requêtes pour un système de 
-récupération de convention collective universitaire.
-
-Réécris la requête suivante pour qu'elle soit plus précise et récupère les 
-clauses ou articles les plus pertinents. Retourne UNIQUEMENT la requête réécrite 
-— ne réponds pas à la question.
-
-Requête originale: {query}
-Requête réécrite:"""
-}
-
-
-def rewrite_query(query: str, lang: str, llm: Ollama) -> str:
-    """
-    Rewrite a user query to be more retrieval-friendly.
-
-    Args:
-        query: Original user query
-        lang:  Detected language code ('en' or 'fr')
-        llm:   Shared Ollama LLM instance from BilingualRAGEngine
-
-    Returns:
-        Rewritten query string (falls back to original if rewrite is empty)
-    """
-    prompt = REWRITE_PROMPT.get(lang, REWRITE_PROMPT["en"]).format(query=query)
-    try:
-        response = llm.complete(prompt)
-        rewritten = str(response).strip()
-        # Reject rewrite if it's empty or suspiciously long (model went off-script)
-        if rewritten and len(rewritten) < 400:
-            return rewritten
-    except Exception as e:
-        print(f"[QueryRewriter] Rewrite failed: {e}")
-    return query  # safe fallback
-
-```
-
-Filename= src\rag_engine.py
-CODE:
-```
-#!/usr/bin/env python3
-"""
-RAG engine module for bilingual question-answering.
-Handles query processing, cross-lingual hybrid retrieval, and response generation.
-"""
-import re
-from rank_bm25 import BM25Okapi
-from llama_index.core.schema import NodeWithScore
-from typing import List, Optional
-from language_detector import detect_language
-from query_handler import QueryHandler, SYSTEM_PROMPTS
-from query_rewriter import rewrite_query
-from reflector import reflect
-from translator import (
-    detect_full_language,
-    needs_translation,
-    translate_to_english,
-    translate_to_target,
-    LANGUAGE_NAMES,
-)
-from llama_index.core import VectorStoreIndex, StorageContext
-from llama_index.core.retrievers import VectorIndexRetriever
-from llama_index.core.query_engine import RetrieverQueryEngine
-from llama_index.core.response_synthesizers import get_response_synthesizer
-from llama_index.llms.ollama import Ollama
-from llama_index.embeddings.ollama import OllamaEmbedding
-from llama_index.vector_stores.chroma import ChromaVectorStore
-import chromadb
-
-PREVIEW_LENGTH = 200
-MAX_RETRIES    = 3
-
-
-class BilingualRAGEngine:
-    """
-    Bilingual RAG engine for Laurentian University Faculty Association collective agreement.
-    Features cross-lingual retrieval, query rewriting, and hybrid RRF retrieval.
-    """
-
-    def __init__(
-        self,
-        db_path: str = "db/chroma_db",
-        collection_name: str = "multilingual_docs",
-        llm_model: str = "llama3.2:3b-instruct-q4_K_M",
-        embedding_model: str = "nomic-embed-text-v2-moe",
-        similarity_top_k: int = 5
-    ):
-        self.db_path          = db_path
-        self.collection_name  = collection_name
-        self.similarity_top_k = similarity_top_k
-        self.query_handler    = QueryHandler()
-
-        print(f"Initializing LLM: {llm_model}")
-        self.llm = Ollama(
-            model=llm_model,
-            base_url="http://localhost:11434",
-            request_timeout=120.0,
-        )
-
-        print(f"Initializing embedding model: {embedding_model}")
-        self.embed_model = OllamaEmbedding(
-            model_name=embedding_model,
-            base_url="http://localhost:11434",
-        )
-
-        self.index        = self._load_index()
-        self.query_engine = self._create_query_engine()
-
-    def _load_index(self) -> VectorStoreIndex:
-        print(f"Loading index from {self.db_path}...")
-        chroma_client     = chromadb.PersistentClient(path=self.db_path)
-        chroma_collection = chroma_client.get_or_create_collection(self.collection_name)
-        vector_store      = ChromaVectorStore(chroma_collection=chroma_collection)
-        index = VectorStoreIndex.from_vector_store(
-            vector_store=vector_store,
-            embed_model=self.embed_model,
-        )
-        print("Index loaded successfully")
-        return index
-
-    def set_similarity_top_k(self, top_k: int):
-        self.similarity_top_k = top_k
-        if hasattr(self, 'query_engine') and hasattr(self.query_engine, 'retriever'):
-            self.query_engine.retriever._similarity_top_k = top_k
-
-    def _create_query_engine(self) -> RetrieverQueryEngine:
-        retriever = VectorIndexRetriever(
-            index=self.index,
-            similarity_top_k=self.similarity_top_k,
-        )
-        response_synthesizer = get_response_synthesizer(
-            llm=self.llm,
-            response_mode="compact",
-        )
-        return RetrieverQueryEngine(
-            retriever=retriever,
-            response_synthesizer=response_synthesizer,
-        )
-
-    def detect_query_language(self, query: str) -> str:
-        return self.query_handler.detect_query_language(query)
-
-    def create_language_aware_prompt(self, query: str, language: str) -> str:
-        system_prompt = self.query_handler.get_system_prompt(language)
-        instruction   = "Réponds en français. " if language == 'fr' else "Respond in English. "
-        return instruction + query
-
-    def query(self, query_text: str, return_sources: bool = False) -> dict:
-        """Standard single-pass RAG query."""
-        detected_language = self.detect_query_language(query_text)
-        print(f"Detected query language: {detected_language}")
-        enhanced_query    = self.create_language_aware_prompt(query_text, detected_language)
-        response          = self.query_engine.query(enhanced_query)
-
-        result = {
-            'response':          str(response),
-            'detected_language': detected_language,
-        }
-
-        if return_sources and hasattr(response, 'source_nodes'):
-            sources = []
-            for node in response.source_nodes:
-                text    = node.node.text
-                preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
-                sources.append({
-                    'text':     preview,
-                    'score':    node.score,
-                    'metadata': node.node.metadata,
-                    'node_id':  node.node.node_id
-                })
-            result['sources'] = sources
-
-        return result
-
-    def chat(self, query_text: str) -> str:
-        return self.query(query_text, return_sources=False)['response']
-
-    def _retrieve_nodes(self, query: str, top_k: int = 5) -> list:
-        """
-        Executes advanced hybrid retrieval. Sorts dense vector nodes by recency weights
-        during similarity ties, then merges them with sparse BM25 tokens via RRF.
-        Directly reads from ChromaDB to avoid ZeroDivisionError.
-        """
-        dense_retriever = VectorIndexRetriever(
-            index=self.index,
-            similarity_top_k=top_k * 2,
-        )
-        raw_dense_nodes = dense_retriever.retrieve(query)
-
-        if raw_dense_nodes:
-            raw_dense_nodes.sort(key=lambda x: x.score, reverse=True)
-            dense_nodes = []
-            i = 0
-            tie_threshold = 0.02
-
-            while i < len(raw_dense_nodes):
-                bucket_score = raw_dense_nodes[i].score
-                bucket = []
-                j = i
-                while j < len(raw_dense_nodes) and (bucket_score - raw_dense_nodes[j].score) < tie_threshold:
-                    bucket.append(raw_dense_nodes[j])
-                    j += 1
-
-                bucket.sort(key=lambda x: float(x.node.metadata.get("recency_weight", 1.0)), reverse=True)
-                dense_nodes.extend(bucket)
-                i = j
-        else:
-            dense_nodes = []
-
-        from llama_index.core.schema import TextNode
-        chroma_client = chromadb.PersistentClient(path=self.db_path)
-        chroma_collection = chroma_client.get_or_create_collection(self.collection_name)
-        collection_data = chroma_collection.get(include=["documents", "metadatas"])
-
-        all_nodes = []
-        if collection_data and collection_data.get("ids"):
-            for cid, doc, meta in zip(collection_data["ids"], collection_data["documents"], collection_data["metadatas"]):
-                node = TextNode(id_=cid, text=doc, metadata=meta)
-                all_nodes.append(node)
-
-        if not all_nodes:
-            return dense_nodes
-
-        tokenized_corpus = [re.findall(r'\b\w+\b', node.text.lower()) for node in all_nodes]
-        bm25 = BM25Okapi(tokenized_corpus)
-
-        tokenized_query = re.findall(r'\b\w+\b', query.lower())
-        bm25_scores = bm25.get_scores(tokenized_query)
-
-        top_bm25_indices = sorted(range(len(bm25_scores)), key=lambda idx: bm25_scores[idx], reverse=True)[:top_k * 2]
-        sparse_nodes = [all_nodes[idx] for idx in top_bm25_indices]
-
-        rrf_scores = {}
-        node_mapping = {}
-
-        for rank, node in enumerate(dense_nodes, start=1):
-            node_id = node.node.node_id
-            node_mapping[node_id] = node
-            node.node.metadata["original_cosine_score"] = str(node.score)
-            rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
-
-        for rank, node in enumerate(sparse_nodes, start=1):
-            node_id = node.node_id
-            if node_id not in node_mapping:
-                from llama_index.core.schema import NodeWithScore
-                node_mapping[node_id] = NodeWithScore(node=node, score=0.0)
-            rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
-
-        sorted_node_ids = sorted(rrf_scores.keys(), key=lambda k: rrf_scores[k], reverse=True)[:top_k]
-
-        final_nodes = []
-        for nid in sorted_node_ids:
-            wrapped_node = node_mapping[nid]
-            wrapped_node.score = rrf_scores[nid]
-            final_nodes.append(wrapped_node)
-
-        return final_nodes
-
-    def _generate_from_nodes(self, original_query: str, nodes, lang: str) -> str:
-        context     = "\n\n---\n\n".join([n.node.text for n in nodes])
-        system      = self.query_handler.get_system_prompt(lang)
-        instruction = "Réponds en français." if lang == "fr" else "Respond in English."
-
-        prompt = f"""{system}
-{instruction}
-Answer ONLY using the context below.
-Cite the source document name and page number for every claim.
-Context:
-{context}
-
-Question: {original_query}
-Answer:"""
-        return str(self.llm.complete(prompt)).strip()
-
-    def agentic_query(
-        self,
-        query_text:     str,
-        return_sources: bool = False,
-        max_retries:    int  = MAX_RETRIES
-    ) -> dict:
-        """Agentic RAG query loop with cross-lingual support."""
-        original_lang      = detect_full_language(query_text)
-        translation_applied = needs_translation(original_lang)
-        translated_query   = None
-
-        if translation_applied:
-            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
-            print(f"[AgenticRAG] Non-native language detected: {original_lang} ({lang_name})")
-            print(f"[AgenticRAG] Translating query to English for processing...")
-            translated_query = translate_to_english(query_text, original_lang, self.llm)
-            processing_query = translated_query
-            pipeline_lang    = "en"
-        else:
-            processing_query = query_text
-            pipeline_lang    = original_lang
-
-        print(f"[AgenticRAG] Pipeline language: {pipeline_lang}")
-
-        current_query    = processing_query
-        rewritten_query  = processing_query
-        nodes            = []
-        answer           = ""
-        is_grounded      = False
-
-        for attempt in range(1, max_retries + 1):
-            print(f"[AgenticRAG] Attempt {attempt}/{max_retries}")
-
-            if attempt == 1:
-                rewritten_query = rewrite_query(current_query, pipeline_lang, self.llm)
-            else:
-                hint = f"{current_query} Focus on specific article numbers, salary grids, dates, or job ranks."
-                rewritten_query = rewrite_query(hint, pipeline_lang, self.llm)
-
-            print(f"[AgenticRAG] Rewritten: {rewritten_query}")
-
-            top_k = self.similarity_top_k + (attempt - 1) * 2
-            nodes = self._retrieve_nodes(rewritten_query, top_k=top_k)
-            print(f"[AgenticRAG] Retrieved {len(nodes)} chunks (top_k={top_k})")
-
-            answer = self._generate_from_nodes(processing_query, nodes, pipeline_lang)
-
-            chunk_texts = [n.node.text for n in nodes]
-            is_grounded = reflect(answer, chunk_texts, self.llm)
-            print(f"[AgenticRAG] Grounded: {is_grounded}")
-
-            if is_grounded:
-                break
-
-            current_query = rewritten_query
-
-        final_answer = answer
-        if translation_applied:
-            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
-            print(f"[AgenticRAG] Translating answer back to {lang_name}...")
-            final_answer = translate_to_target(answer, original_lang, self.llm)
-
-        result = {
-            'response':            final_answer,
-            'english_response':    answer if translation_applied else None,
-            'detected_language':   pipeline_lang,
-            'original_language':   original_lang,
-            'original_query':      query_text,
-            'translated_query':    translated_query,
-            'rewritten_query':     rewritten_query,
-            'attempts':            attempt,
-            'grounded':            is_grounded,
-            'translation_applied': translation_applied,
-        }
-
-        if return_sources:
-            sources = []
-            for node in nodes:
-                text    = node.node.text
-                preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
-                sources.append({
-                    'text':     preview,
-                    'score':    node.score,
-                    'metadata': node.node.metadata,
-                    'node_id':  node.node.node_id
-                })
-            result['sources'] = sources
-
-        return result
-
-
-def create_rag_engine(
-    db_path:         str = "db/chroma_db",
-    llm_model:       str = "llama3.2:3b-instruct-q4_K_M",
-    embedding_model: str = "nomic-embed-text-v2-moe"
-) -> BilingualRAGEngine:
-    return BilingualRAGEngine(
-        db_path=db_path,
-        llm_model=llm_model,
-        embedding_model=embedding_model,
-    )
-```
-
-Filename= src\recency_reranker.py
-CODE:
-```
-"""
-recency_reranker.py — tie-breaking reranker using recency_weight.
-
-Drop this next to your rag_engine.py and call rerank() on ChromaDB results
-before returning them to the user.
-
-Rules
------
-- Primary sort  : cosine similarity score  (descending, higher = better)
-- Tie-breaker   : recency_weight           (descending, newer = better)
-  applied ONLY when two chunks are within TIE_THRESHOLD of each other
-
-Default TIE_THRESHOLD = 0.02  (i.e. scores within 2 percentage points are
-considered a tie and recency decides the winner).
-
-Why 0.02?
-  Typical nomic-embed cosine scores for relevant chunks cluster in a narrow
-  band (e.g. 0.72–0.81).  A 0.02 window lets genuinely different-quality
-  matches keep their natural order while still boosting a newer agreement
-  clause over an identically-worded older one.
-
-Usage
------
-  from recency_reranker import rerank
-
-  results = chroma_collection.query(
-      query_embeddings=[embedding],
-      n_results=20,                  # fetch more than you need
-      include=["documents", "metadatas", "distances"],
-  )
-  top_k = rerank(results, top_k=5)
-  # top_k is a list of dicts: {text, metadata, score, recency_weight}
-"""
-
-from __future__ import annotations
-from typing import List, Dict, Any
-
-TIE_THRESHOLD: float = 0.02
-
-
-def _chroma_distance_to_similarity(distance: float) -> float:
-    """
-    ChromaDB returns L2 distance by default when using cosine space;
-    convert to a 0-1 similarity.  If you use cosine distance directly
-    (distance_function="cosine") it is already 1 - cosine_similarity,
-    so we do 1 - distance.  Adjust if your collection uses inner_product.
-    """
-    return max(0.0, 1.0 - distance)
-
-
-def rerank(
-    chroma_results: Dict[str, Any],
-    top_k: int = 5,
-    tie_threshold: float = TIE_THRESHOLD,
-) -> List[Dict[str, Any]]:
-    """
-    Re-rank ChromaDB query results using similarity as primary sort and
-    recency_weight as a tie-breaker.
-
-    Parameters
-    ----------
-    chroma_results : dict
-        Raw output from chroma_collection.query(include=[...]).
-    top_k : int
-        Number of chunks to return after reranking.
-    tie_threshold : float
-        Score difference below which two chunks are considered tied and
-        recency_weight decides the winner.
-
-    Returns
-    -------
-    List of dicts with keys: chunk_id, text, metadata, score, recency_weight
-    """
-    docs      = chroma_results.get("documents", [[]])[0]
-    metas     = chroma_results.get("metadatas", [[]])[0]
-    distances = chroma_results.get("distances", [[]])[0]
-    ids       = chroma_results.get("ids", [[]])[0]
-
-    if not docs:
-        return []
-
-    candidates = []
-    for doc, meta, dist, cid in zip(docs, metas, distances, ids):
-        sim    = _chroma_distance_to_similarity(dist)
-        weight = float(meta.get("recency_weight", 1.0))
-        candidates.append({
-            "chunk_id":       cid,
-            "text":           doc,
-            "metadata":       meta,
-            "score":          round(sim, 6),
-            "recency_weight": weight,
-        })
-
-    # ── Two-key sort ─────────────────────────────────────────────────────────
-    # We want: higher score first, then higher recency_weight first.
-    # But only apply weight as a tiebreaker, not a multiplier.
-    #
-    # Implementation: bucket scores into groups where every member is within
-    # `tie_threshold` of the group's best score, then sort within each bucket
-    # by recency_weight.
-    candidates.sort(key=lambda x: x["score"], reverse=True)
-
-    reranked: list = []
-    i = 0
-    while i < len(candidates):
-        bucket_score = candidates[i]["score"]
-        bucket = []
-        j = i
-        while j < len(candidates) and (bucket_score - candidates[j]["score"]) < tie_threshold:
-            bucket.append(candidates[j])
-            j += 1
-        # Within the tie bucket: newer agreement wins
-        bucket.sort(key=lambda x: x["recency_weight"], reverse=True)
-        reranked.extend(bucket)
-        i = j
-
-    return reranked[:top_k]
-
-
-# ── Convenience: pretty-print for debugging ───────────────────────────────────
-
-def explain_ranking(results: List[Dict[str, Any]]) -> None:
-    """Print a ranked summary to stdout for inspection."""
-    print(f"{'Rank':<5} {'Score':>7} {'Weight':>7} {'EndYear':>8}  chunk_id")
-    print("-" * 70)
-    for rank, r in enumerate(results, start=1):
-        end_year = r["metadata"].get("end_year", "?")
-        print(
-            f"{rank:<5} {r['score']:>7.4f} {r['recency_weight']:>7.4f} "
-            f"{str(end_year):>8}  {r['chunk_id']}"
-        )
-
-```
-
-Filename= src\reflector.py
-CODE:
-```
-"""
-Reflection module for Agentic RAG.
-Checks whether a generated answer is grounded in the retrieved source chunks.
-"""
-
-from typing import List
-
-from llama_index.llms.ollama import Ollama
-
-
-REFLECT_PROMPT = """You are a grounding verification assistant for a legal document 
-question-answering system.
-
-Given the answer and the retrieved source chunks below, decide whether EVERY claim 
-in the answer is directly supported by the source chunks.
-
-Answer:
-{answer}
-
-Retrieved source chunks:
-{chunks}
-
-Reply with ONLY one word — either GROUNDED or UNGROUNDED."""
-
-
-def reflect(answer: str, chunks: List[str], llm: Ollama) -> bool:
-    """
-    Check whether the generated answer is grounded in retrieved chunks.
-
-    Args:
-        answer: Generated answer text
-        chunks: List of retrieved text chunks
-        llm:    Shared Ollama LLM instance from BilingualRAGEngine
-
-    Returns:
-        True  → answer is grounded (safe to return to user)
-        False → answer is not grounded (trigger re-retrieval)
-    """
-    if not chunks:
-        return False
-
-    chunks_text = "\n\n---\n\n".join(chunks[:5])
-    prompt = REFLECT_PROMPT.format(answer=answer, chunks=chunks_text)
-
-    try:
-        result = str(llm.complete(prompt)).strip().upper()
-        tokens = result.split()
-        return bool(tokens) and tokens[0] == "GROUNDED"
-    except Exception as e:
-        print(f"[Reflector] Reflection failed: {e}")
-        return False  # fail-closed: on reflection failure, treat answer as ungrounded
-
-```
-
-Filename= src\repair_evaluation.py
-CODE:
-```
-#!/usr/bin/env python3
-"""
-Repair and incremental processing script for LUFA RAG system logs.
-Phase 1: Optimizes and updates zero retrieval metrics using direct database text maps.
-Phase 2: Runs expensive simulation lookups and LLM judge grading on incomplete rows.
-"""
-
-import os
-import sys
-import re
-import argparse
-from pathlib import Path
 import pandas as pd
-import chromadb
+import numpy as np
+from tqdm import tqdm
 
-# Ensure root paths are accessible
-sys.path.insert(0, str(Path(__file__).parent))
+# NLP metrics
+import nltk
+from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+from nltk.translate.meteor_score import meteor_score
+from rouge_score import rouge_scorer
+
+# Dynamic simulation hooks
 from run_simulation import query_single_record, load_config
 
-DEFAULT_LUFA_CSV = "tests/lufa_out_data.csv"
-DEFAULT_GT_CSV = "tests/combined_test_data_and_ground_truth.csv"
-DEFAULT_EVAL_CSV = "tests/evaluation_results.csv"
-DEFAULT_DB = "db/chroma_db"
-DEFAULT_COLLECTION = "multilingual_docs"
+warnings.filterwarnings("ignore")
+
+sys.path.insert(0, str(Path(__file__).parent))
+
+# Download NLTK data silently
+for pkg in ["punkt", "wordnet", "omw-1.4", "punkt_tab"]:
+    try:
+        nltk.download(pkg, quiet=True)
+    except Exception:
+        pass
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  STRICT MATRIX SCHEMA COLUMN DEFINITIONS
+# ─────────────────────────────────────────────────────────────────────────────
+LUFA_COLUMNS = [
+    "question_id", "question", "answer", "base_model_used", "language", "attempts", "grounded",
+    "source1_id", "source1_score", "source1_text",
+    "source2_id", "source2_score", "source2_text",
+    "source3_id", "source3_score", "source3_text",
+    "source4_id", "source4_score", "source4_text",
+    "source5_id", "source5_score", "source5_text",
+    "original_cosine_score", "recency_adjusted_score", "RRF"
+]
+
+EVAL_COLUMNS = [
+    "question_id", "question", "answer", "base_model_used", "language", "attempts", "grounded",
+    "source1_id", "source1_score", "source1_text",
+    "source2_id", "source2_score", "source2_text",
+    "source3_id", "source3_score", "source3_text",
+    "source4_id", "source4_score", "source4_text",
+    "source5_id", "source5_score", "source5_text",
+    "original_cosine_score", "recency_adjusted_score", "RRF",
+    "id", "rag_base_model", "judge_llm", "category", "difficulty",
+    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor",
+    "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
+    "answer_relevance", "faithfulness", "context_precision"
+]
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+#  INLINE REPAIR ENGINE UTILITIES
+# ─────────────────────────────────────────────────────────────────────────────
 def calculate_token_overlap(text_a, text_b):
     """Calculate the token intersection ratio between text segments."""
     if not text_a or not text_b or pd.isna(text_a) or pd.isna(text_b):
@@ -2605,14 +198,14 @@ def calculate_token_overlap(text_a, text_b):
     return len(intersection) / len(words_a)
 
 
-def repair_single_row_sources(row_dict, chroma_data=None, db_path=DEFAULT_DB, collection_name=DEFAULT_COLLECTION):
+def repair_single_row_sources(row_dict, chroma_data=None, db_path="db/chroma_db", collection_name="multilingual_docs"):
     """
     Examines a row's source text layers and extracts matching database keys
     by executing a local token scan over the persistent storage collection.
     """
+    import chromadb
     repaired_ids = []
 
-    # Lazy-load database collection layers if not provided inline
     if chroma_data is None:
         try:
             client = chromadb.PersistentClient(path=db_path)
@@ -2637,7 +230,6 @@ def repair_single_row_sources(row_dict, chroma_data=None, db_path=DEFAULT_DB, co
         matched_id = ""
         max_overlap = -1.0
 
-        # Execute absolute string mapping passes
         for cid, doc_text in zip(db_ids, db_docs):
             doc_clean = str(doc_text).lower()
             if source_clean in doc_clean:
@@ -2655,176 +247,2201 @@ def repair_single_row_sources(row_dict, chroma_data=None, db_path=DEFAULT_DB, co
     return repaired_ids
 
 
-def main_pipeline():
-    parser = argparse.ArgumentParser(description="Incremental repair and pipeline execution tool.")
-    parser.add_argument("--lufa_csv", default=DEFAULT_LUFA_CSV)
-    parser.add_argument("--gt_csv", default=DEFAULT_GT_CSV)
-    parser.add_argument("--eval_csv", default=DEFAULT_EVAL_CSV)
-    parser.add_argument("--db", default=DEFAULT_DB)
-    parser.add_argument("--collection", default=DEFAULT_COLLECTION)
-    args = parser.parse_args()
+# ─────────────────────────────────────────────────────────────────────────────
+#  GENERATION METRICS
+# ─────────────────────────────────────────────────────────────────────────────
+def tokenize(text):
+    return re.findall(r'\b\w+\b', str(text).lower())
 
-    print("================================================================================")
-    print("PHASE 1: Starting Cheap Retrieval Metric Repair Loop")
-    print("================================================================================")
 
-    if not Path(args.lufa_csv).exists():
-        print(f"Notice: Target path '{args.lufa_csv}' is missing. Skipping Phase 1.")
-        lufa_df = pd.DataFrame(columns=LUFA_COLUMNS)
-    else:
-        lufa_df = pd.read_csv(args.lufa_csv)
+def token_f1(prediction, reference):
+    pred_tokens = set(tokenize(prediction))
+    ref_tokens = set(tokenize(reference))
+    if not pred_tokens or not ref_tokens:
+        return 0.0
+    common = pred_tokens & ref_tokens
+    precision = len(common) / len(pred_tokens)
+    recall = len(common) / len(ref_tokens)
+    if precision + recall == 0:
+        return 0.0
+    return 2.0 * precision * recall / (precision + recall)
 
-    print(f" -> Connecting to vector database path: {args.db}")
+
+def compute_bleu(prediction, reference):
+    pred_tokens = tokenize(prediction)
+    ref_tokens = tokenize(reference)
+    if not pred_tokens:
+        return 0.0
+    smoothie = SmoothingFunction().method4
+    return sentence_bleu([ref_tokens], pred_tokens, smoothing_function=smoothie)
+
+
+def compute_rouge(prediction, reference):
+    scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
+    scores = scorer.score(str(reference), str(prediction))
+    return {
+        "rouge1": round(scores["rouge1"].fmeasure, 4),
+        "rouge2": round(scores["rouge2"].fmeasure, 4),
+        "rougeL": round(scores["rougeL"].fmeasure, 4),
+    }
+
+
+def compute_meteor(prediction, reference):
     try:
-        client = chromadb.PersistentClient(path=args.db)
-        collection = client.get_collection(args.collection)
-        chroma_data = collection.get(include=["documents"])
-        print(f" -> Active database size: {len(chroma_data.get('ids', []))} entries.")
-    except Exception as e:
-        print(f"Error connecting to database collection: {e}")
-        return
+        pred_tokens = tokenize(prediction)
+        ref_tokens = tokenize(reference)
+        if not pred_tokens or not ref_tokens:
+            return 0.0
+        return meteor_score([ref_tokens], pred_tokens)
+    except Exception:
+        return 0.0
 
-    # Phase 1: Re-map source IDs using the cheap text token intersection check
-    repaired_count = 0
-    for idx, row in lufa_df.iterrows():
-        q_id = row.get("question_id")
 
-        # Pull original tracking values safely
-        mrr_col = float(row.get("mrr", 1.0) if "mrr" in lufa_df.columns else 0.0)
+# ─────────────────────────────────────────────────────────────────────────────
+#  RETRIEVAL METRICS
+# ─────────────────────────────────────────────────────────────────────────────
+def parse_source_ids(raw):
+    if not raw or pd.isna(raw):
+        return []
+    return [s.strip() for s in str(raw).split("|") if s.strip()]
 
-        # If the metric indicates unaligned tracking parameters, execute repair
-        if mrr_col == 0.0 or pd.isna(row.get("source1_id")):
-            row_dict = row.to_dict()
-            fixed_ids = repair_single_row_sources(row_dict, chroma_data, args.db, args.collection)
 
-            if fixed_ids:
-                repaired_count += 1
-                for i, cid in enumerate(fixed_ids, start=1):
-                    lufa_df.at[idx, f"source{i}_id"] = cid
-                print(f" -> Repaired position tokens for Question ID: {q_id}")
+def recall_at_k(retrieved, ground_truth, k):
+    if not ground_truth:
+        return 0.0
+    relevant_at_k = set(retrieved[:k]) & set(ground_truth)
+    return len(relevant_at_k) / len(ground_truth)
 
-    if repaired_count > 0:
-        lufa_df.to_csv(args.lufa_csv, index=False)
-        print(f" -> Phase 1 Complete. Updated {repaired_count} rows on disk.")
+
+def mrr(retrieved, ground_truth):
+    gt_set = set(ground_truth)
+    for rank, doc_id in enumerate(retrieved, start=1):
+        if doc_id in gt_set:
+            return 1.0 / rank
+    return 0.0
+
+
+def ndcg_at_k(retrieved, ground_truth, k=5):
+    gt_set = set(ground_truth)
+    dcg = sum(
+        (1.0 / math.log2(rank + 1))
+        for rank, doc_id in enumerate(retrieved[:k], start=1)
+        if doc_id in gt_set
+    )
+    ideal_hits = min(len(gt_set), k)
+    idcg = sum(1.0 / math.log2(rank + 1) for rank in range(1, ideal_hits + 1))
+    return round(dcg / idcg, 4) if idcg > 0 else 0.0
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  LLM-AS-JUDGE METRICS
+# ─────────────────────────────────────────────────────────────────────────────
+LLM_JUDGE_PROMPTS = {
+    "answer_relevance": """Score how relevant the answer is to the question.
+Score 1-5: 1=completely irrelevant, 3=partially relevant, 5=fully relevant.
+Reply with ONLY the integer score.
+
+Question: {question}
+Answer: {answer}
+Score:""",
+
+    "faithfulness": """Score how faithful the answer is to the provided context.
+Score 1-5: 1=many unsupported claims, 3=mostly supported, 5=all claims verifiable in context.
+Reply with ONLY the integer score.
+
+Context: {context}
+Answer: {answer}
+Score:""",
+
+    "context_precision": """Score how precisely the context chunks are relevant to the question.
+Score 1-5: 1=context is mostly irrelevant, 3=some chunks relevant, 5=all chunks highly relevant.
+Reply with ONLY the integer score.
+
+Question: {question}
+Context: {context}
+Score:""",
+}
+
+
+def extract_score(text):
+    match = re.search(r'\b([1-5])\b', str(text).strip())
+    return float(match.group(1)) / 5.0 if match else 0.5
+
+
+def llm_judge_scores(question, answer, context, llm_model="llama3.2:3b-instruct-q4_K_M"):
+    """Use local Ollama model as judge. Returns normalized 0–1 scores."""
+    from llama_index.llms.ollama import Ollama
+    llm = Ollama(model=llm_model, base_url="http://localhost:11434", request_timeout=60.0)
+    scores = {}
+    for metric, prompt_template in LLM_JUDGE_PROMPTS.items():
+        try:
+            prompt = prompt_template.format(
+                question=question[:500],
+                answer=answer[:800],
+                context=context[:1000],
+            )
+            raw = str(llm.complete(prompt)).strip()
+            scores[metric] = round(extract_score(raw), 4)
+        except Exception as e:
+            print(f"      [Judge Warning] {metric} calculation failure: {e}")
+            scores[metric] = 0.0
+    return scores
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  MAIN EVALUATION PIPELINE
+# ─────────────────────────────────────────────────────────────────────────────
+def build_context_from_row(row):
+    parts = []
+    for i in range(1, 6):
+        text = row.get(f"source{i}_text", "")
+        if text and not pd.isna(text):
+            parts.append(str(text))
+    return "\n\n---\n\n".join(parts)
+
+
+def build_retrieved_ids(row):
+    ids = []
+    for i in range(1, 6):
+        sid = row.get(f"source{i}_id", "")
+        if sid and not pd.isna(sid):
+            ids.append(str(sid))
+    return ids
+
+
+def safe_float(val, default_val=0.0):
+    if pd.isna(val) or val == "":
+        return default_val
+    try:
+        return float(val)
+    except Exception:
+        return default_val
+
+
+def run_evaluation(
+        lufa_csv="tests/lufa_out_data.csv",
+        test_csv="tests/combined_test_data_and_ground_truth.csv",
+        out_csv="tests/evaluation_results.csv",
+        dashboard_out="dashboard/index.html",
+        use_llm_judge=True,
+        llm_model="llama3.2:3b-instruct-q4_K_M",
+        sim_mode="local",
+        api_url="http://localhost:8000"
+):
+    print(f"[Eval] Verifying ground truth data file from: {test_csv}")
+    if not Path(test_csv).exists():
+        raise FileNotFoundError(
+            f"Critical System Error: Missing designated test data tracking registry file at: {test_csv}")
+    test_df = pd.read_csv(test_csv)
+
+    print(f"[Eval] Verifying RAG engine output log from: {lufa_csv}")
+
+    if Path(lufa_csv).exists():
+        try:
+            out_df = pd.read_csv(lufa_csv, on_bad_lines="skip")
+        except Exception as e:
+            print(
+                f"[Warning] Severe file corruption detected in {lufa_csv}. Resetting file layout schema framework: {e}")
+            out_df = pd.DataFrame(columns=LUFA_COLUMNS)
+            Path(lufa_csv).parent.mkdir(parents=True, exist_ok=True)
+            out_df.to_csv(lufa_csv, index=False)
     else:
-        print(" -> Phase 1 Complete. No unaligned retrieval tokens found.")
+        print(f"[Warning] Engine output file '{lufa_csv}' not detected. Constructing a clean file baseline.")
+        out_df = pd.DataFrame(columns=LUFA_COLUMNS)
+        Path(lufa_csv).parent.mkdir(parents=True, exist_ok=True)
+        out_df.to_csv(lufa_csv, index=False)
 
-    print("\n================================================================================")
-    print("PHASE 2: Starting Expensive Gaps Pass (Inference + LLM Judge Updates)")
-    print("================================================================================")
-
-    if not Path(args.gt_csv).exists():
-        print(f"Error: Missing ground truth file at {args.gt_csv}. Phase 2 aborted.")
-        return
-
-    gt_df = pd.read_csv(args.gt_csv)
-    cfg = load_config()
-    base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
-
-    # Re-verify and isolate empty answer parameters or uncalculated rows
     lufa_records = {}
-    if Path(args.lufa_csv).exists():
-        lufa_df = pd.read_csv(args.lufa_csv)
-        for _, lufa_row in lufa_df.iterrows():
-            s_qid = str(lufa_row.get("question_id", "")).strip()
-            if s_qid:
-                lufa_records[s_qid] = lufa_row.to_dict()
+    for _, lufa_row in out_df.iterrows():
+        s_qid = str(lufa_row.get("question_id", "")).strip()
+        if s_qid and s_qid != "nan":
+            lufa_records[s_qid] = lufa_row.to_dict()
 
-    for idx, row in gt_df.iterrows():
+    completed_ids = set()
+    out_path = Path(out_csv)
+
+    chroma_cached_data = None
+    try:
+        import chromadb
+        client = chromadb.PersistentClient(path="db/chroma_db")
+        collection = client.get_collection("multilingual_docs")
+        chroma_cached_data = collection.get(include=["documents"])
+    except Exception as e:
+        print(f"[Warning] Could not pre-cache database tables: {e}")
+
+    if out_path.exists():
+        try:
+            existing_df = pd.read_csv(out_csv, on_bad_lines="skip")
+            if "question_id" in existing_df.columns:
+                mrr_s = pd.to_numeric(existing_df.get("mrr", 0), errors='coerce').fillna(0.0)
+                ndcg_s = pd.to_numeric(existing_df.get("ndcg_at_k", 0), errors='coerce').fillna(0.0)
+
+                valid_completions = existing_df[
+                    existing_df["question_id"].notna() &
+                    ((mrr_s > 0.0) | (ndcg_s > 0.0))
+                    ]
+                completed_ids = set(valid_completions["question_id"].dropna().astype(str).str.strip().tolist())
+
+                total_rows = len(existing_df["question_id"].dropna().unique())
+                zero_count = total_rows - len(completed_ids)
+                print(f"[Resumption] Detected existing output scorecard. Found {len(completed_ids)} completed entries.")
+                if zero_count > 0:
+                    print(
+                        f"[Resumption] Flagged {zero_count} rows containing zero metrics. Bypassing cache to execute inline repair pass.")
+        except Exception as err:
+            print(f"[Warning] Error parsing current results file structure, resetting fresh compilation: {err}")
+    else:
+        print(
+            f"[Eval] Output tracking database path '{out_csv}' not present. Will be generated dynamically row-by-row.")
+
+    cfg = load_config()
+    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+
+    print(f"[Eval] Starting verification loop on {len(test_df)} ground truth questions...")
+    print("\n" + "=" * 80)
+    print("BEGINNING PIPELINE PROCESSING LOOP (WITH INLINE SIMULATION & REPAIR)")
+    print("=" * 80)
+
+    for idx, row in test_df.iterrows():
+        current_counter = idx + 1
         q_id = str(row.get("id")).strip()
-        has_missing_answer = q_id not in lufa_records or pd.isna(lufa_records[q_id].get("answer")) or str(
-            lufa_records[q_id].get("answer")).strip() in ["", "ERROR"]
 
-        if has_missing_answer:
-            print(f" -> Question ID '{q_id}' has missing answer parameters. Prompting backend RAG workflow...")
+        if q_id in completed_ids:
+            print(
+                f"[{current_counter}/{len(test_df)}] Skipping Question ID {q_id} (Already verified in checkpoint file)")
+            continue
+
+        print(f"\n[{current_counter}/{len(test_df)}] Active Evaluation Context -> Question ID: {q_id}")
+
+        if q_id not in lufa_records:
+            print(f"   ⚠️  Notice: Question ID '{q_id}' not found in RAG output log records.")
+            print(f"   -> Executing real-time dynamic backend simulation pass...")
+
             record_dict = row.to_dict()
-            sim_output = query_single_record(record_dict, "local", base_model, base_model, "http://localhost:8000",
-                                             idx + 1)
+            sim_row_output = query_single_record(record_dict, sim_mode, cfg_base_model, llm_model, api_url,
+                                                 current_counter)
 
-            # Align columns and record immediately
-            sim_df = pd.DataFrame([sim_output])
-            sim_df.to_csv(args.lufa_csv, mode="a", index=False, header=not Path(args.lufa_csv).exists())
-            lufa_records[q_id] = sim_output
+            lufa_records[q_id] = sim_row_output
+            sim_df = pd.DataFrame([sim_row_output], columns=LUFA_COLUMNS)
+            sim_df.to_csv(lufa_csv, mode="a", index=False, header=False)
+            print(f"   -> Content generated successfully and appended permanently to {lufa_csv}")
 
-    print(" -> Phase 2 Processing Cycle Completed successfully.")
+        active_rag_data = lufa_records[q_id]
 
+        prediction = "" if pd.isna(active_rag_data.get("answer")) else str(active_rag_data.get("answer"))
+        reference = "" if pd.isna(row.get("expected_answer")) else str(row.get("expected_answer"))
+        retrieved_ids = build_retrieved_ids(active_rag_data)
+
+        gt_col = "ground_source_truth_id" if "ground_source_truth_id" in test_df.columns else "ground_truth_source_ids"
+        ground_truth_ids = parse_source_ids(row.get(gt_col, ""))
+
+        context = build_context_from_row(active_rag_data)
+        question = "" if pd.isna(row.get("question")) else str(row.get("question"))
+        language_val = "" if pd.isna(row.get("language")) else str(row.get("language"))
+
+        print("   -> Calculating Generation metrics...")
+        f1_val = round(token_f1(prediction, reference), 4)
+        print(f"      * Token F1 Score: {f1_val}")
+
+        bleu_val = round(compute_bleu(prediction, reference), 4)
+        print(f"      * Sentence BLEU Score: {bleu_val}")
+
+        rouge_scores = compute_rouge(prediction, reference)
+        print(
+            f"      * ROUGE-1: {rouge_scores['rouge1']} | ROUGE-2: {rouge_scores['rouge2']} | ROUGE-L: {rouge_scores['rougeL']}")
+
+        meteor_val = round(compute_meteor(prediction, reference), 4)
+        print(f"      * METEOR Score: {meteor_val}")
+
+        print("   -> Calculating Retrieval position metrics...")
+        mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
+        ndcg_val = ndcg_at_k(retrieved_ids, ground_truth_ids, k=5)
+        rec1 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=1), 4)
+        rec3 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=3), 4)
+        rec5 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
+
+        if mrr_val == 0.0 and ndcg_val == 0.0:
+            print("   ⚠️  Retrieval metrics returned 0.0. Activating embedded local token repair pass...")
+            try:
+                fixed_ids = repair_single_row_sources(active_rag_data, chroma_cached_data, "db/chroma_db",
+                                                      "multilingual_docs")
+
+                if fixed_ids:
+                    retrieved_ids = fixed_ids
+                    mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
+                    ndcg_val = ndcg_at_k(retrieved_ids, ground_truth_ids, k=5)
+                    rec1 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=1), 4)
+                    rec3 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=3), 4)
+                    rec5 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
+                    print(f"      * Repaired Retrieval Scores -> MRR: {mrr_val} | NDCG@5: {ndcg_val}")
+
+                    for i, cid in enumerate(retrieved_ids, start=1):
+                        active_rag_data[f"source{i}_id"] = cid
+
+                    try:
+                        current_lufa_df = pd.read_csv(lufa_csv, on_bad_lines="skip")
+                        idx_matches = current_lufa_df[current_lufa_df["question_id"] == q_id].index
+                        if len(idx_matches) > 0:
+                            for i, cid in enumerate(retrieved_ids, start=1):
+                                current_lufa_df.loc[idx_matches, f"source{i}_id"] = cid
+                            current_lufa_df.to_csv(lufa_csv, index=False)
+                    except Exception as lufa_save_err:
+                        print(f"      [Warning] Could not sync repaired source IDs back to base log: {lufa_save_err}")
+            except Exception as repair_err:
+                print(f"      [Live Repair Error] Single row recovery pass failed: {repair_err}")
+
+        print(f"      * Mean Reciprocal Rank (MRR): {mrr_val}")
+        print(f"      * NDCG@5 Index: {ndcg_val}")
+        print(f"      * Recall Distribution -> Recall@1: {rec1} | Recall@3: {rec3} | Recall@5: {rec5}")
+
+        primary_logged_score = safe_float(active_rag_data.get("source1_score", 0.0))
+        orig_cos = safe_float(active_rag_data.get("original_cosine_score", primary_logged_score))
+        rec_adj = safe_float(active_rag_data.get("recency_adjusted_score", primary_logged_score))
+        rrf_val = safe_float(active_rag_data.get("RRF", primary_logged_score))
+        print(
+            f"   -> Tracked Hybrid Vectors -> Cosine: {orig_cos} | Recency-Adjusted: {rec_adj} | Fused RRF: {rrf_val}")
+
+        rec = {}
+        for col in LUFA_COLUMNS:
+            val = active_rag_data.get(col)
+            rec[col] = "" if pd.isna(val) else val
+
+        rec["id"] = q_id
+        rec["question_id"] = q_id
+        rec["question"] = question
+        rec["language"] = language_val
+        rec["rag_base_model"] = "" if pd.isna(active_rag_data.get("base_model_used")) else str(
+            active_rag_data.get("base_model_used"))
+        rec["judge_llm"] = llm_model
+        rec["category"] = "" if pd.isna(row.get("category")) else str(row.get("category"))
+        rec["difficulty"] = "" if pd.isna(row.get("difficulty")) else str(row.get("difficulty"))
+
+        rec["token_f1_score"] = f1_val
+        rec["sentence_bleu_score"] = bleu_val
+        rec["rouge1"] = rouge_scores["rouge1"]
+        rec["rouge2"] = rouge_scores["rouge2"]
+        rec["rougeL"] = rouge_scores["rougeL"]
+        rec["meteor"] = meteor_val
+
+        rec["mrr"] = mrr_val
+        rec["ndcg_at_k"] = ndcg_val
+        rec["recall_1"] = rec1
+        rec["recall_3"] = rec3
+        rec["recall_5"] = rec5
+
+        rec["original_cosine_score"] = orig_cos
+        rec["recency_adjusted_score"] = rec_adj
+        rec["RRF"] = rrf_val
+
+        rec["answer_relevance"] = 0.0
+        rec["faithfulness"] = 0.0
+        rec["context_precision"] = 0.0
+
+        if use_llm_judge and prediction and prediction != "" and prediction != "ERROR":
+            print(f"   -> Dispatching prompt topologies to Judge Model ({llm_model})...")
+            try:
+                judge = llm_judge_scores(question, prediction, context, llm_model)
+                rec["answer_relevance"] = judge.get("answer_relevance", 0.0)
+                rec["faithfulness"] = judge.get("faithfulness", 0.0)
+                rec["context_precision"] = judge.get("context_precision", 0.0)
+                print(
+                    f"      * Judge Feedback -> Relevance: {rec['answer_relevance']} | Faithfulness: {rec['faithfulness']} | Precision: {rec['context_precision']}")
+            except Exception as e:
+                print(f"      [Judge Model Connection Error] Skipping scoring pass on entry {q_id}: {e}")
+
+        single_row_df = pd.DataFrame([rec], columns=EVAL_COLUMNS)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        file_is_new = not out_path.exists() or out_path.stat().st_size == 0
+        single_row_df.to_csv(str(out_path), mode="a", index=False, header=file_is_new)
+        print("   ✅ Row recorded safely to checkpoint score file.")
+
+        print("   -> Re-compiling performance HTML dashboard layer with current progress data...")
+        try:
+            current_progress_df = pd.read_csv(str(out_path))
+            current_progress_df = current_progress_df.drop_duplicates(subset=["question_id"], keep="last")
+            Path(dashboard_out).parent.mkdir(parents=True, exist_ok=True)
+            generate_dashboard(current_progress_df, dashboard_out)
+            print(
+                f"      * Live view updated at {dashboard_out} (Current processed set size: {len(current_progress_df)})")
+        except Exception as d_err:
+            print(f"      [Dashboard Warning] Skipping live UI compilation step: {d_err}")
+
+    if out_path.exists() and out_path.stat().st_size > 0:
+        final_results_df = pd.read_csv(str(out_path))
+        final_results_df = final_results_df.drop_duplicates(subset=["question_id"], keep="last")
+    else:
+        final_results_df = pd.DataFrame()
+
+    print("\n" + "=" * 80)
+    print("PROCESSING CYCLE COMPLETED")
+    print("=" * 80)
+    print(f"\n[Export] Full results available at: {out_csv}")
+    print(f"[Export] Interactive dashboard finalized completely at: {dashboard_out}")
+
+    if len(final_results_df) > 0:
+        print("\n" + "─" * 60)
+        print("FINAL EVALUATION METRIC OVERVIEW SUMMARY")
+        print("─" * 60)
+        summary_cols = ["token_f1_score", "sentence_bleu_score", "rougeL", "meteor", "mrr", "ndcg_at_k",
+                        "recall_5", "answer_relevance", "faithfulness", "context_precision"]
+        for col in summary_cols:
+            if col in final_results_df.columns:
+                num_series = pd.to_numeric(final_results_df[col], errors='coerce')
+                print(f"  {col:<22}: {num_series.mean():.4f}")
+
+    return final_results_df
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  DASHBOARD HTML GENERATION
+# ─────────────────────────────────────────────────────────────────────────────
+def df_to_js_data(df):
+    """Prepare aggregated data structures for Chart.js dashboard views."""
+    cleaned_df = df.copy().drop_duplicates(subset=["question_id"], keep="last")
+    models = cleaned_df["rag_base_model"].dropna().unique().tolist()
+
+    def avg_by(group_col, metric):
+        numeric_series = pd.to_numeric(cleaned_df[metric], errors='coerce')
+        temp_df = cleaned_df.copy()
+        temp_df[metric] = numeric_series
+        return {
+            str(k): round(float(v), 4)
+            for k, v in temp_df.groupby(group_col)[metric].mean().items()
+        }
+
+    gen_metrics = ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor"]
+    ret_metrics = ["mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5"]
+    judge_metrics = ["answer_relevance", "faithfulness", "context_precision"]
+
+    for m in gen_metrics + ret_metrics + judge_metrics:
+        if m in cleaned_df.columns:
+            cleaned_df[m] = pd.to_numeric(cleaned_df[m], errors='coerce').fillna(0.0)
+
+    overall_metrics = {}
+    for m in gen_metrics + ret_metrics + judge_metrics:
+        if m in cleaned_df.columns:
+            overall_metrics[m] = round(float(cleaned_df[m].mean()), 4)
+
+    data = {
+        "models": models,
+        "overall": overall_metrics,
+        "by_model": {
+            metric: avg_by("rag_base_model", metric)
+            for metric in gen_metrics + ret_metrics + judge_metrics
+            if metric in cleaned_df.columns
+        },
+        "by_language": {m: avg_by("language", m) for m in gen_metrics + judge_metrics if m in cleaned_df.columns},
+        "by_difficulty": {m: avg_by("difficulty", m) for m in gen_metrics + ret_metrics if m in cleaned_df.columns},
+        "by_category": {m: avg_by("category", m) for m in gen_metrics + judge_metrics if m in cleaned_df.columns},
+        "grounded_rate": round(
+            float(pd.to_numeric(cleaned_df["grounded"], errors='coerce').fillna(0).astype(bool).mean()),
+            4) if "grounded" in cleaned_df.columns else 0,
+        "avg_attempts": round(float(pd.to_numeric(cleaned_df["attempts"], errors='coerce').fillna(1).mean()),
+                              2) if "attempts" in cleaned_df.columns else 1,
+        "total_questions": len(cleaned_df),
+        "generated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+        "rows": cleaned_df[["question_id", "question", "rag_base_model", "language",
+                            "category", "difficulty", "token_f1_score", "sentence_bleu_score", "rougeL", "meteor",
+                            "mrr", "ndcg_at_k", "recall_5", "answer_relevance",
+                            "faithfulness", "context_precision", "grounded", "attempts"]
+        ].fillna("").to_dict(orient="records"),
+    }
+    return data
+
+
+def generate_dashboard(df, output_path):
+    data = df_to_js_data(df)
+    data_json = json.dumps(data, ensure_ascii=False, default=str)
+    html = DASHBOARD_TEMPLATE.replace("__DATA_PLACEHOLDER__", data_json)
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LUFA RAG Evaluation Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  body { background:#0f172a; color:#e2e8f0; font-family:'Segoe UI',sans-serif; }
+  .card { background:#1e293b; border-radius:12px; padding:20px; border:1px solid #334155; }
+  .metric-card { background:linear-gradient(135deg,#1e3a5f,#1e293b); border-radius:10px; padding:16px; border:1px solid #2563eb44; }
+  .section-title { font-size:1.1rem; font-weight:700; color:#93c5fd; margin-bottom:12px; text-transform:uppercase; letter-spacing:.05em; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:9999px; font-size:.7rem; font-weight:600; }
+  .badge-en { background:#1d4ed8; color:#bfdbfe; }
+  .badge-fr { background:#7c3aed; color:#ddd6fe; }
+  .badge-other { background:#374151; color:#d1d5db; }
+  table { width:100%; border-collapse:collapse; font-size:.78rem; }
+  th { background:#0f172a; color:#94a3b8; padding:8px 10px; text-align:left; position:sticky; top:0; }
+  td { padding:7px 10px; border-bottom:1px solid #1e293b; }
+  tr:hover td { background:#1e3a5f22; }
+  .score-high { color:#4ade80; }
+  .score-mid  { color:#facc15; }
+  .score-low  { color:#f87171; }
+  canvas { max-height:280px; }
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:#0f172a; }
+  ::-webkit-scrollbar-thumb { background:#334155; border-radius:3px; }
+</style>
+</head>
+<body class="p-6">
+
+<script>const D = __DATA_PLACEHOLDER__;</script>
+
+<div class="mb-8">
+  <h1 class="text-3xl font-bold text-white mb-1">🎓 LUFA RAG Evaluation Dashboard</h1>
+  <p class="text-slate-400 text-sm">Agentic RAG for Cross-Lingual Retrieval of University Collective Agreements &nbsp;·&nbsp;
+     <span id="gen-at" class="text-slate-500"></span></p>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8" id="kpi-row"></div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  <div class="card">
+    <div class="section-title">Generation Metrics by Model</div>
+    <canvas id="genChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">Retrieval Metrics by Model</div>
+    <canvas id="retChart"></canvas>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  <div class="card">
+    <div class="section-title">LLM-as-Judge Metrics (Radar)</div>
+    <canvas id="radarChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">Performance by Language</div>
+    <canvas id="langChart"></canvas>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  <div class="card">
+    <div class="section-title">F1 Score by Difficulty</div>
+    <canvas id="diffChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">ROUGE-L by Category</div>
+    <canvas id="catChart"></canvas>
+  </div>
+</div>
+
+<div class="card mb-8">
+  <div class="section-title">Detailed Results</div>
+  <div style="max-height:400px;overflow:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Question</th><th>Model</th><th>Lang</th>
+          <th>F1</th><th>BLEU</th><th>ROUGE-L</th><th>METEOR</th>
+          <th>MRR</th><th>Recall@5</th>
+          <th>Relevance</th><th>Faithful</th><th>Precision</th>
+          <th>Grounded</th><th>Attempts</th>
+        </tr>
+      </thead>
+      <tbody id="results-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<p class="text-center text-slate-600 text-xs pb-4">
+  LUFA Agentic RAG Thesis &nbsp;·&nbsp; Laurentian University &nbsp;·&nbsp;
+  Computational Sciences &nbsp;·&nbsp; Generated <span id="footer-date"></span>
+</p>
+
+<script>
+const COLORS = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4'];
+const LIGHT  = ['#93c5fd','#6ee7b7','#fcd34d','#fca5a5','#c4b5fd','#f9a8d4','#67e8f9'];
+
+function scoreClass(v){ return v>=0.7?'score-high':v>=0.4?'score-mid':'score-low'; }
+function fmt(v){ return (typeof v==='number')?v.toFixed(3):v||''; }
+
+document.getElementById('gen-at').textContent = D.generated_at;
+document.getElementById('footer-date').textContent = D.generated_at;
+
+// ── KPI Cards ─────────────────────────────────────────────────────────────────
+const kpis = [
+  {label:'Questions', value: D.total_questions, unit:'', icon:'📊'},
+  {label:'Avg F1', value: (D.overall.token_f1_score||0).toFixed(3), unit:'', icon:'🎯'},
+  {label:'Avg ROUGE-L',value: (D.overall.rougeL||0).toFixed(3),unit:'',icon:'📝'},
+  {label:'Avg MRR', value: (D.overall.mrr||0).toFixed(3), unit:'', icon:'🔍'},
+  {label:'Recall@5', value: (D.overall.recall_5||0).toFixed(3),unit:'',icon:'📈'},
+  {label:'Faithfulness',value:(D.overall.faithfulness||0).toFixed(3),unit:'',icon:'✅'},
+  {label:'Grounded', value: (D.grounded_rate*100||0).toFixed(1),unit:'%',icon:'🔒'},
+  {label:'Avg Attempts',value: D.avg_attempts, unit:'', icon:'🔄'},
+];
+const kpiRow = document.getElementById('kpi-row');
+kpis.forEach(k=>{
+  kpiRow.innerHTML += `<div class="metric-card text-center">
+    <div class="text-2xl mb-1">${k.icon}</div>
+    <div class="text-2xl font-bold text-blue-300">${k.value}${k.unit}</div>
+    <div class="text-xs text-slate-400 mt-1">${k.label}</div>
+  </div>`;
+});
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function barChart(id, labels, datasets, opts={}){
+  new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{labels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}}},
+      scales:{
+        x:{ticks:{color:'#64748b'},grid:{color:'#1e293b'}},
+        y:{ticks:{color:'#64748b'},grid:{color:'#334155'}, beginAtZero:true, max:1,...(opts.yMax?{max:opts.yMax}:{})},
+      },
+    }
+  });
+}
+
+const models = D.models.length ? D.models : ['default'];
+
+// ── Generation Chart ──────────────────────────────────────────────────────────
+{
+  const metrics = ['token_f1_score','sentence_bleu_score','rouge1','rouge2','rougeL','meteor'];
+  const labels = ['F1','BLEU','ROUGE-1','ROUGE-2','ROUGE-L','METEOR'];
+  const datasets = models.map((m,i)=>({
+    label: m,
+    data: metrics.map(met=>(D.by_model[met]||{})[m]||0),
+    backgroundColor: COLORS[i%COLORS.length]+'99',
+    borderColor: COLORS[i%COLORS.length],
+    borderWidth:1,
+  }));
+  barChart('genChart', labels, datasets);
+}
+
+// ── Retrieval Chart ───────────────────────────────────────────────────────────
+{
+  const metrics = ['mrr','ndcg_at_k','recall_1','recall_3','recall_5'];
+  const labels = ['MRR','NDCG','Recall@1','Recall@3','Recall@5'];
+  const datasets = models.map((m,i)=>({
+    label: m,
+    data: metrics.map(met=>(D.by_model[met]||{})[m]||0),
+    backgroundColor: LIGHT[i%LIGHT.length]+'88',
+    borderColor: LIGHT[i%LIGHT.length],
+    borderWidth:1,
+  }));
+  barChart('retChart', labels, datasets);
+}
+
+// ── Radar Chart (LLM-Judge) ───────────────────────────────────────────────────
+{
+  const judgeLabels = ['Answer Relevance','Faithfulness','Context Precision'];
+  const judgeKeys = ['answer_relevance','faithfulness','context_precision'];
+  new Chart(document.getElementById('radarChart'),{
+    type:'radar',
+    data:{
+      labels: judgeLabels,
+      datasets: models.map((m,i)=>({
+        label: m,
+        data: judgeKeys.map(k=>(D.by_model[k]||{})[m]||0),
+        borderColor: COLORS[i%COLORS.length],
+        backgroundColor: COLORS[i%COLORS.length]+'33',
+        pointBackgroundColor: COLORS[i%COLORS.length],
+        borderWidth:2,
+      })),
+    },
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      scales:{r:{min:0,max:1,ticks:{stepSize:.2,color:'#475569',backdropColor:'transparent'},
+        grid:{color:'#334155'},pointLabels:{color:'#94a3b8',font:{size:11}}}},
+      plugins:{legend:{labels:{color:'#94a3b8'}}},
+    }
+  });
+}
+
+// ── Language Chart ────────────────────────────────────────────────────────────
+{
+  const langs = Object.keys(D.by_language.token_f1_score||{});
+  const datasets = [
+    {label:'F1', data:langs.map(l=>(D.by_language.token_f1_score||{})[l]||0), backgroundColor:COLORS[0]+'99',borderColor:COLORS[0],borderWidth:1},
+    {label:'ROUGE-L',data:langs.map(l=>(D.by_language.rougeL||{})[l]||0), backgroundColor:COLORS[1]+'99',borderColor:COLORS[1],borderWidth:1},
+    {label:'METEOR', data:langs.map(l=>(D.by_language.meteor||{})[l]||0), backgroundColor:COLORS[2]+'99',borderColor:COLORS[2],borderWidth:1},
+  ];
+  barChart('langChart', langs, datasets);
+}
+
+// ── Difficulty Chart ──────────────────────────────────────────────────────────
+{
+  const diffs = Object.keys(D.by_difficulty.token_f1_score||{});
+  barChart('diffChart', diffs, [{
+    label:'F1 by Difficulty',
+    data: diffs.map(d=>(D.by_difficulty.token_f1_score||{})[d]||0),
+    backgroundColor: diffs.map((_,i)=>COLORS[i%COLORS.length]+'bb'),
+    borderColor: diffs.map((_,i)=>COLORS[i%COLORS.length]),
+    borderWidth:1,
+  }]);
+}
+
+// ── Category Chart ────────────────────────────────────────────────────────────
+{
+  const cats = Object.keys(D.by_category.rougeL||{});
+  barChart('catChart', cats.map(c=>c.length>18?c.slice(0,16)+'…':c), [{
+    label:'ROUGE-L by Category',
+    data: cats.map(c=>(D.by_category.rougeL||{})[c]||0),
+    backgroundColor: cats.map((_,i)=>LIGHT[i%LIGHT.length]+'99'),
+    borderColor: cats.map((_,i)=>LIGHT[i%LIGHT.length]),
+    borderWidth:1,
+  }]);
+}
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+const tbody = document.getElementById('results-tbody');
+(D.rows||[]).forEach((r,i)=>{
+  const langBadge = r.language==='en'?'badge-en':r.language==='fr'?'badge-fr':'badge-other';
+  tbody.innerHTML += `<tr>
+    <td class="text-slate-500">${i+1}</td>
+    <td class="max-w-xs truncate" title="${(r.question||'').replace(/"/g,"'").replace(/</g,"&lt;").replace(/>/g,"&gt;")}">
+      ${(r.question||'').slice(0,60)}${(r.question||'').length>60?'…':''}</td>
+    <td class="text-blue-300 text-xs">${r.rag_base_model||''}</td>
+    <td><span class="badge ${langBadge}">${r.language||''}</span></td>
+    <td class="${scoreClass(r.token_f1_score)}">${fmt(r.token_f1_score)}</td>
+    <td class="${scoreClass(r.sentence_bleu_score)}">${fmt(r.sentence_bleu_score)}</td>
+    <td class="${scoreClass(r.rougeL)}">${fmt(r.rougeL)}</td>
+    <td class="${scoreClass(r.meteor)}">${fmt(r.meteor)}</td>
+    <td class="${scoreClass(r.mrr)}">${fmt(r.mrr)}</td>
+    <td class="${scoreClass(r.recall_5)}">${fmt(r.recall_5)}</td>
+    <td class="${scoreClass(r.answer_relevance)}">${fmt(r.answer_relevance)}</td>
+    <td class="${scoreClass(r.faithfulness)}">${fmt(r.faithfulness)}</td>
+    <td class="${scoreClass(r.context_precision)}">${fmt(r.context_precision)}</td>
+    <td>${r.grounded?'<span class="text-green-400">✓</span>':'<span class="text-red-400">✗</span>'}</td>
+    <td class="text-center text-slate-400">${r.attempts||1}</td>
+  </tr>`;
+});
+</script>
+</body>
+</html>"""
 
 if __name__ == "__main__":
-    LUFA_COLUMNS = [
-        "question_id", "question", "answer", "base_model_used", "language", "attempts", "grounded",
-        "source1_id", "source1_score", "source1_text",
-        "source2_id", "source2_score", "source2_text",
-        "source3_id", "source3_score", "source3_text",
-        "source4_id", "source4_score", "source4_text",
-        "source5_id", "source5_score", "source5_text",
-        "original_cosine_score", "recency_adjusted_score", "RRF"
-    ]
-    main_pipeline()
+    parser = argparse.ArgumentParser(description="Evaluate LUFA RAG system performance")
+    parser.add_argument("--lufa_csv", default="tests/lufa_out_data.csv")
+    parser.add_argument("--test_csv", default="tests/combined_test_data_and_ground_truth.csv")
+    parser.add_argument("--out_csv", default="tests/evaluation_results.csv")
+    parser.add_argument("--dashboard", default="dashboard/index.html")
+    parser.add_argument("--no_llm_judge", action="store_true", help="Skip LLM-as-judge step")
+    parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
+    parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
+    parser.add_argument("--api_url", default="http://localhost:8000")
+    args = parser.parse_args()
+
+    run_evaluation(
+        lufa_csv=args.lufa_csv,
+        test_csv=args.test_csv,
+        out_csv=args.out_csv,
+        dashboard_out=args.dashboard,
+        use_llm_judge=not args.no_llm_judge,
+        llm_model=args.llm_model,
+        sim_mode=args.sim_mode,
+        api_url=args.api_url
+    )
 ```
 
-Filename= src\repair_lufa_out.py
+Filename= src\run_simulation.py
 CODE:
 ```
 #!/usr/bin/env python3
 """
-Repair script for LUFA RAG system output data.
-Reconstructs missing or mismatched source chunk IDs by matching text snippets
-directly against persistent ChromaDB records and ground truth registries.
-Provides interactive step-by-step terminal output and processing counters.
+Simulation script — runs every question in combined_test_data.csv
+through the Agentic RAG pipeline and stores results in lufa_out_data.csv.
+Supports crash-resumption and saves outputs row-by-row incrementally.
+Guarantees strict column alignment matching the evaluation dashboard schema.
+Automatically identifies and re-runs error records, then continues with new ones.
 """
 
-import os
 import sys
-import re
 import argparse
+import csv
+import time
+import traceback
 from pathlib import Path
+from datetime import datetime
 import pandas as pd
-import chromadb
+import yaml
 
-DEFAULT_LUFA_CSV = "tests/lufa_out_data.csv"
-DEFAULT_GROUND_TRUTH_CSV = "tests/combined_test_data_and_ground_truth.csv"
-DEFAULT_DB = "db/chroma_db"
-DEFAULT_COLLECTION = "multilingual_docs"
+sys.path.insert(0, str(Path(__file__).parent))
+
+INPUT_CSV = "tests/combined_test_data_and_ground_truth.csv"
+OUTPUT_CSV = "tests/lufa_out_data.csv"
+CONFIG = "config/config.yaml"
+
+OUTPUT_COLUMNS = [
+    "question_id", "question", "answer", "base_model_used", "language", "attempts", "grounded",
+    "source1_id", "source1_score", "source1_text",
+    "source2_id", "source2_score", "source2_text",
+    "source3_id", "source3_score", "source3_text",
+    "source4_id", "source4_score", "source4_text",
+    "source5_id", "source5_score", "source5_text",
+    "original_cosine_score", "recency_adjusted_score", "RRF"
+]
 
 
-def calculate_token_overlap(text_a, text_b):
-    """Calculate how much of text_a's distinct tokens are present inside text_b."""
-    if not text_a or not text_b or pd.isna(text_a) or pd.isna(text_b):
-        return 0.0
-    words_a = set(re.findall(r'\b\w+\b', str(text_a).lower()))
-    words_b = set(re.findall(r'\b\w+\b', str(text_b).lower()))
-    if not words_a or not words_b:
-        return 0.0
-    intersection = words_a.intersection(words_b)
-    return len(intersection) / len(words_a)
+def load_config(path=CONFIG):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f) or {}
+    except FileNotFoundError:
+        return {}
 
 
-def repair_dataset(lufa_path, gt_path, db_path, collection_name):
-    print("================================================================================")
-    print("STAGE 1: Loading Datasets and Connecting to ChromaDB")
-    print("================================================================================")
+def extract_sources(sources, max_sources=5):
+    """Flatten up to 5 sources into flat dict keys for CSV, preserving original database UUIDs."""
+    row = {}
+    for i in range(1, max_sources + 1):
+        if i <= len(sources):
+            s = sources[i - 1]
+            meta = s.get("metadata", {})
 
-    # Verification checks for paths and fallbacks
-    if not Path(lufa_path).exists():
-        fallback = Path("data") / Path(lufa_path).name
-        if fallback.exists():
-            lufa_path = str(fallback)
+            row[f"source{i}_id"] = (s.get("node_id") or s.get("chunk_id") or meta.get("node_id") or meta.get("id") or
+                                    str(meta.get("source_doc", "")) + f"_chunk{i}")
+
+            if "original_cosine_score" in meta:
+                row[f"source{i}_score"] = round(float(meta["original_cosine_score"]), 4)
+            else:
+                row[f"source{i}_score"] = round(float(s.get("score") or 0), 4)
+
+            row[f"source{i}_text"] = str(s.get("text", ""))[:500]
         else:
-            print(f"Error: Target RAG engine output file not found at {lufa_path}")
-            return
+            row[f"source{i}_id"] = ""
+            row[f"source{i}_score"] = ""
+            row[f"source{i}_text"] = ""
+    return row
 
-    if not Path(gt_path).exists():
-        fallback = Path("data") / Path(gt_path).name
-        if fallback.exists():
-            gt_path = str(fallback)
 
-    print(f" -> Loading target RAG output log from: {lufa_path}")
-    lufa_df = pd.read_csv(lufa_path)
+def query_single_record(record, mode, base_model, model_name, api_url, idx):
+    """
+    Core atomic method to prompt the backend RAG layout for a single row.
+    Provides deep verbose terminal feedback for interactive visibility.
+    """
+    q_text = str(record["question"])
+    q_id = str(record["id"])
+    print(f"   [Simulation Engine] Initializing query transaction for ID: {q_id}")
+    print(f"   [Simulation Engine] Query String: \"{q_text[:65]}...\"")
+    print(f"   [Simulation Engine] Mode: '{mode}' | Target Model: '{model_name}'")
 
-    gt_lookup = {}
-    if Path(gt_path).exists():
-        print(f" -> Loading ground truth registry reference from: {gt_path}")
-        gt_df = pd.read_csv(gt_path)
-        for _, row in gt_df.iterrows():
-            q_id = str(row.get("id", "")).strip()
-            if q_id:
+    try:
+        if mode == "local":
+            from rag_engine import create_rag_engine
+            engine = create_rag_engine()
+            result = engine.agentic_query(
+                query_text=q_text,
+                return_sources=True,
+                max_retries=3,
+            )
+
+        elif mode == "api":
+            import httpx
+            with httpx.Client(timeout=300.0) as client:
+                resp = client.post(
+                    f"{api_url}/agentic-query",
+                    json={"query": q_text, "return_sources": True, "max_retries": 3},
+                )
+                resp.raise_for_status()
+                result = resp.json()
+
+        elif mode == "frontier":
+            from rag_engine import create_rag_engine
+            from copilot_engine import CopilotEngine
+            rag_engine = create_rag_engine()
+            copilot = CopilotEngine(model=model_name)
+
+            lang = rag_engine.detect_query_language(q_text)
+            nodes = rag_engine._retrieve_nodes(q_text, top_k=5)
+            answer = copilot.generate_from_nodes(q_text, nodes, lang)
+
+            sources_list = []
+            for n in nodes:
+                combined_meta = {}
+                for k, v in n.node.metadata.items():
+                    combined_meta[k] = v
+                combined_meta["id"] = n.node.node_id
+                if "original_cosine_score" in n.node.metadata:
+                    combined_meta["original_cosine_score"] = n.node.metadata["original_cosine_score"]
+                else:
+                    combined_meta["original_cosine_score"] = str(n.score)
+
+                sources_list.append({
+                    "text": n.node.text[:500],
+                    "score": n.score,
+                    "metadata": combined_meta,
+                    "node_id": n.node.node_id
+                })
+
+            result = {
+                "response": answer,
+                "original_language": record.get("language", lang),
+                "rewritten_query": "",
+                "attempts": 1,
+                "grounded": True,
+                "sources": sources_list
+            }
+
+        sources = result.get("sources", [])
+        sources_dict = extract_sources(sources)
+
+        orig_cosine = ""
+        recency_adj = ""
+        rrf_val = ""
+        if sources:
+            first_src = sources[0]
+            first_meta = first_src.get("metadata", {})
+            rrf_val = round(float(first_src.get("score") or 0.0), 6)
+            orig_cosine = round(float(first_meta.get("original_cosine_score") or rrf_val), 6)
+            recency_adj = orig_cosine
+
+        row = {
+            "question_id": q_id,
+            "question": q_text,
+            "answer": result.get("response", ""),
+            "base_model_used": model_name,
+            "language": result.get("original_language", record.get("language", "en")),
+            "attempts": result.get("attempts", 1),
+            "grounded": result.get("grounded", False),
+        }
+        row.update(sources_dict)
+        row["original_cosine_score"] = orig_cosine
+        row["recency_adjusted_score"] = recency_adj
+        row["RRF"] = rrf_val
+
+        print(f"   [Simulation Engine] ✅ Success! Received Answer length: {len(row['answer'])} chars.")
+        return row
+
+    except Exception as e:
+        print(f"   [Simulation Engine] 💥 Error on record {q_id}: {e}")
+        traceback.print_exc()
+        return _empty_row(q_id, q_text, model_name, record.get("language", "en"))
+
+
+def _empty_row(q_id, q_text, model, lang):
+    row = {
+        "question_id": q_id,
+        "question": q_text,
+        "answer": "ERROR",
+        "base_model_used": model,
+        "language": lang,
+        "attempts": 0,
+        "grounded": False,
+    }
+    for i in range(1, 6):
+        row[f"source{i}_id"] = ""
+        row[f"source{i}_score"] = ""
+        row[f"source{i}_text"] = ""
+    row["original_cosine_score"] = ""
+    row["recency_adjusted_score"] = ""
+    row["RRF"] = ""
+    return row
+
+
+def ensure_ground_truth(csv_path):
+    """Auto-run find_ground_truth.py if ground_source_truth_id column is missing."""
+    df = pd.read_csv(csv_path)
+    if "ground_source_truth_id" not in df.columns or df["ground_source_truth_id"].isnull().all():
+        print("[Sim] ground_source_truth_id missing — running find_ground_truth.py first...")
+        from find_ground_truth import run as find_gt
+        find_gt(csv_path, "db/chroma_db", "multilingual_docs", top_k=5)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run LUFA RAG simulation over test dataset")
+    parser.add_argument("--mode", choices=["local", "api", "frontier"], default="local")
+    parser.add_argument("--model", default=None, help="Frontier model ID (for --mode frontier)")
+    parser.add_argument("--api_url", default="http://localhost:8000", help="API base URL for --mode api")
+    parser.add_argument("--input", default=INPUT_CSV, help="Input CSV path")
+    parser.add_argument("--output", default=OUTPUT_CSV, help="Output CSV path")
+    args = parser.parse_args()
+
+    cfg = load_config()
+    base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    model_name = args.model or base_model
+
+    ensure_ground_truth(args.input)
+
+    print(f"[Sim] Loading input master file: {args.input}")
+    df = pd.read_csv(args.input)
+    print(f"[Sim] {len(df)} total target questions configured in master dataset.")
+
+    completed_ids = set()
+    all_logged_ids = set()
+    out_path = Path(args.output)
+
+    if out_path.exists() and out_path.stat().st_size > 0:
+        try:
+            existing_df = pd.read_csv(args.output)
+            if "question_id" in existing_df.columns:
+                all_logged_ids = set(existing_df["question_id"].dropna().astype(str).tolist())
+
+                # Filter strictly for rows that have valid string content and no ERROR flag
+                successful_df = existing_df[
+                    existing_df["question_id"].notna() &
+                    existing_df["answer"].notna() &
+                    (existing_df["answer"].astype(str).str.strip() != "ERROR") &
+                    (existing_df["answer"].astype(str).str.strip() != "")
+                    ]
+                completed_ids = set(successful_df["question_id"].dropna().astype(str).tolist())
+
+                error_count = len(all_logged_ids) - len(completed_ids)
+                print(f"[Resumption] Located active output log file: {args.output}")
+                print(f"[Resumption] Found {len(completed_ids)} successfully processed rows.")
+                if error_count > 0:
+                    print(
+                        f"[Resumption] Found {error_count} rows containing ERROR flags. These will be automatically re-run.")
+        except Exception as err:
+            print(f"[Warning] Error parsing simulation file checkpoint: {err}")
+    else:
+        print(f"[Sim] Output path '{args.output}' is empty or new. Starting execution pass.")
+
+    print("\n" + "=" * 80)
+    print("STARTING UNIFIED SIMULATION PASS (REPAIRING ERRORS + ADDING NEW QUESTIONS)")
+    print("=" * 80)
+
+    for idx, record in df.iterrows():
+        current_counter = idx + 1
+        q_id = str(record["id"])
+
+        if q_id in completed_ids:
+            print(f"[{current_counter}/{len(df)}] Skipping Question ID {q_id} (Valid answer already stored)")
+            continue
+
+        # Verbose message informing whether it is fixing an error or processing a brand new row
+        if q_id in all_logged_ids:
+            print(f"\n[{current_counter}/{len(df)}] 🛠️  Re-running failed record -> Question ID: {q_id}")
+        else:
+            print(f"\n[{current_counter}/{len(df)}] 🚀 Processing unvisited record -> Question ID: {q_id}")
+
+        row_res = query_single_record(record, args.mode, base_model, model_name, args.api_url, current_counter)
+
+        single_row_df = pd.DataFrame([row_res], columns=OUTPUT_COLUMNS)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+
+        file_is_new = not out_path.exists() or out_path.stat().st_size == 0
+        single_row_df.to_csv(str(out_path), mode="a", index=False, header=file_is_new)
+        print("   ✅ Row appended cleanly to simulation output log.")
+        time.sleep(0.5)
+
+    print("\n" + "=" * 80)
+    print(f"[Sim] Execution pass complete. All rows verified and logged to: {args.output}")
+    print("=" * 80 + "\n")
+```
+
+Filename= src\side_by_side_clause_chunker.py
+CODE:
+```
+# python
+"""
+side_by_side_clause_chunker.py
+Extract bilingual side-by-side EN/FR PDFs into clause-level TextNodes and
+optionally inject into LlamaIndex/Chroma (local).
+Deps: pip install pdfplumber langdetect llama-index-core llama-index-vector-stores-chroma
+      llama-index-embeddings-huggingface chromadb pandas
+"""
+from __future__ import annotations
+
+import re
+import json
+import uuid
+import logging
+from dataclasses import dataclass, asdict
+from pathlib import Path
+from typing import List, Optional, Tuple
+
+import pdfplumber
+from langdetect import detect, DetectorFactory
+from llama_index.core.schema import TextNode
+
+DetectorFactory.seed = 42
+logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
+logger = logging.getLogger(__name__)
+
+CLAUSE_RE = re.compile(r'^(\d+(?:\.\d+)*)\s+(.+)$')
+NUM_RE = re.compile(r'^[\d\W]+$')
+
+
+@dataclass
+class Chunk:
+    chunk_id: str
+    doc_id: str
+    page: int
+    language: str
+    clause_no: Optional[str]
+    title: Optional[str]
+    text: str
+    partner_chunk_id: Optional[str] = None
+    x0: Optional[float] = None
+    x1: Optional[float] = None
+    y0: Optional[float] = None
+    y1: Optional[float] = None
+
+def clean_text(s: str) -> str:
+    s = s.replace('\u00a0', ' ').replace('\u200b', ' ')
+    s = re.sub(r'[ \t]+', ' ', s)
+    s = re.sub(r'\n{3,}', '\n\n', s)
+    return s.strip()
+
+def extract_words_split(page) -> Tuple[List[dict], List[dict]]:
+    words = page.extract_words(extra_attrs=["x0", "x1", "top", "bottom"], keep_blank_chars=False, use_text_flow=True) or []
+    if not words:
+        return [], []
+    mid = float(page.width) / 2.0
+    left = [w for w in words if (w["x0"] + w["x1"]) / 2.0 < mid]
+    right = [w for w in words if (w["x0"] + w["x1"]) / 2.0 >= mid]
+    return left, right
+
+
+def cluster_lines(words, y_tol=3.5):
+    if not words:
+        return []
+    words = sorted(words, key=lambda w: (round(w["top"], 1), w["x0"]))
+    lines = []
+    cur = [words[0]]
+    cur_y = words[0]["top"]
+    for w in words[1:]:
+        if abs(w["top"] - cur_y) <= y_tol:
+            cur.append(w)
+            cur_y = (cur_y * (len(cur)-1) + w["top"]) / len(cur)
+        else:
+            lines.append(cur)
+            cur = [w]
+            cur_y = w["top"]
+    lines.append(cur)
+    return lines
+
+
+def line_text(line):
+    return clean_text(" ".join(w["text"] for w in sorted(line, key=lambda x: x["x0"])))
+
+
+def merge_lines(lines):
+    merged = []
+    buf = []
+    for line in lines:
+        t = line_text(line)
+        if not t:
+            continue
+        if buf and (t[0].islower() or t.startswith('—') or t.startswith('-')):
+            buf.append(t)
+        else:
+            if buf:
+                merged.append(' '.join(buf))
+            buf = [t]
+    if buf:
+        merged.append(' '.join(buf))
+    return [clean_text(x) for x in merged if clean_text(x)]
+
+
+def parse_clause_header(text: str):
+    m = CLAUSE_RE.match(text)
+    if m:
+        return m.group(1), m.group(2).strip()
+    return None, None
+
+
+def infer_lang_for_column(text: str) -> str:
+    sample = (text or "")[:500].strip()
+    try:
+        return detect(sample) if sample else "en"
+    except Exception:
+        return "en"
+
+
+def extract_column_chunks(doc_id: str, page_num: int, language: str, words) -> List[Chunk]:
+    lines = cluster_lines(words)
+    para_texts = merge_lines(lines)
+    chunks: List[Chunk] = []
+    running = []
+    prev_clause_no = None
+    prev_title = None
+    idx = 1
+    for t in para_texts:
+        clause_no, title = parse_clause_header(t)
+        if clause_no and running:
+            text = clean_text("\n".join(running))
+            chunks.append(Chunk(
+                chunk_id=f"{doc_id}_p{page_num:03d}_{language}_{idx:03d}",
+                doc_id=doc_id,
+                page=page_num,
+                language=language,
+                clause_no=prev_clause_no,
+                title=prev_title,
+                text=text,
+            ))
+            idx += 1
+            running = []
+        prev_clause_no, prev_title = clause_no, title or (t if len(t) < 90 else None)
+        running.append(t)
+    if running:
+        chunks.append(Chunk(
+            chunk_id=f"{doc_id}_p{page_num:03d}_{language}_{idx:03d}",
+            doc_id=doc_id,
+            page=page_num,
+            language=language,
+            clause_no=prev_clause_no,
+            title=prev_title,
+            text=clean_text("\n".join(running)),
+        ))
+    return chunks
+
+
+def chunk_side_by_side_pdf(pdf_path: str, doc_id: Optional[str] = None) -> List[TextNode]:
+    pdf_path = str(pdf_path)
+    doc_id = doc_id or Path(pdf_path).stem
+    out_chunks: List[Chunk] = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for i, page in enumerate(pdf.pages, start=1):
+            page_text = clean_text(page.extract_text() or "")
+            if not page_text:
+                continue
+            left_words, right_words = extract_words_split(page)
+            left_preview = clean_text(" ".join(w['text'] for w in left_words[:40])) if left_words else ''
+            right_preview = clean_text(" ".join(w['text'] for w in right_words[:40])) if right_words else ''
+            left_lang = infer_lang_for_column(left_preview or page_text[:500])
+            right_lang = 'fr' if left_lang == 'en' else 'en'
+            left_chunks = extract_column_chunks(doc_id, i, left_lang, left_words)
+            right_chunks = extract_column_chunks(doc_id, i, right_lang, right_words)
+            # pair by index
+            pair_count = min(len(left_chunks), len(right_chunks))
+            for k in range(pair_count):
+                left_chunks[k].partner_chunk_id = right_chunks[k].chunk_id
+                right_chunks[k].partner_chunk_id = left_chunks[k].chunk_id
+            out_chunks.extend(left_chunks)
+            out_chunks.extend(right_chunks)
+
+    # convert to TextNode with metadata
+    nodes: List[TextNode] = []
+    for idx, c in enumerate(out_chunks):
+        node = TextNode(
+            id_=str(uuid.uuid4()),
+            text=c.text,
+            metadata={
+                "chunk_id": c.chunk_id,
+                "doc_id": c.doc_id,
+                "page_no": str(c.page),
+                "language": c.language,
+                "clause_no": c.clause_no or "",
+                "title": c.title or "",
+                "partner_chunk_id": c.partner_chunk_id or "",
+                "doc_source": doc_id,
+            },
+        )
+        # hide low-level fields from embedding by listing keys (kept for llama-index compatibility)
+        node.excluded_embed_metadata_keys = ["doc_id", "doc_source", "partner_chunk_id"]
+        node.excluded_llm_metadata_keys = ["doc_id"]
+        nodes.append(node)
+    logger.info("Produced %d bilingual chunks from %s", len(nodes), pdf_path)
+    return nodes
+
+
+def index_nodes_to_chroma(nodes: List[TextNode], collection_name: str, chroma_persist_dir: str = "./chroma_db", model_device: str = "cuda"):
+    try:
+        import chromadb
+        from llama_index.vector_stores.chroma import ChromaVectorStore
+        from llama_index.core import StorageContext, VectorStoreIndex
+        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+    except ImportError as exc:
+        raise ImportError("Missing optional deps for indexing. Install: chromadb llama-index-vector-stores-chroma llama-index-embeddings-huggingface") from exc
+
+    logger.info("Loading embedding model: BGE-M3 (local) on %s", model_device)
+    embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-m3", device=model_device, max_length=512)
+
+    chroma_client = chromadb.PersistentClient(path=chroma_persist_dir)
+    chroma_col = chroma_client.get_or_create_collection(collection_name)
+    vector_store = ChromaVectorStore(chroma_collection=chroma_col)
+    storage_ctx = StorageContext.from_defaults(vector_store=vector_store)
+
+    VectorStoreIndex(
+        nodes,
+        storage_context=storage_ctx,
+        embed_model=embed_model,
+        show_progress=True,
+    )
+    logger.info("Indexed %d nodes into collection '%s' (path=%s)", len(nodes), collection_name, chroma_persist_dir)
+
+
+if __name__ == "__main__":
+    import argparse
+    import pandas as pd
+
+    p = argparse.ArgumentParser(description="Side-by-side bilingual clause chunker -> LlamaIndex/Chroma")
+    p.add_argument("pdf", help="Path to side-by-side bilingual PDF")
+    p.add_argument("--doc-id", default=None, help="Document id override")
+    p.add_argument("--out-prefix", default=None, help="If set, write <prefix>.csv and .jsonl")
+    p.add_argument("--index", action="store_true", help="Also index into Chroma collections")
+    p.add_argument("--collection", default="lufa_bilingual", help="Chroma collection name")
+    p.add_argument("--chroma-dir", default="./chroma_db", help="Chroma persistent directory")
+    p.add_argument("--device", default="cuda", choices=["cuda", "cpu"], help="Embedding device")
+    args = p.parse_args()
+
+    nodes = chunk_side_by_side_pdf(args.pdf, args.doc_id)
+
+    if args.out_prefix:
+        rows = [{"chunk_id": n.metadata.get("chunk_id"), "text": n.text, **n.metadata} for n in nodes]
+        Path(args.out_prefix).parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(rows).to_csv(f"{args.out_prefix}.csv", index=False)
+        with open(f"{args.out_prefix}.jsonl", "w", encoding="utf-8") as f:
+            for r in rows:
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        logger.info("Wrote outputs: %s.csv / %s.jsonl", args.out_prefix, args.out_prefix)
+
+    if args.index:
+        index_nodes_to_chroma(nodes, args.collection, chroma_persist_dir=args.chroma_dir, model_device=args.device)
+
+    print(f"Done. Produced {len(nodes)} chunks.")
+
+```
+
+Filename= src\test_basic.py
+CODE:
+```
+"""
+Basic tests for the bilingual RAG system components.
+These tests verify that the modules can be imported and basic functions work.
+"""
+
+import sys
+from pathlib import Path
+
+# Add src directory to path
+sys.path.insert(0, str(Path(__file__).parent / 'src'))
+
+def test_imports():
+    """Test that all modules can be imported."""
+    print("Testing imports...")
+    try:
+        import ingestion
+        print("✓ ingestion module imported successfully")
+    except Exception as e:
+        print(f"✗ Failed to import ingestion: {e}")
+        return False
+    
+    try:
+        import rag_engine
+        print("✓ rag_engine module imported successfully")
+    except Exception as e:
+        print(f"✗ Failed to import rag_engine: {e}")
+        return False
+    
+    try:
+        import app
+        print("✓ app module imported successfully")
+    except Exception as e:
+        print(f"✗ Failed to import app: {e}")
+        return False
+    
+    return True
+
+
+def test_augment_query_with_year():
+    """Test that augment_query_with_year correctly appends year range when needed."""
+    print("\nTesting augment_query_with_year...")
+    try:
+        from query_handler import QueryHandler
+        handler = QueryHandler()
+
+        # English query without a year should be augmented
+        en_query = "What is the vacation policy?"
+        en_result = handler.augment_query_with_year(en_query, language='en')
+        assert en_result == "What is the vacation policy? collective agreement 2020 - 2025", \
+            f"Unexpected English augmentation: '{en_result}'"
+        print(f"✓ English query augmented: '{en_result}'")
+
+        # French query without a year should be augmented
+        fr_query = "Quelle est la politique de vacances?"
+        fr_result = handler.augment_query_with_year(fr_query, language='fr')
+        assert fr_result == "Quelle est la politique de vacances? convention collective 2020 - 2025", \
+            f"Unexpected French augmentation: '{fr_result}'"
+        print(f"✓ French query augmented: '{fr_result}'")
+
+        # Query that already contains a year should not be modified
+        year_query = "What changed in 2022 for sick leave?"
+        year_result = handler.augment_query_with_year(year_query, language='en')
+        assert year_result == year_query, \
+            f"Query with year should not be modified, got: '{year_result}'"
+        print(f"✓ Query with year unchanged: '{year_result}'")
+
+        # 4-digit numbers outside the 19xx/20xx range should not block augmentation
+        non_year_query = "Article 1234 about benefits"
+        non_year_result = handler.augment_query_with_year(non_year_query, language='en')
+        assert non_year_result == "Article 1234 about benefits collective agreement 2020 - 2025", \
+            f"Non-year 4-digit number should not block augmentation, got: '{non_year_result}'"
+        print(f"✓ Non-year 4-digit number triggers augmentation: '{non_year_result}'")
+
+        non_year_query2 = "Clause 3000 override"
+        non_year_result2 = handler.augment_query_with_year(non_year_query2, language='en')
+        assert non_year_result2 == "Clause 3000 override collective agreement 2020 - 2025", \
+            f"Non-year 4-digit number should not block augmentation, got: '{non_year_result2}'"
+        print(f"✓ Non-year 4-digit number (3000) triggers augmentation: '{non_year_result2}'")
+
+        return True
+    except Exception as e:
+        print(f"✗ augment_query_with_year failed: {e}")
+        return False
+
+
+def test_language_detection():
+    """Test language detection functionality."""
+    print("\nTesting language detection...")
+    try:
+        from ingestion import detect_language
+        
+        # Test English
+        en_text = "This is an English text about artificial intelligence."
+        en_result = detect_language(en_text)
+        assert en_result == 'en', f"Expected 'en', got '{en_result}'"
+        print(f"✓ English detection: '{en_result}'")
+        
+        # Test French
+        fr_text = "Ceci est un texte en français sur l'intelligence artificielle."
+        fr_result = detect_language(fr_text)
+        assert fr_result == 'fr', f"Expected 'fr', got '{fr_result}'"
+        print(f"✓ French detection: '{fr_result}'")
+        
+        return True
+    except Exception as e:
+        print(f"✗ Language detection failed: {e}")
+        return False
+
+
+def test_directory_structure():
+    """Test that all required directories exist."""
+    print("\nTesting directory structure...")
+    required_dirs = [
+        'data/english',
+        'data/french',
+        'src',
+        'db'
+    ]
+    
+    all_exist = True
+    for dir_path in required_dirs:
+        path = Path(dir_path)
+        if path.exists():
+            print(f"✓ Directory exists: {dir_path}")
+        else:
+            print(f"✗ Directory missing: {dir_path}")
+            all_exist = False
+    
+    return all_exist
+
+
+def test_sample_documents():
+    """Test that sample documents exist."""
+    print("\nTesting sample documents...")
+    sample_docs = [
+        'data/english/sample_ai_document.txt',
+        'data/french/sample_ai_document.txt'
+    ]
+    
+    all_exist = True
+    for doc_path in sample_docs:
+        path = Path(doc_path)
+        if path.exists():
+            size = path.stat().st_size
+            print(f"✓ Document exists: {doc_path} ({size} bytes)")
+        else:
+            print(f"✗ Document missing: {doc_path}")
+            all_exist = False
+    
+    return all_exist
+
+
+def test_requirements():
+    """Test that requirements.txt exists and has content."""
+    print("\nTesting requirements.txt...")
+    req_file = Path('requirements.txt')
+    if not req_file.exists():
+        print("✗ requirements.txt not found")
+        return False
+    
+    with open(req_file) as f:
+        requirements = f.read().strip().split('\n')
+    
+    required_packages = [
+        'llama-index',
+        'llama-index-llms-ollama',
+        'llama-index-embeddings-ollama',
+        'llama-index-vector-stores-chroma',
+        'chromadb',
+        'streamlit',
+        'pypdf',
+        'langdetect'
+    ]
+    
+    all_present = True
+    for package in required_packages:
+        # Check if any requirement line starts with the package name (handles version specifiers)
+        if any(req.strip().startswith(package) for req in requirements):
+            print(f"✓ Package listed: {package}")
+        else:
+            print(f"✗ Package missing: {package}")
+            all_present = False
+    
+    return all_present
+
+
+def test_bootstrap_script():
+    """Test that bootstrap script exists and is executable."""
+    print("\nTesting bootstrap script...")
+    script = Path('bootstrap.sh')
+    if not script.exists():
+        print("✗ bootstrap.sh not found")
+        return False
+    
+    print(f"✓ bootstrap.sh exists")
+    
+    # Check if executable
+    import os
+    if os.access(script, os.X_OK):
+        print("✓ bootstrap.sh is executable")
+        return True
+    else:
+        print("✗ bootstrap.sh is not executable")
+        return False
+
+
+def test_query_rewriter():
+    """Test query rewriting with a stubbed LLM."""
+    print("\nTesting query rewriter...")
+    try:
+        from query_rewriter import rewrite_query
+
+        class MockLLM:
+            def complete(self, prompt):
+                return "What are the vacation entitlements in the 2020-2025 LUFA collective agreement?"
+
+        # Normal rewrite returns the LLM output
+        result = rewrite_query("vacation?", "en", MockLLM())
+        assert result == "What are the vacation entitlements in the 2020-2025 LUFA collective agreement?", \
+            f"Unexpected rewrite: '{result}'"
+        print(f"✓ Normal rewrite: '{result}'")
+
+        # Exception → falls back to original query
+        class FailingLLM:
+            def complete(self, prompt):
+                raise RuntimeError("LLM error")
+
+        result = rewrite_query("vacation?", "en", FailingLLM())
+        assert result == "vacation?", f"Expected original query on failure, got: '{result}'"
+        print(f"✓ Exception fallback: '{result}'")
+
+        # Empty response → falls back to original query
+        class EmptyLLM:
+            def complete(self, prompt):
+                return ""
+
+        result = rewrite_query("vacation?", "en", EmptyLLM())
+        assert result == "vacation?", f"Expected original query for empty response, got: '{result}'"
+        print(f"✓ Empty response fallback: '{result}'")
+
+        # Overly long response (>= 400 chars) → falls back to original query
+        class LongLLM:
+            def complete(self, prompt):
+                return "x" * 401
+
+        result = rewrite_query("vacation?", "en", LongLLM())
+        assert result == "vacation?", f"Expected original query for long response, got: '{result}'"
+        print(f"✓ Overly long response fallback: '{result}'")
+
+        # French language uses French prompt (verify no crash)
+        result = rewrite_query("vacances?", "fr", MockLLM())
+        assert result == "What are the vacation entitlements in the 2020-2025 LUFA collective agreement?", \
+            f"Unexpected French rewrite: '{result}'"
+        print(f"✓ French language rewrite: '{result}'")
+
+        return True
+    except Exception as e:
+        print(f"✗ Query rewriter test failed: {e}")
+        return False
+
+
+def test_reflector():
+    """Test grounding verification with a stubbed LLM."""
+    print("\nTesting reflector...")
+    try:
+        from reflector import reflect
+
+        CHUNKS = ["The vacation policy states 20 days per year."]
+
+        class MockLLM:
+            def __init__(self, response):
+                self._response = response
+
+            def complete(self, prompt):
+                return self._response
+
+        # GROUNDED → returns True
+        result = reflect("Employees get 20 days vacation.", CHUNKS, MockLLM("GROUNDED"))
+        assert result is True, f"Expected True for GROUNDED, got {result}"
+        print("✓ GROUNDED → True")
+
+        # UNGROUNDED → returns False
+        result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("UNGROUNDED"))
+        assert result is False, f"Expected False for UNGROUNDED, got {result}"
+        print("✓ UNGROUNDED → False")
+
+        # UNGROUNDED with punctuation must still not be treated as GROUNDED
+        result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("UNGROUNDED."))
+        assert result is False, f"Expected False for 'UNGROUNDED.', got {result}"
+        print("✓ 'UNGROUNDED.' punctuation check → False")
+
+        # Tokens starting with GROUNDED but not exactly equal must not match
+        result = reflect("Employees get 50 days vacation.", CHUNKS, MockLLM("GROUNDEDNESS"))
+        assert result is False, f"Expected False for 'GROUNDEDNESS', got {result}"
+        print("✓ 'GROUNDEDNESS' → False (exact token check)")
+
+        # Empty chunks → always False (no source to ground against)
+        result = reflect("Some answer.", [], MockLLM("GROUNDED"))
+        assert result is False, f"Expected False for empty chunks, got {result}"
+        print("✓ Empty chunks → False")
+
+        # Exception → fail-closed (False)
+        class FailingLLM:
+            def complete(self, prompt):
+                raise RuntimeError("LLM error")
+
+        result = reflect("Some answer.", CHUNKS, FailingLLM())
+        assert result is False, f"Expected False (fail-closed) on exception, got {result}"
+        print("✓ Exception → False (fail-closed)")
+
+        return True
+    except Exception as e:
+        print(f"✗ Reflector test failed: {e}")
+        return False
+
+
+def main():
+    """Run all tests."""
+    print("="*60)
+    print("Bilingual RAG System - Basic Tests")
+    print("="*60)
+    
+    tests = [
+        ("Directory Structure", test_directory_structure),
+        ("Sample Documents", test_sample_documents),
+        ("Requirements", test_requirements),
+        ("Bootstrap Script", test_bootstrap_script),
+        ("Module Imports", test_imports),
+        ("Language Detection", test_language_detection),
+        ("Augment Query With Year", test_augment_query_with_year),
+        ("Query Rewriter", test_query_rewriter),
+        ("Reflector", test_reflector),
+    ]
+    
+    results = []
+    for test_name, test_func in tests:
+        try:
+            result = test_func()
+            results.append((test_name, result))
+        except Exception as e:
+            print(f"✗ Test '{test_name}' crashed: {e}")
+            results.append((test_name, False))
+    
+    print("\n" + "="*60)
+    print("Test Results Summary")
+    print("="*60)
+    
+    passed = sum(1 for _, result in results if result)
+    total = len(results)
+    
+    for test_name, result in results:
+        status = "✓ PASS" if result else "✗ FAIL"
+        print(f"{status}: {test_name}")
+    
+    print(f"\nPassed: {passed}/{total}")
+    
+    if passed == total:
+        print("\n✓ All tests passed!")
+        return 0
+    else:
+        print(f"\n✗ {total - passed} test(s) failed")
+        return 1
+
+
+if __name__ == "__main__":
+    exit(main())
+
+```
+
+Filename= src\test_integration.py
+CODE:
+```
+"""
+Integration tests for the bilingual RAG system.
+These tests require the full environment to be set up (run bootstrap.sh first).
+"""
+
+import sys
+import os
+from pathlib import Path
+
+# Add src directory to path
+sys.path.insert(0, str(Path(__file__).parent / 'src'))
+
+
+def check_ollama():
+    """Check if Ollama is running."""
+    print("Checking Ollama connection...")
+    try:
+        import requests
+        response = requests.get("http://localhost:11434/api/tags", timeout=5)
+        if response.status_code == 200:
+            print("✓ Ollama is running")
+            return True
+        else:
+            print("✗ Ollama returned unexpected status")
+            return False
+    except Exception as e:
+        print(f"✗ Cannot connect to Ollama: {e}")
+        print("  Please ensure Ollama is running: ollama serve")
+        return False
+
+
+def test_language_detection():
+    """Test language detection with real module."""
+    print("\nTesting language detection...")
+    try:
+        from ingestion import detect_language
+        
+        # Test English
+        en_text = "This is an English text about artificial intelligence and machine learning."
+        en_result = detect_language(en_text)
+        print(f"  English text detected as: {en_result}")
+        assert en_result == 'en', f"Expected 'en', got '{en_result}'"
+        
+        # Test French
+        fr_text = "Ceci est un texte en français sur l'intelligence artificielle et l'apprentissage automatique."
+        fr_result = detect_language(fr_text)
+        print(f"  French text detected as: {fr_result}")
+        assert fr_result == 'fr', f"Expected 'fr', got '{fr_result}'"
+        
+        print("✓ Language detection works correctly")
+        return True
+    except Exception as e:
+        print(f"✗ Language detection failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+def test_document_loading():
+    """Test document loading functionality."""
+    print("\nTesting document loading...")
+    try:
+        from ingestion import load_documents_from_directory
+        
+        # Load English documents
+        en_docs = load_documents_from_directory("data/english")
+        print(f"  Loaded {len(en_docs)} English document(s)")
+        
+        # Load French documents
+        fr_docs = load_documents_from_directory("data/french")
+        print(f"  Loaded {len(fr_docs)} French document(s)")
+        
+        if len(en_docs) > 0 and len(fr_docs) > 0:
+            print("✓ Document loading works correctly")
+            return True
+        else:
+            print("✗ No documents loaded")
+            return False
+    except Exception as e:
+        print(f"✗ Document loading failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+def test_document_tagging():
+    """Test document language tagging."""
+    print("\nTesting document tagging...")
+    try:
+        from ingestion import load_documents_from_directory, tag_documents_with_language
+        
+        # Load and tag documents
+        docs = load_documents_from_directory("data/english")
+        if docs:
+            tagged_docs = tag_documents_with_language(docs)
+            
+            if all('language' in doc.metadata for doc in tagged_docs):
+                print(f"✓ All {len(tagged_docs)} documents tagged with language")
+                return True
+            else:
+                print("✗ Some documents missing language tag")
+                return False
+        else:
+            print("✗ No documents to tag")
+            return False
+    except Exception as e:
+        print(f"✗ Document tagging failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+def test_ingestion(quick_mode=True):
+    """Test document ingestion (creates index)."""
+    print("\nTesting document ingestion...")
+    if quick_mode:
+        print("  (Skipped - would require Ollama models)")
+        return True
+    
+    try:
+        from ingestion import create_multilingual_index
+        
+        # This will attempt to create an index
+        # It requires Ollama to be running with the right models
+        index = create_multilingual_index(
+            english_dir="data/english",
+            french_dir="data/french",
+            db_path="db/test_chroma_db"
+        )
+        
+        print("✓ Document ingestion completed successfully")
+        return True
+    except Exception as e:
+        print(f"✗ Document ingestion failed: {e}")
+        print("  This is expected if Ollama models are not available")
+        return False
+
+
+def test_rag_engine_init(quick_mode=True):
+    """Test RAG engine initialization."""
+    print("\nTesting RAG engine initialization...")
+    if quick_mode:
+        print("  (Skipped - would require Ollama models)")
+        return True
+    
+    try:
+        from rag_engine import BilingualRAGEngine
+        
+        engine = BilingualRAGEngine(
+            db_path="db/test_chroma_db",
+            llm_model="llama3.2:latest",
+            embedding_model="nomic-embed-text-v2-moe:latest"
+        )
+        
+        print("✓ RAG engine initialized successfully")
+        return True
+    except Exception as e:
+        print(f"✗ RAG engine initialization failed: {e}")
+        print("  This is expected if Ollama models are not available")
+        return False
+
+
+def main():
+    """Run all integration tests."""
+    print("="*70)
+    print("Bilingual RAG System - Integration Tests")
+    print("="*70)
+    print("\nNote: Some tests require Ollama to be running with models pulled.")
+    print("Run: ollama pull llama3.2:latest && ollama pull nomic-embed-text-v2-moe:latest")
+    print()
+    
+    # Check if we're in quick mode (no Ollama required)
+    quick_mode = not check_ollama()
+    
+    if quick_mode:
+        print("\n⚠ Running in quick mode (Ollama not available)")
+        print("  Some tests will be skipped\n")
+    
+    tests = [
+        ("Language Detection", lambda: test_language_detection()),
+        ("Document Loading", lambda: test_document_loading()),
+        ("Document Tagging", lambda: test_document_tagging()),
+        ("Document Ingestion", lambda: test_ingestion(quick_mode)),
+        ("RAG Engine Init", lambda: test_rag_engine_init(quick_mode)),
+    ]
+    
+    results = []
+    for test_name, test_func in tests:
+        try:
+            result = test_func()
+            results.append((test_name, result))
+        except Exception as e:
+            print(f"✗ Test '{test_name}' crashed: {e}")
+            import traceback
+            traceback.print_exc()
+            results.append((test_name, False))
+    
+    print("\n" + "="*70)
+    print("Test Results Summary")
+    print("="*70)
+    
+    passed = sum(1 for _, result in results if result)
+    total = len(results)
+    
+    for test_name, result in results:
+        status = "✓ PASS" if result else "✗ FAIL"
+        print(f"{status}: {test_name}")
+    
+    print(f"\nPassed: {passed}/{total}")
+    
+    if quick_mode:
+        print("\n⚠ Note: Some tests were skipped due to Ollama not being available")
+    
+    if passed == total:
+        print("\n✓ All tests passed!")
+        return 0
+    else:
+        print(f"\n✗ {total - passed} test(s) failed")
+        return 1
+
+
+if __name__ == "__main__":
+    # Check if dependencies are installed
+    try:
+        import langdetect
+        import llama_index
+    except ImportError as e:
+        print("="*70)
+        print("ERROR: Required dependencies not installed")
+        print("="*70)
+        print(f"\nMissing module: {e}")
+        print("\nPlease run the bootstrap script first:")
+        print("  ./bootstrap.sh")
+        print("  conda activate LUFA_OpenSource_RAG")
+        print("  python test_integration.py")
+        exit(1)
+    
+    exit(main())
+
+```
+
+Filename= src\test_reflector.py
+CODE:
+```
+"""
+Unit tests for the reflect() function in src/reflector.py.
+These tests use a stubbed LLM to avoid requiring a live Ollama instance.
+Run with: python test_reflector.py
+"""
+
+import sys
+import unittest
+from pathlib import Path
+from unittest.mock import MagicMock
+
+# Add src directory to path
+sys.path.insert(0, str(Path(__file__).parent / 'src'))
+
+# Stub out llama_index before importing reflector so tests run without the
+# full Ollama / llama-index stack installed.
+sys.modules.setdefault('llama_index', MagicMock())
+sys.modules.setdefault('llama_index.llms', MagicMock())
+sys.modules.setdefault('llama_index.llms.ollama', MagicMock())
+
+from reflector import reflect
+
+
+def _make_llm(response_text):
+    """Return a mock LLM whose complete() returns response_text."""
+    llm = MagicMock()
+    llm.complete.return_value = response_text
+    return llm
+
+
+class TestReflect(unittest.TestCase):
+
+    def test_reflect_grounded_returns_true(self):
+        """When the LLM responds with GROUNDED the function must return True."""
+        llm = _make_llm("GROUNDED")
+        self.assertIs(reflect("Some answer.", ["Chunk one.", "Chunk two."], llm), True)
+
+    def test_reflect_grounded_case_insensitive(self):
+        """GROUNDED detection should be case-insensitive (result is upper-cased internally)."""
+        llm = _make_llm("grounded")
+        self.assertIs(reflect("Some answer.", ["Chunk one."], llm), True)
+
+    def test_reflect_grounded_with_trailing_whitespace(self):
+        """Leading/trailing whitespace around the token should be ignored."""
+        llm = _make_llm("  GROUNDED  ")
+        self.assertIs(reflect("Some answer.", ["Chunk one."], llm), True)
+
+    def test_reflect_ungrounded_returns_false(self):
+        """When the LLM responds with UNGROUNDED the function must return False."""
+        llm = _make_llm("UNGROUNDED")
+        self.assertIs(reflect("Some answer.", ["Chunk one."], llm), False)
+
+    def test_reflect_ungrounded_case_insensitive(self):
+        """UNGROUNDED detection should be case-insensitive."""
+        llm = _make_llm("ungrounded")
+        self.assertIs(reflect("Some answer.", ["Chunk one."], llm), False)
+
+    def test_reflect_first_token_only(self):
+        """Only the first token matters; extra text after GROUNDED should still return True."""
+        llm = _make_llm("GROUNDED (some explanation)")
+        self.assertIs(reflect("Some answer.", ["Chunk one."], llm), True)
+
+    def test_reflect_first_token_ungrounded_with_extra_text(self):
+        """Only the first token matters; extra text after UNGROUNDED should still return False."""
+        llm = _make_llm("UNGROUNDED because the answer mentions facts not in the chunks.")
+        self.assertIs(reflect("Some answer.", ["Chunk one."], llm), False)
+
+    def test_reflect_exception_is_fail_closed(self):
+        """On LLM error the function must return False (fail-closed) to match the implemented policy."""
+        llm = MagicMock()
+        llm.complete.side_effect = RuntimeError("connection refused")
+        self.assertIs(reflect("Some answer.", ["Chunk one."], llm), False)
+
+    def test_reflect_empty_chunks_returns_false(self):
+        """With no chunks there is nothing to ground against; must return False without calling LLM."""
+        llm = MagicMock()
+        self.assertIs(reflect("Some answer.", [], llm), False)
+        llm.complete.assert_not_called()
+
+    def test_reflect_uses_at_most_five_chunks(self):
+        """Only the first five chunks should be sent to the LLM."""
+        chunks = [f"Chunk {i}." for i in range(10)]
+        llm = _make_llm("GROUNDED")
+        reflect("Some answer.", chunks, llm)
+        call_args = llm.complete.call_args[0][0]
+        # Chunks 0-4 should appear; chunk 5 onwards should not
+        for i in range(5):
+            self.assertIn(f"Chunk {i}.", call_args)
+        for i in range(5, 10):
+            self.assertNotIn(f"Chunk {i}.", call_args)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+```
+
+Filename= src\translator.py
+CODE:
+```
+"""
+Translation module for Agentic RAG multilingual support.
+Converts non-EN/FR queries to English for processing,
+then translates the final answer back to the original language.
+"""
+
+from llama_index.llms.ollama import Ollama
+from langdetect import detect, LangDetectException
+
+# Languages natively supported by the pipeline — no translation needed
+SUPPORTED_LANGUAGES = {"en", "fr"}
+
+# Human-readable language names for prompts
+LANGUAGE_NAMES = {
+    "af": "Afrikaans", "sq": "Albanian", "ar": "Arabic", "hy": "Armenian",
+    "az": "Azerbaijani", "eu": "Basque", "be": "Belarusian", "bn": "Bengali",
+    "bs": "Bosnian", "bg": "Bulgarian", "ca": "Catalan", "zh": "Chinese",
+    "zh-cn": "Chinese (Simplified)", "zh-tw": "Chinese (Traditional)",
+    "hr": "Croatian", "cs": "Czech", "da": "Danish", "nl": "Dutch",
+    "en": "English", "et": "Estonian", "fi": "Finnish", "fr": "French",
+    "gl": "Galician", "de": "German", "el": "Greek", "gu": "Gujarati",
+    "ha": "Hausa", "he": "Hebrew", "hi": "Hindi", "hu": "Hungarian",
+    "id": "Indonesian", "ga": "Irish", "it": "Italian", "ja": "Japanese",
+    "kn": "Kannada", "kk": "Kazakh", "ko": "Korean", "lv": "Latvian",
+    "lt": "Lithuanian", "mk": "Macedonian", "ms": "Malay", "ml": "Malayalam",
+    "mt": "Maltese", "mr": "Marathi", "ne": "Nepali", "no": "Norwegian",
+    "fa": "Persian", "pl": "Polish", "pt": "Portuguese", "pa": "Punjabi",
+    "ro": "Romanian", "ru": "Russian", "sr": "Serbian", "sk": "Slovak",
+    "sl": "Slovenian", "so": "Somali", "es": "Spanish", "sw": "Swahili",
+    "sv": "Swedish", "tl": "Filipino", "ta": "Tamil", "te": "Telugu",
+    "th": "Thai", "tr": "Turkish", "uk": "Ukrainian", "ur": "Urdu",
+    "vi": "Vietnamese", "cy": "Welsh", "yo": "Yoruba", "zu": "Zulu",
+}
+
+TRANSLATE_TO_EN_PROMPT = """Translate the following text into English.
+Output ONLY the translated text — no explanations, no labels, no extra content.
+
+Text ({source_language}):
+{text}
+
+English translation:"""
+
+TRANSLATE_TO_TARGET_PROMPT = """Translate the following text into {target_language}.
+Output ONLY the translated text — no explanations, no labels, no extra content.
+
+English text:
+{text}
+
+{target_language} translation:"""
+
+
+def detect_full_language(text: str) -> str:
+    """
+    Detect the language of a text string.
+
+    Returns:
+        ISO 639-1 language code (e.g. 'en', 'fr', 'es', 'ar')
+        Falls back to 'en' if detection fails.
+    """
+    try:
+        code = detect(text)
+        # Normalise Chinese variants → 'zh'
+        if code.startswith("zh"):
+            return "zh"
+        return code
+    except LangDetectException:
+        print("[Translator] Language detection failed — defaulting to 'en'")
+        return "en"
+
+
+def needs_translation(lang_code: str) -> bool:
+    """Return True if the language is not natively supported (i.e. not EN or FR)."""
+    return lang_code not in SUPPORTED_LANGUAGES
+
+
+def translate_to_english(text: str, source_lang: str, llm: Ollama) -> str:
+    """
+    Translate any non-EN/FR text to English before RAG processing.
+
+    Args:
+        text:        Text to translate
+        source_lang: Detected ISO language code of the source text
+        llm:         Shared Ollama LLM instance
+
+    Returns:
+        English-translated text (falls back to original on failure)
+    """
+    lang_name = LANGUAGE_NAMES.get(source_lang, source_lang.upper())
+    prompt = TRANSLATE_TO_EN_PROMPT.format(
+        source_language=lang_name,
+        text=text
+    )
+    try:
+        result = str(llm.complete(prompt)).strip()
+        if result:
+            print(f"[Translator] '{source_lang}' → 'en': {text[:60]}... → {result[:60]}...")
+            return result
+    except Exception as e:
+        print(f"[Translator] translate_to_english failed: {e}")
+    return text  # safe fallback
+
+
+def translate_to_target(text: str, target_lang: str, llm: Ollama) -> str:
+    """
+    Translate an English answer back to the user's original language.
+
+    Args:
+        text:        English answer text
+        target_lang: ISO language code of the user's original language
+        llm:         Shared Ollama LLM instance
+
+    Returns:
+        Translated answer (falls back to English on failure)
+    """
+    if target_lang in SUPPORTED_LANGUAGES or target_lang == "en":
+        return text  # no translation needed
+
+    lang_name = LANGUAGE_NAMES.get(target_lang, target_lang.upper())
+    prompt = TRANSLATE_TO_TARGET_PROMPT.format(
+        target_language=lang_name,
+        text=text
+    )
+    try:
+        result = str(llm.complete(prompt)).strip()
+        if result:
+            print(f"[Translator] 'en' → '{target_lang}': {text[:60]}... → {result[:60]}...")
+            return result
+    except Exception as e:
+        print(f"[Translator] translate_to_target failed: {e}")
+    return text  # safe fallback — return English if translation fails
+```
+
