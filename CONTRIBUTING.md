@@ -1,27 +1,22 @@
-- `db/` - Vector database storage
+3. Test your changes thoroughly
+4. Update documentation if needed
+5. Submit a pull request with a clear description
 
-## Testing
+## Adding New Features
 
-### Basic Structure Tests (no dependencies required)
-```bash
-python test_basic.py
-```
+When adding new features, consider:
+- Maintaining bilingual support
+- Keeping the code modular
+- Adding appropriate error handling
+- Updating documentation and tests
 
-### Full System Tests (after installation)
-```bash
-conda activate LUFA_OpenSource_RAG
-# Ensure Ollama is running and models are pulled
-python test_integration.py
-```
+## Reporting Issues
 
-## Code Style
+When reporting issues, please include:
+- Python version
+- Ollama version
+- Steps to reproduce
+- Error messages or logs
+- Expected vs actual behavior
 
-- Follow PEP 8 guidelines
-- Add docstrings to all functions
-- Keep functions focused and modular
-- Add type hints where appropriate
-
-## Pull Request Process
-
-1. Create a new branch for your feature
-2. Make your changes
+Thank you for contributing! 🎉
