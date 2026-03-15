@@ -1,11 +1,11 @@
-        for root, dirs, files in os.walk(src_dir):
-            for file in files:
-                if file.endswith(".py"):
-                    file_path = Path(root) / file
+                    with open(file_path, "r", encoding="utf-8") as infile:
+                        outfile.write(infile.read())
 
-                    # Write header
-                    outfile.write(f"Filename= {file_path}\n")
-                    outfile.write("CODE:\n")
-                    outfile.write("```\n")
+                    # Write footer and spacing
+                    outfile.write("\n```\n\n")
 
-                    # Write content
+    print(f"Successfully bundled all code into {output_file}")
+
+
+if __name__ == "__main__":
+    bundle_code()
