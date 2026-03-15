@@ -1,69 +1,109 @@
-# Implementation Summary
+- Performs cross-lingual semantic search
+- Generates responses in query language
+- Includes source attribution
 
-> **🔒 Security Update (2026-02-11)**: All dependencies have been updated to address critical vulnerabilities. See [SECURITY.md](SECURITY.md) for details.
+**Key Features:**
+- `BilingualRAGEngine` class with full RAG pipeline
+- `detect_query_language()` - Query language detection
+- `create_language_aware_prompt()` - Language-specific prompts
+- `query()` - Complete query processing
 
-## ✅ Complete Bilingual EN/FR RAG System
+#### 3. Streamlit App (`src/app.py`)
+- Interactive chat interface
+- Real-time language detection display
+- Source document viewer
+- Usage statistics and analytics
+- Configurable retrieval parameters
 
-This implementation provides a fully functional bilingual (English/French) Retrieval-Augmented Generation system with all requested features.
+**UI Features:**
+- Chat history with language indicators
+- Source document display with scores
+- Language distribution statistics
+- Adjustable top-k retrieval
 
-### 🎯 Problem Statement Requirements - All Met
+#### 4. Bootstrap Script (`bootstrap.sh`)
+- Automated environment setup
+- Dependency installation
+- Ollama model checking
+- Helper commands for common tasks
 
-| Requirement | Status | Implementation                                    |
-|------------|--------|---------------------------------------------------|
-| Bilingual EN/FR support | ✅ | Automatic language detection with langdetect      |
-| Ollama integration | ✅ | Using llama3.2 and nomic-embed-text-v2-moe models |
-| LlamaIndex framework | ✅ | Core RAG orchestration                            |
-| ChromaDB vector store | ✅ | Persistent vector storage                         |
-| Streamlit UI | ✅ | Interactive web interface                         |
-| Auto-detect doc language | ✅ | Language detection in ingestion.py                |
-| Tag chunks with language | ✅ | Metadata tagging system                           |
-| Multilingual vector store | ✅ | nomic-embed-text-v2-moe multilingual embeddings   |
-| Cross-lingual retrieval | ✅ | Semantic search across languages                  |
-| Respond in query language | ✅ | Laexnguage-aware prompt engineering               |
-| Bootstrap generation | ✅ | Complete setup automation                         |
+**Commands:**
+- `./bootstrap.sh` - Initial setup
+- `./bootstrap.sh ingest` - Run ingestion
+- `./bootstrap.sh run` - Start application
 
-### 📦 Dependencies - All Included (Security Patched)
+### 📚 Documentation
 
-All required packages in `requirements.txt` with **latest secure versions**:
-- ✅ llama-index==0.13.0 (patched vulnerabilities)
-- ✅ llama-index-llms-ollama==0.3.8
-- ✅ llama-index-embeddings-ollama==0.4.1
-- ✅ llama-index-vector-stores-chroma==0.4.1
-- ✅ chromadb
-- ✅ streamlit
-- ✅ pypdf
-- ✅ langdetect
+| Document | Purpose | Status |
+|----------|---------|--------|
+| README.md | Complete user guide | ✅ 245 lines |
+| QUICKSTART.md | Quick start guide | ✅ 90 lines |
+| ARCHITECTURE.md | System design | ✅ 347 lines |
+| TROUBLESHOOTING.md | Problem solving | ✅ 301 lines |
+| CONTRIBUTING.md | Development guide | ✅ 68 lines |
+| data/README.md | Data directory guide | ✅ 27 lines |
 
-### 🏗️ Directory Structure - All Created
+### 🧪 Testing
 
-```
-LUFA_OpenSource_RAG/
-├── data/
-│   ├── english/          ✅ With sample document
-│   └── french/           ✅ With sample document
-├── src/
-│   ├── ingestion.py      ✅ Document processing
-│   ├── rag_engine.py     ✅ Query engine
-│   └── app.py            ✅ Streamlit UI
-├── db/                   ✅ ChromaDB storage location
-├── requirements.txt      ✅ All dependencies
-└── bootstrap.sh          ✅ Setup automation
-```
+#### Basic Tests (`test_basic.py`)
+- Directory structure validation
+- Sample document verification
+- Dependency checking
+- Bootstrap script validation
+- No external dependencies required
 
-### 🔧 Core Components
+#### Integration Tests (`test_integration.py`)
+- Full system integration
+- Language detection with real module
+- Document loading and tagging
+- RAG engine initialization
+- Requires full environment setup
 
-#### 1. Document Ingestion (`src/ingestion.py`)
-- Loads documents from English and French directories
-- Detects language using langdetect library
-- Tags chunks with language metadata
-- Creates embeddings with nomic-embed-text-v2-moe
-- Stores in ChromaDB with language preservation
+### 🎨 Features Implemented
 
-**Key Functions:**
-- `detect_language()` - Automatic EN/FR detection
-- `load_documents_from_directory()` - Multi-format loading
-- `tag_documents_with_language()` - Metadata tagging
-- `create_multilingual_index()` - Full index creation
+#### Language Detection
+- Automatic detection of document language during ingestion
+- Query language detection for appropriate responses
+- Fallback to English for ambiguous cases
 
-#### 2. RAG Engine (`src/rag_engine.py`)
-- Detects query language automatically
+#### Cross-lingual Retrieval
+- nomic-embed-text-v2-moe multilingual embeddings
+- Semantic similarity across languages
+- Retrieves relevant content regardless of language
+
+#### Language-aware Responses
+- Detects query language
+- Adds language-specific instructions to LLM
+- Returns answers in the same language as query
+
+#### Persistent Storage
+- ChromaDB vector database
+- Persistent across sessions
+- Efficient similarity search
+
+#### User Interface
+- Clean, modern Streamlit design
+- Real-time chat interaction
+- Language indicators (🇬🇧/🇫🇷)
+- Source document display
+- Usage statistics
+
+### 🚀 Usage Workflow
+
+1. **Setup** (one time):
+   ```bash
+   ./bootstrap.sh
+   ollama pull llama3.2
+   ollama pull nomic-embed-text-v2-moe
+   ```
+
+2. **Add Documents**:
+   ```bash
+   cp your-files.pdf data/english/
+   cp vos-fichiers.pdf data/french/
+   ```
+
+3. **Ingest**:
+   ```bash
+   conda activate LUFA_OpenSource_RAG
+   python src/ingestion.py
