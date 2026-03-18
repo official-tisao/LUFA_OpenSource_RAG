@@ -22,7 +22,7 @@ cd LUFA_OpenSource_RAG
 ollama pull llama3.2
 ollama pull nomic-embed-text-v2-moe
 
-conda create -n lufa_rag python=3.11 -y
+conda create -n LUFA_OpenSource_RAG python=3.11 -y
 conda init
 ```
 
@@ -37,8 +37,8 @@ cp your-french-doc.pdf data/french/
 
 ### Step 2: Ingest Documents
 ```bash
-conda activate lufa_rag
-# source venv/bin/activate # Uncomment this to use venv over conda
+conda activate LUFA_OpenSource_RAG
+# conda activate LUFA_OpenSource_RAG # Uncomment this to use venv over conda
 python src/ingestion.py
 ```
 
@@ -57,16 +57,8 @@ python test_basic.py
 
 # Full tests (after setup)
 
-conda activate lufa_rag
+conda activate LUFA_OpenSource_RAG
 
-#command for bash
-source venv/bin/activate
-
-#command for powershell
-.\venv\Scripts\Activate.ps1
-
-#command for cmd
-venv\Scripts\activate.bat
 
 python test_integration.py
 ```
@@ -80,38 +72,3 @@ ollama serve
 ```
 
 ### "Model not found"
-```bash
-# Pull the models
-ollama pull llama3.2
-ollama pull nomic-embed-text-v2-moe
-```
-
-### "No documents found"
-```bash
-# Make sure documents are in the right place
-ls data/english/
-ls data/french/
-```
-
-## Example Queries
-
-Try these in the app:
-
-**English:**
-- "What are the main topics in these documents?"
-- "Summarize the key findings"
-- "What is artificial intelligence?"
-
-**French:**
-- "Quels sont les principaux sujets de ces documents?"
-- "Résume les principales conclusions"
-- "Qu'est-ce que l'intelligence artificielle?"
-
-## Next Steps
-
-- Add more documents to `data/english/` and `data/french/`
-- Run ingestion again to update the index
-- Customize the UI in `src/app.py`
-- Adjust retrieval parameters in `src/rag_engine.py`
-
-Need help? Check the full [README.md](README.md) or open an issue!
