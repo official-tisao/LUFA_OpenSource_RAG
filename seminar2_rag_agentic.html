@@ -1,15 +1,108 @@
-{title:"Theme #5: Privacy and Local Deployment",txt:"Why Cloud is Not an Option Here",items:["Mireshghallah et al., 2020: cloud inference = institutional data out of control","LUFA agreement covers salaries, grievances - highly confidential","Grimmelmann et al., 2024: no audit trail when proprietary algos analyze legal docs","Dubey et al., 2024: Llama 3.2 3B @ Q4_K_M fits into 6 GB VRAM"],box:"Design decision: Local inference with 100% resources (Ollama + Llama 3.2 3B + BGE-M3 + ChromaDB)."},
-{title:"Synthesis across the Five Themes",txt:"From Literature Gaps to Design Requirements",tbl:{h:["Literature Finding","Design Requirement"],r:[["LLMs hallucinate in legal contexts","Citation-level grounding as hard constraint"],["Single-pass RAG fails on complex queries","Agentic loop with grading and reflection"],["Dense retrieval misses exact legal identifiers","Hybrid dense + BM25 with RRF fusion"],["BGE-M3 supports cross-lingual embedding","One shared vector space for EN + FR"],["Cloud inference exposes sensitive data","100% local deployment pipeline"]]}},
-{title:"System Architecture: High-Level Overview",txt:"Five Integrated Subsystems running locally. No external network calls.",items:["[PDF Corpus (EN+FR)]","-> 1. Document Preprocessing Pipeline","-> 2. Embedding & Hybrid Vector Index","-> 3. Agentic Retrieval Pipeline (Includes Corrective Re-Retrieval)","-> 4. Answer Generation Module","-> 5. Local Deployment Layer"]},
-{title:"SUBSYSTEM 1: DOCUMENT PREPROCESSING",txt:"Clause-Boundary Chunking - Preserving Legal Integrity",items:["Problem: Fixed token windows split clauses (Blair-Stanek et al., 2023)","Solution: Chunking occurs at article and sub-article levels. Each chunk = one entire provision.","Metadata added: article_number | clause_id | section_title | language | page_no","Small chunks (<30 tokens) merged with next clause"],box:"Outcome: 389 EN chunks, 401 FR chunks, average 118-124 tokens per chunk."},
-{title:"SUBSYSTEM 2: EMBEDDING AND VECTOR INDEX",txt:"BGE-M3 + ChromaDB = Unified Dual-Language Vector Space",items:["BGE-M3: Over 100 languages in unified space. Query in FR retrieves EN clause via proximity.","ChromaDB: Local persistent DB. Sub-collections: lufa_en and lufa_fr.","BM25 Sparse Index: Exact matches for article numbers and legal terminology.","Fused with dense results using RRF (Cormack et al., 2009)."]},
-{title:"Subsystem 3: The Agentic Retrieval Loop",txt:"The Agent That Realizes When It Is Mistaken",items:["User Query -> Query Rewriting/HyDE","-> Hybrid Retrieval (Dense + BM25 + RRF)","-> Retrieval Grading. Enough? NO -> Rewrite & Retrieve (up to 5x)","-> YES -> Answer Creation","-> Agent Self-Reflection Test. Realistic? NO -> Mark or Retrieve","-> YES -> Response Provided to User"]},
-{title:"Query Rewriting and HyDE",txt:"Overcoming the Vocabulary Gap between Users and Legal Documents",items:["Issue: Faculty asks 'notice before sabbatical?', Agreement says 'notification for professional development leave'.","Strategy 1: Llama 3.2 3B rewrites query in proper legal language with synonyms.","Strategy 2 (HyDE): LLM writes hypothetical answer. Used as search query.","Hypothetical doc appears closer geometrically to actual clauses than the raw query."]},
-{title:"Retrieval Grading and Corrective Re-Retrieval",txt:"Not All Retrieved Chunks Are Relevant, We Verify",items:["Grading: Llama 3.2 3B evaluates every retrieved chunk for relevance.","Requires minimum 2 out of 5 chunks to pass.","CRAG (Yan et al.): If <2 pass, agent identifies retrieval gap, redrafts query, re-runs (up to 5x).","Prevents 'silent failure' of standard RAG passing bad chunks to generator."]},
-{title:"Self-Reflection and Answer Generation",txt:"Validating the Answer Against the Evidence Before Delivery",items:["Self-Reflection: Llama 3.2 3B verifies every factual claim in the generated answer.","Is claim supported by at least one retrieved chunk? Unsupported claims get uncertainty marking.","If majority of claims unsupported -> answer scrapped, retrieval restarts.","Generation: Tri-partite prompt. Each claim cites Article Number & Clause ID in user's language."]},
-{title:"Subsystem 5: Local Deployment",txt:"Everything Works Offline - 6 GB VRAM, Zero Cloud",items:["Llama 3.2 3B (Q4_K_M via Ollama): ~2.1 GB VRAM","BGE-M3 embedding (GGUF): ~0.5 GB VRAM","KV-cache: ~1.5-2.5 GB VRAM","Peak GPU memory: Under 6 GB (ChromaDB uses system RAM)","Privacy: Ollama & LlamaIndex use localhost REST. Nothing leaves machine."]},
-{title:"Implementation Status",txt:"Where We Are Right Now",tbl:{h:["Component","Status"],r:[["PDF ingestion & clause chunking","Complete"],["BGE-M3 + ChromaDB indexing","Complete"],["BM25 sparse index","Complete"],["Hybrid RRF retrieval","Complete"],["Ollama local inference","Complete"],["LlamaIndex ReAct agent scaffolding","In Progress"],["Retrieval grading / Self-reflection","Pending"],["End-to-end pipeline test","Pending"]]}},
-{title:"Evaluation Plan: The Benchmark",txt:"A Purpose-Built Bilingual Benchmark - 60 Queries (No existing benchmark exists)",tbl:{h:["Sub-set","Language","Count","Source"],r:[["English monolingual","EN query -> EN clause","20","Grievance records"],["French monolingual","FR query -> FR clause","20","Faculty orientation"],["Cross-lingual","EN <-> FR","20","Real cross-lang queries"]]},box:"3 complexity levels. 2 independent annotators (Kappa >= 0.75)."},
-{title:"Evaluation Plan: The Four Systems",txt:"Four Systems on the Same Benchmark (Retrieval fixed, Generator/Loop varies)",tbl:{h:["System","Type","Generator","Agentic Loop"],r:[["A: Proposed Agentic RAG","Local","Llama 3.2 3B","Full loop"],["B: Naive RAG Baseline","Local","Llama 3.2 3B","Single pass"],["C: GPT-4o + RAG","Cloud","GPT-4o","Single pass"],["D: Claude 3.5 Sonnet + RAG","Cloud","Claude 3.5","Single pass"]]}},
-{title:"Evaluation Plan: Metrics",txt:"What We Measure and Why",items:["Relevance of retrieval: Precision@3, Recall@3, nDCG@3 (addresses RQ2)","Quality of answer (RAGAS): Faithfulness, Answer Relevance, Context Precision","Citation accuracy: 1pt correct Article+ID, 0.5pt correct Article only, 0pt missing/wrong.","Latency: Target median < 10 seconds at P75 (addresses RQ3)"]},
-{title:"Three Gaps in Original Research",txt:"What Has Not Been Done Before, Our Contribution",items:["Gap 1 (Domain): No RAG system designed/evaluated on a university collective agreement corpus.","Gap 2 (Cross-lingual Agentic RAG): All surveyed agentic systems use monolingual English. No study looks at bilingual/cross-lingual bridging.","Gap 3 (Minimalist Hardware): No benchmark compares full-local agentic RAG (6GB VRAM) to state-of-the-art models on real institutional data."]},
+{title:"Seminar 3 Work Plan",txt:"What Comes Next",tbl:{h:["Milestone","Target Week"],r:[["Complete full agentic pipeline integration","Week 1-2"],["End-to-end system testing and debugging","Week 2-3"],["Construct 60-item bilingual evaluation benchmark","Week 3-4"],["Run evaluation experiments - all 4 systems","Week 4-5"],["Statistical analysis & Draft Chapters 4-5","Week 5-8"],["Seminar 3: Results, Discussion, Contributions","Week 9"]]}},
+{title:"Seminar 2 Wrap-Up Slide",txt:"What We Proved Today",items:["Literature in 5 themes inspires every one of our 5 design decisions","Proposed system answers all 3 research questions via 5-subsystem architecture","Infrastructure is finished; agentic loop is being actively developed","A specially designed 60-point bilingual benchmark tests 4 systems using 4 metrics","Three distinct research problems create novelty and uniqueness in this project"]},
+{title:"Thank You - Questions Welcome",items:["Contact: Saheed Oluwatosin Tiamiyu | stiamiyu@laurentian.ca","School of Engineering and Computational Sciences","Seminar 1 title: From RAG to Agentic RAG: From Static Pipelines to Agentic Systems in Agreement Document Retrieval"]},
+{t:"download"}
+];
+
+const deck=document.getElementById('deck');
+let cur=0;
+
+function build(){
+  data.forEach((s,i)=>{
+    let d=document.createElement('div');
+    d.className='slide'+(i===0?' active':'');
+    if(s.t==='cover'){
+      d.classList.add('cover');
+      d.innerHTML=`<img src="https://upload.wikimedia.org/wikipedia/en/3/39/Laurentian_University.svg" class="logo">
+      <div class="cols">
+        <div class="col" style="border-left:5px solid #58a6ff"><h2>Presenter</h2><p style="font-size:1.3em">Saheed Oluwatosin Tiamiyu<br><br>Student Id: 0466367</p></div>
+        <div class="col" style="border-left:5px solid #238636"><h2>Supervisor</h2><p style="font-size:1.3em">Prof. Kalpdrum Passi<br><br>Full Professor, School of Engineering and Computer Science</p></div>
+      </div>
+      <div class="seminar-title">${s.title}</div>`;
+    }else if(s.t==='download'){
+      d.innerHTML=`<h1>Download Presentation</h1><div style="flex:1;display:flex"><button class="dl-btn" onclick="genPPTX()">Download Seminar 2 PPTX</button></div>`;
+    }else{
+      let html=`<h1>${s.title}</h1>`;
+      if(s.txt) html+=`<div class="txt-box">${s.txt}</div>`;
+      if(s.items){
+        html+=`<ul>`;
+        s.items.forEach(it=>html+=`<li>${it}</li>`);
+        html+=`</ul>`;
+      }
+      if(s.tbl){
+        html+=`<table><tr>`;
+        s.tbl.h.forEach(th=>html+=`<th>${th}</th>`);
+        html+=`</tr>`;
+        s.tbl.r.forEach(tr=>{
+          html+=`<tr>`;
+          tr.forEach(td=>html+=`<td>${td}</td>`);
+          html+=`</tr>`;
+        });
+        html+=`</table>`;
+      }
+      if(s.box) html+=`<div class="txt-box" style="margin-top:20px;border-color:#238636">${s.box}</div>`;
+      html+=`<div class="nav-hint">Slide ${i+1} of ${data.length-1} | Use Arrows to Navigate</div>`;
+      d.innerHTML=html;
+    }
+    deck.appendChild(d);
+  });
+}
+
+function nav(dir){
+  let slides=document.querySelectorAll('.slide');
+  slides[cur].classList.remove('active');
+  cur+=dir;
+  if(cur<0) cur=0;
+  if(cur>=slides.length) cur=slides.length-1;
+  slides[cur].classList.add('active');
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') nav(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') nav(-1);
+});
+
+async function genPPTX(){
+  let pres=new PptxGenJS();
+  pres.layout='LAYOUT_16x9';
+  pres.defineSlideMaster({title:'M1',background:{color:'0B0F19'},slideNumber:{x:'95%',y:'95%',color:'8b949e'}});
+  data.forEach((s,i)=>{
+    if(s.t==='download') return;
+    let slide=pres.addSlide({masterName:'M1'});
+    if(s.t==='cover'){
+      slide.addImage({path:"https://upload.wikimedia.org/wikipedia/en/3/39/Laurentian_University.svg",x:7.5,y:0.2,w:2,h:0.55});
+      slide.addShape(pres.ShapeType.rect,{x:1,y:2,w:3.8,h:1.5,fill:{color:'161b22'},line:{color:'58a6ff',width:2}});
+      slide.addText([{text:"Presenter\n",options:{fontSize:18,color:'58a6ff',bold:true}},{text:"Saheed Oluwatosin Tiamiyu\nStudent Id: 0466367",options:{fontSize:14,color:'ffffff'}}],{x:1.1,y:2.1,w:3.6,h:1.3});
+      slide.addShape(pres.ShapeType.rect,{x:5.2,y:2,w:3.8,h:1.5,fill:{color:'161b22'},line:{color:'238636',width:2}});
+      slide.addText([{text:"Supervisor\n",options:{fontSize:18,color:'238636',bold:true}},{text:"Prof. Kalpdrum Passi\nFull Professor, School of Engineering and Computer Science",options:{fontSize:14,color:'ffffff'}}],{x:5.3,y:2.1,w:3.6,h:1.3});
+      slide.addText(s.title,{x:0.5,y:4.5,w:9,h:1,fontSize:18,color:'58a6ff',bold:true,align:'center'});
+    }else{
+      let currY=0.5;
+      slide.addText(s.title,{x:0.5,y:currY,w:9,h:0.6,fontSize:24,color:'58a6ff',bold:true});
+      slide.addShape(pres.ShapeType.line,{x:0.5,y:currY+0.6,w:9,h:0,line:{color:'30363d',width:1}});
+      currY+=0.8;
+      if(s.txt){
+        slide.addShape(pres.ShapeType.rect,{x:0.5,y:currY,w:9,h:0.4,fill:{color:'161b22'}});
+        slide.addText(s.txt,{x:0.6,y:currY,w:8.8,h:0.4,fontSize:14,color:'c9d1d9'});
+        currY+=0.6;
+      }
+      if(s.items){
+        let bText=s.items.map(it=>({text:it,options:{bullet:true,breakLine:true}}));
+        slide.addText(bText,{x:0.5,y:currY,w:9,h:s.items.length*0.4,fontSize:16,color:'ffffff',valign:'top'});
+        currY+=s.items.length*0.45;
+      }
+      if(s.tbl){
+        let rws=[s.tbl.h.map(th=>({text:th,options:{fill:'161b22',color:'58a6ff',bold:true,border:{type:'solid',color:'30363d'}}}) )];
+        s.tbl.r.forEach(tr=>rws.push(tr.map(td=>({text:td,options:{color:'ffffff',border:{type:'solid',color:'30363d'}}}))));
+        slide.addTable(rws,{x:0.5,y:currY,w:9,colW:s.tbl.h.map(()=>(9/s.tbl.h.length))});
+      }
+      if(s.box){
+        slide.addShape(pres.ShapeType.rect,{x:0.5,y:5,w:9,h:0.4,fill:{color:'161b22'}});
+        slide.addText(s.box,{x:0.6,y:5,w:8.8,h:0.4,fontSize:14,color:'79c0ff',bold:true});
+      }
+    }
+  });
+  pres.writeFile({fileName:"Seminar2_Tiamiyu.pptx"});
+}
+build();
+</script></body></html>
