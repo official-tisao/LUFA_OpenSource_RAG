@@ -1,74 +1,46 @@
-# Quick Start Guide
-
-## Prerequisites Check
-
-Before starting, ensure you have:
-- [ ] Python 3.8+ installed
-- [ ] Anaconda/Miniconda installation
-- [ ] Ollama installed and running
-- [ ] Required models pulled (`llama3.2` and `nomic-embed-text-v2-moe`)
-
-## Setup (5 minutes)
-
 ```bash
-# 1. Clone the repository
-git clone https://github.com/official-tisao/LUFA_OpenSource_RAG.git
-cd LUFA_OpenSource_RAG
-
-# 2. Run bootstrap
-./bootstrap.sh
-
-# 3. Pull Ollama models (if not already done)
+# Pull the models
 ollama pull llama3.2
 ollama pull nomic-embed-text-v2-moe
-
-conda create -n LUFA_OpenSource_RAG python=3.11 -y
-conda init
 ```
 
-## Using the System (3 steps)
-
-### Step 1: Add Your Documents
+### "No documents found"
 ```bash
-# Copy your files
-cp your-english-doc.pdf data/english/
-cp your-french-doc.pdf data/french/
+# Make sure documents are in the right place
+ls data/english/
+ls data/french/
 ```
 
-### Step 2: Ingest Documents
-```bash
-conda activate LUFA_OpenSource_RAG
-# conda activate LUFA_OpenSource_RAG # Uncomment this to use venv over conda
-python src/ingestion.py
-```
+## Example Queries
 
-### Step 3: Start the App
-```bash
-streamlit run src/app.py
-```
+Try these in the app:
 
-That's it! Open your browser to http://localhost:8501
+**English:**
+- "What are the main topics in these documents?"
+- "Summarize the key findings"
+- "What is artificial intelligence?"
 
-## Testing Your Setup
+**French:**
+- "Quels sont les principaux sujets de ces documents?"
+- "Résume les principales conclusions"
+- "Qu'est-ce que l'intelligence artificielle?"
 
-```bash
-# Basic tests (no dependencies needed)
-python test_basic.py
+## Next Steps
 
-# Full tests (after setup)
+- Add more documents to `data/english/` and `data/french/`
+- Run ingestion again to update the index
+- Customize the UI in `src/app.py`
+- Adjust retrieval parameters in `src/rag_engine.py`
 
-conda activate LUFA_OpenSource_RAG
+# LUFA Agentic RAG System - Execution Workflow
 
+This document outlines the correct execution order for the system scripts to ensure clean data generation, accurate metric scoring, and dashboard compilation.
 
-python test_integration.py
-```
+### Step 1: Establish Ground Truth (One-Time Setup)
+Before running any simulations, the master dataset must have its expected answers linked to the exact ChromaDB vector identifiers.
+Command: python src/find_ground_truth.py
+Input: data/combined_test_data.csv
+Output: Appends UUIDs to ground_source_truth_id column in the same file.
 
-## Common Issues
-
-### "Ollama not running"
-```bash
-# Start Ollama
-ollama serve
-```
-
-### "Model not found"
+### Step 2: Run The RAG Simulation
+This script feeds the test questions into the local LLM and embedding layers. It performs the agentic looping and hybrid retrieval, saving the raw answers and retrieved chunks to an output log.
