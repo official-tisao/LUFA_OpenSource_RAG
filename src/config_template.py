@@ -1,15 +1,13 @@
 
-# Document Directories
-ENGLISH_DOCS_DIR = "data/english"
-FRENCH_DOCS_DIR = "data/french"
+# Agreement Configuration
+DEFAULT_AGREEMENT_YEAR_RANGE = "2020 - 2025"
 
-# Chunking Configuration
-CHUNK_SIZE = 512
-CHUNK_OVERLAP = 50
+# Streamlit Configuration
+STREAMLIT_PAGE_TITLE = "Bilingual RAG System"
+STREAMLIT_PAGE_ICON = "🌍"
+STREAMLIT_LAYOUT = "wide"
 
-# Retrieval Configuration
-SIMILARITY_TOP_K = 3
-RESPONSE_MODE = "compact"  # Options: "compact", "refine", "tree_summarize"
-
-# Language Detection
-DEFAULT_LANGUAGE = "en"  # Fallback if detection fails
+# Feature Flags
+ENABLE_SOURCE_DISPLAY = True
+ENABLE_LANGUAGE_STATS = True
+ENABLE_CHAT_HISTORY = True
