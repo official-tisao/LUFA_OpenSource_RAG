@@ -1,46 +1,78 @@
-# LUFA_OpenSource_RAG
+│ - Query translation/rewriting │ │ - Reflection/re-retrieval │ │ - Recency-weighted ranking │ 
+└───────────────────┬────────────────────┘ │ ┌───────────────────▼────────────────────┐ 
+│ ChromaDB Vector Store (db/chroma_db) │ │ - Embedding: BGE-M3 or Nomic │ 
+│ - Collection: multilingual_docs │ │ - Query: Filtered by language │
+└───────────────────┬────────────────────┘ │ ┌───────────────────▼────────────────────┐ 
+│ Ingestion Pipeline (ingestion.py) │ │ - ClauseBoundaryChunker │ │ - Language-tagged metadata │ 
+│ - Recency ranking │ └───────────────────┬────────────────────┘ │ ┌───────────────────▼────────────────────┐ 
+│ Source Documents (data/ dirs) │ │ - English PDFs: data/english/ │ │ - French PDFs: data/french/ │ 
+│ - Bilingual: data/english_and_... │ └────────────────────────────────────────┘
 
-A production-grade **Bilingual (English/French) Agentic RAG System** for querying the Laurentian University Faculty Association (LUFA) collective agreements. Combines local LLMs with frontier model support, clause-aware chunking, and multi-pass agentic retrieval for accurate legal document processing.
+LUFA_OpenSource_RAG
+
+
+## Refined Bilingual Open-Source RAG Technical Implementation Plan
+
+## 💻 Installation & Setup
+
+### Prerequisites
+
+- **Python**: 3.11+
+- **RAM**: 16GB minimum (32GB for faster inference)
+- **GPU**: NVIDIA (6GB+ VRAM) or Apple Silicon (M1+) — or CPU (slower)
+- **Environment**: Linux, macOS, or WSL2 on Windows
+
+### Step 1: Clone & Environment
+
+```bash
+git clone https://github.com/your-org/LUFA_OpenSource_RAG.git
+cd LUFA_OpenSource_RAG
+
+# Create Conda environment
+conda create -n lufa_rag python=3.11 -y
+conda activate lufa_rag
+```
+
+**Hardware Requirements:**
+
+- Minimum 16GB RAM (32GB recommended for multilingual models)
+- NVIDIA GPU with 6GB+ VRAM (OR M1/M2/M3 Mac)
+
 
 ---
 
-## 📋 Table of Contents
+## 💻 Installation & Setup
 
-- [Overview](#overview)
-- [System Architecture](#system-architecture)
-- [Installation & Setup](#installation--setup)
-- [Project Structure](#project-structure)
-- [Core Python Modules](#core-python-modules)
-- [Running the System](#running-the-system)
-- [API Reference](#api-reference)
-- [Evaluation & Testing](#evaluation--testing)
-- [Contributing](#contributing)
-- [License](#license)
+### Prerequisites
 
----
+- **Python**: 3.11+
+- **RAM**: 16GB minimum (32GB for faster inference)
+- **GPU**: NVIDIA (6GB+ VRAM) or Apple Silicon (M1+) — or CPU (slower)
+- **Environment**: Linux, macOS, or WSL2 on Windows
 
-## 🎯 Overview
+### Step 1: Clone & Environment
 
-**LUFA_OpenSource_RAG** is an advanced retrieval-augmented generation (RAG) system purpose-built for university faculty collective agreements. The system:
+```bash
+git clone https://github.com/your-org/LUFA_OpenSource_RAG.git
+cd LUFA_OpenSource_RAG
 
-- ✅ **Bilingual Support**: Native English/French query handling with automatic language detection
-- ✅ **Clause-Aware Chunking**: Extracts semantic clause boundaries from PDFs (not naive fixed-size chunks)
-- ✅ **Agentic Retrieval**: Multi-pass query rewriting, reflection, and re-retrieval for improved accuracy
-- ✅ **Frontier Model Integration**: Optional use of GitHub Copilot models (GPT-5, Claude, Grok, Gemini) alongside local Ollama
-- ✅ **Production API**: FastAPI REST interface with health checks, streaming, and timeout management
-- ✅ **Evaluation Dashboard**: Automated RAGAS-style evaluation with interactive HTML dashboard
-- ✅ **Local-First**: No cloud dependencies—runs entirely on-premise with Ollama + ChromaDB
+# Create Conda environment
+conda create -n lufa_rag python=3.11 -y
+conda activate lufa_rag
+```
 
-**Target Users**: Legal researchers, faculty representatives, HR departments, and university administrators needing semantic search over bilingual policy documents.
 
----
+### Phase 2: Bilingual Model Selection
 
-## 🏗️ System Architecture
-┌─────────────────────────────────────────────────────────────────┐ 
-│ USER INTERFACES │ ├──────────────────────┬──────────────────┬──────────────────────┤ 
-│ Streamlit Web UI │ REST API (Port │ CLI / Python SDK │ │ (app.py) │ 8000, api.py) │ 
-│ └──────────────────────┴──────────────────┴──────────────────────┘ 
-│ ┌───────────┼────────────┐ │ │ │ ┌───────▼─────┐ ┌──▼────────┐ ┌─▼──────────┐ 
-│ Standard │ │ Agentic │ │ Frontier │ │ RAG │ │ RAG │ │ Model │ │ (1-pass) │ │ (3-pass) │ │ (GitHub) │
-└───────┬─────┘ └──┬────────┘ └─┬──────────┘ │ │ │ └───────────┼────────────┘ │ 
-┌───────────────────▼────────────────────┐ │ BilingualRAGEngine (rag_engine.py) │ │ - Language detection │ 
+
+**Multilingual LLM** :[^1]
+
+1. **Llama 3.2:3b-instruct-q4_K_M** : Officially supports French, English, and 6 other languages[^4]
+
+# LLM for generation (3B parameter model, fits most GPUs)
+ollama pull llama3.2:3b-instruct-q4_K_M
+
+# Multilingual embedding (100+ language support)
+ollama pull nomic-embed-text-v2-moe
+
+# Optional: Alternative embedding (higher quality but larger)
