@@ -1,69 +1,58 @@
-    lang_code = "fr" if "fr" in row_lang or "fran" in row_lang else "en"
-    art_no = extract_article_number(question_text) or extract_article_number(expected_text)
+    client = chromadb.PersistentClient(path=db_path)
 
-    # Pathway 1: Complex Metadata SQL WHERE Route
-    if art_no:
-        where_clause = {
-            "$and": [
-                {"article_number": str(art_no)},
-                {"language": lang_code}
-            ]
-        }
-        print(f"   [Dual Strategy] Executing SQL WHERE route -> Article: {art_no} | Lang: {lang_code}")
-        db_results = collection.get(
-            where=where_clause,
-            include=["documents"]
-        )
-    # Pathway 2: Fallback Embedding Index Route
-    else:
-        where_clause = {"language": lang_code}
-        print(f"   [Dual Strategy] No Article found. Executing fallback Neural Vector Index Query route -> Lang: {lang_code}")
-        query_embedding = embed_model.get_text_embedding(question_text)
-        query_results = collection.query(
-            query_embeddings=[query_embedding],
-            n_results=20,
-            where=where_clause,
-            include=["documents"]
-        )
-        db_results = {
-            "ids": query_results["ids"][0] if query_results["ids"] else [],
-            "documents": query_results["documents"][0] if query_results["documents"] else []
-        }
+    print("[Initialization] Instantiating neural layout embedding index models...")
+    engine = create_rag_engine(db_path=db_path)
+    embed_model = engine.embed_model
 
-    ids = db_results.get("ids", [])
-    docs = db_results.get("documents", [])
+    print("\n" + "=" * 80)
+    print("STARTING INTERACTIVE BILINGUAL PROCESSING LOOP")
+    print("=" * 80)
 
-    if not ids or not docs:
-        print("   ⚠️  Warning: No database records matched query filters.")
-        return "", "", 0.0, 0.0
+    for idx, row in df.iterrows():
+        current_counter = idx + 1
+        question_id = row.get("id", f"row_{idx}")
 
-    best_id = ids[0]
-    best_doc = docs[0]
-    max_overlap = -1.0
+        print(f"\n[{current_counter}/{total_records}] Processing Question ID: {question_id}")
+        print(f"   -> Query Preview: \"{str(row['question'])[:65]}...\"")
 
-    for cid, doc_text in zip(ids, docs):
-        overlap = calculate_token_overlap(doc_text, expected_text)
-        if overlap > max_overlap:
-            max_overlap = overlap
-            best_id = cid
-            best_doc = doc_text
+        try:
+            gt_id, gt_text, overlap_pct, answer_overlap_pct = find_exact_ground_truth(
+                row=row,
+                client=client,
+                collection_name=collection_name,
+                embed_model=embed_model
+            )
 
-    # Cross-verify using answer column token footprint ratio
-    answer_overlap_score = calculate_answer_based_overlap(expected_text, best_doc)
-    return best_id, best_doc, max_overlap, answer_overlap_score
+            df.at[idx, "ground_source_truth_id"] = gt_id
+            df.at[idx, "ground_source_truth"] = gt_text
+
+            if gt_id:
+                print(f"   ✅ Success: Chunk linked successfully.")
+                print(f"      - Database Node UUID: {gt_id}")
+                print(f"      - Text Alignment Score (Doc-to-Expected): {overlap_pct:.2%}")
+                print(f"      - Answer Footprint Cross-Check (Expected-in-Doc): {answer_overlap_pct:.2%}")
+            else:
+                print(f"   ❌ Null Extraction: Found no underlying text blocks.")
+
+        except Exception as e:
+            print(f"   💥 Pipeline Exception on index row index [{idx}]: {e}")
+
+    print("\n" + "=" * 80)
+    print("PROCESSING CYCLE COMPLETED")
+    print("=" * 80)
+
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_path, index=False)
+    print(f"\n[Export] Integrated data structured table saved cleanly to: {output_path}")
 
 
-def run_pipeline(csv_path, db_path, collection_name, output_path):
-    print(f"[Initialization] Loading base source text dataset from: {csv_path}")
-    if not Path(csv_path).exists():
-        print(f"Error: Source file {csv_path} does not exist.")
-        return
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Find true database ground truth mappings with runtime console feedback.")
+    parser.add_argument("--csv", default=DEFAULT_CSV, help="Path to evaluation test dataset")
+    parser.add_argument("--db", default=DEFAULT_DB, help="ChromaDB persistent file location")
+    parser.add_argument("--collection", default=DEFAULT_COLLECTION, help="ChromaDB target collection")
+    parser.add_argument("--out", default=OUTPUT_CSV, help="Path for the output joined results")
+    args = parser.parse_args()
 
-    df = pd.read_csv(csv_path)
-    total_records = len(df)
-    print(f"[Initialization] Total entries detected to process: {total_records}")
-
-    df["ground_source_truth_id"] = ""
-    df["ground_source_truth"] = ""
-
-    print(f"[Initialization] Establishing persistent connection to ChromaDB at: {db_path}")
+    run_pipeline(args.csv, args.db, args.collection, args.out)
