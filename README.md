@@ -1,78 +1,77 @@
-│ - Query translation/rewriting │ │ - Reflection/re-retrieval │ │ - Recency-weighted ranking │ 
-└───────────────────┬────────────────────┘ │ ┌───────────────────▼────────────────────┐ 
-│ ChromaDB Vector Store (db/chroma_db) │ │ - Embedding: BGE-M3 or Nomic │ 
-│ - Collection: multilingual_docs │ │ - Query: Filtered by language │
-└───────────────────┬────────────────────┘ │ ┌───────────────────▼────────────────────┐ 
-│ Ingestion Pipeline (ingestion.py) │ │ - ClauseBoundaryChunker │ │ - Language-tagged metadata │ 
-│ - Recency ranking │ └───────────────────┬────────────────────┘ │ ┌───────────────────▼────────────────────┐ 
-│ Source Documents (data/ dirs) │ │ - English PDFs: data/english/ │ │ - French PDFs: data/french/ │ 
-│ - Bilingual: data/english_and_... │ └────────────────────────────────────────┘
+ollama pull mxbai-embed-large
 
-LUFA_OpenSource_RAG
-
-
-## Refined Bilingual Open-Source RAG Technical Implementation Plan
-
-## 💻 Installation & Setup
-
-### Prerequisites
-
-- **Python**: 3.11+
-- **RAM**: 16GB minimum (32GB for faster inference)
-- **GPU**: NVIDIA (6GB+ VRAM) or Apple Silicon (M1+) — or CPU (slower)
-- **Environment**: Linux, macOS, or WSL2 on Windows
-
-### Step 1: Clone & Environment
-
-```bash
-git clone https://github.com/your-org/LUFA_OpenSource_RAG.git
-cd LUFA_OpenSource_RAG
-
-# Create Conda environment
-conda create -n lufa_rag python=3.11 -y
-conda activate lufa_rag
-```
-
-**Hardware Requirements:**
-
-- Minimum 16GB RAM (32GB recommended for multilingual models)
-- NVIDIA GPU with 6GB+ VRAM (OR M1/M2/M3 Mac)
-
-
----
-
-## 💻 Installation & Setup
-
-### Prerequisites
-
-- **Python**: 3.11+
-- **RAM**: 16GB minimum (32GB for faster inference)
-- **GPU**: NVIDIA (6GB+ VRAM) or Apple Silicon (M1+) — or CPU (slower)
-- **Environment**: Linux, macOS, or WSL2 on Windows
-
-### Step 1: Clone & Environment
-
-```bash
-git clone https://github.com/your-org/LUFA_OpenSource_RAG.git
-cd LUFA_OpenSource_RAG
-
-# Create Conda environment
-conda create -n lufa_rag python=3.11 -y
-conda activate lufa_rag
+# Optional: Frontier model simulators (for local testing)
+ollama pull mistral
 ```
 
 
-### Phase 2: Bilingual Model Selection
+**Multilingual Embedding Model**:[^1]
 
+1. **nomic-embed-text-v2-moe** : Supports 100+ languages with strong French/English performance[^2]
 
-**Multilingual LLM** :[^1]
-
-1. **Llama 3.2:3b-instruct-q4_K_M** : Officially supports French, English, and 6 other languages[^4]
-
-# LLM for generation (3B parameter model, fits most GPUs)
-ollama pull llama3.2:3b-instruct-q4_K_M
-
-# Multilingual embedding (100+ language support)
+```bash
 ollama pull nomic-embed-text-v2-moe
+```
 
-# Optional: Alternative embedding (higher quality but larger)
+
+### Phase 3: Enhanced Project Structure
+
+```
+LUFA_OpenSource_RAG/
+│
+├── src/                           # Core Python modules
+│   ├── app.py                     # Streamlit web interface (see below)
+│   ├── api.py                     # FastAPI REST server
+│   ├── rag_engine.py              # BilingualRAGEngine orchestrator
+│   ├── ingestion.py               # Document loading & indexing
+│   ├── clause_chunker.py          # Clause-aware PDF parsing
+│   ├── side_by_side_clause_chunker.py  # Bilingual PDF extraction
+│   ├── query_handler.py           # Query language detection
+│   ├── language_detector.py       # Language identification utilities
+│   ├── query_rewriter.py          # Query expansion (for agentic mode)
+│   ├── translator.py              # Inter-language translation
+│   ├── reflector.py               # Self-reflection step (agentic)
+│   ├── recency_reranker.py        # Time-weighted ranking
+│   ├── copilot_engine.py          # GitHub Models integration
+│   ├── run_simulation.py          # Batch evaluation runner
+│   ├── evaluate.py                # RAGAS metrics + dashboard
+│   ├── find_ground_truth.py       # Ground truth linking
+│   ├── generate_test_question.py  # Test question generation
+│   ├── pdf_ocr_converter.py       # OCR for scanned PDFs
+│   └── test_*.py                  # Unit tests
+│
+├── data/                          # Document corpus
+│   ├── english/                   # English PDFs
+│   ├── french/                    # French PDFs
+│   ├── english_and_french/        # Bilingual side-by-side PDFs
+│   ├── processed/                 # Extracted text cache
+│   └── metadata.json              # Document tracking
+│
+├── db/
+│   └── chroma_db/                 # Vector store (persistent)
+│
+├── config/
+│   ├── config.yaml                # Main configuration
+│   └── config_template.py         # Configuration template
+│
+├── tests/
+│   ├── combined_test_data.csv     # Evaluation test set
+│   └── *.json                     # Ground truth labels
+│
+├── dashboard/                     # Evaluation results
+│   └── index.html                 # Interactive results dashboard
+│
+├── requirements.txt               # Python dependencies
+├── bootstrap.sh                   # Setup automation script
+├── ARCHITECTURE.md                # Detailed architecture docs
+├── QUICKSTART.md                  # 5-minute getting started
+├── TROUBLESHOOTING.md             # Common issues & fixes
+└── README.md                      # This file
+```
+
+
+### Phase 4: Updated Dependencies
+
+```
+llama-index
+llama-index-llms-ollama
