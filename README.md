@@ -1,77 +1,98 @@
-ollama pull mxbai-embed-large
-
-# Optional: Frontier model simulators (for local testing)
-ollama pull mistral
+llama-index-embeddings-ollama
+llama-index-vector-stores-chroma
+chromadb
+streamlit
+pypdf
+langdetect                # Language detection
+pycountry                 # Language code handling
 ```
 
 
-**Multilingual Embedding Model**:[^1]
+### Phase 5: Bilingual Ingestion Strategy
 
-1. **nomic-embed-text-v2-moe** : Supports 100+ languages with strong French/English performance[^2]
+**Key Features:**[^5][^1]
 
-```bash
-ollama pull nomic-embed-text-v2-moe
+1. **Language Detection**: Automatically detect whether each PDF is English or French using `langdetect`
+2. **Metadata Tagging**: Store language metadata with each chunk
+3. **Unified Vector Store**: Both languages in same ChromaDB using multilingual embeddings[^6]
+4. **Document Structure**:
+    - Read both English and French collective agreements from respective folders
+    - Chunk with 1024 tokens, 200 overlap
+    - Tag each chunk with: `{language: "en/fr", source_doc: "filename", page: N}`
+
+### Phase 6: Multilingual RAG Engine
+
+**Core Capabilities:**[^1]
+
+1. **Query Language Detection**: Detect if user asks in English or French
+2. **Cross-Lingual Retrieval**: Multilingual embeddings enable:
+    - English query → retrieves relevant French documents[^6]
+    - French query → retrieves relevant English documents
+    - Same-language retrieval
+3. **Response Generation**: LLM responds in the same language as the query[^4]
+4. **Retrieval Settings**: Top 5 chunks with similarity threshold 0.7
+
+**System Prompts:**
+
+```python
+SYSTEM_PROMPTS = {
+    "en": "You are a helpful assistant answering questions about the Laurentian University Faculty Association collective agreement. Respond in English.",
+    "fr": "Tu es un assistant utile qui répond aux questions sur la convention collective de l'Association des professeur(e)s de l'Université Laurentienne. Réponds en français."
+}
 ```
 
 
-### Phase 3: Enhanced Project Structure
+### Phase 7: Bilingual User Interface
 
-```
-LUFA_OpenSource_RAG/
-│
-├── src/                           # Core Python modules
-│   ├── app.py                     # Streamlit web interface (see below)
-│   ├── api.py                     # FastAPI REST server
-│   ├── rag_engine.py              # BilingualRAGEngine orchestrator
-│   ├── ingestion.py               # Document loading & indexing
-│   ├── clause_chunker.py          # Clause-aware PDF parsing
-│   ├── side_by_side_clause_chunker.py  # Bilingual PDF extraction
-│   ├── query_handler.py           # Query language detection
-│   ├── language_detector.py       # Language identification utilities
-│   ├── query_rewriter.py          # Query expansion (for agentic mode)
-│   ├── translator.py              # Inter-language translation
-│   ├── reflector.py               # Self-reflection step (agentic)
-│   ├── recency_reranker.py        # Time-weighted ranking
-│   ├── copilot_engine.py          # GitHub Models integration
-│   ├── run_simulation.py          # Batch evaluation runner
-│   ├── evaluate.py                # RAGAS metrics + dashboard
-│   ├── find_ground_truth.py       # Ground truth linking
-│   ├── generate_test_question.py  # Test question generation
-│   ├── pdf_ocr_converter.py       # OCR for scanned PDFs
-│   └── test_*.py                  # Unit tests
-│
-├── data/                          # Document corpus
-│   ├── english/                   # English PDFs
-│   ├── french/                    # French PDFs
-│   ├── english_and_french/        # Bilingual side-by-side PDFs
-│   ├── processed/                 # Extracted text cache
-│   └── metadata.json              # Document tracking
-│
-├── db/
-│   └── chroma_db/                 # Vector store (persistent)
-│
-├── config/
-│   ├── config.yaml                # Main configuration
-│   └── config_template.py         # Configuration template
-│
-├── tests/
-│   ├── combined_test_data.csv     # Evaluation test set
-│   └── *.json                     # Ground truth labels
-│
-├── dashboard/                     # Evaluation results
-│   └── index.html                 # Interactive results dashboard
-│
-├── requirements.txt               # Python dependencies
-├── bootstrap.sh                   # Setup automation script
-├── ARCHITECTURE.md                # Detailed architecture docs
-├── QUICKSTART.md                  # 5-minute getting started
-├── TROUBLESHOOTING.md             # Common issues & fixes
-└── README.md                      # This file
+**Streamlit Features:**[^1]
+
+- Language toggle (EN/FR) for UI labels
+- Automatic query language detection
+- Display retrieved chunks with language tags
+- Show source document and page numbers
+- Option to translate the answer into another language
+
+**UI Elements:**
+
+```python
+# Sidebar: Language preference selector
+language = st.sidebar.selectbox("Language / Langue", ["English", "Français"])
+
+# Main chat: Question input (accepts EN/FR)
+query = st.chat_input("Ask a question / Posez une question")
+
+# Response area: Answer + source citations
+st.write(response)
+st.caption(f"Sources: {source_docs}")
+
+# Metadata display: Show which language documents were retrieved
+st.info(f"Retrieved {len(chunks)} chunks ({lang_counts})")
 ```
 
 
-### Phase 4: Updated Dependencies
+### Phase 8: Evaluation Framework
 
-```
-llama-index
-llama-index-llms-ollama
+**Bilingual Test Dataset:**[^1]
+
+1. Create 20 English Q\&A pairs from English collective agreements
+2. Create 20 French Q\&A pairs from French collective agreements
+3. Test cross-lingual scenarios (English query, French source)
+
+**Metrics:**
+
+- Retrieval accuracy per language
+- Answer quality (manual evaluation)
+- Cross-lingual retrieval performance
+- Response time per language
+
+**Optional: RAGAS Evaluation** with local model as judge[^1]
+
+### Phase 9: Technical Documentation Structure
+
+Your thesis documentation should cover:
+
+1. **Architecture Overview**
+    - System diagram showing bilingual data flow
+    - Component interactions
+2. **Multilingual Challenges**
+    - Embedding space alignment for EN/FR
