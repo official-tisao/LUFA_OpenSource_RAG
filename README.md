@@ -1,64 +1,15 @@
-    - Query-document language mismatch handling
-    - Token counting differences between languages
-3. **Implementation Details**
-    - Model selection rationale (why nomic-embed-text-v2-moe or Llama 3.2)
-    - Chunking strategy for French vs English text
-    - Performance optimization for local deployment
-4. **Evaluation Results**
-    - Monolingual performance (EN→EN, FR→FR)
-    - Cross-lingual performance (EN→FR, FR→EN)
-    - Comparison with baseline approaches
+  --max-time 120
 
-### Immediate Next Steps
+# Run full simulation
+python src/run_simulation.py --mode local
+python src/run_simulation.py --mode frontier --model gpt-4o
 
-1. Install Ollama and pull bilingual models:
+# Find ground truth IDs
+python src/find_ground_truth.py
 
-```bash
-ollama pull llama3.2:3b-instruct-q4
-ollama pull nomic-embed-text-v2-moe  # or mxbai-embed-large
-```
-
-2. Set up enhanced project structure with language folders
-
-```bash
-conda create -n LUFA_OpenSource_RAG python=3.11 -y
-conda init
-```
-
-3. Implement `language_detector.py` for automatic language detection
-4. Modify `ingestion.py` to handle both English and French PDFs with metadata tagging
-
-This refined plan maintains your open-source approach while adding robust bilingual capabilities. The key advantage is that multilingual embedding models map semantically similar content across languages to nearby vectors, enabling true cross-lingual retrieval without translation overhead.[^7][^8]
-
-### No documents found
-- Ensure documents are placed in `data/english/` or `data/french/`
-- Run ingestion: `python src/ingestion.py`
-- Check for error messages during ingestion
-
-### Import errors
-```bash
-# Activate virtual environment
-conda activate LUFA_OpenSource_RAG
-
-conda activate LUFA_OpenSource_RAG
-
-
-# Reinstall dependencies
-pip install -r requirements.txt
-```
-### Other Quick runs 
-pip install fastapi uvicorn httpx openai nltk rouge-score pyyaml tqdm pandas numpy
-pip install pdfplumber langdetect llama-index-core
-pip install llama-index-vector-stores-chroma
-pip install llama-index-embeddings-huggingface chromadb
-python -c "import nltk; nltk.download('punkt'); nltk.download('wordnet'); nltk.download('omw-1.4')"
-
-
-1. python src/find_ground_truth.py          # adds ground_truth_source_ids to combined_test_data.csv
-2. python src/api.py                        # (optional) start REST API server
-3. python src/run_simulation.py             # runs all questions → lufa_out_data.csv
-4. python src/evaluate.py                   # metrics → evaluation_results.csv + dashboard/index.html
-5. open dashboard/index.html                # view results in browser
+# Generate evaluation + dashboard
+python src/evaluate.py
+python src/evaluate.py --no_llm_judge   # faster, skips Ollama judge
 
 # Health check
 curl http://localhost:8000/health
@@ -79,3 +30,53 @@ curl -X POST http://localhost:8000/agentic-query \
 curl -X POST http://localhost:8000/copilot-query \
   -H "Content-Type: application/json" \
   -d '{"query":"What are the academic freedom provisions?","model":"claude-sonnet-4-5"}' \
+  --max-time 120
+
+# Run full simulation
+python src/run_simulation.py --mode local
+python src/run_simulation.py --mode frontier --model gpt-4o
+
+# Find ground truth IDs
+python src/find_ground_truth.py
+
+# Generate evaluation + dashboard
+python src/evaluate.py
+python src/evaluate.py --no_llm_judge   # faster, skips Ollama judge
+
+
+
+## 📄 License
+
+This project is open source and available under the terms specified in the LICENSE file.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Support
+
+For issues and questions, please open an issue on GitHub.
+
+---
+
+Built with ❤️ using Ollama, LlamaIndex, ChromaDB, and Streamlit
+
+---
+
+## Footnotes
+
+[^1]: This approach leverages the inherent multilingual capabilities of modern embedding and LLM models to provide seamless bilingual support without requiring separate pipelines or translation services.
+
+[^2]: nomic-embed-text-v2-moe (BAAI General Embedding - Multilingual, Multifunctionality, Multi-Granularity) is specifically designed for cross-lingual retrieval tasks and has been shown to perform well on French and English document pairs.
+
+[^4]: Llama 3.2 officially supports 8 languages, including English and French, making it suitable for generating responses in either language while maintaining context and accuracy.
+
+[^5]: Language detection and metadata tagging ensure that the system can track document provenance while still enabling cross-lingual retrieval through shared embedding space.
+
+[^6]: Using a single unified vector store with multilingual embeddings is more efficient than maintaining separate stores per language and naturally enables cross-lingual retrieval.
+
+[^7]: Cross-lingual retrieval allows users to query in one language (e.g., English) and retrieve relevant documents in another language (e.g., French) based on semantic similarity.
+
+[^8]: Multilingual embedding models are trained to map semantically similar phrases across languages to nearby points in the embedding space, enabling natural cross-lingual information retrieval without explicit translation.
+
+---
