@@ -1,29 +1,26 @@
-- **Affected versions**: llama-index < 0.12.28
-- **Fixed in**: 0.12.28
-- **Severity**: Critical
-- **Description**: The library was vulnerable to SQL injection attacks
 
-### Updates Applied
+### Recommendation
 
-**Previous versions:**
-```
-llama-index==0.10.17
-llama-index-llms-ollama==0.1.2
-llama-index-embeddings-ollama==0.1.2
-llama-index-vector-stores-chroma==0.1.4
-```
+**For existing installations:**
+1. Pull the latest changes
+2. Run: `conda activate LUFA_OpenSource_RAG`
+3. Run: `pip install -r requirements.txt --upgrade`
+4. Verify: `pip list | grep llama-index`
 
-**Updated to:**
-```
-llama-index==0.13.0
-llama-index-llms-ollama==0.3.8
-llama-index-embeddings-ollama==0.4.1
-llama-index-vector-stores-chroma==0.4.1
-```
+**For new installations:**
+- The bootstrap script will automatically install the patched versions
 
-### Impact
+### References
 
-- All three vulnerabilities are now patched
-- The code is fully compatible with the updated versions
-- No breaking changes to the application API
-- Users should update immediately by running: `pip install -r requirements.txt --upgrade`
+- LlamaIndex Security Advisories
+- GitHub Advisory Database
+- Python Package Index (PyPI) vulnerability reports
+
+### Contact
+
+If you have questions about these security updates, please open an issue on GitHub.
+
+---
+
+**Status**: ✅ All vulnerabilities patched
+**Action Required**: Update dependencies immediately
