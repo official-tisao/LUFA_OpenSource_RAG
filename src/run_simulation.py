@@ -1,100 +1,77 @@
+    parser.add_argument("--model", default=None, help="Frontier model ID (for --mode frontier)")
+    parser.add_argument("--api_url", default="http://localhost:8000", help="API base URL for --mode api")
+    parser.add_argument("--input", default=INPUT_CSV, help="Input CSV path")
+    parser.add_argument("--output", default=OUTPUT_CSV, help="Output CSV path")
+    args = parser.parse_args()
 
-            lang = rag_engine.detect_query_language(q_text)
-            nodes = rag_engine._retrieve_nodes(q_text, top_k=5)
-            answer = copilot.generate_from_nodes(q_text, nodes, lang)
+    cfg = load_config()
+    base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    model_name = args.model or base_model
 
-            sources_list = []
-            for n in nodes:
-                combined_meta = {}
-                for k, v in n.node.metadata.items():
-                    combined_meta[k] = v
-                combined_meta["id"] = n.node.node_id
-                if "original_cosine_score" in n.node.metadata:
-                    combined_meta["original_cosine_score"] = n.node.metadata["original_cosine_score"]
-                else:
-                    combined_meta["original_cosine_score"] = str(n.score)
+    ensure_ground_truth(args.input)
 
-                sources_list.append({
-                    "text": n.node.text[:500],
-                    "score": n.score,
-                    "metadata": combined_meta,
-                    "node_id": n.node.node_id
-                })
+    print(f"[Sim] Loading input master file: {args.input}")
+    df = pd.read_csv(args.input)
+    print(f"[Sim] {len(df)} total target questions configured in master dataset.")
 
-            result = {
-                "response": answer,
-                "original_language": record.get("language", lang),
-                "rewritten_query": "",
-                "attempts": 1,
-                "grounded": True,
-                "sources": sources_list
-            }
+    completed_ids = set()
+    all_logged_ids = set()
+    out_path = Path(args.output)
 
-        sources = result.get("sources", [])
-        sources_dict = extract_sources(sources)
+    if out_path.exists() and out_path.stat().st_size > 0:
+        try:
+            existing_df = pd.read_csv(args.output)
+            if "question_id" in existing_df.columns:
+                all_logged_ids = set(existing_df["question_id"].dropna().astype(str).tolist())
 
-        orig_cosine = ""
-        recency_adj = ""
-        rrf_val = ""
-        if sources:
-            first_src = sources[0]
-            first_meta = first_src.get("metadata", {})
-            rrf_val = round(float(first_src.get("score") or 0.0), 6)
-            orig_cosine = round(float(first_meta.get("original_cosine_score") or rrf_val), 6)
-            recency_adj = orig_cosine
+                # Filter strictly for rows that have valid string content and no ERROR flag
+                successful_df = existing_df[
+                    existing_df["question_id"].notna() &
+                    existing_df["answer"].notna() &
+                    (existing_df["answer"].astype(str).str.strip() != "ERROR") &
+                    (existing_df["answer"].astype(str).str.strip() != "")
+                    ]
+                completed_ids = set(successful_df["question_id"].dropna().astype(str).tolist())
 
-        row = {
-            "question_id": q_id,
-            "question": q_text,
-            "answer": result.get("response", ""),
-            "base_model_used": model_name,
-            "language": result.get("original_language", record.get("language", "en")),
-            "attempts": result.get("attempts", 1),
-            "grounded": result.get("grounded", False),
-        }
-        row.update(sources_dict)
-        row["original_cosine_score"] = orig_cosine
-        row["recency_adjusted_score"] = recency_adj
-        row["RRF"] = rrf_val
+                error_count = len(all_logged_ids) - len(completed_ids)
+                print(f"[Resumption] Located active output log file: {args.output}")
+                print(f"[Resumption] Found {len(completed_ids)} successfully processed rows.")
+                if error_count > 0:
+                    print(
+                        f"[Resumption] Found {error_count} rows containing ERROR flags. These will be automatically re-run.")
+        except Exception as err:
+            print(f"[Warning] Error parsing simulation file checkpoint: {err}")
+    else:
+        print(f"[Sim] Output path '{args.output}' is empty or new. Starting execution pass.")
 
-        print(f"   [Simulation Engine] ✅ Success! Received Answer length: {len(row['answer'])} chars.")
-        return row
+    print("\n" + "=" * 80)
+    print("STARTING UNIFIED SIMULATION PASS (REPAIRING ERRORS + ADDING NEW QUESTIONS)")
+    print("=" * 80)
 
-    except Exception as e:
-        print(f"   [Simulation Engine] 💥 Error on record {q_id}: {e}")
-        traceback.print_exc()
-        return _empty_row(q_id, q_text, model_name, record.get("language", "en"))
+    for idx, record in df.iterrows():
+        current_counter = idx + 1
+        q_id = str(record["id"])
 
+        if q_id in completed_ids:
+            print(f"[{current_counter}/{len(df)}] Skipping Question ID {q_id} (Valid answer already stored)")
+            continue
 
-def _empty_row(q_id, q_text, model, lang):
-    row = {
-        "question_id": q_id,
-        "question": q_text,
-        "answer": "ERROR",
-        "base_model_used": model,
-        "language": lang,
-        "attempts": 0,
-        "grounded": False,
-    }
-    for i in range(1, 6):
-        row[f"source{i}_id"] = ""
-        row[f"source{i}_score"] = ""
-        row[f"source{i}_text"] = ""
-    row["original_cosine_score"] = ""
-    row["recency_adjusted_score"] = ""
-    row["RRF"] = ""
-    return row
+        # Verbose message informing whether it is fixing an error or processing a brand new row
+        if q_id in all_logged_ids:
+            print(f"\n[{current_counter}/{len(df)}] 🛠️  Re-running failed record -> Question ID: {q_id}")
+        else:
+            print(f"\n[{current_counter}/{len(df)}] 🚀 Processing unvisited record -> Question ID: {q_id}")
 
+        row_res = query_single_record(record, args.mode, base_model, model_name, args.api_url, current_counter)
 
-def ensure_ground_truth(csv_path):
-    """Auto-run find_ground_truth.py if ground_source_truth_id column is missing."""
-    df = pd.read_csv(csv_path)
-    if "ground_source_truth_id" not in df.columns or df["ground_source_truth_id"].isnull().all():
-        print("[Sim] ground_source_truth_id missing — running find_ground_truth.py first...")
-        from find_ground_truth import run as find_gt
-        find_gt(csv_path, "db/chroma_db", "multilingual_docs", top_k=5)
+        single_row_df = pd.DataFrame([row_res], columns=OUTPUT_COLUMNS)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
 
+        file_is_new = not out_path.exists() or out_path.stat().st_size == 0
+        single_row_df.to_csv(str(out_path), mode="a", index=False, header=file_is_new)
+        print("   ✅ Row appended cleanly to simulation output log.")
+        time.sleep(0.5)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run LUFA RAG simulation over test dataset")
-    parser.add_argument("--mode", choices=["local", "api", "frontier"], default="local")
+    print("\n" + "=" * 80)
+    print(f"[Sim] Execution pass complete. All rows verified and logged to: {args.output}")
+    print("=" * 80 + "\n")
