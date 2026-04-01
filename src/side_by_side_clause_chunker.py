@@ -1,79 +1,62 @@
-    lines = cluster_lines(words)
-    para_texts = merge_lines(lines)
-    chunks: List[Chunk] = []
-    running = []
-    prev_clause_no = None
-    prev_title = None
-    idx = 1
-    for t in para_texts:
-        clause_no, title = parse_clause_header(t)
-        if clause_no and running:
-            text = clean_text("\n".join(running))
-            chunks.append(Chunk(
-                chunk_id=f"{doc_id}_p{page_num:03d}_{language}_{idx:03d}",
-                doc_id=doc_id,
-                page=page_num,
-                language=language,
-                clause_no=prev_clause_no,
-                title=prev_title,
-                text=text,
-            ))
-            idx += 1
-            running = []
-        prev_clause_no, prev_title = clause_no, title or (t if len(t) < 90 else None)
-        running.append(t)
-    if running:
-        chunks.append(Chunk(
-            chunk_id=f"{doc_id}_p{page_num:03d}_{language}_{idx:03d}",
-            doc_id=doc_id,
-            page=page_num,
-            language=language,
-            clause_no=prev_clause_no,
-            title=prev_title,
-            text=clean_text("\n".join(running)),
-        ))
-    return chunks
+        node.excluded_embed_metadata_keys = ["doc_id", "doc_source", "partner_chunk_id"]
+        node.excluded_llm_metadata_keys = ["doc_id"]
+        nodes.append(node)
+    logger.info("Produced %d bilingual chunks from %s", len(nodes), pdf_path)
+    return nodes
 
 
-def chunk_side_by_side_pdf(pdf_path: str, doc_id: Optional[str] = None) -> List[TextNode]:
-    pdf_path = str(pdf_path)
-    doc_id = doc_id or Path(pdf_path).stem
-    out_chunks: List[Chunk] = []
-    with pdfplumber.open(pdf_path) as pdf:
-        for i, page in enumerate(pdf.pages, start=1):
-            page_text = clean_text(page.extract_text() or "")
-            if not page_text:
-                continue
-            left_words, right_words = extract_words_split(page)
-            left_preview = clean_text(" ".join(w['text'] for w in left_words[:40])) if left_words else ''
-            right_preview = clean_text(" ".join(w['text'] for w in right_words[:40])) if right_words else ''
-            left_lang = infer_lang_for_column(left_preview or page_text[:500])
-            right_lang = 'fr' if left_lang == 'en' else 'en'
-            left_chunks = extract_column_chunks(doc_id, i, left_lang, left_words)
-            right_chunks = extract_column_chunks(doc_id, i, right_lang, right_words)
-            # pair by index
-            pair_count = min(len(left_chunks), len(right_chunks))
-            for k in range(pair_count):
-                left_chunks[k].partner_chunk_id = right_chunks[k].chunk_id
-                right_chunks[k].partner_chunk_id = left_chunks[k].chunk_id
-            out_chunks.extend(left_chunks)
-            out_chunks.extend(right_chunks)
+def index_nodes_to_chroma(nodes: List[TextNode], collection_name: str, chroma_persist_dir: str = "./chroma_db", model_device: str = "cuda"):
+    try:
+        import chromadb
+        from llama_index.vector_stores.chroma import ChromaVectorStore
+        from llama_index.core import StorageContext, VectorStoreIndex
+        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+    except ImportError as exc:
+        raise ImportError("Missing optional deps for indexing. Install: chromadb llama-index-vector-stores-chroma llama-index-embeddings-huggingface") from exc
 
-    # convert to TextNode with metadata
-    nodes: List[TextNode] = []
-    for idx, c in enumerate(out_chunks):
-        node = TextNode(
-            id_=str(uuid.uuid4()),
-            text=c.text,
-            metadata={
-                "chunk_id": c.chunk_id,
-                "doc_id": c.doc_id,
-                "page_no": str(c.page),
-                "language": c.language,
-                "clause_no": c.clause_no or "",
-                "title": c.title or "",
-                "partner_chunk_id": c.partner_chunk_id or "",
-                "doc_source": doc_id,
-            },
-        )
-        # hide low-level fields from embedding by listing keys (kept for llama-index compatibility)
+    logger.info("Loading embedding model: BGE-M3 (local) on %s", model_device)
+    embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-m3", device=model_device, max_length=512)
+
+    chroma_client = chromadb.PersistentClient(path=chroma_persist_dir)
+    chroma_col = chroma_client.get_or_create_collection(collection_name)
+    vector_store = ChromaVectorStore(chroma_collection=chroma_col)
+    storage_ctx = StorageContext.from_defaults(vector_store=vector_store)
+
+    VectorStoreIndex(
+        nodes,
+        storage_context=storage_ctx,
+        embed_model=embed_model,
+        show_progress=True,
+    )
+    logger.info("Indexed %d nodes into collection '%s' (path=%s)", len(nodes), collection_name, chroma_persist_dir)
+
+
+if __name__ == "__main__":
+    import argparse
+    import pandas as pd
+
+    p = argparse.ArgumentParser(description="Side-by-side bilingual clause chunker -> LlamaIndex/Chroma")
+    p.add_argument("pdf", help="Path to side-by-side bilingual PDF")
+    p.add_argument("--doc-id", default=None, help="Document id override")
+    p.add_argument("--out-prefix", default=None, help="If set, write <prefix>.csv and .jsonl")
+    p.add_argument("--index", action="store_true", help="Also index into Chroma collections")
+    p.add_argument("--collection", default="lufa_bilingual", help="Chroma collection name")
+    p.add_argument("--chroma-dir", default="./chroma_db", help="Chroma persistent directory")
+    p.add_argument("--device", default="cuda", choices=["cuda", "cpu"], help="Embedding device")
+    args = p.parse_args()
+
+    nodes = chunk_side_by_side_pdf(args.pdf, args.doc_id)
+
+    if args.out_prefix:
+        rows = [{"chunk_id": n.metadata.get("chunk_id"), "text": n.text, **n.metadata} for n in nodes]
+        Path(args.out_prefix).parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(rows).to_csv(f"{args.out_prefix}.csv", index=False)
+        with open(f"{args.out_prefix}.jsonl", "w", encoding="utf-8") as f:
+            for r in rows:
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        logger.info("Wrote outputs: %s.csv / %s.jsonl", args.out_prefix, args.out_prefix)
+
+    if args.index:
+        index_nodes_to_chroma(nodes, args.collection, chroma_persist_dir=args.chroma_dir, model_device=args.device)
+
+    print(f"Done. Produced {len(nodes)} chunks.")
