@@ -1,2 +1,3 @@
-Generator model,Llama 3.2 3B (via Ollama),Installed (GGUF Q4_K_M)
-RAG evaluation,RAGAS,Not Installed
+BM25 implementation,rank-bm25,Not Installed
+PDF parsing,PyMuPDF,Not Installed
+Experiment tracking,Python logging + JSON,Built-in (Python 3.11.15)
