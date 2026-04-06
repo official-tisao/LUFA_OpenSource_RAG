@@ -1,5 +1,2 @@
-Component,Framework/Library,Version
-LLM serving,Ollama,0.17.6
-Agent orchestration,LlamaIndex,0.14.22
-Vector database,ChromaDB,1.5.9
-Embedding model,BGE-M3 (via Ollama),Installed (GGUF F16)
+Generator model,Llama 3.2 3B (via Ollama),Installed (GGUF Q4_K_M)
+RAG evaluation,RAGAS,Not Installed
