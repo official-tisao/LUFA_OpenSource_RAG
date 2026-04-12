@@ -1,29 +1,24 @@
-# Data Directory
+- And more (via LlamaIndex SimpleDirectoryReader)
 
-This directory contains sample documents to help you get started with the bilingual RAG system.
+## Adding Your Documents
 
-## Directory Structure
+1. Copy your English documents to the `english/` directory
+2. Copy your French documents to the `french/` directory
+3. Activate your environment:
 
-- `english/` - Place English documents here
-- `french/` - Place French documents here
+   **Option A – Conda environment:**
+   ```bash
+   conda activate LUFA_OpenSource_RAG
+   ```
 
-## Supported Formats
+   **Option B – venv on top of Conda:**
+   ```bash
+   conda activate LUFA_OpenSource_RAG
+   # conda activate LUFA_OpenSource_RAG   # Linux / macOS
+   # conda activate LUFA_OpenSource_RAG    # Windows
+   ```
+4. Run the ingestion script: `python src/ingestion.py`
 
-The system supports various document formats including:
-- PDF (.pdf)
-- Text files (.txt)
-- Markdown (.md)# Data Directory
+## Sample Documents
 
-This directory contains sample documents to help you get started with the bilingual RAG system.
-
-## Directory Structure
-
-- `english/` - Place English documents here
-- `french/` - Place French documents here
-
-## Supported Formats
-
-The system supports various document formats including:
-- PDF (.pdf)
-- Text files (.txt)
-- Markdown (.md)
+This directory includes sample documents about Artificial Intelligence to help you test the system:
