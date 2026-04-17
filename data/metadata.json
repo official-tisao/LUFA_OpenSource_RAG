@@ -1,7 +1,8 @@
-{
-  "documents": [],
-  "ingestion_history": [
+    },
     {
-      "timestamp": "2026-02-14T10:14:24.007212",
-      "english_count": 2039,
-      "french_count": 1482
+      "timestamp": "2026-06-21T09:59:51.773636",
+      "english_count": 21,
+      "french_count": 13
+    }
+  ],
+  "statistics": {
