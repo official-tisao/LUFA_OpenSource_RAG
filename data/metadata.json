@@ -1,8 +1,6 @@
-    },
-    {
-      "timestamp": "2026-06-21T09:59:51.773636",
-      "english_count": 21,
-      "french_count": 13
-    }
-  ],
-  "statistics": {
+    "total_documents": 34,
+    "english_documents": 21,
+    "french_documents": 13,
+    "last_updated": "2026-06-21T09:59:51.773636"
+  }
+}
