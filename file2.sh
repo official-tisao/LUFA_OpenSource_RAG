@@ -1,18 +1,20 @@
-#!/bin/bash
+    "test_reflector.py:deleted" "CLAUDE.md:created" "combine_corpus.py:created"
+    "src/api.py:created" "src/translator.py:created" "src/clause_chunker.py:created"
+)
 
-# Configuration
-START_DATE="2026-03-10"
-END_DATE="2026-06-26"
-START_SEC=$(date -d "$START_DATE" +%s)
-END_SEC=$(date -d "$END_DATE" +%s)
-CUR_SEC=$START_SEC
+is_text() { [[ "$1" =~ \.(py|md|csv|txt|sh|html|css|js|json)$ ]] && return 0 || return 1; }
 
-# Define Files: path:operation
-FILES=(
-    "CONTRIBUTING.md:updated" "IMPLEMENTATION_SUMMARY.md:updated" "QUICKSTART.md:updated"
-    "README.md:updated" "SECURITY.md:updated" "TROUBLESHOOTING.md:updated"
-    "bootstrap-backup.sh:deleted" "bootstrap.sh:updated" "data/README.md:updated"
-    "data/english/Thorneloe-LUFA-CA-2017-2020-Collective-Agreement-Signed.pdf:deleted"
-    "data/metadata.json:updated" "file2.sh:updated" "inference_logs_cleaned.txt:updated"
-    "pdf_ocr_converter.py:deleted" "requirements.txt:updated" "src/app.py:updated"
-    "src/rag_engine.py:updated" "test_basic.py:deleted" "test_integration.py:deleted"
+for ENTRY in "${FILES[@]}"; do
+    FILE_PATH="${ENTRY%%:*}"
+    OPERATION="${ENTRY##*:}"
+    B_NAME=$(basename "$FILE_PATH")
+
+    if [ "$OPERATION" == "deleted" ]; then
+        rm -f "$FILE_PATH"
+        git add "$FILE_PATH"
+        export GIT_AUTHOR_DATE="$(date -d "@$CUR_SEC" +"%Y-%m-%d 10:00:00")"
+        export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"
+        git commit -m "$OPERATION $B_NAME"
+    elif is_text "$FILE_PATH"; then
+        LINES=$(wc -l < "$FILE_PATH")
+        [ "$LINES" -lt 450 ] && CHUNKS=3 || CHUNKS=6
