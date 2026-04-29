@@ -1,167 +1,105 @@
-Downloading llama_parse-0.6.54-py3-none-any.whl (4.9 kB)
-Downloading llama_cloud_services-0.6.54-py3-none-any.whl (63 kB)
-
-Downloading platformdirs-4.8.0-py3-none-any.whl (20 kB)
-Downloading python_dotenv-1.2.1-py3-none-any.whl (21 kB)
-Downloading markupsafe-3.0.3-cp310-cp310-win_amd64.whl (15 kB)
-Downloading mmh3-5.2.0-cp310-cp310-win_amd64.whl (41 kB)
-Downloading narwhals-2.16.0-py3-none-any.whl (443 kB)
-Downloading networkx-3.4.2-py3-none-any.whl (1.7 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 237.3 kB/s  0:00:07
-Downloading nltk-3.9.2-py3-none-any.whl (1.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 236.9 kB/s  0:00:06
-Downloading ollama-0.6.1-py3-none-any.whl (14 kB)
-Downloading onnxruntime-1.23.2-cp310-cp310-win_amd64.whl (13.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.5/13.5 MB 3.1 MB/s  0:00:04
-Downloading opentelemetry_api-1.39.1-py3-none-any.whl (66 kB)
-Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
-Downloading opentelemetry_exporter_otlp_proto_grpc-1.39.1-py3-none-any.whl (19 kB)
-Downloading opentelemetry_exporter_otlp_proto_common-1.39.1-py3-none-any.whl (18 kB)
-Downloading opentelemetry_proto-1.39.1-py3-none-any.whl (72 kB)
-
-Downloading googleapis_common_protos-1.72.0-py3-none-any.whl (297 kB)
-
-Downloading opentelemetry_sdk-1.39.1-py3-none-any.whl (132 kB)
-Downloading opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl (219 kB)
-
-Downloading orjson-3.11.7-cp310-cp310-win_amd64.whl (125 kB)
-Downloading overrides-7.7.0-py3-none-any.whl (17 kB)
-
-Downloading packaging-26.0-py3-none-any.whl (74 kB)
-
-Downloading propcache-0.4.1-cp310-cp310-win_amd64.whl (41 kB)
-
-Downloading pyarrow-23.0.0-cp310-cp310-win_amd64.whl (27.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 27.5/27.5 MB 3.5 MB/s  0:00:07
-Downloading pybase64-1.4.3-cp310-cp310-win_amd64.whl (35 kB)
-Downloading pypika-0.51.1-py2.py3-none-any.whl (60 kB)
-Downloading pytest_asyncio-1.3.0-py3-none-any.whl (15 kB)
-
-Downloading backports_asyncio_runner-1.2.0-py3-none-any.whl (12 kB)
-Downloading pytest-9.0.2-py3-none-any.whl (374 kB)
-Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
-
-Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
-Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
-
-Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 5.1 MB/s  0:00:00
-Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
-Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
-Downloading pyyaml-6.0.3-cp310-cp310-win_amd64.whl (158 kB)
-
-Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
-
-Downloading regex-2026.1.15-cp310-cp310-win_amd64.whl (277 kB)
-Downloading rich-14.3.2-py3-none-any.whl (309 kB)
-
-Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
-Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
-
-Downloading rpds_py-0.30.0-cp310-cp310-win_amd64.whl (235 kB)
-Using cached setuptools-82.0.0-py3-none-any.whl (1.0 MB)
-Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
-
-Downloading soupsieve-2.8.3-py3-none-any.whl (37 kB)
-Downloading sqlalchemy-2.0.46-cp310-cp310-win_amd64.whl (2.1 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 2.0 MB/s  0:00:01
-Downloading greenlet-3.3.1-cp310-cp310-win_amd64.whl (226 kB)
-
-Downloading tiktoken-0.12.0-cp310-cp310-win_amd64.whl (879 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 879.4/879.4 kB 240.8 kB/s  0:00:03
-Downloading tokenizers-0.22.2-cp39-abi3-win_amd64.whl (2.7 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.7/2.7 MB 237.4 kB/s  0:00:11
-Downloading huggingface_hub-1.4.1-py3-none-any.whl (553 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 553.3/553.3 kB 245.1 kB/s  0:00:02
-Downloading hf_xet-1.2.0-cp37-abi3-win_amd64.whl (2.9 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 236.6 kB/s  0:00:12
-Downloading tomli-2.4.0-py3-none-any.whl (14 kB)
-
-
-Downloading typer-0.23.1-py3-none-any.whl (56 kB)
-Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
-Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
-Downloading typing_inspect-0.9.0-py3-none-any.whl (8.8 kB)
-Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
-Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
-Downloading tzdata-2025.3-py2.py3-none-any.whl (348 kB)
-
-Downloading uvicorn-0.40.0-py3-none-any.whl (68 kB)
-Downloading httptools-0.7.1-cp310-cp310-win_amd64.whl (86 kB)
-
-Downloading watchfiles-1.1.1-cp310-cp310-win_amd64.whl (287 kB)
-Downloading websocket_client-1.9.0-py3-none-any.whl (82 kB)
-Downloading websockets-16.0-cp310-cp310-win_amd64.whl (178 kB)
-Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
-Downloading aiosqlite-0.22.1-py3-none-any.whl (17 kB)
-
-Downloading coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
-Downloading humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
-Downloading dataclasses_json-0.6.7-py3-none-any.whl (28 kB)
-Downloading marshmallow-3.26.2-py3-none-any.whl (50 kB)
-
-Downloading filelock-3.23.0-py3-none-any.whl (22 kB)
-Downloading flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
-Downloading griffe-2.0.0-py3-none-any.whl (5.2 kB)
-Downloading griffecli-2.0.0-py3-none-any.whl (9.3 kB)
-Downloading griffelib-2.0.0-py3-none-any.whl (142 kB)
-Downloading importlib_resources-6.5.2-py3-none-any.whl (37 kB)
-Downloading joblib-1.5.3-py3-none-any.whl (309 kB)
-Downloading pyproject_hooks-1.2.0-py3-none-any.whl (10 kB)
-
-Downloading pyreadline3-3.5.4-py3-none-any.whl (83 kB)
-Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
-Downloading oauthlib-3.3.1-py3-none-any.whl (160 kB)
-
-Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
-Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 236.2 kB/s  0:00:26
-Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 230.9 kB/s  0:00:03
-Downloading typer_slim-0.23.1-py3-none-any.whl (3.4 kB)
-Building wheels for collected packages: langdetect
-  Building wheel for langdetect (pyproject.toml) ... done
-  Created wheel for langdetect: filename=langdetect-1.0.9-py3-none-any.whl size=993363 sha256=342e0a9a43631b5ee2eab3602b8142acf4b43bf32b6f53224400f56fcbbacf6b
-  Stored in directory: c:\users\tisao-msi\appdata\local\pip\cache\wheels\95\03\7d\59ea870c70ce4e5a370638b5462a7711ab78fba2f655d05106
-Successfully built langdetect
-Installing collected packages: striprtf, pytz, mpmath, flatbuffers, filetype, durationpy, dirtyjson, zipp, wrapt, websockets, websocket-client, watchdog, urllib3
-, tzdata, typing-extensions, tornado, tomli, toml, tenacity, sympy, soupsieve, sniffio, smmap, six, shellingham, setuptools, rpds-py, regex, pyyaml, python-doten
-v, pyreadline3, pyproject_hooks, pygments, pycountry, pybase64, pyarrow, protobuf, propcache, pluggy, platformdirs, pillow, packaging, overrides, orjson, oauthli
-b, numpy, networkx, nest-asyncio, narwhals, mypy-extensions, mmh3, mdurl, MarkupSafe, joblib, jiter, iniconfig, importlib-resources, idna, httptools, hf-xet, h11
-, griffelib, greenlet, fsspec, frozenlist, filelock, distro, defusedxml, colorama, charset_normalizer, certifi, cachetools, blinker, bcrypt, backports-asyncio-ru
-nner, backoff, attrs, async-timeout, annotated-types, annotated-doc, aiosqlite, aiohappyeyeballs, typing-inspection, typing-inspect, tqdm, sqlalchemy, requests, 
-referencing, python-dateutil, pypika, pypdf, pydantic-core, opentelemetry-proto, multidict, marshmallow, markdown-it-py, langdetect, jinja2, importlib-metadata, 
-humanfriendly, httpcore, grpcio, griffecli, googleapis-common-protos, gitdb, exceptiongroup, deprecated, click, build, beautifulsoup4, aiosignal, yarl, uvicorn, 
-tiktoken, rich, requests-oauthlib, pytest, pydeck, pydantic, posthog, pandas, opentelemetry-exporter-otlp-proto-common, opentelemetry-api, nltk, jsonschema-specifications, griffe, gitpython, dataclasses-json, coloredlogs, anyio, watchfiles, typer, pytest-asyncio, opentelemetry-semantic-conventions, onnxruntime, llama-index-instrumentation, kubernetes, jsonschema, httpx, banks, aiohttp, typer-slim, opentelemetry-sdk, openai, ollama, llama-index-workflows, llama-cloud, altair, streamlit, opentelemetry-exporter-otlp-proto-grpc, llama-index-core, huggingface-hub, tokenizers, llama-index-readers-file, llama-index-llms-openai, llama-index-llms-ollama, llama-index-indices-managed-llama-cloud, llama-index-embeddings-openai, llama-index-embeddings-ollama, llama-cloud-services, llama-parse, llama-index-cli, chromadb, llama-index-vector-stores-chroma, llama-index-readers-llama-parse, llama-index   
-  Attempting uninstall: setuptools
-    Found existing installation: setuptools 79.0.1
-    Uninstalling setuptools-79.0.1:
-      Successfully uninstalled setuptools-79.0.1
-Successfully installed MarkupSafe-3.0.3 aiohappyeyeballs-2.6.1 aiohttp-3.13.3 aiosignal-1.4.0 aiosqlite-0.22.1 altair-6.0.0 annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.12.1 a
-sync-timeout-5.0.1 attrs-25.4.0 backoff-2.2.1 backports-asyncio-runner-1.2.0 banks-2.4.0 bcrypt-5.0.0 beautifulsoup4-4.14.3 blinker-1.9.0 build-1.4.0 cachetools-6.2.6 certifi-2026.
-1.4 charset_normalizer-3.4.4 chromadb-1.5.0 click-8.3.1 colorama-0.4.6 coloredlogs-15.0.1 dataclasses-json-0.6.7 defusedxml-0.7.1 deprecated-1.2.18 dirtyjson-1.0.8 distro-1.9.0 dur
-ationpy-0.10 exceptiongroup-1.3.1 filelock-3.23.0 filetype-1.2.0 flatbuffers-25.12.19 frozenlist-1.8.0 fsspec-2026.2.0 gitdb-4.0.12 gitpython-3.1.46 googleapis-common-protos-1.72.0
- greenlet-3.3.1 griffe-2.0.0 griffecli-2.0.0 griffelib-2.0.0 grpcio-1.78.0 h11-0.16.0 hf-xet-1.2.0 httpcore-1.0.9 httptools-0.7.1 httpx-0.28.1 huggingface-hub-1.4.1 humanfriendly-1
-0.0 idna-3.11 importlib-metadata-8.7.1 importlib-resources-6.5.2 iniconfig-2.3.0 jinja2-3.1.6 jiter-0.13.0 joblib-1.5.3 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 kuberne
-tes-35.0.0 langdetect-1.0.9 llama-cloud-0.1.35 llama-cloud-services-0.6.54 llama-index-0.14.14 llama-index-cli-0.5.3 llama-index-core-0.14.14 llama-index-embeddings-ollama-0.8.6 ll
-ama-index-embeddings-openai-0.5.1 llama-index-indices-managed-llama-cloud-0.9.4 llama-index-instrumentation-0.4.2 llama-index-llms-ollama-0.9.1 llama-index-llms-openai-0.6.18 llama
--index-readers-file-0.5.6 llama-index-readers-llama-parse-0.5.1 llama-index-vector-stores-chroma-0.5.5 llama-index-workflows-2.14.2 llama-parse-0.6.54 markdown-it-py-4.0.0 marshmal
-low-3.26.2 mdurl-0.1.2 mmh3-5.2.0 mpmath-1.3.0 multidict-6.7.1 mypy-extensions-1.1.0 narwhals-2.16.0 nest-asyncio-1.6.0 networkx-3.4.2 nltk-3.9.2 numpy-2.2.6 oauthlib-3.3.1 ollama-
-0.6.1 onnxruntime-1.23.2 openai-2.21.0 opentelemetry-api-1.39.1 opentelemetry-exporter-otlp-proto-common-1.39.1 opentelemetry-exporter-otlp-proto-grpc-1.39.1 opentelemetry-proto-1.
-39.1 opentelemetry-sdk-1.39.1 opentelemetry-semantic-conventions-0.60b1 orjson-3.11.7 overrides-7.7.0 packaging-26.0 pandas-2.3.3 pillow-12.1.1 platformdirs-4.8.0 pluggy-1.6.0 post
-hog-5.4.0 propcache-0.4.1 protobuf-6.33.5 pyarrow-23.0.0 pybase64-1.4.3 pycountry-24.6.1 pydantic-2.12.5 pydantic-core-2.41.5 pydeck-0.9.1 pygments-2.19.2 pypdf-6.7.0 pypika-0.51.1
- pyproject_hooks-1.2.0 pyreadline3-3.5.4 pytest-9.0.2 pytest-asyncio-1.3.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.1 pytz-2025.2 pyyaml-6.0.3 referencing-0.37.0 regex-2026.1.
-15 requests-2.32.5 requests-oauthlib-2.0.0 rich-14.3.2 rpds-py-0.30.0 setuptools-82.0.0 shellingham-1.5.4 six-1.17.0 smmap-5.0.2 sniffio-1.3.1 soupsieve-2.8.3 sqlalchemy-2.0.46 str
-eamlit-1.54.0 striprtf-0.0.26 sympy-1.14.0 tenacity-9.1.4 tiktoken-0.12.0 tokenizers-0.22.2 toml-0.10.2 tomli-2.4.0 tornado-6.5.4 tqdm-4.67.3 typer-0.23.1 typer-slim-0.23.1 typing-
-extensions-4.15.0 typing-inspect-0.9.0 typing-inspection-0.4.2 tzdata-2025.3 urllib3-2.6.3 uvicorn-0.40.0 watchdog-6.0.0 watchfiles-1.1.1 websocket-client-1.9.0 websockets-16.0 wrapt-1.17.3 yarl-1.22.0 zipp-3.23.0
-(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> # Make sure venv is active: (venv) in prompt
-(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> python src/ingestion.py
+    index = create_multilingual_index(english_dir, french_dir, db_path)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 137, in create_multilingual_index
+    index = VectorStoreIndex.from_documents(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\base.py", line 122, in from_documents
+    return cls(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 75, in __init__
+    super().__init__(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\base.py", line 79, in __init__
+    index_struct = self.build_index_from_nodes(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 309, in build_index_from_nodes
+    return self._build_index_from_nodes(content_nodes, **insert_kwargs)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 278, in _build_index_from_nodes
+    self._add_nodes_to_index(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 231, in _add_nodes_to_index
+    nodes_batch = self._get_node_with_embedding(nodes_batch, show_progress)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\vector_store\base.py", line 138, in _get_node_with_embedding
+    id_to_embed_map = embed_nodes(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\indices\utils.py", line 177, in embed_nodes
+    new_embeddings = embed_model.get_text_embedding_batch(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index_instrumentation\dispatcher.py", line 335, in wrapper
+    result = func(*args, **kwargs)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\base\embeddings\base.py", line 476, in get_text_embedding_batch
+    embeddings = self._get_text_embeddings(cur_batch)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\embeddings\ollama\base.py", line 95, in _get_text_embeddings
+    return self.get_general_text_embeddings(formatted_texts)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\embeddings\ollama\base.py", line 104, in get_general_text_embeddings
+    result = self._client.embed(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\ollama\_client.py", line 393, in embed
+    return self._request(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\ollama\_client.py", line 133, in _request_raw
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: failed to encode response: json: unsupported value: NaN (status code: 500)
+Generating embeddings:   0%|▌                                                                                                                     | 9/2048 [00:14<55:34,  1.64s/it]
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> python src/ingestion.py                             
 Starting document ingestion...
 Loading English documents...
  - WARNING - Ignoring wrong pointing object 8 0 (offset 0)
  - WARNING - Ignoring wrong pointing object 10 0 (offset 0)
  - WARNING - Ignoring wrong pointing object 12 0 (offset 0)
  - WARNING - Ignoring wrong pointing object 20 0 (offset 0)
+ - WARNING - incorrect startxref pointer(2)
+ - WARNING - parsing for Object Streams
+ - WARNING - Object 131 0 not defined.
+ - WARNING - Error -3 while decompressing data: invalid distance too far back
+Traceback (most recent call last):
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 224, in <module>
+    ingest_documents()
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 217, in ingest_documents
+    index = create_multilingual_index(english_dir, french_dir, db_path)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 94, in create_multilingual_index
+    english_docs = load_documents_from_directory(english_dir)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 40, in load_documents_from_directory
+    documents = reader.load_data()
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\readers\file\base.py", line 783, in load_data
+    documents.extend(load_file_with_args(input_file))
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\core\readers\file\base.py", line 613, in load_file
+    docs = reader.load_data(input_file, **kwargs)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+  File "C:\Users\TISAO-MSI\.conda\envs\lufa_rag\lib\concurrent\futures\_base.py", line 451, in result
+    return self.__get_result()
+  File "C:\Users\TISAO-MSI\.conda\envs\lufa_rag\lib\concurrent\futures\_base.py", line 403, in __get_result
+    raise self._exception
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\llama_index\readers\file\docs\base.py", line 91, in load_data
+    page_text = pdf.pages[page].extract_text()
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\_page.py", line 2044, in extract_text
+    return self._extract_text(
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\_page.py", line 1739, in _extract_text
+    for operands, operator in content.operations:
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\generic\_data_structures.py", line 1412, in operations
+    self._parse_content_stream(BytesIO(self._data))
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\generic\_data_structures.py", line 1305, in _parse_content_stream
+    operands.append(read_object(stream, None, self.forced_encoding))
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\generic\_data_structures.py", line 1476, in read_object
+    return NumberObject.read_from_stream(stream)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\generic\_base.py", line 588, in read_from_stream
+    num = read_until_regex(stream, NumberObject.NumberPattern)
+  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\venv\lib\site-packages\pypdf\_utils.py", line 259, in read_until_regex
+    tok = stream.read(16)
+KeyboardInterrupt
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> Remove-Item -Recurse -Force db/chroma_db
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> python src/ingestion.py                 
+Starting document ingestion...
+Loading English documents...
+ - WARNING - Ignoring wrong pointing object 8 0 (offset 0)
+ - WARNING - Ignoring wrong pointing object 10 0 (offset 0)
+ - WARNING - Ignoring wrong pointing object 12 0 (offset 0)
+ - WARNING - Ignoring wrong pointing object 20 0 (offset 0)
+ - WARNING - incorrect startxref pointer(2)
+ - WARNING - parsing for Object Streams
+ - WARNING - Object 131 0 not defined.
+ - WARNING - Error -3 while decompressing data: invalid distance too far back
 Loading French documents...
  - WARNING - incorrect startxref pointer(2)
  - WARNING - parsing for Object Streams
@@ -170,14 +108,54 @@ Loading French documents...
 Tagging documents with language...
 Document tagged with language: en
 Document tagged with language: fr
-Document tagged with language: en
-Initializing embedding model: bge-m3
+Initializing embedding model: nomic-embed-text-v2-moe
 Initializing ChromaDB at db/chroma_db...
  - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
 Creating vector store index...
-Applying transformations: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:05<00:00,  5.77s/it]
-Generating embeddings:   0%|                                                                                                                              | 0/2048 [00:00<?, ?it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 500 Internal Server Error"
-Traceback (most recent call last):
-  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 224, in <module>
-    ingest_documents()
-  File "C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG\src\ingestion.py", line 217, in ingest_documents
+Applying transformations: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:06<00:00,  6.38s/it]
+Generating embeddings:   0%|                                                                                                                              | 0/2048 [00:00<?, ?it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+Generating embeddings:   0%|▌                                                                                                                    | 10/2048 [00:06<23:43,  1.43it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+Generating embeddings: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2048/2048 [08:14<00:00,  4.14it/s]
+Generating embeddings:   0%|                                                                                                                              | 0/2048 [00:00<?, ?it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+Generating embeddings:   0%|▌                                                                                                                    | 10/2048 [00:04<16:52,  2.01it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+Generating embeddings: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████▌| 2040/2048 [09:22<00:02,  3.21it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+Generating embeddings: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2048/2048 [09:25<00:00,  3.62it/s]
+Generating embeddings:   0%|                                                                                                                              | 0/1017 [00:00<?, ?it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+Generating embeddings:   1%|█▏                                                                                                                   | 10/1017 [00:04<08:20,  2.01it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+Generating embeddings:  99%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏| 1010/1017 [05:15<00:00,  7.77it/s] - INFO - HTTP Request: POST http://localhost:11434/api/embed "HTTP/1.1 200 OK"
+Generating embeddings: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1017/1017 [05:16<00:00,  3.21it/s]
+Index created successfully with 3521 documents
+Metadata updated: 2039 EN, 1482 FR documents
+Document ingestion completed!
+(venv) (lufa_rag) PS C:\Users\TISAO-MSI\Codebase\LUFA_OpenSource_RAG> streamlit run src/app.py
+
+      Welcome to Streamlit!
+
+      If you'd like to receive helpful onboarding emails, news, offers, promotions,
+      and the occasional swag, please enter your email address below. Otherwise,
+      leave this field blank.
+
+      Email: stiamiyu@laurentian.ca                                                                                                                                                 
+
+  You can find our privacy policy at https://streamlit.io/privacy-policy
+  Summary:
+  - This open source library collects usage statistics.
+  - We cannot see and do not store information contained inside Streamlit apps,
+    such as text, charts, images, etc.
+  - Telemetry data is stored in servers in the United States.
+  - If you'd like to opt out, add the following to %userprofile%/.streamlit/config.toml,
+    creating that file if necessary:
+    [browser]
+    gatherUsageStats = false
+  You can now view your Streamlit app in your browser.
+  Local URL: http://localhost:8501                                                                                                                                                  
+  Network URL: http://172.20.10.2:8501
+Initializing LLM: llama3.2:3b-instruct-q4_K_M
+Initializing embedding model: nomic-embed-text-v2-moe
+Loading index from db/chroma_db...
+Index loaded successfully
+Detected query language: en
+Detected query language: en
+Detected query language: fr
+Detected query language: fr
+Detected query language: en
