@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 """
 RAG engine module for bilingual question-answering.
-Handles query processing, cross-lingual retrieval, and response generation.
+Handles query processing, cross-lingual hybrid retrieval, and response generation.
 """
 import re
 from rank_bm25 import BM25Okapi
@@ -10,7 +11,7 @@ from language_detector import detect_language
 from query_handler import QueryHandler, SYSTEM_PROMPTS
 from query_rewriter import rewrite_query
 from reflector import reflect
-from translator import (                          # ── TRANSLATION: new imports
+from translator import (
     detect_full_language,
     needs_translation,
     translate_to_english,
@@ -33,11 +34,7 @@ MAX_RETRIES    = 3
 class BilingualRAGEngine:
     """
     Bilingual RAG engine for Laurentian University Faculty Association collective agreement.
-    Features:
-    - Auto-detect query language (all languages)
-    - Translate non-EN/FR queries → English → RAG pipeline → translate answer back
-    - Cross-lingual retrieval with nomic-embed-text-v2-moe
-    - Agentic loop: query rewriting + reflection + adaptive re-retrieval
+    Features cross-lingual retrieval, query rewriting, and hybrid RRF retrieval.
     """
 
     def __init__(
@@ -68,8 +65,6 @@ class BilingualRAGEngine:
 
         self.index        = self._load_index()
         self.query_engine = self._create_query_engine()
-
-    # ── Unchanged internals ───────────────────────────────────────────────────
 
     def _load_index(self) -> VectorStoreIndex:
         print(f"Loading index from {self.db_path}...")
@@ -110,280 +105,9 @@ class BilingualRAGEngine:
         instruction   = "Réponds en français. " if language == 'fr' else "Respond in English. "
         return instruction + query
 
-    def chat(self, query_text: str) -> str:
-        return self.query(query_text, return_sources=False)['response']
-
-    # ── Original single-pass query — unchanged ────────────────────────────────
     def query(self, query_text: str, return_sources: bool = False) -> dict:
-        """Standard single-pass RAG query (original behaviour, fully preserved)."""
+        """Standard single-pass RAG query."""
         detected_language = self.detect_query_language(query_text)
         print(f"Detected query language: {detected_language}")
-        enhanced_query = self.create_language_aware_prompt(query_text, detected_language)
-        response = self.query_engine.query(enhanced_query)
-
-        result = {
-            'response': str(response),
-            'detected_language': detected_language,
-        }
-
-        if return_sources and hasattr(response, 'source_nodes'):
-            sources = []
-            for node in response.source_nodes:
-                text = node.node.text
-                preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
-                sources.append({
-                    'text': preview,
-                    'score': node.score,
-                    'metadata': node.node.metadata,
-                    'node_id': node.node.node_id
-                })
-            result['sources'] = sources
-
-        return result
-
-    # ── Agentic helpers ───────────────────────────────────────────────────────
-
-    def agentic_query(
-            self,
-            query_text: str,
-            return_sources: bool = False,
-            max_retries: int = MAX_RETRIES
-    ) -> dict:
-        """
-        Agentic RAG query with full translation + 4-step loop.
-        """
-        original_lang = detect_full_language(query_text)
-        translation_applied = needs_translation(original_lang)
-        translated_query = None
-
-        if translation_applied:
-            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
-            print(f"[AgenticRAG] Non-native language detected: {original_lang} ({lang_name})")
-            print(f"[AgenticRAG] Translating query to English for processing...")
-            translated_query = translate_to_english(query_text, original_lang, self.llm)
-            processing_query = translated_query
-            pipeline_lang = "en"
-        else:
-            processing_query = query_text
-            pipeline_lang = original_lang
-
-        print(f"[AgenticRAG] Pipeline language: {pipeline_lang}")
-
-        current_query = processing_query
-        rewritten_query = processing_query
-        nodes = []
-        answer = ""
-        is_grounded = False
-
-        for attempt in range(1, max_retries + 1):
-            print(f"[AgenticRAG] Attempt {attempt}/{max_retries}")
-
-            if attempt == 1:
-                rewritten_query = rewrite_query(current_query, pipeline_lang, self.llm)
-            else:
-                hint = f"{current_query} Focus on specific article numbers, salary grids, dates, or job ranks."
-                rewritten_query = rewrite_query(hint, pipeline_lang, self.llm)
-
-            print(f"[AgenticRAG] Rewritten: {rewritten_query}")
-
-            top_k = self.similarity_top_k + (attempt - 1) * 2
-            nodes = self._retrieve_nodes(rewritten_query, top_k=top_k)
-            print(f"[AgenticRAG] Retrieved {len(nodes)} chunks (top_k={top_k})")
-
-            answer = self._generate_from_nodes(processing_query, nodes, pipeline_lang)
-
-            chunk_texts = [n.node.text for n in nodes]
-            is_grounded = reflect(answer, chunk_texts, self.llm)
-            print(f"[AgenticRAG] Grounded: {is_grounded}")
-
-            if is_grounded:
-                break
-
-            current_query = rewritten_query
-
-        final_answer = answer
-        if translation_applied:
-            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
-            print(f"[AgenticRAG] Translating answer back to {lang_name}...")
-            final_answer = translate_to_target(answer, original_lang, self.llm)
-
-        result = {
-            'response': final_answer,
-            'english_response': answer if translation_applied else None,
-            'detected_language': pipeline_lang,
-            'original_language': original_lang,
-            'original_query': query_text,
-            'translated_query': translated_query,
-            'rewritten_query': rewritten_query,
-            'attempts': attempt,
-            'grounded': is_grounded,
-            'translation_applied': translation_applied,
-        }
-
-        if return_sources:
-            sources = []
-            for node in nodes:
-                text = node.node.text
-                preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
-                sources.append({
-                    'text': preview,
-                    'score': node.score,
-                    'metadata': node.node.metadata,
-                    'node_id': node.node.node_id
-                })
-            result['sources'] = sources
-
-        return result
-
-    def _retrieve_nodes(self, query: str, top_k: int = 5) -> list:
-        """
-        Executes advanced hybrid retrieval. Sorts dense vector nodes by recency weights
-        during similarity ties, then merges them with sparse BM25 tokens via RRF.
-        Directly reads from ChromaDB to avoid ZeroDivisionError.
-        """
-        # 1. Fetch dense candidates from the index vector space
-        dense_retriever = VectorIndexRetriever(
-            index=self.index,
-            similarity_top_k=top_k * 2,
-        )
-        raw_dense_nodes = dense_retriever.retrieve(query)
-
-        # 2. Apply Recency Reranker sorting to the dense pool as a pre-pass tiebreaker
-        if raw_dense_nodes:
-            # Initial descending sort by raw semantic cosine similarity score
-            raw_dense_nodes.sort(key=lambda x: x.score, reverse=True)
-
-            dense_nodes = []
-            i = 0
-            tie_threshold = 0.02
-
-            while i < len(raw_dense_nodes):
-                bucket_score = raw_dense_nodes[i].score
-                bucket = []
-                j = i
-                # Group nodes falling within the narrow similarity tie threshold window
-                while j < len(raw_dense_nodes) and (bucket_score - raw_dense_nodes[j].score) < tie_threshold:
-                    bucket.append(raw_dense_nodes[j])
-                    j += 1
-
-                # Sort the tie bucket internally by document metadata recency weight
-                bucket.sort(key=lambda x: float(x.node.metadata.get("recency_weight", 1.0)), reverse=True)
-                dense_nodes.extend(bucket)
-                i = j
-        else:
-            dense_nodes = []
-
-        # 3. Extract text pool for BM25 from ChromaDB collection directly to prevent ZeroDivisionError
-        from llama_index.core.schema import TextNode
-        import chromadb
-        chroma_client = chromadb.PersistentClient(path=self.db_path)
-        chroma_collection = chroma_client.get_collection(self.collection_name)
-        collection_data = chroma_collection.get(include=["documents", "metadatas"])
-
-        all_nodes = []
-        if collection_data and collection_data.get("ids"):
-            for cid, doc, meta in zip(collection_data["ids"], collection_data["documents"],
-                                      collection_data["metadatas"]):
-                node = TextNode(id_=cid, text=doc, metadata=meta)
-                all_nodes.append(node)
-
-        if not all_nodes:
-            # Fallback to avoid ZeroDivisionError if the database is unpopulated
-            return dense_nodes
-
-        tokenized_corpus = [re.findall(r'\b\w+\b', node.text.lower()) for node in all_nodes]
-        bm25 = BM25Okapi(tokenized_corpus)
-
-        # 4. Fetch sparse candidates
-        tokenized_query = re.findall(r'\b\w+\b', query.lower())
-        bm25_scores = bm25.get_scores(tokenized_query)
-
-        # Sort top nodes based on BM25 score
-        top_bm25_indices = sorted(range(len(bm25_scores)), key=lambda idx: bm25_scores[idx], reverse=True)[:top_k * 2]
-        sparse_nodes = [all_nodes[idx] for idx in top_bm25_indices]
-
-        # 5. Apply Reciprocal Rank Fusion (RRF) across prioritized channels
-        rrf_scores = {}
-        node_mapping = {}
-
-        # Process dense nodes using their recency-adjusted array positions
-        for rank, node in enumerate(dense_nodes, start=1):
-            node_id = node.node.node_id
-            node_mapping[node_id] = node
-            # Save the original dense cosine score in metadata to fix evaluation logging view
-            node.node.metadata["original_cosine_score"] = str(node.score)
-            rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
-
-        for rank, node in enumerate(sparse_nodes, start=1):
-            node_id = node.node_id
-            if node_id not in node_mapping:
-                from llama_index.core.schema import NodeWithScore
-                node_mapping[node_id] = NodeWithScore(node=node, score=0.0)
-            rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
-
-        # Sort final unified node keys by global RRF ranking
-        sorted_node_ids = sorted(rrf_scores.keys(), key=lambda k: rrf_scores[k], reverse=True)[:top_k]
-
-        final_nodes = []
-        for nid in sorted_node_ids:
-            wrapped_node = node_mapping[nid]
-            wrapped_node.score = rrf_scores[nid]
-            final_nodes.append(wrapped_node)
-
-        return final_nodes
-
-    def _generate_from_nodes(self, original_query: str, nodes, lang: str) -> str:
-        context     = "\n\n---\n\n".join([n.node.text for n in nodes])
-        system      = self.query_handler.get_system_prompt(lang)
-        instruction = "Réponds en français." if lang == "fr" else "Respond in English."
-
-        prompt = f"""{system}
-{instruction}
-Answer ONLY using the context below. Cite the source document name and page number 
-for every claim.
-
-Context:
-{context}
-
-Question: {original_query}
-Answer:"""
-        return str(self.llm.complete(prompt)).strip()
-
-    # ── Agentic query — with translation layer ────────────────────────────────
-
-def create_rag_engine(
-    db_path:         str = "db/chroma_db",
-    llm_model:       str = "llama3.2:3b-instruct-q4_K_M",
-    embedding_model: str = "nomic-embed-text-v2-moe"
-) -> BilingualRAGEngine:
-    return BilingualRAGEngine(
-        db_path=db_path,
-        llm_model=llm_model,
-        embedding_model=embedding_model,
-    )
-
-
-if __name__ == "__main__":
-    engine = create_rag_engine()
-
-    tests = [
-        ("What is the salary grid for 2024?",   "English"),
-        ("Quelles sont les heures de bureau?",  "French"),
-        ("¿Cuáles son las horas de oficina?",   "Spanish → EN → answer → ES"),
-        ("事務時間は何ですか？",                   "Japanese → EN → answer → JA"),
-        ("Welche Gehaltsklasse gilt für 2024?", "German  → EN → answer → DE"),
-    ]
-
-    for query, label in tests:
-        print(f"\n{'─'*60}")
-        print(f"[TEST] {label}")
-        print(f"Query: {query}")
-        r = engine.agentic_query(query, return_sources=False)
-        print(f"Original lang:       {r['original_language']}")
-        print(f"Translation applied: {r['translation_applied']}")
-        if r['translated_query']:
-            print(f"Translated query:    {r['translated_query']}")
-        print(f"Rewritten query:     {r['rewritten_query']}")
-        print(f"Attempts:            {r['attempts']}")
-        print(f"Grounded:            {r['grounded']}")
-        print(f"Answer:              {r['response']}")
+        enhanced_query    = self.create_language_aware_prompt(query_text, detected_language)
+        response          = self.query_engine.query(enhanced_query)
