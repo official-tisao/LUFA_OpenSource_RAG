@@ -1,12 +1,92 @@
+        context     = "\n\n---\n\n".join([n.node.text for n in nodes])
+        system      = self.query_handler.get_system_prompt(lang)
+        instruction = "Réponds en français." if lang == "fr" else "Respond in English."
+
+        prompt = f"""{system}
+{instruction}
+Answer ONLY using the context below.
+Cite the source document name and page number for every claim.
+Context:
+{context}
+
+Question: {original_query}
+Answer:"""
+        return str(self.llm.complete(prompt)).strip()
+
+    def agentic_query(
+        self,
+        query_text:     str,
+        return_sources: bool = False,
+        max_retries:    int  = MAX_RETRIES
+    ) -> dict:
+        """Agentic RAG query loop with cross-lingual support."""
+        original_lang      = detect_full_language(query_text)
+        translation_applied = needs_translation(original_lang)
+        translated_query   = None
+
+        if translation_applied:
+            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
+            print(f"[AgenticRAG] Non-native language detected: {original_lang} ({lang_name})")
+            print(f"[AgenticRAG] Translating query to English for processing...")
+            translated_query = translate_to_english(query_text, original_lang, self.llm)
+            processing_query = translated_query
+            pipeline_lang    = "en"
+        else:
+            processing_query = query_text
+            pipeline_lang    = original_lang
+
+        print(f"[AgenticRAG] Pipeline language: {pipeline_lang}")
+
+        current_query    = processing_query
+        rewritten_query  = processing_query
+        nodes            = []
+        answer           = ""
+        is_grounded      = False
+
+        for attempt in range(1, max_retries + 1):
+            print(f"[AgenticRAG] Attempt {attempt}/{max_retries}")
+            rewritten_query = rewrite_query(current_query, pipeline_lang, self.llm)
+
+
+            print(f"[AgenticRAG] Rewritten: {rewritten_query}")
+
+            top_k = self.similarity_top_k + (attempt-1)
+            nodes = self._retrieve_nodes(rewritten_query, top_k=top_k)
+            print(f"[AgenticRAG] Retrieved {len(nodes)} chunks (top_k={top_k})")
+
+            answer = self._generate_from_nodes(processing_query, nodes, pipeline_lang)
+
+            chunk_texts = [n.node.text for n in nodes]
+            is_grounded = reflect(answer, chunk_texts, self.llm)
+            print(f"[AgenticRAG] Grounded: {is_grounded}")
+
+            if is_grounded:
+                break
+
+            current_query = rewritten_query
+
+        final_answer = answer
+        if translation_applied:
+            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
+            print(f"[AgenticRAG] Translating answer back to {lang_name}...")
+            final_answer = translate_to_target(answer, original_lang, self.llm)
 
         result = {
-            'response':          str(response),
-            'detected_language': detected_language,
+            'response':            final_answer,
+            'english_response':    answer if translation_applied else None,
+            'detected_language':   pipeline_lang,
+            'original_language':   original_lang,
+            'original_query':      query_text,
+            'translated_query':    translated_query,
+            'rewritten_query':     rewritten_query,
+            'attempts':            attempt,
+            'grounded':            is_grounded,
+            'translation_applied': translation_applied,
         }
 
-        if return_sources and hasattr(response, 'source_nodes'):
+        if return_sources:
             sources = []
-            for node in response.source_nodes:
+            for node in nodes:
                 text    = node.node.text
                 preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
                 sources.append({
@@ -19,88 +99,14 @@
 
         return result
 
-    def chat(self, query_text: str) -> str:
-        return self.query(query_text, return_sources=False)['response']
 
-    def _retrieve_nodes(self, query: str, top_k: int = 5) -> list:
-        """
-        Executes advanced hybrid retrieval. Sorts dense vector nodes by recency weights
-        during similarity ties, then merges them with sparse BM25 tokens via RRF.
-        Directly reads from ChromaDB to avoid ZeroDivisionError.
-        """
-        dense_retriever = VectorIndexRetriever(
-            index=self.index,
-            similarity_top_k=top_k * 2,
-        )
-        raw_dense_nodes = dense_retriever.retrieve(query)
-
-        if raw_dense_nodes:
-            raw_dense_nodes.sort(key=lambda x: x.score, reverse=True)
-            dense_nodes = []
-            i = 0
-            tie_threshold = 0.02
-
-            while i < len(raw_dense_nodes):
-                bucket_score = raw_dense_nodes[i].score
-                bucket = []
-                j = i
-                while j < len(raw_dense_nodes) and (bucket_score - raw_dense_nodes[j].score) < tie_threshold:
-                    bucket.append(raw_dense_nodes[j])
-                    j += 1
-
-                bucket.sort(key=lambda x: float(x.node.metadata.get("recency_weight", 1.0)), reverse=True)
-                dense_nodes.extend(bucket)
-                i = j
-        else:
-            dense_nodes = []
-
-        from llama_index.core.schema import TextNode
-        chroma_client = chromadb.PersistentClient(path=self.db_path)
-        chroma_collection = chroma_client.get_or_create_collection(self.collection_name)
-        collection_data = chroma_collection.get(include=["documents", "metadatas"])
-
-        all_nodes = []
-        if collection_data and collection_data.get("ids"):
-            for cid, doc, meta in zip(collection_data["ids"], collection_data["documents"], collection_data["metadatas"]):
-                node = TextNode(id_=cid, text=doc, metadata=meta)
-                all_nodes.append(node)
-
-        if not all_nodes:
-            return dense_nodes
-
-        tokenized_corpus = [re.findall(r'\b\w+\b', node.text.lower()) for node in all_nodes]
-        bm25 = BM25Okapi(tokenized_corpus)
-
-        tokenized_query = re.findall(r'\b\w+\b', query.lower())
-        bm25_scores = bm25.get_scores(tokenized_query)
-
-        top_bm25_indices = sorted(range(len(bm25_scores)), key=lambda idx: bm25_scores[idx], reverse=True)[:top_k * 2]
-        sparse_nodes = [all_nodes[idx] for idx in top_bm25_indices]
-
-        rrf_scores = {}
-        node_mapping = {}
-
-        for rank, node in enumerate(dense_nodes, start=1):
-            node_id = node.node.node_id
-            node_mapping[node_id] = node
-            node.node.metadata["original_cosine_score"] = str(node.score)
-            rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
-
-        for rank, node in enumerate(sparse_nodes, start=1):
-            node_id = node.node_id
-            if node_id not in node_mapping:
-                from llama_index.core.schema import NodeWithScore
-                node_mapping[node_id] = NodeWithScore(node=node, score=0.0)
-            rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
-
-        sorted_node_ids = sorted(rrf_scores.keys(), key=lambda k: rrf_scores[k], reverse=True)[:top_k]
-
-        final_nodes = []
-        for nid in sorted_node_ids:
-            wrapped_node = node_mapping[nid]
-            wrapped_node.score = rrf_scores[nid]
-            final_nodes.append(wrapped_node)
-
-        return final_nodes
-
-    def _generate_from_nodes(self, original_query: str, nodes, lang: str) -> str:
+def create_rag_engine(
+    db_path:         str = "db/chroma_db",
+    llm_model:       str = "llama3.2:3b-instruct-q4_K_M",
+    embedding_model: str = "nomic-embed-text-v2-moe"
+) -> BilingualRAGEngine:
+    return BilingualRAGEngine(
+        db_path=db_path,
+        llm_model=llm_model,
+        embedding_model=embedding_model,
+    )
