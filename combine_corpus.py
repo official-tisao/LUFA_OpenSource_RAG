@@ -1,57 +1,56 @@
-    print(f" -> Discovery Complete. Found {total_files} total corpus files to process.")
 
-    if total_files == 0:
-        print(" -> Warning: No valid files found to process. Exiting script execution.")
-        return
+                            lines[-1] = processed_last_line
+                            page_content = "\n".join(lines)
+                            outfile.write(page_content + "\n\n")
+
+                    # Clean up temporary file if generated
+                    if TEMP_OCR_FILE.exists():
+                        os.remove(TEMP_OCR_FILE)
+
+                # Execution Branch for Text Documents
+                elif file_path.suffix.lower() == ".txt":
+                    print("   -> Strategy: Parsing raw text streams directly")
+                    with open(file_path, "r", encoding="utf-8") as txt_file:
+                        content = txt_file.read()
+
+                    pages_text = content.split('\x0c') if '\x0c' in content else [content]
+                    for page_idx, page_text in enumerate(pages_text, start=1):
+                        total_pages += 1
+                        lines = [line.strip() for line in page_text.splitlines() if line.strip()]
+
+                        if not lines:
+                            continue
+
+                        last_line = lines[-1]
+
+                        if YEAR_RANGE_RE.search(last_line):
+                            processed_last_line = last_line
+                        else:
+                            sanitized_base = sanitize_filename(file_path.stem)
+                            processed_last_line = f"{sanitized_base} Page {page_idx}"
+
+                        lines[-1] = processed_last_line
+                        page_content = "\n".join(lines)
+                        outfile.write(page_content + "\n\n")
+
+                print("   ✅ Success: Content processed and compiled smoothly.")
+
+            except Exception as exc:
+                error_count += 1
+                print(f"   💥 Major Exception Encountered processing file '{file_path.name}': {exc}")
+                # Ensure safety cleanup on crash
+                if TEMP_OCR_FILE.exists():
+                    os.remove(TEMP_OCR_FILE)
 
     print("\n================================================================================")
-    print("STAGE 2: Beginning Text Compilation and Layer Analysis")
+    print("STAGE 3: Consolidation Summary Results")
+    print("================================================================================")
+    print(f" -> Completed processing: {total_files - error_count} out of {total_files} files successfully.")
+    print(f" -> Total parsed virtual pages appended: {total_pages}")
+    print(f" -> Critical execution failures recorded: {error_count}")
+    print(f" -> Master compilation text document stored at: {OUTPUT_FILE}")
     print("================================================================================")
 
-    total_pages = 0
-    error_count = 0
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as outfile:
-        for idx, file_path in enumerate(all_files):
-            current_counter = idx + 1
-            print(f"\n[{current_counter}/{total_files}] Current Document: {file_path.name}")
-
-            try:
-                # Execution Branch for PDF Documents
-                if file_path.suffix.lower() == ".pdf":
-                    active_pdf_path = file_path
-
-                    # Run image-layer detection threshold check
-                    if is_image_based_pdf(file_path):
-                        print("   -> Layer Check: Image layer detected. Executing conditional OCR layer injection...")
-                        inferred_lang = "fra" if "french" in str(file_path).lower() else "eng"
-
-                        ocrmypdf.ocr(
-                            str(file_path),
-                            str(TEMP_OCR_FILE),
-                            deskew=True,
-                            force_ocr=True,
-                            language=[inferred_lang]
-                        )
-                        active_pdf_path = TEMP_OCR_FILE
-                    else:
-                        print("   -> Layer Check: Native text layer detected. Skipping OCR execution completely.")
-
-                    # Extract text content layout
-                    with pdfplumber.open(str(active_pdf_path)) as pdf:
-                        for page_idx, page in enumerate(pdf.pages, start=1):
-                            total_pages += 1
-                            raw_text = page.extract_text(x_tolerance=3, y_tolerance=3) or ""
-                            lines = [line.strip() for line in raw_text.splitlines() if line.strip()]
-
-                            if not lines:
-                                continue
-
-                            last_line = lines[-1]
-
-                            # Validate whether the footer contains the required agreement pattern
-                            if YEAR_RANGE_RE.search(last_line):
-                                processed_last_line = last_line
-                            else:
-                                sanitized_base = sanitize_filename(file_path.stem)
-                                processed_last_line = f"{sanitized_base} Page {page_idx}"
+if __name__ == "__main__":
+    run_consolidation()
