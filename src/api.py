@@ -1,64 +1,46 @@
-"""
-FastAPI REST API for LUFA Bilingual Agentic RAG System.
-Timeout configured for LLM inference which can take 30–120s per query.
-
-Start with:  python src/api.py
-Test with:   curl -X POST http://localhost:8000/agentic-query \
-               -H "Content-Type: application/json" \
-               -d '{"query":"What is the salary grid for 2024?","return_sources":true}'
-"""
-
-import sys, yaml
-from pathlib import Path
-from typing import Optional
-from contextlib import asynccontextmanager
-
-import uvicorn
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-
-sys.path.insert(0, str(Path(__file__).parent))
-from rag_engine import BilingualRAGEngine
 
 
-def load_config(path: str = "config/config.yaml") -> dict:
+# ── Request / Response models ─────────────────────────────────────────────────
+class QueryRequest(BaseModel):
+    query:          str  = Field(..., example="What is the salary grid for 2024?")
+    return_sources: bool = Field(True)
+    top_k:          int  = Field(5, ge=1, le=20)
+
+class AgenticQueryRequest(BaseModel):
+    query:          str  = Field(..., example="What are the office hours requirements?")
+    return_sources: bool = Field(True)
+    top_k:          int  = Field(5, ge=1, le=20)
+    max_retries:    int  = Field(3, ge=1, le=5)
+
+class CopilotQueryRequest(BaseModel):
+    query:          str  = Field(..., example="What is the academic freedom policy?")
+    model:          str  = Field("gpt-4o", description="GitHub Models model ID")
+    return_sources: bool = Field(True)
+    top_k:          int  = Field(5, ge=1, le=20)
+
+
+# ── Endpoints ─────────────────────────────────────────────────────────────────
+@app.get("/health", tags=["System"])
+async def health():
+    return {
+        "status": "healthy" if engine_instance else "degraded",
+        "engine_loaded": engine_instance is not None,
+        "llm_model": LLM_MODEL,
+        "embedding_model": EMBED_MODEL,
+    }
+
+@app.get("/models", tags=["System"])
+async def list_models():
+    return {"llm_model": LLM_MODEL, "embedding_model": EMBED_MODEL,
+            "db_path": DB_PATH, "collection": COLLECTION}
+
+@app.post("/query", tags=["Standard RAG"])
+async def standard_query(req: QueryRequest):
+    """Single-pass RAG query — responds in query language."""
+    if not engine_instance:
+        raise HTTPException(503, "RAG engine not initialized.")
     try:
-        with open(path) as f:
-            return yaml.safe_load(f) or {}
-    except FileNotFoundError:
-        return {}
-
-_cfg          = load_config()
-LLM_MODEL     = _cfg.get("models", {}).get("llm",       {}).get("name", "llama3.2:3b-instruct-q4_K_M")
-EMBED_MODEL   = _cfg.get("models", {}).get("embedding", {}).get("name", "nomic-embed-text-v2-moe")
-DB_PATH       = _cfg.get("database",  {}).get("path",       "db/chroma_db")
-COLLECTION    = _cfg.get("database",  {}).get("collection",  "multilingual_docs")
-DEFAULT_TOP_K = _cfg.get("retrieval", {}).get("top_k", 5)
-
-engine_instance: Optional[BilingualRAGEngine] = None
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    global engine_instance
-    print("[API] Loading RAG engine...")
-    engine_instance = BilingualRAGEngine(
-        db_path=DB_PATH, collection_name=COLLECTION,
-        llm_model=LLM_MODEL, embedding_model=EMBED_MODEL,
-        similarity_top_k=DEFAULT_TOP_K,
-    )
-    print("[API] Ready.")
-    yield
-    print("[API] Shutdown.")
-
-
-app = FastAPI(
-    title="LUFA Bilingual Agentic RAG API",
-    description="REST API for cross-lingual retrieval of LUFA collective agreements.",
-    version="1.0.0",
-    lifespan=lifespan,
-)
-
-app.add_middleware(CORSMiddleware, allow_origins=["*"],
-                   allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+        engine_instance.set_similarity_top_k(req.top_k)
+        return engine_instance.query(req.query, return_sources=req.return_sources)
+    except Exception as e:
+        raise HTTPException(500, str(e))
