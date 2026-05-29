@@ -2,7 +2,7 @@
 LUFA_OpenSource_RAG
 
 
-## Refined Bilingual Open-Source RAG Technical Implementation Plan
+## Refined Bilingual Open-Source Agentic RAG Technical Implementation Plan
 
 ### Phase 1: Environment \& Hardware Setup
 
@@ -54,7 +54,7 @@ LUFA_OpenSource_RAG/
 ├── src/
 │   ├── ingestion.py      # Bilingual document ingestion
 │   ├── language_detector.py  # Auto-detect document language
-│   ├── rag_engine.py     # Multilingual RAG pipeline
+│   ├── rag_engine.py     # Multilingual Agentic RAG pipeline
 │   ├── query_handler.py  # Language-aware query processing
 │   └── app.py            # Bilingual Streamlit interface
 ├── config/
@@ -93,7 +93,7 @@ pycountry                 # Language code handling
     - Chunk with 1024 tokens, 200 overlap
     - Tag each chunk with: `{language: "en/fr", source_doc: "filename", page: N}`
 
-### Phase 6: Multilingual RAG Engine
+### Phase 6: Multilingual Agentic RAG Engine
 
 **Core Capabilities:**[^1]
 
