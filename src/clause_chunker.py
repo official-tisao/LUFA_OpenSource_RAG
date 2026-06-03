@@ -1,118 +1,104 @@
-"""
-clause_chunker.py
-=================
-Subsystem 1 - Document Preprocessing Pipeline
-Clause-Boundary Chunking for the LUFA Collective Agreement (EN + FR)
+    tokens:         int          = 0
 
-Thesis: Designing a Locally Deployed Cross-Lingual Agentic RAG System
-        for Bilingual Institutional Legal Documents
-Author: Saheed Oluwatosin Tiamiyu | Laurentian University
-Supervisor: Prof. Kalpdrum Passi
-"""
-
-from __future__ import annotations
-
-import json
-import logging
-import re
-import uuid
-from dataclasses import dataclass, asdict
-from pathlib import Path
-from typing import List, Optional
-
-import pdfplumber
-from langdetect import detect, DetectorFactory
-from llama_index.core.schema import TextNode
-
-DetectorFactory.seed = 42
-
-logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
-logger = logging.getLogger(__name__)
-
-# ===========================================================================
-# 0. CORPUS-WIDE RECENCY CONSTANTS
-# ===========================================================================
-
-CORPUS_MIN_YEAR: int = 1998
-CORPUS_MAX_YEAR: int = 2026
-
-YEAR_RE = re.compile(r'\b(?:19|20)\d{2}\b')
-
-# ===========================================================================
-# 1. REGEX PATTERNS
-# ===========================================================================
-
-ARTICLE_HEADER_RE = re.compile(
-    r"^(?:ARTICLE|Article)[\s\xa0]+(\d{1,3})[\s\xa0.\-\u2013\u2014:]*"
-    r"([A-Z\u00C0-\u00FF][^\n]*)?$",
-    re.MULTILINE
-)
-
-CLAUSE_HEADER_RE = re.compile(
-    r"^(\d{1,3}(?:\.\d+)+(?:\([a-zA-Z0-9]+\))?)[\s\xa0.\-\u2013\u2014:]+(.+)?$",
-    re.MULTILINE
-)
-
-SECTION_DIVIDER_RE = re.compile(
-    r"^(?:PART|SECTION|SCHEDULE|APPENDIX|ANNEXE|PARTIE)[\s\xa0]+[IVX\d]+",
-    re.IGNORECASE | re.MULTILINE
-)
-
-# FIXED: Generalized pattern handles variations like Page - 1, PAGE 2, page-10, or <<page_1>>
-PAGE_MARKER_RE = re.compile(
-    r"page(?:[\s\xa0]*[-_]+[\s\xa0]*|[\s\xa0]+)?(\d+)",
-    re.IGNORECASE
-)
-
-def token_count(text: str) -> int:
-    """Whitespace-based token count (fast, consistent)."""
-    if not text:
-        return 0
-    return len(text.split())
-
-
-def clean_text(s: str) -> str:
-    """Normalise whitespace and remove non-breaking/zero-width spaces."""
-    if not s:
-        return ""
-    s = s.replace("\u00a0", " ").replace("\xa0", " ").replace("\u200b", " ")
-    s = re.sub(r"[ \t]+", " ", s)
-    s = re.sub(r"\n{3,}", "\n\n", s)
-    return s.strip()
-
-# ===========================================================================
-# 2. RECENCY WEIGHTING HELPERS
-# ===========================================================================
-
-def extract_end_year(filename: str) -> Optional[int]:
-    """Return the highest 4-digit year found in the filename stem, or None."""
-    years = [int(y) for y in YEAR_RE.findall(Path(filename).stem)]
-    return max(years) if years else None
-
-
-def compute_weight(
-    end_year: Optional[int],
-    min_year: int = CORPUS_MIN_YEAR,
-    max_year: int = CORPUS_MAX_YEAR,
-) -> float:
-    if end_year is None or max_year == min_year:
-        return 1.0
-    raw = max(0.0, min(1.0, (end_year - min_year) / (max_year - min_year)))
-    return round(0.30 + 0.70 * raw, 4)
+    def __post_init__(self) -> None:
+        self.tokens = token_count(self.text)
 
 
 # ===========================================================================
-# 3. DATA STRUCTURES
+# 4. PDF TEXT EXTRACTION
 # ===========================================================================
 
-@dataclass
-class RawClause:
-    """Intermediate container before finalising as a LlamaIndex TextNode."""
-    article_number: str
-    clause_id:      str
-    section_title:  str
-    text:           str
-    language:       str
-    page_no:        int
-    end_year:       Optional[int] = None
-    recency_weight: float        = 1.0
+def extract_pages(pdf_path: Path) -> List[dict]:
+    """Extract text per page using pdfplumber with safe default layout resolution tolerances."""
+    pages = []
+    with pdfplumber.open(str(pdf_path)) as pdf:
+        for i, page in enumerate(pdf.pages, start=1):
+            # FIXED: Restored core defaults to stop character dropping bugs
+            text = page.extract_text() or ""
+            pages.append({"page_no": i, "text": text})
+    logger.info("Extracted %d pages from %s", len(pages), pdf_path.name)
+    return pages
+
+
+def build_marked_text(pages: List[dict]) -> str:
+    parts = []
+    for p in pages:
+        parts.append(f"<<page_{p['page_no']}>>")
+        parts.append(p["text"])
+    return "\n".join(parts)
+
+
+def detect_language(text: str) -> str:
+    try:
+        sample = text[:500].strip()
+        return detect(sample) if sample else "en"
+    except Exception:
+        return "en"
+
+
+# ===========================================================================
+# 5. CLAUSE BOUNDARY CHUNKER
+# ===========================================================================
+
+class ClauseBoundaryChunker:
+
+    def __init__(
+        self,
+        min_tokens: int = 30,
+        max_tokens: int = 512,
+        language_override: Optional[str] = None,
+        min_year: int = CORPUS_MIN_YEAR,
+        max_year: int = CORPUS_MAX_YEAR,
+    ) -> None:
+        self.min_tokens        = min_tokens
+        self.max_tokens        = max_tokens
+        self.language_override = language_override
+        self.min_year          = min_year
+        self.max_year          = max_year
+
+    def chunk_pdf(self, pdf_path: Path) -> List[TextNode]:
+        end_year = extract_end_year(str(pdf_path))
+        weight   = compute_weight(end_year, self.min_year, self.max_year)
+        logger.info(
+            "Recency | end_year=%s | weight=%.4f | file=%s",
+            end_year, weight, pdf_path.name,
+        )
+
+        pages     = extract_pages(pdf_path)
+        full_text = build_marked_text(pages)
+        raw       = self._split_into_clauses(full_text)
+
+        for clause in raw:
+            clause.end_year       = end_year
+            clause.recency_weight = weight
+
+        merged = self._merge_short_clauses(raw)
+        final  = self._split_long_clauses(merged)
+        nodes  = self._to_text_nodes(final)
+
+        avg = sum(int(n.metadata["token_count"]) for n in nodes) / max(len(nodes), 1)
+        logger.info(
+            "Chunking done | chunks=%d | avg_tokens=%.1f | lang=%s",
+            len(nodes), avg, self.language_override or "auto",
+        )
+        return nodes
+
+    # ------------------------------------------------------------------
+    # Step A: Split at article/clause boundaries
+    # ------------------------------------------------------------------
+
+    def _split_into_clauses(self, full_text: str) -> List[RawClause]:
+        lines   = full_text.splitlines()
+        clauses: List[RawClause] = []
+
+        current_article  = "0"
+        current_clause_id = "0"
+        current_title    = "PREAMBLE"
+        current_page     = 1
+        buffer: List[str] = []
+
+        def flush() -> None:
+            text = "\n".join(buffer).strip()
+            # FIXED: Clear out the entire text tag safely during flush using the regex
+            text = PAGE_MARKER_RE.sub("", text).strip()
+            if text:
