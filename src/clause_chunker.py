@@ -1,104 +1,93 @@
-    tokens:         int          = 0
+                lang = (
+                    self.language_override
+                    if self.language_override
+                    else detect_language(text)
+                )
+                clauses.append(RawClause(
+                    article_number=current_article,
+                    clause_id=current_clause_id,
+                    section_title=current_title,
+                    text=text,
+                    language=lang,
+                    page_no=current_page,
+                ))
+            buffer.clear()
 
-    def __post_init__(self) -> None:
-        self.tokens = token_count(self.text)
+        # ===========================================================================
+        # RECOGNITION LOOP CORRECTION (Inside _split_into_clauses method)
+        # ===========================================================================
 
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                continue
 
-# ===========================================================================
-# 4. PDF TEXT EXTRACTION
-# ===========================================================================
+            # 1. FIXED: Changed .match() to .search() to find page targets anywhere on the line
+            pm = PAGE_MARKER_RE.search(stripped)
+            if pm:
+                current_page = int(pm.group(1))
+                buffer.append(line)
+                continue
 
-def extract_pages(pdf_path: Path) -> List[dict]:
-    """Extract text per page using pdfplumber with safe default layout resolution tolerances."""
-    pages = []
-    with pdfplumber.open(str(pdf_path)) as pdf:
-        for i, page in enumerate(pdf.pages, start=1):
-            # FIXED: Restored core defaults to stop character dropping bugs
-            text = page.extract_text() or ""
-            pages.append({"page_no": i, "text": text})
-    logger.info("Extracted %d pages from %s", len(pages), pdf_path.name)
-    return pages
+            # --- Section divider
+            if SECTION_DIVIDER_RE.search(stripped):  # FIXED: Changed to .search()
+                current_title = stripped
+                buffer.append(line)
+                continue
 
+            # --- Top-level ARTICLE header
+            art_m = ARTICLE_HEADER_RE.search(stripped)  # FIXED: Changed to .search()
+            if art_m:
+                flush()
+                current_article = art_m.group(1)
+                title_part = (art_m.group(2) or "").strip()
+                if title_part:
+                    current_title = title_part
+                current_clause_id = current_article
+                buffer.append(line)
+                continue
 
-def build_marked_text(pages: List[dict]) -> str:
-    parts = []
-    for p in pages:
-        parts.append(f"<<page_{p['page_no']}>>")
-        parts.append(p["text"])
-    return "\n".join(parts)
+            # --- Sub-clause header
+            cl_m = CLAUSE_HEADER_RE.search(stripped)  # FIXED: Changed to .search()
+            if cl_m:
+                candidate = cl_m.group(1)
+                if candidate.startswith(current_article + "."):
+                    flush()
+                    current_clause_id = self._normalise_id(candidate)
+                    buffer.append(line)
+                    continue
 
-
-def detect_language(text: str) -> str:
-    try:
-        sample = text[:500].strip()
-        return detect(sample) if sample else "en"
-    except Exception:
-        return "en"
-
-
-# ===========================================================================
-# 5. CLAUSE BOUNDARY CHUNKER
-# ===========================================================================
-
-class ClauseBoundaryChunker:
-
-    def __init__(
-        self,
-        min_tokens: int = 30,
-        max_tokens: int = 512,
-        language_override: Optional[str] = None,
-        min_year: int = CORPUS_MIN_YEAR,
-        max_year: int = CORPUS_MAX_YEAR,
-    ) -> None:
-        self.min_tokens        = min_tokens
-        self.max_tokens        = max_tokens
-        self.language_override = language_override
-        self.min_year          = min_year
-        self.max_year          = max_year
-
-    def chunk_pdf(self, pdf_path: Path) -> List[TextNode]:
-        end_year = extract_end_year(str(pdf_path))
-        weight   = compute_weight(end_year, self.min_year, self.max_year)
-        logger.info(
-            "Recency | end_year=%s | weight=%.4f | file=%s",
-            end_year, weight, pdf_path.name,
-        )
-
-        pages     = extract_pages(pdf_path)
-        full_text = build_marked_text(pages)
-        raw       = self._split_into_clauses(full_text)
-
-        for clause in raw:
-            clause.end_year       = end_year
-            clause.recency_weight = weight
-
-        merged = self._merge_short_clauses(raw)
-        final  = self._split_long_clauses(merged)
-        nodes  = self._to_text_nodes(final)
-
-        avg = sum(int(n.metadata["token_count"]) for n in nodes) / max(len(nodes), 1)
-        logger.info(
-            "Chunking done | chunks=%d | avg_tokens=%.1f | lang=%s",
-            len(nodes), avg, self.language_override or "auto",
-        )
-        return nodes
+            buffer.append(line)
+        flush()
+        logger.info("Initial split: %d raw clauses", len(clauses))
+        return clauses
 
     # ------------------------------------------------------------------
-    # Step A: Split at article/clause boundaries
+    # Step B: Merge clauses below min_tokens
     # ------------------------------------------------------------------
 
-    def _split_into_clauses(self, full_text: str) -> List[RawClause]:
-        lines   = full_text.splitlines()
-        clauses: List[RawClause] = []
+    def _merge_short_clauses(self, clauses: List[RawClause]) -> List[RawClause]:
+        if not clauses:
+            return clauses
 
-        current_article  = "0"
-        current_clause_id = "0"
-        current_title    = "PREAMBLE"
-        current_page     = 1
-        buffer: List[str] = []
+        pending_texts: List[str] = []
+        pending_page  = 0
+        merged: List[RawClause] = []
 
-        def flush() -> None:
-            text = "\n".join(buffer).strip()
-            # FIXED: Clear out the entire text tag safely during flush using the regex
-            text = PAGE_MARKER_RE.sub("", text).strip()
-            if text:
+        for clause in clauses:
+            if clause.tokens < self.min_tokens:
+                pending_texts.append(clause.text)
+                if not pending_page:
+                    pending_page = clause.page_no
+            else:
+                if pending_texts:
+                    combined = "\n".join(pending_texts) + "\n" + clause.text
+                    clause = RawClause(
+                        article_number=clause.article_number,
+                        clause_id=clause.clause_id,
+                        section_title=clause.section_title,
+                        text=combined.strip(),
+                        language=clause.language,
+                        page_no=pending_page or clause.page_no,
+                        end_year=clause.end_year,
+                        recency_weight=clause.recency_weight,
