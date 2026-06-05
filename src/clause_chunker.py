@@ -1,93 +1,90 @@
-                lang = (
-                    self.language_override
-                    if self.language_override
-                    else detect_language(text)
-                )
-                clauses.append(RawClause(
-                    article_number=current_article,
-                    clause_id=current_clause_id,
-                    section_title=current_title,
-                    text=text,
-                    language=lang,
-                    page_no=current_page,
-                ))
-            buffer.clear()
+                    )
+                    pending_texts.clear()
+                    pending_page = 0
+                merged.append(clause)
 
-        # ===========================================================================
-        # RECOGNITION LOOP CORRECTION (Inside _split_into_clauses method)
-        # ===========================================================================
+        if pending_texts and merged:
+            last     = merged[-1]
+            combined = last.text + "\n" + "\n".join(pending_texts)
+            merged[-1] = RawClause(
+                article_number=last.article_number,
+                clause_id=last.clause_id,
+                section_title=last.section_title,
+                text=combined.strip(),
+                language=last.language,
+                page_no=last.page_no,
+                end_year=last.end_year,
+                recency_weight=last.recency_weight,
+            )
 
-        for line in lines:
-            stripped = line.strip()
-            if not stripped:
-                continue
-
-            # 1. FIXED: Changed .match() to .search() to find page targets anywhere on the line
-            pm = PAGE_MARKER_RE.search(stripped)
-            if pm:
-                current_page = int(pm.group(1))
-                buffer.append(line)
-                continue
-
-            # --- Section divider
-            if SECTION_DIVIDER_RE.search(stripped):  # FIXED: Changed to .search()
-                current_title = stripped
-                buffer.append(line)
-                continue
-
-            # --- Top-level ARTICLE header
-            art_m = ARTICLE_HEADER_RE.search(stripped)  # FIXED: Changed to .search()
-            if art_m:
-                flush()
-                current_article = art_m.group(1)
-                title_part = (art_m.group(2) or "").strip()
-                if title_part:
-                    current_title = title_part
-                current_clause_id = current_article
-                buffer.append(line)
-                continue
-
-            # --- Sub-clause header
-            cl_m = CLAUSE_HEADER_RE.search(stripped)  # FIXED: Changed to .search()
-            if cl_m:
-                candidate = cl_m.group(1)
-                if candidate.startswith(current_article + "."):
-                    flush()
-                    current_clause_id = self._normalise_id(candidate)
-                    buffer.append(line)
-                    continue
-
-            buffer.append(line)
-        flush()
-        logger.info("Initial split: %d raw clauses", len(clauses))
-        return clauses
+        logger.info(
+            "After merge: %d clauses (removed %d short)",
+            len(merged), len(clauses) - len(merged),
+        )
+        return merged
 
     # ------------------------------------------------------------------
-    # Step B: Merge clauses below min_tokens
+    # Step C: Split clauses above max_tokens
     # ------------------------------------------------------------------
 
-    def _merge_short_clauses(self, clauses: List[RawClause]) -> List[RawClause]:
-        if not clauses:
-            return clauses
-
-        pending_texts: List[str] = []
-        pending_page  = 0
-        merged: List[RawClause] = []
+    def _split_long_clauses(self, clauses: List[RawClause]) -> List[RawClause]:
+        result: List[RawClause] = []
+        sent_boundary = re.compile(r"(?<=[.!?])\s+(?=[A-Z\u00C0-\u00FF])")
 
         for clause in clauses:
-            if clause.tokens < self.min_tokens:
-                pending_texts.append(clause.text)
-                if not pending_page:
-                    pending_page = clause.page_no
-            else:
-                if pending_texts:
-                    combined = "\n".join(pending_texts) + "\n" + clause.text
-                    clause = RawClause(
+            if clause.tokens <= self.max_tokens:
+                result.append(clause)
+                continue
+
+            sentences = sent_boundary.split(clause.text)
+            part_buf: List[str] = []
+            part_tok  = 0
+            part_idx  = 1
+
+            for sent in sentences:
+                st = token_count(sent)
+                if part_tok + st > self.max_tokens and part_buf:
+                    suffix = ("__p" + str(part_idx)) if part_idx > 1 else ""
+                    result.append(RawClause(
                         article_number=clause.article_number,
-                        clause_id=clause.clause_id,
+                        clause_id=clause.clause_id + suffix,
                         section_title=clause.section_title,
-                        text=combined.strip(),
+                        text=" ".join(part_buf).strip(),
                         language=clause.language,
-                        page_no=pending_page or clause.page_no,
+                        page_no=clause.page_no,
                         end_year=clause.end_year,
                         recency_weight=clause.recency_weight,
+                    ))
+                    part_idx += 1
+                    part_buf  = [sent]
+                    part_tok  = st
+                else:
+                    part_buf.append(sent)
+                    part_tok += st
+
+            if part_buf:
+                suffix = ("__p" + str(part_idx)) if part_idx > 1 else ""
+                result.append(RawClause(
+                    article_number=clause.article_number,
+                    clause_id=clause.clause_id + suffix,
+                    section_title=clause.section_title,
+                    text=" ".join(part_buf).strip(),
+                    language=clause.language,
+                    page_no=clause.page_no,
+                    end_year=clause.end_year,
+                    recency_weight=clause.recency_weight,
+                ))
+
+        logger.info("After long-split: %d final clauses", len(result))
+        return result
+
+    # ------------------------------------------------------------------
+    # Step D: Convert to LlamaIndex TextNode list
+    # ------------------------------------------------------------------
+
+    def _to_text_nodes(self, clauses: List[RawClause]) -> List[TextNode]:
+        nodes: List[TextNode] = []
+        for idx, clause in enumerate(clauses):
+            node = TextNode(
+                id_=str(uuid.uuid4()),
+                text=clause.text,
