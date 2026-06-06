@@ -1,90 +1,105 @@
-                    )
-                    pending_texts.clear()
-                    pending_page = 0
-                merged.append(clause)
-
-        if pending_texts and merged:
-            last     = merged[-1]
-            combined = last.text + "\n" + "\n".join(pending_texts)
-            merged[-1] = RawClause(
-                article_number=last.article_number,
-                clause_id=last.clause_id,
-                section_title=last.section_title,
-                text=combined.strip(),
-                language=last.language,
-                page_no=last.page_no,
-                end_year=last.end_year,
-                recency_weight=last.recency_weight,
+                metadata={
+                    "article_number":  clause.article_number,
+                    "clause_id":       clause.clause_id,
+                    "section_title":   clause.section_title,
+                    "language":        clause.language,
+                    "page_no":         str(clause.page_no),
+                    "token_count":     str(clause.tokens),
+                    "chunk_index":     str(idx),
+                    "doc_source":      "lufa_collective_agreement",
+                    "end_year":        str(clause.end_year) if clause.end_year else "",
+                    "recency_weight":  str(clause.recency_weight),
+                },
             )
+            node.excluded_embed_metadata_keys = [
+                "token_count", "chunk_index", "doc_source",
+                "page_no", "end_year", "recency_weight",
+            ]
+            node.excluded_llm_metadata_keys = [
+                "token_count", "chunk_index",
+            ]
+            nodes.append(node)
+        return nodes
 
-        logger.info(
-            "After merge: %d clauses (removed %d short)",
-            len(merged), len(clauses) - len(merged),
-        )
-        return merged
+    @staticmethod
+    def _normalise_id(raw: str) -> str:
+        normalised = re.sub(r"\(([a-z]+)\)", r".\1", raw)
+        return normalised.strip(" .")
 
-    # ------------------------------------------------------------------
-    # Step C: Split clauses above max_tokens
-    # ------------------------------------------------------------------
 
-    def _split_long_clauses(self, clauses: List[RawClause]) -> List[RawClause]:
-        result: List[RawClause] = []
-        sent_boundary = re.compile(r"(?<=[.!?])\s+(?=[A-Z\u00C0-\u00FF])")
+# ===========================================================================
+# 6. CONVENIENCE WRAPPER
+# ===========================================================================
 
-        for clause in clauses:
-            if clause.tokens <= self.max_tokens:
-                result.append(clause)
-                continue
+def ingest_pdf(
+    pdf_path,
+    language_override: Optional[str] = None,
+    min_tokens: int = 30,
+    max_tokens: int = 512,
+    min_year: int = CORPUS_MIN_YEAR,
+    max_year: int = CORPUS_MAX_YEAR,
+) -> List[TextNode]:
+    path = Path(pdf_path)
+    if not path.exists():
+        raise FileNotFoundError("PDF not found: " + str(path.resolve()))
 
-            sentences = sent_boundary.split(clause.text)
-            part_buf: List[str] = []
-            part_tok  = 0
-            part_idx  = 1
+    chunker = ClauseBoundaryChunker(
+        min_tokens=min_tokens,
+        max_tokens=max_tokens,
+        language_override=language_override,
+        min_year=min_year,
+        max_year=max_year,
+    )
+    return chunker.chunk_pdf(path)
 
-            for sent in sentences:
-                st = token_count(sent)
-                if part_tok + st > self.max_tokens and part_buf:
-                    suffix = ("__p" + str(part_idx)) if part_idx > 1 else ""
-                    result.append(RawClause(
-                        article_number=clause.article_number,
-                        clause_id=clause.clause_id + suffix,
-                        section_title=clause.section_title,
-                        text=" ".join(part_buf).strip(),
-                        language=clause.language,
-                        page_no=clause.page_no,
-                        end_year=clause.end_year,
-                        recency_weight=clause.recency_weight,
-                    ))
-                    part_idx += 1
-                    part_buf  = [sent]
-                    part_tok  = st
-                else:
-                    part_buf.append(sent)
-                    part_tok += st
 
-            if part_buf:
-                suffix = ("__p" + str(part_idx)) if part_idx > 1 else ""
-                result.append(RawClause(
-                    article_number=clause.article_number,
-                    clause_id=clause.clause_id + suffix,
-                    section_title=clause.section_title,
-                    text=" ".join(part_buf).strip(),
-                    language=clause.language,
-                    page_no=clause.page_no,
-                    end_year=clause.end_year,
-                    recency_weight=clause.recency_weight,
-                ))
+# ===========================================================================
+# 7. CSV / JSONL OUTPUT HELPER
+# ===========================================================================
 
-        logger.info("After long-split: %d final clauses", len(result))
-        return result
+def save_outputs(nodes: List[TextNode], out_prefix: str) -> tuple:
+    import pandas as pd
 
-    # ------------------------------------------------------------------
-    # Step D: Convert to LlamaIndex TextNode list
-    # ------------------------------------------------------------------
+    Path(out_prefix).parent.mkdir(parents=True, exist_ok=True)
 
-    def _to_text_nodes(self, clauses: List[RawClause]) -> List[TextNode]:
-        nodes: List[TextNode] = []
-        for idx, clause in enumerate(clauses):
-            node = TextNode(
-                id_=str(uuid.uuid4()),
-                text=clause.text,
+    rows = [
+        {
+            "chunk_id":       n.node_id,
+            "text":           n.text,
+            **n.metadata,
+        }
+        for n in nodes
+    ]
+
+    csv_path   = f"{out_prefix}.csv"
+    jsonl_path = f"{out_prefix}.jsonl"
+
+    pd.DataFrame(rows).to_csv(csv_path, index=False)
+    with open(jsonl_path, "w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+    logger.info("Saved %d chunks -> %s  |  %s", len(nodes), csv_path, jsonl_path)
+    return csv_path, jsonl_path
+
+
+# ===========================================================================
+# 8. FULL PIPELINE RUNNER
+# ===========================================================================
+
+def run_ingestion_pipeline(
+    en_pdf_path,
+    fr_pdf_path,
+    chroma_persist_dir: str = "./chroma_db",
+    collection_en: str = "lufa_en",
+    collection_fr: str = "lufa_fr",
+    min_year: int = CORPUS_MIN_YEAR,
+    max_year: int = CORPUS_MAX_YEAR,
+) -> dict:
+    try:
+        import chromadb
+        from llama_index.vector_stores.chroma import ChromaVectorStore
+        from llama_index.core import StorageContext, VectorStoreIndex
+        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+    except ImportError as exc:
+        raise ImportError("Missing optional dependencies for vector storage.") from exc
