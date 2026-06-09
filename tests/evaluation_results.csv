@@ -1,0 +1,1179 @@
+question_id,question,answer,base_model_used,language,attempts,grounded,source1_id,source1_score,source1_text,source2_id,source2_score,source2_text,source3_id,source3_score,source3_text,source4_id,source4_score,source4_text,source5_id,source5_score,source5_text,original_cosine_score,recency_adjusted_score,RRF,id,rag_base_model,judge_llm,category,difficulty,token_f1_score,sentence_bleu_score,rouge1,rouge2,rougeL,meteor,mrr,ndcg_at_k,recall_1,recall_3,recall_5,answer_relevance,faithfulness,context_precision
+test_en_001,What is the primary purpose of the collective agreement?,"Unfortunately, the provided text does not explicitly state the primary purpose of the collective agreement. However, based on the context and the various sections that outline the salary structure, benefits, and working conditions for faculty members, it can be inferred that the primary purpose of the collective agreement is to establish a framework for the employment and working conditions of faculty members at Laurentian University.
+
+One possible interpretation is that the primary purpose of the collective agreement is to provide a fair and equitable framework for the employment of faculty members, including their salaries, benefits, and working conditions, as outlined in sections such as 8.10 - Salary Structure, 8.15 - Progress-Through-The-Ranks Increments, and 5.10 - Academic Qualifications Guidelines.
+
+However, without further information, it is not possible to determine the primary purpose of the collective agreement with certainty.",llama3.2:3b-instruct-q4_K_M,English,2,True,8d3355c4-affc-4615-8f45-5243f5f6e42f,0.435,"For all ranks, where a Member’s salary exceeds $166,762 per annum, the PTR will be nil.
+(c) Additional qualification increments shall be awarded pursuant to Article
+8.30 – Additional Qualifications
+In...",8d3355c4-affc-4615-8f45-5243f5f6e42f,0.435,"For all ranks, where a Member’s salary exceeds $166,762 per annum, the PTR will be nil.
+(c) Additional qualification increments shall be awarded pursuant to Article
+8.30 – Additional Qualifications
+In...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4395,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",fc8d5dca-a890-487e-814f-932649528497,0.0164,"However, if the parties agree, they may appoint another
+person as arbitrator if Mr. Teplitsky is incapacitated.
+b) A progress-through-the rank increment for the evaluation
+carried out for the year 200...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4395,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",0.43504,0.43504,0.029857,test_en_001,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,General Provisions,easy,0.2766,0.0176,0.2169,0.0488,0.1687,0.292,0.0,0.0,0.0,0.0,0.0,0.8,1.0,1.0
+test_en_002,Who is recognized as the exclusive bargaining agent for full-time faculty?,"The exclusive bargaining agent for full-time faculty is not explicitly stated in the provided text. The text does mention the Laurentian University Faculty Association (LUFA) as the representative body for the bargaining unit, but it does not explicitly state that LUFA is the exclusive bargaining agent for full-time faculty.",llama3.2:3b-instruct-q4_K_M,English,2,True,c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4855,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4855,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",474ffcb6-367d-493a-8bc6-13c2482e8d1e,0.4383,"The workload shall include an additional 3 credits to be used towards teaching, governance or scholarly
+work at the discretion of the member.
+7
+<<>>
+Collective Agreement 2017-2020
+Members may request ...",afa63931-280b-40f6-839b-f8f30a9e93d8,0.4441,"Year 1 (July 1, 2020 – June 30, 2021)
+(i) ATB to Base Salary: 0%
+(ii) Annual Progress-Through-the-Ranks: $0
+(iii) Promotion and Additional Qualifications: $2,900
+Year 2 (July 1, 2021 – June 30, 2022)
+...",01e33ebb-9451-4c36-988d-e479381053bc,0.0159,"If
+the short list contains fewer than three (3) names, this change can only be an additional name. Alternatively, the Dean/University Librarian shall work together with the
+Department/School to substi...",0.4855,0.4855,0.032787,test_en_002,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Union Recognition,easy,0.5366,0.148,0.375,0.3226,0.3438,0.6434,0.0,0.0,0.0,0.0,0.0,0.4,0.8,1.0
+test_en_003,Does the University of Sudbury collective agreement cover part-time instructors?,"The question does not explicitly state that the collective agreement covers part-time instructors. However, based on the information provided, it appears that the collective agreement does not have a specific clause explicitly stating that it covers part-time instructors.
+
+The definitions section of the collective agreement (Article 2.10 - RECOGNITION OF THE EMPLOYER) does not explicitly include a definition for ""part-time instructor"". Instead, it defines Sessional Instructors and Adjunct appointments, which are similar but not identical to part-time instructors.
+
+The definitions section does include a definition for Sessional Instructors, which are ""Sessional Instructors shall mean persons appointed on a Sessional appointment under this Agreement..."" (Article 2.10 - RECOGNITION OF THE EMPLOYER, section 2.10.2).
+
+Additionally, the collective agreement defines Sessional Seniority, which refers to credits earned by Sessional Instructors (Article 2.10 - RECOGNITION OF THE EMPLOYER, section 2.10.2, subsection u).
+
+It's possible that part-time instructors are not covered under the collective agreement, but without further information, it's difficult to say for certain.",llama3.2:3b-instruct-q4_K_M,English,1,True,4852de47-ad26-4d96-9fc9-d44fb8e09732,0.429,"Sessional Members shall be covered by the general provisions
+regarding teaching and professional librarianship of Article 2.00 paragraph 3,
+A1 Teaching and A2 Professional Librarianship except for spe...",9ad16055-95a7-441e-a281-7306003c8096,0.4251,"Adjunct
+appointments do not have ranks or carry the right to vote in Department/School decision- making.
+(r) Academic Year shall mean the twelve (12) month period commencing July 1 and ending
+June 30 ...",9ad16055-95a7-441e-a281-7306003c8096,0.4251,"Adjunct
+appointments do not have ranks or carry the right to vote in Department/School decision- making.
+(r) Academic Year shall mean the twelve (12) month period commencing July 1 and ending
+June 30 ...",66aca9a5-02d3-467d-9dca-9d925febd4a2,0.0161,"11.23 The University is not responsible for expenses incurred by the sessional to attend work wherever the work is
+located, unless mutually agreed to by the parties.
+11.24 Sessional Contracts and Cont...",9ad16055-95a7-441e-a281-7306003c8096,0.4431,"Adjunct appointments do not have ranks or carry the
+right to vote in Department/School decision- making.
+(r) Academic Year shall mean the twelve (12) month period commencing July 1 and ending
+June 30 ...",0.429041,0.429041,0.031778,test_en_003,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Bargaining Unit,medium,0.1739,0.012,0.1237,0.0312,0.1134,0.2397,0.0,0.0,0.0,0.0,0.0,0.8,0.8,1.0
+test_en_004,How is academic freedom defined?,"According to Article 3.10, academic freedom is defined as the freedom to examine, question, teach, and learn, including the right to investigate, speculate, and comment publicly, to carry out research and to disseminate the results thereof. (Article 3.10.1)
+
+In more detail, academic freedom includes the right to:
+
+* Freedom in teaching
+* Freedom in research and scholarship, including the right to disseminate and publish the results thereof
+* Freedom to produce and perform creative works
+* Freedom to acquire, preserve, and provide access to documentary material in all formats
+* Freedom to participate in professional and representative academic bodies
+* Freedom to engage in service to the institution and the community
+* Freedom to express one’s opinion about the University, its administration, and the system in which one works. (Article 3.10.2)",llama3.2:3b-instruct-q4_K_M,English,1,True,8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.5623,"Academic freedom is the right to search for truth, knowledge and understanding and to express freely what one believes. The
+University as an institution and the community of its scholars have a duty t...",c4372400-441b-4afa-ad53-784efbb6305b,0.5385,"0.02 Academic freedom
+(a) As the fundamental objective of the University is the search for new knowledge and the free dissemination of what is
+known, academic freedom is essential to its teaching and ...",8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.5623,"Academic freedom is the right to search for truth, knowledge and understanding and to express freely what one believes. The
+University as an institution and the community of its scholars have a duty t...",c4372400-441b-4afa-ad53-784efbb6305b,0.5385,"0.02 Academic freedom
+(a) As the fundamental objective of the University is the search for new knowledge and the free dissemination of what is
+known, academic freedom is essential to its teaching and ...",8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.4711,"Academic
+freedom is the right to search for truth, knowledge and understanding and to express freely what one
+believes. The University as an institution and the community of its scholars have a duty t...",0.562341,0.562341,0.032266,test_en_004,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Academic Freedom,easy,0.2143,0.022,0.1477,0.0816,0.1477,0.2451,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_005,Does academic freedom protect faculty from disciplinary action for their research?,"According to Article 3.10.2 of the Collective Agreement 2017-2020, academic freedom does not confer legal immunity. It requires the acknowledgement of the work of others and the acceptance of responsibility for one's own beliefs and utterances.
+
+In other words, academic freedom does not protect faculty from disciplinary action for their research, but it does protect their right to conduct research and express their opinions freely, without restriction by prescribed doctrine.
+
+(See Article 3.10.2 on page 11 of the Collective Agreement 2017-2020)",llama3.2:3b-instruct-q4_K_M,English,1,True,c4372400-441b-4afa-ad53-784efbb6305b,0.4996,"0.02 Academic freedom
+(a) As the fundamental objective of the University is the search for new knowledge and the free dissemination of what is
+known, academic freedom is essential to its teaching and ...",c4372400-441b-4afa-ad53-784efbb6305b,0.4996,"0.02 Academic freedom
+(a) As the fundamental objective of the University is the search for new knowledge and the free dissemination of what is
+known, academic freedom is essential to its teaching and ...",8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.4639,"Academic freedom is the right to search for truth, knowledge and understanding and to express freely what one believes. The
+University as an institution and the community of its scholars have a duty t...",8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.4639,"Academic freedom is the right to search for truth, knowledge and understanding and to express freely what one believes. The
+University as an institution and the community of its scholars have a duty t...",8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.4319,"Academic
+freedom is the right to search for truth, knowledge and understanding and to express freely what one
+believes. The University as an institution and the community of its scholars have a duty t...",0.499648,0.499648,0.032266,test_en_005,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Academic Freedom,medium,0.2105,0.013,0.1698,0.0385,0.0943,0.2753,1.0,1.6309,1.0,1.0,1.0,0.8,1.0,1.0
+test_en_006,What constitutes a grievance?,"According to Article 23 of the Laurentian University Faculty Association collective agreement, a grievance is defined as a claim, dispute, or complaint involving the interpretation, application, administration, or alleged violation of this collective agreement (LUFA-H Collective Agreement 2016-2020, Article 23.01).",llama3.2:3b-instruct-q4_K_M,English,1,True,c1094f8d-b014-4d11-8fe3-179828142eba,0.5265,"35.02 There are three types of grievance: an individual grievance, on behalf of one Member; a
+group grievance, on behalf of a group of Members similarly affected by an Employer action;
+and a policy gr...",afa63931-280b-40f6-839b-f8f30a9e93d8,0.0164,"Year 1 (July 1, 2020 – June 30, 2021)
+(i) ATB to Base Salary: 0%
+(ii) Annual Progress-Through-the-Ranks: $0
+(iii) Promotion and Additional Qualifications: $2,900
+Year 2 (July 1, 2021 – June 30, 2022)
+...",3d1e87be-5ea9-4780-9f85-fd2d326e8cb6,0.5301,"ARTICLE 23 – GRIEVANCE PROCEDURE
+23.01 A grievance is a claim, dispute, or complaint involving the interpretation, application, administration or alleged
+violation of this collective agreement. Grieva...",bb98a246-93bb-4c16-8797-03dd03297fb5,0.0161,"You need to understand how likely it is that a worker
+will get hurt or made sick by the hazard.
+12
+2017-2020 Thorneloe-LUFA Collective Agreement 115
+<<>>
++ Control the hazards by looking for ways to g...",3d1e87be-5ea9-4780-9f85-fd2d326e8cb6,0.5301,"ARTICLE 23 – GRIEVANCE PROCEDURE
+23.01 A grievance is a claim, dispute, or complaint involving the interpretation, application, administration or alleged
+violation of this collective agreement. Grieva...",0.526473,0.526473,0.016393,test_en_006,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Grievance,easy,0.5385,0.1426,0.5075,0.2769,0.4179,0.5896,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_007,What are the steps in the grievance procedure?,"According to Article 11.10 of the Collective Agreement, the steps in the grievance procedure are not explicitly listed, but rather the types of grievances that can be filed. However, the steps mentioned in the grievance procedure are as follows:
+
+1. Filing a grievance: A grievance can be filed by the Union on behalf of a Member or group of Members (Individual Grievance), the Union on behalf of a group of Members (Group Grievance), the Union on a matter of general policy or application of the Collective Agreement (Policy Grievance), or the Union on a matter that directly affects the Union (Union Grievance).
+2. Filing with the Employer: The grievance can also be filed by the Employer on behalf of an individual Member or group of Members (Employer Grievance).
+3. Informal resolution: The parties are required to make every reasonable effort to settle all grievances in a prompt, just and equitable manner through informal means.
+4. Written submission: All communications required under the grievance procedure must be in writing and delivered by email, registered mail, or with written proof of receipt.
+
+Note that the grievance procedure does not specify a step-by-step process for resolving a grievance, but rather outlines the types of grievances that can be filed and the requirements for communicating during the procedure.",llama3.2:3b-instruct-q4_K_M,English,2,True,fcc78181-1fdc-4076-8525-ead4a7421574,0.535,"23.04 Employer Grievance
+(a) The Employer shall have the right to lodge a grievance with the Union concerning the meaning, application or
+interpretation ofany provision ofthis
+Agreement commencing at ...",678161da-8333-4b8d-99ee-53b35525c8bb,0.0164,"If they are unsuccessful in agreeing upon such a chairperson within a period of twenty (20) working days of the
+appointment of the second nominee, they shall request the
+Minister of Labour for Ontario...",fcc78181-1fdc-4076-8525-ead4a7421574,0.535,"23.04 Employer Grievance
+(a) The Employer shall have the right to lodge a grievance with the Union concerning the meaning, application or
+interpretation ofany provision ofthis
+Agreement commencing at ...",678161da-8333-4b8d-99ee-53b35525c8bb,0.0161,"If they are unsuccessful in agreeing upon such a chairperson within a period of twenty (20) working days of the
+appointment of the second nominee, they shall request the
+Minister of Labour for Ontario...",79e5c279-ce00-43ab-8971-02035017af63,0.4991,"ARTICLE 11.10 – GRIEVANCE PROCEDURE
+11.10.1 There shall be no discrimination, harassment or coercion, of any kind, practised
+against any persons involved in these procedures.
+11.10.2 The Union and the...",0.535032,0.535032,0.016393,test_en_007,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Grievance,medium,0.1681,0.009,0.1143,0.0165,0.0898,0.1493,0.0,0.0,0.0,0.0,0.0,0.6,1.0,1.0
+test_en_008,Can the Union file a policy grievance on behalf of multiple members?,"According to Article 11.10.3(e), a policy grievance is a grievance by a Union that may involve a matter of general policy or of general application of the Collective Agreement.
+
+The article does not specifically state that the Union can only file a policy grievance on behalf of a single member. However, it does state that a policy grievance is a grievance by a Union that may involve a matter of general policy or of general application of the Collective Agreement.
+
+In general, the article does not provide any restrictions on the number of members that can be included in a policy grievance. Therefore, it is reasonable to assume that the Union can file a policy grievance on behalf of multiple members, as long as the grievance is related to a matter of general policy or general application of the Collective Agreement.
+
+However, it is worth noting that the article does not provide any specific guidance on how the Union should proceed in such cases, and it is ultimately up to the Union and the Employer to negotiate and agree on the scope and procedures for the grievance.",llama3.2:3b-instruct-q4_K_M,English,3,True,79e5c279-ce00-43ab-8971-02035017af63,0.4627,"ARTICLE 11.10 – GRIEVANCE PROCEDURE
+11.10.1 There shall be no discrimination, harassment or coercion, of any kind, practised
+against any persons involved in these procedures.
+11.10.2 The Union and the...",2894b142-cfb3-47f2-8c28-de192ad806e1,0.0164,"Article 2.15.1 will be amended to add as a 4th paragraph that the bargaining unit includes:
+- All persons employed by Laurentian University in the job classification of Counsellors,
+save and except, m...",79e5c279-ce00-43ab-8971-02035017af63,0.4804,"GRIEVANCE AND ARBITRATION
+ARTICLE 11.10 – GRIEVANCE PROCEDURE
+11.10.1 There shall be no discrimination, harassment or coercion, of any kind, practised against any persons involved in
+these procedures....",2894b142-cfb3-47f2-8c28-de192ad806e1,0.0161,"Article 2.15.1 will be amended to add as a 4th paragraph that the bargaining unit includes:
+- All persons employed by Laurentian University in the job classification of Counsellors,
+save and except, m...",79e5c279-ce00-43ab-8971-02035017af63,0.4804,"GRIEVANCE AND ARBITRATION
+ARTICLE 11.10 – GRIEVANCE PROCEDURE
+11.10.1 There shall be no discrimination, harassment or coercion, of any kind, practised against any persons involved in
+these procedures....",0.462748,0.462748,0.016393,test_en_008,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Grievance,medium,0.2609,0.0231,0.1659,0.0744,0.1198,0.3374,0.0,0.0,0.0,0.0,0.0,0.6,0.8,0.4
+test_en_010,Is discrimination on the basis of political affiliation permitted?,"No, discrimination on the basis of political affiliation is not permitted according to Article 3.15.3 (b) of the Collective Agreement, which states: ""b) The Parties agree, however, that no Members or person acting as an officer of the University shall take part in formal discussions or vote with respect to the determination of any term or condition of employment of a member of her/his immediate family as defined in Article 1.30 – Definitions.""
+
+This article prohibits Members from participating in discussions or votes that would affect the employment terms of their immediate family members, and by extension, it can be inferred that it also prohibits discrimination on the basis of political affiliation.",llama3.2:3b-instruct-q4_K_M,English,3,True,4f269396-c101-4bbc-9133-9abbd04fd702,0.3702,"To that end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor
+and has created a discrimination and harassment policy.
+3.15.2 The Parties agree that in accordance wi...",4f269396-c101-4bbc-9133-9abbd04fd702,0.3521,"To that
+end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor and has created a
+discrimination and harassment policy.
+3.15.2 (a) The Parties agree that in accordanc...",4f269396-c101-4bbc-9133-9abbd04fd702,0.3683,"To that end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor
+and has created a discrimination and harassment policy.
+3.15.2 The Parties agree that in accordance wi...",4f269396-c101-4bbc-9133-9abbd04fd702,0.3521,"To that
+end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor and has created a
+discrimination and harassment policy.
+3.15.2 (a) The Parties agree that in accordanc...",47bded3c-7dce-4d22-a26f-6fb5111a02ec,0.361,"3.03 The choice of the most competent person for any position described in formally approved
+job descriptions will not constitute discrimination.
+3.04 Nothing in this Article shall be interpreted to p...",0.370158,0.370158,0.032018,test_en_010,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Non-Discrimination,easy,0.2069,0.0167,0.1406,0.0476,0.125,0.3305,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6
+test_en_011,What grounds of discrimination are prohibited?,"According to Article 3.01 of the Collective Agreement, the grounds of discrimination that are prohibited are:
+
+* Age (as defined in the Ontario Human Rights Code)
+* Race
+* Creed
+* Colour
+* Ancestry
+* Ethnic or cultural background
+* National origin
+* Political or religious affiliation or belief
+* Sex
+* Sexual orientation
+* Gender identity
+* Gender expression
+* Marital status
+* Family relationship
+* Personal or social life style or behavior
+* Clerical or lay status
+* Disability
+
+These grounds are prohibited in regard to salaries, rank, appointment, promotion, tenure, reappointment, dismissal, leaves, benefits, or any other matter arising from the Collective Agreement.",llama3.2:3b-instruct-q4_K_M,English,2,True,4f269396-c101-4bbc-9133-9abbd04fd702,0.4043,"To that end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor
+and has created a discrimination and harassment policy.
+3.15.2 The Parties agree that in accordance wi...",4f269396-c101-4bbc-9133-9abbd04fd702,0.403,"To that end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor
+and has created a discrimination and harassment policy.
+3.15.2 The Parties agree that in accordance wi...",a649a63a-d79e-4e91-84d5-5bc3afeef136,0.4133,"ARTICLE 3 – WORKPLACE ENVIRONMENT
+3.01 No Discrimination – Human Rights Code
+The Parties agree that there shall be no discrimination, interference, restriction or coercion exercised or practiced with
+...",a649a63a-d79e-4e91-84d5-5bc3afeef136,0.4133,"ARTICLE 3 – WORKPLACE ENVIRONMENT
+3.01 No Discrimination – Human Rights Code
+The Parties agree that there shall be no discrimination, interference, restriction or coercion exercised or practiced with
+...",658662d3-0c53-4e6f-85e3-dd2d824a87ea,0.4426,"ARTICLE 3 — NO DISCRIMINATION
+3.01 Human Rights Code: The Parties agree to abide by the Ontario Human Rights Code. There
+shall be no discrimination or harassment exercised or practiced with respect to...",0.404263,0.404263,0.031514,test_en_011,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Non-Discrimination,medium,0.3736,0.0321,0.3186,0.0721,0.2301,0.4823,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_012,What is the standard normal teaching load for a tenure-track faculty member?,"According to Article 10.07(c)(i), the standard normal teaching load for a full-time faculty member is 15 credits per academic year, which includes a minimum of 12 credits of live teaching.",llama3.2:3b-instruct-q4_K_M,English,1,True,78b84e7c-a90f-4089-9571-3c303a1d0a5e,0.4334,"All leaves.
+5.40.4 The composition of the workload of Members may vary with their discipline, and will take into account the
+capabilities of the Members, the need to maximize their potential and any o...",101a3771-8f41-4a64-b72e-7f5c38569842,0.4186,"10.07 Annual Academic Workload
+(a) The President must ensure that the annual academic workload is determined, distributed, and scheduled as equitably
+as possible. The member’s assigned annual academic...",78b84e7c-a90f-4089-9571-3c303a1d0a5e,0.4334,"All leaves.
+5.40.4 The composition of the workload of Members may vary with their discipline, and will take into account the
+capabilities of the Members, the need to maximize their potential and any o...",101a3771-8f41-4a64-b72e-7f5c38569842,0.4186,"10.07 Annual Academic Workload
+(a) The President must ensure that the annual academic workload is determined, distributed, and scheduled as equitably
+as possible. The member’s assigned annual academic...",78b84e7c-a90f-4089-9571-3c303a1d0a5e,0.4292,"Faculty outreach and liaison, including participation in research and support for scholarly
+communication;
+viii. Evaluation, measurement and analysis of user needs and library services and resources;
+...",0.43337,0.43337,0.03055,test_en_012,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Workload,medium,0.4151,0.0785,0.4138,0.1786,0.3448,0.3411,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_013,How are workload reductions granted?,"According to Article 7.35 of the Collective Agreement, workload reductions are granted through a voluntary reduced workload arrangement. 
+
+1. A full-time member of the bargaining unit must request a temporary reduction in workload, which can be up to 50% of their normal workload, with a proportionate reduction in salary and annual vacation entitlement.
+2. The request must be made at least 3 months in advance to the department/school and the Dean/University Librarian.
+3. The Dean/University Librarian must approve the request, and the approval should not be unreasonably withheld.
+4. The university may grant longer periods of reduction or renewal of the reduction period with the Dean's/University Librarian's approval.",llama3.2:3b-instruct-q4_K_M,English,1,True,2e0ea4a9-0afe-4bcc-9bf4-a3546b6f94f7,0.377,"The report shall become part of their personnel file.
+(c) Time spent on study leave does not count towards sabbatical credit.
+7.30.6 Appointments while on Leave
+1
+<<>>
+Collective Agreement 2017-2020
+A...",2e0ea4a9-0afe-4bcc-9bf4-a3546b6f94f7,0.377,"The report shall become part of their personnel file.
+(c) Time spent on study leave does not count towards sabbatical credit.
+7.30.6 Appointments while on Leave
+1
+<<>>
+Collective Agreement 2017-2020
+A...",6a368cfd-cd20-4bc0-9cdf-2ec1474dcbb0,0.3873,"The onus shall be on the
+Employer to show that the proposed reductions are consistent with normal workloads as defined in Article 5.40 –
+Academic Workload and that the proposed reductions will not cre...",e6acfdad-1d48-48b3-9809-6ff02986b98d,0.3915,"ARTICLE 7.35 – VOLUNTARY REDUCED WORKLOAD
+7.35.1 The Employer and the Union endorse the principle of voluntary reduced workload as being mutually beneficial to
+the Members and the institution. Any ful...",6a368cfd-cd20-4bc0-9cdf-2ec1474dcbb0,0.3873,"The onus shall be on the
+Employer to show that the proposed reductions are consistent with normal workloads as defined in Article 5.40 –
+Academic Workload and that the proposed reductions will not cre...",0.377049,0.377049,0.031746,test_en_013,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Workload,medium,0.1395,0.0094,0.0909,0.0308,0.0909,0.1154,0.0,0.0,0.0,0.0,0.0,1.0,0.8,1.0
+test_en_014,Are faculty members required to participate in university governance?,"Yes, faculty members are required to participate in university governance, as stated in Article 5.15.27 of the Collective Agreement. The Agreement states that to the extent consistent with their teaching/library and scholarly responsibilities, Members shall contribute to the governance of the University through membership on appropriate bodies. It also notes that for the purposes of this Article, service to the Union will be considered equivalent to service on Department/School or Senate Committees.
+
+Additionally, Article 10.04(a) of the Collective Agreement states that each member is entitled and expected to share in a reasonable amount of the administrative responsibilities of the University, including participation in Faculty Affairs Committee, Senate, Board of Regents, and other administrative bodies necessitated by the University's commitments.
+
+This requirement applies to full-time faculty members, as indicated in the context.",llama3.2:3b-instruct-q4_K_M,English,1,True,1493c8d1-7f60-4401-855e-f6ea4de87c87,0.433,"The Department/School will post the office hours.
+5.15.7 A Member shall not be required to co-teach a course without the Member’s consent.
+5.15.8 Members shall comply with all properly established reg...",65260c5d-e54c-43e4-9c73-5d84c0b27817,0.0164,"In addition to those activities listed above (a-n), Indigenous Scholarship is recognized as a primary
+category of scholarly contribution and includes but is not limited to:
+i. Development and sharing ...",96fbd964-5763-4cee-aadf-0ed08d750790,0.453,"10.04 University Service
+(a) Each member is entitled and expected to share in a reasonable amount of the administrative responsibilities of the
+University, including participation in Faculty Affairs C...",65260c5d-e54c-43e4-9c73-5d84c0b27817,0.0161,"In addition to those activities listed above (a-n), Indigenous Scholarship is recognized as a primary
+category of scholarly contribution and includes but is not limited to:
+i. Development and sharing ...",96fbd964-5763-4cee-aadf-0ed08d750790,0.453,"10.04 University Service
+(a) Each member is entitled and expected to share in a reasonable amount of the administrative responsibilities of the
+University, including participation in Faculty Affairs C...",0.432993,0.432993,0.016393,test_en_014,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Workload,easy,0.3178,0.0223,0.2222,0.075,0.1481,0.3011,0.5,1.0616,0.0,1.0,1.0,1.0,0.8,0.6
+test_en_015,What is the procedure for establishing a new faculty position?,"According to Article 13.08, the rank and starting salary of a new appointment shall be established by the President, considering the new appointee's teaching, research, and/or other relevant professional experience.",llama3.2:3b-instruct-q4_K_M,English,3,True,c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4259,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4259,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4226,"The Salary Structure for the Academic Year 2022-2023
+8.10.3 The salary of each Member shall be composed of the base salary of each Member as of June 30, 2022 as
+modified by the following items:
+(a) Fo...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4226,"The Salary Structure for the Academic Year 2022-2023
+8.10.3 The salary of each Member shall be composed of the base salary of each Member as of June 30, 2022 as
+modified by the following items:
+(a) Fo...",44f25ba8-aa87-4011-882f-c39299def7a9,0.4324,"Members may request one day free from teaching for teaching preparation and grading. This request shall
+not be unreasonably denied. In order to promote scholarly activity and professional development,...",0.425884,0.425884,0.031778,test_en_015,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Appointments,hard,0.2979,0.0503,0.3774,0.0784,0.2642,0.3224,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_016,What are the ranks of faculty appointments?,"According to Article 11.02 of the Collective Agreement, the ranks of faculty appointments are:
+
+1. Full Professor
+2. Associate Professor
+3. Assistant Professor
+4. Lecturer
+
+Note that these ranks are not categories, but rather specific titles that represent different levels of appointment.",llama3.2:3b-instruct-q4_K_M,English,2,True,8d3355c4-affc-4615-8f45-5243f5f6e42f,0.4718,"For all ranks, where a Member’s salary exceeds $166,762 per annum, the PTR will be nil.
+(c) Additional qualification increments shall be awarded pursuant to Article
+8.30 – Additional Qualifications
+In...",474ffcb6-367d-493a-8bc6-13c2482e8d1e,0.4874,"The workload shall include an additional 3 credits to be used towards teaching, governance or scholarly
+work at the discretion of the member.
+7
+<<>>
+Collective Agreement 2017-2020
+Members may request ...",8d3355c4-affc-4615-8f45-5243f5f6e42f,0.4718,"For all ranks, where a Member’s salary exceeds $166,762 per annum, the PTR will be nil.
+(c) Additional qualification increments shall be awarded pursuant to Article
+8.30 – Additional Qualifications
+In...",474ffcb6-367d-493a-8bc6-13c2482e8d1e,0.4874,"The workload shall include an additional 3 credits to be used towards teaching, governance or scholarly
+work at the discretion of the member.
+7
+<<>>
+Collective Agreement 2017-2020
+Members may request ...",60633cd4-2414-4b30-a9a5-962bbfddc777,0.4925,"11.02 Ranks of Appointment
+All initial appointments offull-time faculty members shall be at one ofthe following ranks:
+Full Professor
+Associate Professor
+Assistant Professor
+Lecturer
+11.03 Categories ...",0.4718,0.4718,0.029958,test_en_016,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Appointments,easy,0.3636,0.0331,0.3704,0.1923,0.2593,0.5239,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.8
+test_en_017,How long is the initial probationary period for a tenure-track Assistant Professor?,"According to Article 5.20.22, the initial probationary appointment for a tenure-track Assistant Professor/Librarian shall be for a period of three (3) years.",llama3.2:3b-instruct-q4_K_M,English,2,True,c4c5f432-d679-4d55-a948-502d6d03b892,0.4891,"In the case of persons appointed at the rank of Lecturer/ General
+Librarian and Assistant Professor/Assistant Librarian, the initial probationary
+appointment shall be for a period of three (3) years.
+...",c4c5f432-d679-4d55-a948-502d6d03b892,0.4472,"Should such a Member be
+appointed to the position, it shall be a final probationary appointment of one (1) year with tenure evaluation
+to begin by September 30 of that year.
+5.20.23 In the case of per...",5a314ad9-bc1a-4483-932c-42020d4aa44e,0.4751,"Under exceptional circumstances and upon
+recommendation of both the Department/School and the Vice-President,
+Academic, where a Member is appointed at the rank of Associate Professor/Librarian the Uni...",4bc90158-eb5f-478c-934d-49a942035104,0.45,"Replacements of Members absent due to
+illness or disability, on sick leave (per Article 5.45) or on pregnancy or parental leave
+(per Article 5.50) shall not be included within this one-third total.
+4....",5a314ad9-bc1a-4483-932c-42020d4aa44e,0.4711,"Under exceptional circumstances and upon
+recommendation of both the
+Department/School and the Vice-President,
+Academic and Provost, where a Member is appointed at the rank of Associate Professor/Libra...",0.489051,0.489051,0.031778,test_en_017,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Tenure,medium,0.4211,0.0617,0.381,0.1,0.2857,0.313,0.25,0.4307,0.0,0.0,1.0,1.0,0.6,0.6
+test_en_018,When must a faculty member apply for tenure?,"According to Article 5.20.46, a faculty member may apply for tenure one year prior to the final year of their probationary status.
+
+Source: Collective Agreement 2012-2016, Article 5.20.46",llama3.2:3b-instruct-q4_K_M,English,1,True,76db4dbc-4459-4ea5-955e-78b56e5cde1e,0.4381,"13.06 Category Criteria
+The following criteria will be used as general guidelines when considering Members relative
+to the indicated category:
+a) Limited Term
+Limited term appointments are made to vac...",44f25ba8-aa87-4011-882f-c39299def7a9,0.4531,"Members may request one day free from teaching for teaching preparation and grading. This request shall
+not be unreasonably denied. In order to promote scholarly activity and professional development,...",222db758-7dab-4fcd-aed9-634ba6fe888c,0.0164,"Tenure Evaluation
+a) Members on probationary appointments shall normally begin to
+undergo a formal tenure evaluation by the FPC/FFPC/LPC no later than
+30 September of the final year of their probation...",44f25ba8-aa87-4011-882f-c39299def7a9,0.4531,"Members may request one day free from teaching for teaching preparation and grading. This request shall
+not be unreasonably denied. In order to promote scholarly activity and professional development,...",500f61f3-84d9-4207-8c48-8342a45edfe4,0.0161,"11.06.
+26 of 66
+<<>>
+Collective Agreement 2018-2021
+(vi) Ifthe limited-term member is hired into the probationary (tenure-track) position, then the member shall receive credit
+towards the first probat...",0.438072,0.438072,0.028992,test_en_018,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Tenure,medium,0.5,0.2152,0.4561,0.3273,0.4211,0.4813,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6
+test_en_019,What criteria are evaluated for granting tenure?,"According to Article 2.22 - Tenure Evaluation Procedures, tenure is granted based on the following criteria:
+
+1. a) In the interest of the University community and of society at large, tenure protects free criticism and independent judgement and hence forms an integral part of Academic Freedom (per Article 1.21).
+
+No specific criteria are listed for granting tenure in this article.",llama3.2:3b-instruct-q4_K_M,English,2,True,c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4417,"The Salary Structure for the Academic Year 2022-2023
+8.10.3 The salary of each Member shall be composed of the base salary of each Member as of June 30, 2022 as
+modified by the following items:
+(a) Fo...",1b81abd7-0569-4d1c-b081-620c639ad4d8,0.0164,"ARTICLE 10.40 – PROFESSIONAL DEVELOPMENT EXPENDITURE
+10.40.1 Expenditure
+The parties agree that the University is best served when staff have the opportunities for personal
+development and career adva...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4417,"The Salary Structure for the Academic Year 2022-2023
+8.10.3 The salary of each Member shall be composed of the base salary of each Member as of June 30, 2022 as
+modified by the following items:
+(a) Fo...",1b81abd7-0569-4d1c-b081-620c639ad4d8,0.0161,"ARTICLE 10.40 – PROFESSIONAL DEVELOPMENT EXPENDITURE
+10.40.1 Expenditure
+The parties agree that the University is best served when staff have the opportunities for personal
+development and career adva...",0c2edb8b-73fa-488e-9929-f9da2b01daf6,0.4239,"For all ranks, where a Member’s salary exceeds
+$173,328 per annum, the PTR will be nil.
+(c) Additional qualification increments shall be awarded pursuant to Article 8.30 – Additional
+Qualifications In...",0.441656,0.441656,0.016393,test_en_019,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Tenure,easy,0.25,0.0157,0.2278,0.026,0.1266,0.2619,0.0,0.0,0.0,0.0,0.0,0.4,1.0,0.4
+test_en_020,Who assesses the tenure application initially?,The Faculty Personnel Committee (FPC) assesses the tenure application initially.,llama3.2:3b-instruct-q4_K_M,English,1,True,94a4623f-e889-4e2d-ac1c-9acfd310b576,0.4817,"ARTICLE 5.60 – TENURE EVALUATION PROCEDURES
+5.60.1 In the interest of the University community and of society at large tenure protects free criticism and independent
+judgement and hence forms an integ...",94a4623f-e889-4e2d-ac1c-9acfd310b576,0.4817,"ARTICLE 5.60 – TENURE EVALUATION PROCEDURES
+5.60.1 In the interest of the University community and of society at large tenure protects free criticism and independent
+judgement and hence forms an integ...",94a4623f-e889-4e2d-ac1c-9acfd310b576,0.4602,"Prior to sending the letter to the Vice-President, Academic and
+Provost, the letter shall be brought to Faculty Personnel Committee for review and approval.
+5.55.25 The letter and the assessment revie...",94a4623f-e889-4e2d-ac1c-9acfd310b576,0.4602,"Prior to sending the letter to the Vice-President, Academic and
+Provost, the letter shall be brought to Faculty Personnel Committee for review and approval.
+5.55.25 The letter and the assessment revie...",885b9361-de2e-4c17-a7f8-034a0a17c0ec,0.4636,"ARTICLE 11 — APPOINTMENTS, PROMOTIONS, TENURE
+11.01 Preamble
+The process ofdeveloping recommendations on the appointment offaculty is a peer-review and collegial process. The
+Employer recognizes that ...",0.481707,0.481707,0.031746,test_en_020,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Tenure,medium,0.1905,0.0228,0.3636,0.0,0.1818,0.1695,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6
+test_en_021,What happens if tenure is denied?,"Volgens artikel 11.10.12 wordt een lid van de facultaire associatie, met een tweejarig aanstelling, wegens overmoedigheid in dienst genomen, als het bedrijf dat hem in dienst eindigt, hem op 15 december van het academische jaar in welke dienst hij wordt ontslagen, een schriftelijke notificatie geeft waarin de reden voor het ontslag vermeld wordt.",llama3.2:3b-instruct-q4_K_M,English,1,True,6ce96794-e217-4a28-9182-f158474454ff,0.319,"If the offer is to transfer one (1) component of the Member's workload (this component restricted
+to either teaching or research) to another academic area, such offer shall include a statement of the ...",7a97028d-a7bb-4774-ad1e-a403add4849f,0.0164,"Si le membre quitte l'Université avant trois années de service continu, il est tenu de remboursera l'Université la portion
+impayée du prêt.
+62 de 66
+<<>>
+Convention collective 2018-2021
+NDIX
+OF AGREEM...",27901849-5b04-40b6-b36e-1edaccedde3e,0.3056,"For a period of five (5) years from the
+date of their appointment to the administrative position, the Members shall have first right of refusal of any
+academic vacancy within Laurentian for which they...",7a97028d-a7bb-4774-ad1e-a403add4849f,0.0161,"Si le membre quitte l'Université avant trois années de service continu, il est tenu de remboursera l'Université la portion
+impayée du prêt.
+62 de 66
+<<>>
+Convention collective 2018-2021
+NDIX
+OF AGREEM...",833abab9-1fd9-41cb-883d-6ec137c3e467,0.3014,"Le Membre bénéficie tant d'une indemnité de rupture de contrat, que des droits de rappel,
+selon les dispositions de l’Article 11.10.18 ci-dessous.
+11.10.14 Un Membre ayant la permanence qui accepte de...",0.318985,0.318985,0.016393,test_en_021,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Tenure,medium,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.6,1.0,0.6
+test_en_022,What is required for promotion to Full Professor?,"According to the Collective Agreement 2015-2018, for promotion to Full Professor, the candidate shall:
+
+(i) have successfully met all requirements for Associate Professor and hold a Doctorate;
+(ii) have shown evidence of scholarly activity throughout the member’s career and after the member’s promotion or appointment to Associate Professor that ranks as a recognized contribution to the scholarly field of the candidate.",llama3.2:3b-instruct-q4_K_M,English,1,True,43dba894-13f2-4dfe-9286-b0f7ae10166d,0.4565,"11.04 Rank Criteria
+The following criteria will be used as general guidelines when considering the minimum qualifications of members relative
+to the indicated ranks. These guidelines are not intended ...",43dba894-13f2-4dfe-9286-b0f7ae10166d,0.4565,"11.04 Rank Criteria
+The following criteria will be used as general guidelines when considering the minimum qualifications of members relative
+to the indicated ranks. These guidelines are not intended ...",f2a41562-c5cb-4d72-b211-8745915a6226,0.4711,"This
+work must be judged by four (4) external referees, who shall normally be
+Full Professors in an academic institution, and at least two (2) of these referees may be nominated by the applicant; and
+...",1903f27d-c031-43a5-b5e7-279afb7af3e6,0.0164,"Applications shall be made on the prescribed application form and
+forwarded in triplicate to the office of the applicant's Dean/Director of the
+Library, together with three copies of all necessary and...",f2a41562-c5cb-4d72-b211-8745915a6226,0.4711,"This
+work must be judged by four (4) external referees, who shall normally be
+Full Professors in an academic institution, and at least two (2) of these referees may be nominated by the applicant; and
+...",0.456545,0.456545,0.030118,test_en_022,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Promotion,hard,0.3692,0.0511,0.3182,0.093,0.25,0.336,0.0,0.0,0.0,0.0,0.0,1.0,0.8,0.6
+test_en_023,Can external referees be used in the promotion process?,"Yes, external referees can be used in the promotion process, according to Article 5.65.8 of the collective agreement. For appointment/promotion to the rank of Full Professor/Librarian, the assessors shall consider the assessment of the Member's scholarly activity as judged by four (4) external referees.",llama3.2:3b-instruct-q4_K_M,English,3,True,b5c4085d-4789-47e3-92c3-31cdb150dd96,0.3629,"A copy of
+this assessment will immediately be forwarded to the Member who will then have one (1) week to decide
+whether or not to proceed with the application.
+5.65.6 The following documents must be a...",b5c4085d-4789-47e3-92c3-31cdb150dd96,0.3629,"A copy of
+this assessment will immediately be forwarded to the Member who will then have one (1) week to decide
+whether or not to proceed with the application.
+5.65.6 The following documents must be a...",0c2edb8b-73fa-488e-9929-f9da2b01daf6,0.3785,"For all ranks, where a Member’s salary exceeds
+$173,328 per annum, the PTR will be nil.
+(c) Additional qualification increments shall be awarded pursuant to Article 8.30 – Additional
+Qualifications In...",7cf4bd4f-a978-473d-adf4-ed31e5cc6b85,0.0164,"Applications may also be submitted by
+Chairs/Directors, or a Dean/University Librarian on behalf of Members who have not themselves applied where the
+Members have declared their willingness to be cons...",0c2edb8b-73fa-488e-9929-f9da2b01daf6,0.3785,"For all ranks, where a Member’s salary exceeds
+$173,328 per annum, the PTR will be nil.
+(c) Additional qualification increments shall be awarded pursuant to Article 8.30 – Additional
+Qualifications In...",0.362907,0.362907,0.030798,test_en_023,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Promotion,medium,0.2963,0.0221,0.2769,0.0635,0.2769,0.3566,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6
+test_en_024,What is a Limited Term Appointment (LTA)?,"A Limited Term Appointment (LTA) is an appointment that carries no implication of renewal or continuation beyond the stated term and no implication that the appointee shall be considered for tenure. Limited term appointees must be assigned to an academic Department/School and shall be considered Members unless excluded by Article 2.15 – Recognition of the Bargining Unit.
+
+(Source: Collective Agreement 2011-14, Section 5.20.10)",llama3.2:3b-instruct-q4_K_M,English,1,True,76d9a42e-8315-4e88-a456-86fc58b7bf87,0.4757,"Letters of appointment shall specify all terms and conditions of
+appointments, including rank, status, and salary, and any special conditions
+such as bilingual requirements per Articles 1.25 and forma...",01e33ebb-9451-4c36-988d-e479381053bc,0.4389,"If
+the short list contains fewer than three (3) names, this change can only be an additional name. Alternatively, the Dean/University Librarian shall work together with the
+Department/School to substi...",01e33ebb-9451-4c36-988d-e479381053bc,0.4548,"Alternatively, the Dean/University Librarian shall work together with the Department/School to substitute one (1) of the
+short-listed names.
+5.20.5 Appointments shall be made only to the ranks referre...",01e33ebb-9451-4c36-988d-e479381053bc,0.4389,"If
+the short list contains fewer than three (3) names, this change can only be an additional name. Alternatively, the Dean/University Librarian shall work together with the
+Department/School to substi...",01e33ebb-9451-4c36-988d-e479381053bc,0.4548,"Alternatively, the Dean/University Librarian shall work together with the Department/School to substitute one (1) of the
+short-listed names.
+5.20.5 Appointments shall be made only to the ranks referre...",0.475745,0.475745,0.032002,test_en_024,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Appointments,easy,0.2703,0.0148,0.2198,0.0225,0.1319,0.2246,0.0,0.0,0.0,0.0,0.0,1.0,0.8,0.4
+test_en_025,How are base salaries determined?,"The base salary is determined by the floor salary of the higher rank to which a member is promoted. According to Article 8.15.5 of the Collective Agreement, if a member's salary is below the floor salary of the higher rank, they shall receive the floor salary upon promotion.",llama3.2:3b-instruct-q4_K_M,English,1,True,acb35873-0399-4154-a937-d128e783ac04,0.3795,"Si le
+salaire de ce membre est érieur à la base salariale du rang supérieur, il reçoit le salaire base dès la promotion.
+56 de 66
+<<>>
+Convention collective 2018-2021 artir du 1° juillet 2018 ang Base...",8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.0164,"Academic freedom is the right to search for truth,
+knowledge and understanding and to express freely what one believes. The
+University as an institution and the community of its scholars have a duty t...",acb35873-0399-4154-a937-d128e783ac04,0.3795,"Si le
+salaire de ce membre est érieur à la base salariale du rang supérieur, il reçoit le salaire base dès la promotion.
+56 de 66
+<<>>
+Convention collective 2018-2021 artir du 1° juillet 2018 ang Base...",8a94c04a-1ff0-4fe1-8ced-96cc5625c2c5,0.0161,"If such Members'
+salaries are below the floor salary of the higher rank, they shall receive the floor salary upon promotion.
+8.15.5 Promotion Increment: Effective July 1, 2009, there shall be an award...",a1fdad88-d98b-43fd-af05-aefaffa1c3f1,0.3684,"ARTICLE 26 — SALARY
+26.01 Compensation for full time Members shall be as follows:
+a) ascale increase equal to that negotiated in the Laurentian University Collective
+Agreement for 2016/2017, 2017/2018...",0.379504,0.379504,0.016393,test_en_025,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Compensation,easy,0.3333,0.0179,0.2609,0.0597,0.2029,0.2742,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_028,What happens to the salary grid under the mediated term sheet?,"The salary grid under the mediated term sheet is updated to reflect the changes agreed upon by the parties. Specifically, the following changes are mentioned:
+
+* For July 1, 2022, a scale increase of 1% of the Member's regular salary.
+* For July 1, 2022, a Progress-Through-The-Ranks increment for the evaluation carried out for the year 2021-2022, with a value of $2,900.
+* For July 1, 2023, a scale increase of 1% of the Member's regular salary.
+* For July 1, 2023, a Progress-Through-The-Ranks increment for the evaluation carried out for the year 2022-2023, with a value of $2,900.
+
+The updated salary grid is not explicitly stated in the provided context, but it is implied that the mediated term sheet has resulted in changes to the salary structure as outlined in Article 8.10.
+
+There is no mention of what happens to the salary grid after July 1, 2023, or any further changes that may be made to the salary structure.",llama3.2:3b-instruct-q4_K_M,English,2,True,84f27fa0-0a6b-4230-a1d9-c5bdd8be7540,0.4033,"27.03 If notice of amendment or termination is given by either party, the other party agrees to meet for the purpose of
+negotiation within thirty days after the giving of notice, if requested to do so...",84f27fa0-0a6b-4230-a1d9-c5bdd8be7540,0.4033,"27.03 If notice of amendment or termination is given by either party, the other party agrees to meet for the purpose of
+negotiation within thirty days after the giving of notice, if requested to do so...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4051,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",46c7a0ae-cf91-4b79-9166-c36c03bda566,0.0164,"The communication system established by the Organization to inform
+employees about workplace violence;
+Information on what constitutes workplace violence and on the
+means of identifying the factors th...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4051,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",0.403304,0.403304,0.02971,test_en_028,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Compensation,hard,0.1616,0.0062,0.1237,0.0312,0.0928,0.2164,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6
+test_en_029,Does the university provide health and dental benefits?,"Yes, the university provides health and dental benefits, as stated in Article 8.45.3 of the Collective Agreement. The benefits include:
+
+- Extended Health Care (including semi-private hospital coverage)
+- Dental Care
+- Long-Term Disability
+- Accidental Death and Dismemberment
+- Dependent Group Life
+- Group Life Insurance
+- Retirement Plan of Laurentian University of Sudbury and its Federated and Affiliated Colleges
+
+These benefits are shared by the Employer and the Member on the following basis:
+
+- Employer Member: 50% for Life Insurance, Accidental Death & Dismemberment, Dependent Group Life, and Long-Term Disability
+- Employer Member: 100% for Extended Health Care, Dental Care, and Retirement Plan
+- Dependent: 50% for Dependent Group Life
+- Dependent: 100% for Group Life Insurance, Long-Term Disability, and Extended Health Care, Dental Care",llama3.2:3b-instruct-q4_K_M,English,1,True,7f271b5a-3162-4c3a-845c-91a37e3e4617,0.4273,"The agreement shall provide that the Members shall assign all their rights, titles and interests in
+the invention, improvement or discovery to the University subject to the University and the Members ...",c2be35f2-f682-42ab-b386-3fdfa4a4af71,0.0164,"Three
+(3) credit courses shall be pro-rated
+164 of 246
+<<>>
+Collective Agreement 2008-11
+ARTICLE 8.45 – BENEFITS
+8.45.1 The following benefits are available to full-time
+Members and Permanent Sessiona...",d55567e9-7145-4527-8933-c352f4183d9e,0.4208,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
+Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illn...",c2be35f2-f682-42ab-b386-3fdfa4a4af71,0.0161,"Three
+(3) credit courses shall be pro-rated
+164 of 246
+<<>>
+Collective Agreement 2008-11
+ARTICLE 8.45 – BENEFITS
+8.45.1 The following benefits are available to full-time
+Members and Permanent Sessiona...",d55567e9-7145-4527-8933-c352f4183d9e,0.4208,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
+Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illn...",0.427348,0.427348,0.016393,test_en_029,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Benefits,easy,0.2466,0.0293,0.1871,0.0876,0.1871,0.2473,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_030,Is the pension plan a defined benefit or defined contribution plan?,"The pension plan is a defined benefit plan. According to Section 8.45.3 of the Collective Agreement, the Member's contributions shall only be used toward funding the Defined Benefit component of the Retirement Plan. All pension service contributions and benefits accrued prior to July 1, 2012, shall remain in the hybrid component of the Retirement Plan.",llama3.2:3b-instruct-q4_K_M,English,1,True,0c4edca6-fd9e-4752-b41a-7500cdc9f267,0.3873,"Plan will be credited
+at the Plan rate of
+The Employer may return.
+take a contribution
+holiday in accordance The Employer may
+with the Pension take a contribution
+Benefits Act and holiday in accordanc...",0c4edca6-fd9e-4752-b41a-7500cdc9f267,0.3795,"The
+Pension Plan will be
+amended to reflect this
+agreement.
+8.45.3 Delete reference to the Effective July 1, 2011, Effective July 1, 2011,
+SuRP. Members shall only Members shall only
+participate in th...",0c8c6dac-0a9c-4be4-af3c-16ebbb5edd7d,0.3801,"All
+the Retirement Plan.
+pension service
+contributions and All pension service
+benefits accrued prior contributions and
+toJuly 01, 2012, shall benefits accrued prior
+remain in the hybrid toJuly 01, 20...",0c4edca6-fd9e-4752-b41a-7500cdc9f267,0.3645,"Retirement Plan The Employer’s (a) Effective June contributions to 30, 2017, eight point the Retirement two percent
+(8.2%)
+Plan shall be at of the part of the least the amount Member’s required to fun...",0c4edca6-fd9e-4752-b41a-7500cdc9f267,0.3645,"Retirement Plan The Employer’s (a) Effective June contributions to 30, 2017, eight point the Retirement two percent
+(8.2%)
+Plan shall be at of the part of the least the amount Member’s required to fun...",0.387331,0.387331,0.032258,test_en_030,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Benefits,hard,0.3607,0.0428,0.3373,0.1481,0.2651,0.3747,1.0,2.4485,1.0,1.0,1.0,1.0,0.8,0.8
+test_en_031,What is the professional development allowance (PER)?,"The professional development allowance (PER) is an allowance that full-time Members are eligible to receive each academic year for expenses related to approved academic research or professional purposes. The allowance is cumulative over two academic years.
+
+According to Article 30.01 of the Laurentian University Faculty Association collective agreement, ""Each full-time Member shall be eligible to receive a professional allowance for each contractual year, such allowance to be spent for expenses related to approved academic research or professional purposes.""
+
+Additionally, the amount of the allowance is specified in Article 4.95, which states that as of July 1, 2014, the amount of the professional allowance is $2,300.",llama3.2:3b-instruct-q4_K_M,English,1,True,8b3e34fd-6272-48a6-bf17-9a79e2784d5e,0.3924,"30.02 The amount of the allowance for full-time Faculty shall be paid in accordance with the rates
+set in the Laurentian Collective Agreement.
+30.03 Professional development expenditures allowable und...",8b3e34fd-6272-48a6-bf17-9a79e2784d5e,0.3851,"30.02 The amount of the allowance for full-time Faculty shall be paid in accordance with the rates
+set in the Laurentian Collective Agreement.
+30.03 Professional development expenditures allowable und...",12089275-858a-4036-bb55-e7d528cd19d8,0.4458,"ARTICLE 30 — PROFESSIONAL DEVELOPMENT
+30.01 Each full-time Member shall be eligible to receive a professional allowance for each
+contractual year, such allowance to be spent for expenses related to ap...",0d694825-0669-4ba2-a158-f7411fc1ba14,0.0164,"The parties agree that, when a replacement would be required, the Employer’s inability
+to find a suitable replacement would not be considered unreasonable grounds for
+denial of the request.
+4.85.2 All...",a2125c46-75e1-4989-817d-87fea6e5f203,0.4302,"30.07 Sessional Members shall be eligible for professional development money of two hundred and
+fifty (250) dollars, per each three credit course that they teach up to a limit of two thousand
+(2,000) ...",0.392421,0.392421,0.030777,test_en_031,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Benefits,medium,0.2716,0.0205,0.197,0.0615,0.1667,0.2942,0.0,0.0,0.0,0.0,0.0,1.0,0.8,0.4
+test_en_032,When is a faculty member eligible for a sabbatical leave?,"According to Article 7.25.2, a faculty member is eligible for a sabbatical leave if they have been full-time faculty members of the University for the past six (6) consecutive years, holding the rank of Full Professor/Librarian, Associate Professor/Librarian, and Assistant Professor/Librarian at the time of application.",llama3.2:3b-instruct-q4_K_M,English,1,True,3a1ce08b-56cc-416a-8bed-7dc423e2597e,0.5879,"Sabbatical leave will not be automatic and
+shall be granted following an approved application procedure, outlined below.
+(b) In order to attract qualified faculty, the Vice-President, Academic and Pro...",c30b573f-8d0f-4b3b-bde2-58ebdb6c585d,0.0164,"However, Members who terminate their employment between June 1 and Labour Day,
+and who have no formal teaching duties during all or part of that period, shall take and
+be deemed to have taken as much ...",3a1ce08b-56cc-416a-8bed-7dc423e2597e,0.5879,"Sabbatical leave will not be automatic and shall be
+granted following an approved application procedure, outlined below.
+(b) In order to attract qualified faculty, the Vice-President, Academic and Pro...",c30b573f-8d0f-4b3b-bde2-58ebdb6c585d,0.0161,"However, Members who terminate their employment between June 1 and Labour Day,
+and who have no formal teaching duties during all or part of that period, shall take and
+be deemed to have taken as much ...",f59c4328-2270-4bd2-96c2-7b97d12e0343,0.5534,"ARTICLE 7.25 – SABBATICAL LEAVES
+7.25.1 Preamble
+In recognition of the fact that full-time Members are required to continue to develop as scholars and
+researchers throughout their careers, the Univers...",0.58785,0.58785,0.016393,test_en_032,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,easy,0.4286,0.0446,0.3662,0.1449,0.3662,0.4064,0.5,1.0616,0.0,1.0,1.0,1.0,0.8,0.6
+test_en_033,What percentage of salary is paid during a 12-month sabbatical?,"During a 12-month sabbatical, a member receives 85% of their regular salary. (Source: Collective Agreement 2018-2021, Article 12.09)",llama3.2:3b-instruct-q4_K_M,English,1,True,7b945d17-6003-4b92-85a5-f5ded2b64d3a,0.5279,"12.09 A member who takes a 12-month sabbatical leave shall receive a sabbatical stipend of 85% of the member’s
+regular salary. A member with six actual consecutive years of service who is taking a fir...",2585c312-ae5d-4b4a-a35b-1f213c30d7aa,0.0164,"The period of leave shall be included as credited years ofservice in determining
+University pension benefits.
+36 of 66
+<<>>
+Collective Agreement 2018-2021
+12.15 A member on sabbatical leave shall rece...",7b945d17-6003-4b92-85a5-f5ded2b64d3a,0.5279,"12.09 A member who takes a 12-month sabbatical leave shall receive a sabbatical stipend of 85% of the member’s
+regular salary. A member with six actual consecutive years of service who is taking a fir...",2585c312-ae5d-4b4a-a35b-1f213c30d7aa,0.0161,"The period of leave shall be included as credited years ofservice in determining
+University pension benefits.
+36 of 66
+<<>>
+Collective Agreement 2018-2021
+12.15 A member on sabbatical leave shall rece...",a51ac377-336e-4bea-9cd9-77352989fa32,0.5055,"22.03 A Member requesting a six-month (6) sabbatical leave after six (6) years of continuous full-
+time employment shall receive 100% of the Member’s regular salary.
+22.04 A Member taking a twelve-mon...",0.527854,0.527854,0.016393,test_en_033,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,medium,0.4286,0.1987,0.5217,0.2727,0.3913,0.4155,0.0,0.0,0.0,0.0,0.0,1.0,0.8,1.0
+test_en_034,Can a member take a 6-month sabbatical instead?,"According to Article 7.65.2 of the Collective Agreement 2017-2020, a Member taking a leave of absence exceeding six (6) months may elect to defer contractual decisions on reappointment or tenure/permanence by one year. However, this provision requires that the Member provide written notice to the Dean/University Librarian of their intention to do so.
+
+There is no mention of a 6-month sabbatical being an option for deferring contractual decisions. The provision specifically refers to a leave of absence exceeding six (6) months, which is different from a 6-month sabbatical.
+
+Therefore, a 6-month sabbatical would not be considered a leave of absence exceeding six (6) months, and the Member would not be able to take advantage of the provision to defer contractual decisions.",llama3.2:3b-instruct-q4_K_M,English,1,True,b99b88fa-40b4-402e-b7cd-53737b1f2f90,0.4385,"When a Member elects to defer such decisions, she/he shall provide
+the Dean/University Librarian, or equivalent, with written notice of her/his intention to do so.
+(f) The Parties agree that the provi...",b99b88fa-40b4-402e-b7cd-53737b1f2f90,0.4385,"When a Member elects to defer such decisions, she/he shall provide
+the Dean/University Librarian, or equivalent, with written notice of her/his intention to do so.
+(f) The Parties agree that the provi...",938ed44a-c541-4eb3-9e5d-bb9e8e40dcdd,0.4516,"24.02 Leave of Absence Without Pay
+a) A Member may apply for and the Employer may grant a leave of absence without pay for
+a period of up to 24 months. Faculty members on a leave of absence from the U...",70716b66-ce61-46cb-9ef2-de2eae219478,0.0164,"Maternity
+A full-time female Member shall be granted maternity leave subject to
+the following conditions:
+a) The Member shall be entitled to a paid leave of absence providing
+she has completed at leas...",925d0638-f267-47f4-b401-6c9d226c02ff,0.4343,"An application for an
+extension should be made in writing to the President at least four (4) months in advance. These time requirements may be waived in special circumstances.
+5.30.3 Final approval re...",0.438477,0.438477,0.032258,test_en_034,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,medium,0.2022,0.0235,0.1517,0.0559,0.1379,0.2516,0.0,0.0,0.0,0.0,0.0,0.4,0.8,1.0
+test_en_035,Does the collective agreement offer pregnancy/maternity leave?,"Yes, the collective agreement does offer pregnancy/maternity leave. According to Article 7.60, a pregnant full-time Member or pregnant Master Lecturer Member shall be entitled to seventeen (17) weeks pregnancy leave.
+
+Specifically, the agreement outlines the following:
+
+* The member shall receive 100% of their nominal salary for the first week of pregnancy leave.
+* For up to a maximum of sixteen (16) additional weeks, the member shall receive an amount equal to the difference between the Employment Insurance (EI) benefits received by the member and 100% of the member's nominal salary.
+* If the member is disentitled or disqualified from receiving EI benefits, the employer shall maintain the member at 100% of their nominal earnings for the period of their leave.
+
+Additionally, the agreement also outlines the notice period for pregnancy leave, which is normally two (2) weeks written notice, but may be altered by mutual agreement or by the member with a new written notice at least two (2) weeks prior to the date the pregnancy leave is to begin.
+
+References:
+
+* Collective Agreement 2017-2020, Article 7.60
+* Collective Agreement 2008-11, Article 7.60",llama3.2:3b-instruct-q4_K_M,English,1,True,13673c42-5a60-4988-94d0-0a8328a18382,0.4376,"14.04 Pregnancy Leave
+(a) The Employer shall supplement the Employment
+Insurance maternity benefits up to 100% of the employee's nominal earnings during Pregnancy
+Leave. Up to seventeen weeks of Pregn...",8beb3c8d-785b-40f5-904b-06cf1b3808eb,0.4756,"ARTICLE 7.60 – PREGNANCY, PARENTAL AND
+ADOPTION LEAVES
+7.60.1 Pregnancy Leave
+(a) A pregnant full-time Member or pregnant Master Lecturer Member shall be entitled to seventeen (17) weeks
+pregnancy lea...",82640e37-251b-4936-b42f-a0fb9785916d,0.4726,"Where the report is requested as a result of a real concern for the safety of the Member or other
+members of the University community, the report produced, in addition to the information provided purs...",8beb3c8d-785b-40f5-904b-06cf1b3808eb,0.4756,"ARTICLE 7.60 – PREGNANCY, PARENTAL AND
+ADOPTION LEAVES
+7.60.1 Pregnancy Leave
+(a) A pregnant full-time Member or pregnant Master Lecturer Member shall be entitled to seventeen (17) weeks
+pregnancy lea...",82640e37-251b-4936-b42f-a0fb9785916d,0.4726,"Where the report is requested as a result of a real concern for the safety of the Member or other
+members of the University community, the report produced, in addition to the information provided purs...",0.437595,0.437595,0.031514,test_en_035,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,easy,0.1786,0.0077,0.1063,0.0293,0.087,0.1871,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0
+test_en_036,How long does the supplemental employment benefit (top-up) last for maternity leave?,"The supplemental employment benefit (top-up) lasts for a maximum period of 17 weeks, which includes the period for which EI benefits for maternity are not payable.",llama3.2:3b-instruct-q4_K_M,English,2,True,2659b34a-8e48-4c3f-9616-ae79f1f6972a,0.4684,"The member shall notify the Chair ofthe member’s
+Department and the President and shall supply the
+President with a copy ofthe summons. The member and the Department shall make alternative arrangement...",2659b34a-8e48-4c3f-9616-ae79f1f6972a,0.4684,"The member shall notify the Chair ofthe member’s
+Department and the President and shall supply the
+President with a copy ofthe summons. The member and the Department shall make alternative arrangement...",13673c42-5a60-4988-94d0-0a8328a18382,0.459,"14.04 Pregnancy Leave
+(a) The Employer shall supplement the Employment
+Insurance maternity benefits up to 100% of the employee's nominal earnings during Pregnancy
+Leave. Up to seventeen weeks of Pregn...",13673c42-5a60-4988-94d0-0a8328a18382,0.459,"14.04 Pregnancy Leave
+(a) The Employer shall supplement the Employment
+Insurance maternity benefits up to 100% of the employee's nominal earnings during Pregnancy
+Leave. Up to seventeen weeks of Pregn...",44c67d70-66ac-405c-80b5-dd7c38f8cce7,0.4258,"Cette période peut être modifiée par consentement
+mutuel ou par le Membre, qui doit donner par écrit à l’Employeur un nouvel avis au moins deux (2)
+semaines avant le début du congé de maternité.
+(c) L...",0.468439,0.468439,0.032787,test_en_036,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,hard,0.4167,0.0362,0.4138,0.0714,0.2759,0.2578,0.0,0.0,0.0,0.0,0.0,0.8,0.6,1.0
+test_en_037,Is there a provision for parental leave?,"Yes, there is a provision for parental leave in the Collective Agreement. The provision is outlined in Article 7.60 - Pregnancy, Parental, and Adoption Leaves.
+
+Specifically, the provision states that the parental leave must be commenced within 52 weeks from the date the child comes into care or custody of the parent for the first time (7.60.7).
+
+During the period of parental leave, a Member shall receive:
+
+* 100% of their nominal salary for the first 2 weeks
+* An amount equal to the difference between the EI benefits received by the Member and 100% of the Member's nominal salary for up to a maximum of 7 additional weeks
+* The Employer shall pay the additional amount necessary to ensure the Member receives the top-up described in subparagraph 7.60.6 (b) (ii) above, in the event of any adjustment by the Government of Canada to the Member's EI benefit entitlement
+
+Additionally, the provision states that if the Member is disentitled or disqualified from receiving EI benefits or should EI cease to provide coverage for parental benefits or adjust the amount of benefits that were received, the Employer shall maintain the Member at 100% of their nominal earnings for the period of their leave (7.60.6 (c)).",llama3.2:3b-instruct-q4_K_M,English,1,True,a50624fd-f1e9-4085-8c66-3263d121e14e,0.507,"The parental leave must be commenced within the fifty-two (52)
+weeks from the date the child comes into care or custody of the parent for the first time.
+(b) During the period of parental leave as spe...",1cce2be7-e54b-4cc4-9be7-6756ec2e0c2e,0.0164,"The notice period in 5.50.07 a shall not apply if the Member stops working because the
+child comes into the custody, care and control of the parent sooner than expected.
+5.50.08 Extended Parental Leav...",a50624fd-f1e9-4085-8c66-3263d121e14e,0.507,"The parental leave must be commenced within the fifty-two (52)
+weeks from the date the child comes into care or custody of the parent for the first time.
+(b) During the period of parental leave as spe...",ff4709eb-2b72-4c69-8b52-999485fc724c,0.0161,"Such leave shall not be unreasonably withheld.
+7.50.4 Should the Members not be elected, they shall come back to work immediately to assume their normal duties.
+7.50.5 If the Members are elected and:
+...",a50624fd-f1e9-4085-8c66-3263d121e14e,0.4985,"The parental leave must be commenced
+within the fifty-two (52) weeks from the date the child comes into care or custody of the parent for the first time.
+(b) During the period of parental leave as spe...",0.507003,0.507003,0.016393,test_en_037,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,easy,0.188,0.0067,0.1304,0.0351,0.1043,0.2594,0.0,0.0,0.0,0.0,0.0,1.0,0.6,1.0
+test_en_038,What is the policy for sick leave?,"The policy for sick leave in the Laurentian University Faculty Association collective agreement is as follows:
+
+* Sick leave benefits are not cumulative and are not cashable upon termination of employment or at any other time (5.45.06).
+* Sick leave benefits for any period of absence following notice of termination of employment will not be payable without substantiating medical evidence (5.45.05).
+* Sick leave benefits defined in this Article may not be granted under the following circumstances:
+ + Intentionally self-inflicted injuries or diseases (5.45.11(a)).
+ + Pregnancy (however, complications due to pregnancy are covered by sick leave provisions, upon submission of a medical certificate) (5.45.11(b)).
+ + While vacation pay is also being received (5.45.11(c)).
+ + Wilful participation in riots, wars or violent or uncontrolled demonstrations or protests (5.45.11(d)).
+ + Injuries or diseases sustained while committing a criminal act for which the Member has been found to be guilty by a duly constituted court or while serving a prison sentence (5.45.11(e)).
+* To have a sick leave benefits period reinstated up to the maximum, Members who have been absent and in receipt of sick leave benefits must return to full duties for at least one (1) full working day in the case of a completely unrelated and different disability cause, and for thirty (30) calendar days in the case of the same disability cause (5.45.04).
+* Sick leave benefits will be reduced by the amount of any Worker's Compensation benefits or similar disability income benefits which the Member is eligible to receive by reason of accident or sickness, from a government plan, except Employment Insurance (5.45.07).
+
+It is also worth noting that the agreement requires a report to be submitted for any sick leave period in excess of five (5) consecutive working days, and that the report shall not contain any diagnosis of the Member's condition, unless the Member, in consultation with the Union, requests that the diagnosis be included (7.55.7).",llama3.2:3b-instruct-q4_K_M,English,1,True,6e98b843-6f0f-4b13-9c00-8292e4dc254a,0.4479,"Such a report will
+be required:
+a, for any sick leave period in excess of five (5) consecutive working days;
+b. in the event a Membet’s sick leave pattern raises substantial doubt of the claim, even i...",2f433a7e-6df2-4230-a7fd-24c6413bcf99,0.0164,"29.04 Any Member on an unpaid leave of absence shall make special arrangements for benefit
+coverage as outlined in Article 24, Leave of Absence without Pay.
+29.05 Short-term Disability for Full-time M...",69587c03-0b99-4c68-b205-7d17e1796695,0.4401,"Such a report, with a copy forwarded to the
+Director of Personnel, will be required:
+a) For any sick leave period in excess of five (5) consecutive
+working days.
+b) In the event a Member's sick leave ...",6e4e5448-9e9f-48f7-974c-c396727f0204,0.0161,"29.03 Pension premiums, benefits, and offsets shall be as negotiated in the current Laurentian
+University Collective Agreement.
+LUFA-H Collective Agreement 2016-2020 45
+<<>>
+29.04 Any Member on an unp...",82640e37-251b-4936-b42f-a0fb9785916d,0.397,"The report shall not contain any diagnosis of the Member’s condition, unless
+the Member, in consultation with the Union, requests that the diagnosis be included.
+(e) Within five (5) working days of th...",0.447941,0.447941,0.016393,test_en_038,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,medium,0.1709,0.0076,0.0984,0.022,0.071,0.1826,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_039,Are members entitled to bereavement leave?,"Yes, members are entitled to bereavement leave. According to Article 7.70.4, if an employee's nephew, niece, grandparent-in-law, aunt, or uncle dies, the member shall be granted a leave of absence of one (1) working day without loss in pay.",llama3.2:3b-instruct-q4_K_M,English,2,True,c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4722,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4722,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",c9721a9d-b816-4b4e-8422-81702899d77d,0.0164,"Effective January 1, 2019, purchase and fitting of prescription glasses or elective contact lenses, as well as repairs or
+elective laser vision correction procedures will be increased to an overall ma...",c9721a9d-b816-4b4e-8422-81702899d77d,0.0161,"Effective January 1, 2019, purchase and fitting of prescription glasses or elective contact lenses, as well as repairs or
+elective laser vision correction procedures will be increased to an overall ma...",8b4bcc02-9e85-4258-a3f5-601a334716bc,0.4201,"All leaves to which the retiring member would be
+entitled must be terminated at the member’s retirement date.
+19.02 Members who retire from the University shall retain their name and title on the Univ...",0.472186,0.472186,0.032018,test_en_039,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,easy,0.2712,0.0211,0.3125,0.0323,0.1875,0.2232,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_040,Can a faculty member take an unpaid leave of absence?,"Yes, a faculty member can take an unpaid leave of absence. According to Article 14.01 of the Collective Agreement, a member may apply for and the Employer may grant a leave of absence without pay.
+
+Source: Collective Agreement 2014-2017, Article 14.01
+
+Note that in this case, there is no mention of any specific requirements or procedures for requesting an unpaid leave of absence.",llama3.2:3b-instruct-q4_K_M,English,2,True,8de5d46b-f89e-4df9-acf2-93df223aca37,0.4444,"ARTICLE 14 – LEAVES OF ABSENCE
+14.01 Leave of Absence without pay
+A member may apply for and the Employer may grant a leave of absence without pay. The member shall apply in writing
+to the President, ...",cfb5de16-e04d-4ebd-a6c6-f55a991584a0,0.0164,"<<>>
+COLLECTIVE AGREEMENT
+between
+the Laurentian University
+Faculty Association
+and
+the Board of Governors
+of Thorneloe University
+2014–2017
+<<>>
+TABLE OF CONTENTS
+1. INTRODUCTION
+ARTICLE 1.10 TITLE 5...",8de5d46b-f89e-4df9-acf2-93df223aca37,0.4444,"ARTICLE 14 – LEAVES OF ABSENCE
+14.01 Leave of Absence without pay
+A member may apply for and the Employer may grant a leave of absence without pay. The member shall apply in writing
+to the President, ...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.0161,"The term “another member of an Employee’s family” means brother and sister, step-brother and step-sister, mother and
+father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",352ddf0c-0c2f-4688-8309-a8233ef71cdb,0.3994,"Tout Membre qui ne répond
+pas dans un délai de trente (30) jours ou qui refuse un poste permanent qui lui est offert selon le présent
+Article, perd tous ses droits de rappel.
+11.15.24 Un Membre qui ac...",0.444425,0.444425,0.016393,test_en_040,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,medium,0.4062,0.0689,0.3294,0.1446,0.2588,0.5081,0.0,0.0,0.0,0.0,0.0,1.0,0.8,0.8
+test_en_042,Does the member have the right to union representation during disciplinary meetings?,"Yes, the member has the right to union representation during disciplinary meetings.
+
+Article 5.75.3 of the Collective Agreement states: ""Discipline shall be imposed only in compliance with principles of natural justice and due process. Accordingly, the Member has a fundamental right to know, in a timely manner, the nature of the allegations against him/her, and the right to respond to such allegations.""
+
+This provision guarantees that the member has the right to be represented by a union representative during disciplinary meetings, and that the employer must provide the member with a clear understanding of the allegations against them and an opportunity to respond.",llama3.2:3b-instruct-q4_K_M,English,2,True,13b50482-9f00-41d6-80ee-12512d52e416,0.4088,"For arbitration, reasonable efforts will be made to supply the
+information as soon as practicable, subject to the above.
+98 of 243
+<<>>
+Collective Agreement 2011-14
+5.70.12 Where in the opinion of an ...",13b50482-9f00-41d6-80ee-12512d52e416,0.4088,"For arbitration, reasonable efforts will be made to supply the
+information as soon as practicable, subject to the above.
+98 of 243
+<<>>
+Collective Agreement 2011-14
+5.70.12 Where in the opinion of an ...",d55567e9-7145-4527-8933-c352f4183d9e,0.4844,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
+Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illn...",b3b27d80-6923-44a8-b9e9-677ec1ea62c7,0.0164,"INNIS
+Registrar
+The above description of the bargaining unit is subject to the following qualifications:
+CLARITY NOTE:
+For the purposes of clarity, the parties agree that the
+204 of 243
+<<>>
+Collectiv...",d55567e9-7145-4527-8933-c352f4183d9e,0.4844,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
+Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illn...",0.408837,0.408837,0.027783,test_en_042,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Discipline,easy,0.2683,0.0272,0.2308,0.0781,0.2,0.2922,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_043,What is progressive discipline?,"Progressive discipline is defined in Article 5.75.1 of the Collective Agreement, but it is not explicitly stated in the provided text. However, based on the context and the following article, 5.75, it can be inferred that progressive discipline refers to a disciplinary approach that involves a series of steps, with increasing severity, for addressing misconduct or performance issues.
+
+This is implied in Article 5.75.1, which states that ""Discipline shall be just and reasonable, based on the principle of progressive discipline, except in egregious cases."" 
+
+It appears that the principle of progressive discipline involves a step-by-step approach, with the aim of addressing the issue in a fair and consistent manner. However, the exact details of progressive discipline are not explicitly stated in the provided text.",llama3.2:3b-instruct-q4_K_M,English,2,True,68692f4b-7bdb-4b47-b637-9624fbe4b322,0.4123,"13.10.2 A Member shall not be disciplined per Article 5.75 – Disciplinary Measures for refusing to cross a picket line
+on campus which has been established in full compliance with existing laws. The E...",e68308ee-770f-4e6e-acce-2ed48f0fdc01,0.0164,"Sincerely,
+Vice-President, Academic and Provost
+Enclosures
+2
+<<>>
+Collective Agreement 2017-2020
+OFFER OF EMPLOYMENT TO
+(Subject to changes in the new Collective Agreement)
+DR. XXX,
+DATE
+1. DEPARTMENT...",189ba770-955f-4d0a-be39-0b169dd5d120,0.4115,"Discipline shall be just and reasonable,
+based on the principle of progressive discipline, except in egregious cases.
+5.75.2 Just cause shall be defined as:
+(a) Gross misconduct including serious unpr...",e68308ee-770f-4e6e-acce-2ed48f0fdc01,0.0161,"Sincerely,
+Vice-President, Academic and Provost
+Enclosures
+2
+<<>>
+Collective Agreement 2017-2020
+OFFER OF EMPLOYMENT TO
+(Subject to changes in the new Collective Agreement)
+DR. XXX,
+DATE
+1. DEPARTMENT...",189ba770-955f-4d0a-be39-0b169dd5d120,0.4005,"Accordingly, the
+Member has a fundamental right to know, in a timely manner, the nature of the allegations against him/her, and the right
+to respond to such allegations.
+5.75.5 The following are the o...",0.412288,0.412288,0.016393,test_en_043,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Discipline,hard,0.1304,0.0074,0.1146,0.0129,0.0892,0.1741,0.0,0.0,0.0,0.0,0.0,1.0,0.6,0.6
+test_en_044,How are intellectual property rights managed?,"I don't see any information about intellectual property rights in the provided text. The text appears to be a section of the Collective Agreement 2015-2018, which covers various aspects of employment, salary, benefits, and other working conditions for faculty members at Laurentian University. However, it does not mention intellectual property rights.",llama3.2:3b-instruct-q4_K_M,English,2,True,c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4283,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",c0074b4f-85e4-47d0-81c7-32cfda27a6a4,0.4283,"The term “another Member of an Employee’s family” means brother and sister, step-brother and step-sister,
+mother and father, mother-in-law and father-in-law, sister-in-law and brother-in-law, grandpar...",44f25ba8-aa87-4011-882f-c39299def7a9,0.401,"Members may request one day free from teaching for teaching preparation and grading. This request shall
+not be unreasonably denied. In order to promote scholarly activity and professional development,...",44f25ba8-aa87-4011-882f-c39299def7a9,0.401,"Members may request one day free from teaching for teaching preparation and grading. This request shall
+not be unreasonably denied. In order to promote scholarly activity and professional development,...",474ffcb6-367d-493a-8bc6-13c2482e8d1e,0.3932,"The workload shall include an additional 3 credits to be used towards teaching, governance or scholarly
+work at the discretion of the member.
+7
+<<>>
+Collective Agreement 2017-2020
+Members may request ...",0.42831,0.42831,0.032018,test_en_044,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Intellectual Property,medium,0.2609,0.0351,0.2597,0.08,0.1558,0.308,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_045,Who owns the patent if a member creates a patentable invention using university resources?,"According to Article 6.30.2 of the Collective Agreement, the Employer waives, disclaims, and abandons any interest in or claims to any invention, improvement, design, or development made by a Member or Members, except where this has occurred with the use of the Employer's funds, personnel, or equipment. In such cases, the conditions set out in Article 6.30.4 apply.
+
+Article 6.30.4 states that where an invention, improvement, design, or development was made by Members with the use of the Employer's funds, personnel, or equipment, the Members shall sign an agreement with the University before an application for patent is filed by them. This agreement shall provide that the Employer shall assign all rights, title, and interest in the invention, improvement, design, or development to the Members.
+
+Therefore, if a member creates a patentable invention using university resources, the patent would be owned by the Member, subject to the conditions of the agreement and the assignment of rights to the University.",llama3.2:3b-instruct-q4_K_M,English,2,True,38edbb73-8c10-4e5d-9423-eb054246369f,0.4264,"ARTICLE 6.30 – PATENTS
+6.30.1 The Employer agrees that the Members have the unqualified right to publish their inventions. The Employer further
+agrees that the Members have no obligation to modify the...",38edbb73-8c10-4e5d-9423-eb054246369f,0.4264,"ARTICLE 6.30 – PATENTS
+6.30.1 The Employer agrees that the Members have the unqualified right to publish their inventions. The Employer further
+agrees that the Members have no obligation to modify the...",559addea-fbc9-46df-99c5-c635b2a763af,0.4202,"Members agree to disclose the existence of any patent applications to
+the Employer within three (3) months of the date of the application unless
+otherwise provided for in this Article and shall affirm...",38edbb73-8c10-4e5d-9423-eb054246369f,0.4093,"ARTICLE 6.30 – PATENTS
+6.30.1 The Employer agrees that the Members have the unqualified right to publish their inventions. The
+Employer further agrees that the Members have no obligation to modify the...",559addea-fbc9-46df-99c5-c635b2a763af,0.409,"This agreement shall provide that the Employer shall assign all
+rights, title and interest in the invention, improvement, design or development to the Members, subject to the
+University and the Member...",0.426364,0.426364,0.030579,test_en_045,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Intellectual Property,hard,0.2424,0.0169,0.1856,0.0833,0.1443,0.2541,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6
+test_en_046,Are faculty members evaluated on their teaching?,"Yes, according to Article 8.25.5 of the Collective Agreement 2017-2020, for Full Professors/Librarians/Archivists, the Faculty Personnel Committee shall consider the award of merit increments in relation to criteria for promotion to the rank for Full Professor/Librarian, and the judging of the applicant's performance over the past three years, or since the award of the last merit increase, shall be based on consistently good teaching.
+
+Additionally, for Master Lecturers, the judging of the applicant's performance over the past three years, or since the award of the last merit increase, shall be based on consistently good teaching (Article 8.25.5).
+
+However, it's also mentioned in Article 5.50.4 that Assessors shall use the results of the teaching evaluations in their assessments with the understanding that these evaluations comprise only one part of a Member's teaching dossier.
+
+This implies that while teaching is one of the criteria considered in the evaluation process, it is not the only factor, and other aspects such as scholarly activity, academic qualifications, and professional service are also taken into account.",llama3.2:3b-instruct-q4_K_M,English,2,True,c14ef21d-b4fa-4e14-943d-a7b4e41cd95b,0.4244,"Only tenured
+Members are eligible to vote.
+1
+<<>>
+Collective Agreement 2017-2020
+8.25.5 For Full Professors/Librarians/Archivists, the
+Faculty Personnel Committee shall consider the award of merit inc...",c14ef21d-b4fa-4e14-943d-a7b4e41cd95b,0.4244,"Only tenured
+Members are eligible to vote.
+1
+<<>>
+Collective Agreement 2017-2020
+8.25.5 For Full Professors/Librarians/Archivists, the
+Faculty Personnel Committee shall consider the award of merit inc...",ea338095-2ce6-4b09-a84a-641836f6ea11,0.4439,"The Vice-President, Academic and Provost will
+communicate her/his decision on the request prior to the planned date of the course evaluation.
+(b) It is the responsibility of Members to maintain on an ...",afa63931-280b-40f6-839b-f8f30a9e93d8,0.0164,"Termination of The parties agree that the one counsellor listed in confidential
+Counsellor Schedule “B” to this term sheet shall be terminated (the
+“Terminated Counsellor”), with an effective terminat...",f75c97aa-e60c-4f0f-9268-aa47534dcc9c,0.4632,"In interpreting these guidelines, the following shall apply:
+(a) Article 5.10 – Academic Qualifications
+Guidelines
+(b) Article 5.15 – Rights, Responsibilities and Duties of Academics
+(c) Article 5.50 ...",0.424375,0.424375,0.02837,test_en_046,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Evaluation,easy,0.1043,0.0052,0.0707,0.0102,0.0707,0.1716,0.0,0.0,0.0,0.0,0.0,1.0,0.8,0.4
+test_en_047,Can student evaluations be the sole metric for teaching performance?,"No, student evaluations cannot be the sole metric for teaching performance. According to Article 4.35 of the Collective Agreement 2011-14, ""Student course evaluations shall not be the sole means of determining the quality of the Sessional Member's teaching performance. The Sessional Member's entire teaching dossier shall be considered.""",llama3.2:3b-instruct-q4_K_M,English,1,True,ea338095-2ce6-4b09-a84a-641836f6ea11,0.3821,"The Vice-President, Academic and Provost will
+communicate her/his decision on the request prior to the planned date of the course evaluation.
+(b) It is the responsibility of Members to maintain on an ...",876a228f-aeb7-4a55-9432-18fa48b82b49,0.0164,"The credits taught by
+Sessional Members in off-campus courses shall not be included in these totals.
+35 of 246
+<<>>
+Collective Agreement 2008-11
+ARTICLE 4.30 – TEACHING RIGHTS AND
+RESPONSIBILITIES FOR...",ea338095-2ce6-4b09-a84a-641836f6ea11,0.3855,"The Vice-President, Academic and
+Provost will communicate her/his decision on the request prior to the planned date of the course evaluation.
+(b) It is the responsibility of Members to maintain on an ...",876a228f-aeb7-4a55-9432-18fa48b82b49,0.0161,"The credits taught by
+Sessional Members in off-campus courses shall not be included in these totals.
+35 of 246
+<<>>
+Collective Agreement 2008-11
+ARTICLE 4.30 – TEACHING RIGHTS AND
+RESPONSIBILITIES FOR...",ea338095-2ce6-4b09-a84a-641836f6ea11,0.3855,"The Vice-President, Academic and
+Provost will communicate her/his decision on the request prior to the planned date of the course evaluation.
+(b) It is the responsibility of Members to maintain on an ...",0.382139,0.382139,0.016393,test_en_047,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Evaluation,medium,0.3077,0.0348,0.2254,0.087,0.169,0.2386,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_048,What is the role of a Department Chair?,"According to Article 9.06 of the Collective Agreement 2018-2021, the role of a Department Chair is to provide academic leadership in the Department, serving as the administrative head and spokesperson of the Department. The Chair's responsibilities include:
+
+(a) managing the operations of the Department;
+(b) overseeing the administration of the Department and ensuring that the members of the Department have an opportunity to participate in the decision-making process;
+(c) designating a deputy and advising the President accordingly in the event of an absence for a period longer than ten working days;
+(d) overseeing the use of space and equipment assigned to the Department;
+(e) chairing departmental meetings or designating a member of the Department to do so;
+(f) representing the Department's interests within the University;
+(g) recommending to the President the teaching duties and allocating other departmental responsibilities to members of the Department, after consultation with the individual faculty member, and after consultation with all available members of the Department;
+(h) convening meetings of the Department at least once each Fall and once each Winter term for the purpose of establishing matters of internal policy, or recommending policy to the appropriate bodies within the University;
+(i) providing the Chair designate with information and documents necessary to prepare to assume the office of Chair;
+(j) carrying out such other duties related to their Academic Department as may be reasonably assigned by the Employer.",llama3.2:3b-instruct-q4_K_M,English,3,True,e80cd9b7-baca-4777-89ba-cc0deba66ae4,0.4224,"ARTICLE 9 – DEPARTMENT CHAIR
+9.01 The Chair of the Department shall be appointed by the
+14 of 59
+<<>>
+Collective Agreement 2015-2018
+University President from among the tenured or probationary members...",e80cd9b7-baca-4777-89ba-cc0deba66ae4,0.4224,"ARTICLE 9 – DEPARTMENT CHAIR
+9.01 The Chair of the Department shall be appointed by the
+14 of 59
+<<>>
+Collective Agreement 2015-2018
+University President from among the tenured or probationary members...",2894b142-cfb3-47f2-8c28-de192ad806e1,0.4203,"Article 2.15.1 will be amended to add as a 4th paragraph that the bargaining unit includes:
+- All persons employed by Laurentian University in the job classification of Counsellors,
+save and except, m...",a68e30a0-c4a8-4b64-b71d-4697069950ad,0.4418,"33.02 Department Chairs, shall receive a 6 credit reduction in teaching or the value equivalent to 6-
+credits added to their salary for every year they are Chair. Chairs duties begin on July 1.",4d8a2cd8-50e8-4c26-ab8e-1c1468e7c19a,0.0159,"Grievances concerning renewal ofprobationary appointment and tenure decisions shall proceed directly to arbitration as
+set forth in Article 24 Arbitration of
+Procedures.
+8.08 A Lecturer who obtains a ...",0.422433,0.422433,0.032522,test_en_048,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Department Chair,medium,0.1987,0.0161,0.1504,0.0758,0.1203,0.2396,0.0,0.0,0.0,0.0,0.0,1.0,0.6,0.6
+test_en_049,How is a Department Chair selected?,"According to the Collective Agreement 2011-14, Article 9.15, a Department Chair is selected through a selection process involving the Selection Committee, the Dean/University Librarian, and the Vice-President, Academic and Provost.
+
+Here's a step-by-step overview of the selection process:
+
+1. The Selection Committee is responsible for conducting the selection process.
+2. The Chair of the Selection Committee reports the results of the selection process and its recommendation to the Dean/University Librarian (Article 9.15.9).
+3. If the Dean/University Librarian is prepared to accept the Selection Committee's recommendation, the Dean/University Librarian will forward this recommendation together with their own to the Vice-President, Academic and Provost, who will make the appointment (Article 9.15.10).
+4. If the Dean/University Librarian is not prepared to accept the Selection Committee's recommendation, the Dean/University Librarian shall indicate their reservations to the Selection Committee and the Department/School. If the Dean/University Librarian and the Selection Committee are unable to agree on an appointment, the selection procedure shall be reinstituted as in clause 9.15.3 above (Article 9.15.11).
+
+It's worth noting that in exceptional circumstances, the Vice-President, Academic and Provost and the Dean/University Librarian, after consultation with a Department/School, may appoint an acting Chair/Director for a period of up to four (4) months, consistent with Article 9.20 – Term of Office of Chairs/Directors and Article 9.30 – Removal from Office of Chairs/Directors (Article 9.15.13).",llama3.2:3b-instruct-q4_K_M,English,1,True,e956bb4d-d9b9-431f-894e-5fb66d28355a,0.4667,"The ballots shall be opened and counted in the
+presence of the Selection Committee.
+9.15.9 The Chair of the Selection Committee shall report the results of the selection process and its recommendation...",e956bb4d-d9b9-431f-894e-5fb66d28355a,0.4667,"The ballots shall be opened and counted in the
+presence of the Selection Committee.
+9.15.9 The Chair of the Selection Committee shall report the results of the selection process and its recommendation...",e956bb4d-d9b9-431f-894e-5fb66d28355a,0.4599,"The ballots shall be opened and counted in the
+presence of the Selection Committee.
+9.15.9 The Chair of the Selection Committee shall report the results of the selection process and its recommendation...",e956bb4d-d9b9-431f-894e-5fb66d28355a,0.4599,"The ballots shall be opened and counted in the
+presence of the Selection Committee.
+9.15.9 The Chair of the Selection Committee shall report the results of the selection process and its recommendation...",4dc8114f-cd0f-4492-880c-3c3d323cb405,0.4864,"Any outside appointment shall be
+made in accordance with Article 5.20 – Appointment and Renewal.
+9.15.13 In exceptional circumstances the Vice-President, Academic and Provost and the Dean/University L...",0.466692,0.466692,0.032266,test_en_049,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Department Chair,medium,0.2114,0.0102,0.1223,0.0435,0.1007,0.2416,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.8
+test_en_050,Do Chairs receive additional compensation?,"Yes, Chairs/Directors are entitled to receive an additional credit of one (1) year toward their sabbatical for a completed three (3) year term, as per Article 9.25.5.",llama3.2:3b-instruct-q4_K_M,English,3,True,4dc8114f-cd0f-4492-880c-3c3d323cb405,0.4377,"For purposes of administration of this Article, the Chair/Director shall indicate to the Dean/University
+Librarian as of
+September 1 of each year the category under which she/he should be compensated....",f05016c5-7d90-415c-8cd3-9211f1811baf,0.0164,"When a correspondence course is revised, equivalent credit value shall
+be calculated on a pro-rated basis.
+6.35.3 Copyright
+Copyright for distance education courses shall be governed by Article 4.91.
+...",4dc8114f-cd0f-4492-880c-3c3d323cb405,0.4377,"For purposes of administration of this Article, the Chair/Director shall indicate to the Dean/University
+Librarian as of
+September 1 of each year the category under which she/he should be compensated....",dbe7d39c-7050-4cbf-981d-e055c7cdd2b7,0.0161,"ARTICLE 6.40 – FRINGE BENEFITS
+6.40.1 Available Fringe Benefits
+During the term of this Agreement, the Employer agrees to maintain for its Members, the
+same benefits package and the same cost-sharing ...",a1fdad88-d98b-43fd-af05-aefaffa1c3f1,0.4239,"ARTICLE 26 — SALARY
+26.01 Compensation for full time Members shall be as follows:
+a) ascale increase equal to that negotiated in the Laurentian University Collective
+Agreement for 2016/2017, 2017/2018...",0.437668,0.437668,0.016393,test_en_050,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Department Chair,easy,0.2326,0.0258,0.2273,0.0476,0.2273,0.2385,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_051,Is there a retirement age specified?,"Yes, according to the Collective Agreement 2011-14 (page 16, sections 16(a) and 16(b)), a Member taking Special Voluntary Early Retirement must be at least 60 years of age to be eligible for full or partial CPP benefits.",llama3.2:3b-instruct-q4_K_M,English,1,True,06cc31c7-e660-4622-9f09-5248629d9021,0.4204,"The allowable
+roll-over amount may be spread over the years of the
+Special Voluntary Early Retirement and the remaining incentive amount would be considered income for the sake of
+calculating the annu...",a14f8ed9-c46f-441c-ae65-d058e279ac2e,0.4234,"The allowable
+roll-over amount may be spread over the years of the
+Special Voluntary Early Retirement and the remaining incentive amount would be considered
+223 of 246
+<<>>
+Collective Agreement 2008-1...",473f4a7f-3a23-4064-9731-50d1b1bb2002,0.3875,"No amendments to the
+Pension Plan that
+reduce pension benefits
+for Members, or that
+materially affect
+Members’ rights, may
+be made without
+LUFA’s consent.
+5.90.5 Reflect proposed Members hired after D...",06cc31c7-e660-4622-9f09-5248629d9021,0.4204,"The allowable
+roll-over amount may be spread over the years of the
+Special Voluntary Early Retirement and the remaining incentive amount would be considered income for the sake of
+calculating the annu...",a14f8ed9-c46f-441c-ae65-d058e279ac2e,0.4234,"The allowable
+roll-over amount may be spread over the years of the
+Special Voluntary Early Retirement and the remaining incentive amount would be considered
+223 of 246
+<<>>
+Collective Agreement 2008-1...",0.420397,0.420397,0.031545,test_en_051,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Retirement,medium,0.1429,0.0103,0.1613,0.0,0.129,0.105,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_052,Are phased retirement options available?,"Oui, phased retirement options sont disponibles. Selon l'article 1 de l'Accord collectif 2008-11, un programme de retraite progressive a été mis en place le 1er juillet 2006 et continue à être en vigueur. Les membres peuvent se rétirer progressivement sur une période de trois ans et demie.",llama3.2:3b-instruct-q4_K_M,English,1,True,c3ad47b4-5541-4d7a-9d44-2643efd788d8,0.4659,"For phased retirement, the cumulative appointment over the two (2) year phased retirement period will be at
+least one hundred percent (100%) but not more than one hundred and twenty-five percent (125%...",c3ad47b4-5541-4d7a-9d44-2643efd788d8,0.4659,"For phased retirement, the cumulative appointment over the two (2) year phased retirement period will be at
+least one hundred percent (100%) but not more than one hundred and twenty-five percent (125%...",80463d6b-6281-4798-aa39-c8bc9ddb7c66,0.3433,"Modify Early Retirement Provisions
+For members who have not attained age 62 as of July 1, 2021:
+• Remove subsidized early retirement reductions for all members on all service
+(actuarially adjusted fro...",c08d9013-e02c-475c-88f6-46e9280f9546,0.0159,"Admission to the Special Voluntary Early Retirement
+Plan will be available under this plan for a four (4) year period i.e. from July 1, 2008 to June 30, 2012. If the Laurentian
+University Retirement P...",06cc31c7-e660-4622-9f09-5248629d9021,0.3613,"The allowable
+roll-over amount may be spread over the years of the
+Special Voluntary Early Retirement and the remaining incentive amount would be considered income for the sake of
+calculating the annu...",0.465925,0.465925,0.032787,test_en_052,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Retirement,medium,0.0896,0.0143,0.0789,0.027,0.0789,0.0545,0.25,0.4307,0.0,0.0,1.0,1.0,0.4,1.0
+test_en_053,What happens in the event of financial exigency?,"In the event of financial exigency, the Employer (the Board of Governors) may give notice of its belief that a financial exigency exists. As of the date of such notice, the procedures specified in Article 10.15 shall apply, and no new appointments may be made to either the academic or administrative staff complement (Article 10.15.5).
+
+Within two (2) days of giving notice, the Board of Governors shall forward all financial documentation relevant to the alleged state of financial exigency to the Faculty Association (Article 10.15.6).
+
+Within fifteen (15) days of the notice, the Parties shall establish a Financial Commission to consider the alleged financial exigency and either confirm it (under whatever conditions it chooses to impose) or reject it (Article 10.15.7).
+
+The Financial Commission shall be chosen as an Arbitration Board, with no member being a government official (Article 10.15.8). Decisions of the Financial Commission under this Article shall be final and binding on all Parties (Article 10.15.8). The onus of proof shall be on the Employer to establish to the satisfaction of the Financial Commission that a state of financial exigency exists within the meaning of this Article (Article 10.15.9).",llama3.2:3b-instruct-q4_K_M,English,1,True,d5658d8b-b87c-4fa8-a117-b642d11425a6,0.5261,"ARTICLE 10.15 – FINANCIAL EXIGENCY
+10.15.1 The Board of Governors and the Union agree that the first duty of the University is to ensure that its academic
+priorities remain paramount, particularly wit...",d5658d8b-b87c-4fa8-a117-b642d11425a6,0.5261,"ARTICLE 10.15 – FINANCIAL EXIGENCY
+10.15.1 The Board of Governors and the Union agree that the first duty of the University is to ensure that its academic
+priorities remain paramount, particularly wit...",d5658d8b-b87c-4fa8-a117-b642d11425a6,0.5083,"ARTICLE 10.15 – FINANCIAL EXIGENCY
+10.15.1 The Board of Governors and the Union agree that the first duty of the University is to ensure that its academic
+priorities remain paramount, particularly wit...",bb161b7f-6caa-48ab-92b8-0b437ad94824,0.5167,"38.05 In the event that the Board of Regents considers that a financial exigency exists, within the
+meaning of Paragraph 2, it may give notice of such a belief. As of the date of such notice the
+proce...",ac1384dd-e6f2-46d3-a6c6-2b4ed4090ea3,0.5129,"As of the date of such notice the procedures specified in this
+Article shall apply, and no new appointments may be made to either the
+academic or administrative staff complement.
+6. Within two (2) day...",0.526066,0.526066,0.031099,test_en_053,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Job Security,hard,0.0917,0.003,0.0705,0.0,0.0705,0.0973,0.0,0.0,0.0,0.0,0.0,1.0,0.8,1.0
+test_en_054,How did the CCAA mediation term sheet affect financial exigency clauses?,"The CCAA mediation term sheet did not affect financial exigency clauses, but rather the parties agreed to establish a Financial Commission within 15 days of the notice specified in Paragraph 5 above, which would consider the alleged financial exigency and either confirm it or reject it (39.07).",llama3.2:3b-instruct-q4_K_M,English,1,True,7e8f8012-c49d-475c-b27f-c295cdb97969,0.3664,"This is without prejudice/precedent to LUFA’s position that crisis work is bargaining unit work.
+142
+<<>>
+APPENDIX N: COORDINATOR CREDITS- PROGRAMS
+143
+<<>>
+144
+<<>>
+145
+<<>>
+APPENDIX O: COORDINATOR C...",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.3846,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+...",b838d46e-8b23-4e1b-ab7b-12293e7ba0d9,0.0164,"<<>>
+LAURENTIAN UNIVERSITY FACULTY ASSOCIATION
+MEDIATION TERM SHEET
+DATED APRIL 7, 2021
+The below sets out the key financial terms and conditions agreed to following negotiations
+between Laurentian Un...",02546743-7c69-4a3b-b035-1785d8f3f9c1,0.3815,"39.07 Within fifteen (15) days of the notice specified in Paragraph 5 above, the parties shall
+establish a Financial Commission which will consider the alleged financial exigency and either
+(a) confir...",38ab0ad6-0ba9-4954-86e2-ddeac1897e91,0.0159,"The parties agree that grievances for non-monetary issues or
+Grievances
+those not involving the expenditure of money such as
+accommodation, denial of tenure or unjust dismissal, which arise
+on or afte...",0.36638,0.36638,0.032258,test_en_054,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Job Security,hard,0.2258,0.0225,0.2571,0.0882,0.2286,0.3368,0.5,0.6309,0.0,1.0,1.0,1.0,1.0,0.4
+test_en_055,Are faculty members allowed to engage in outside professional activities?,"Yes, faculty members are allowed to engage in outside professional activities, but such activities must not interfere with their obligations, duties, and responsibilities as full-time employees of the University.",llama3.2:3b-instruct-q4_K_M,English,2,True,dae68fda-c792-45b7-94d3-d1cc30eb2ea5,0.5072,"10.06 Other Paid Professional Activities
+The nature ofthe professional competence ofmany faculty members affords opportunities for the exercise ofthat
+competence outside the member's University duties...",ae415be8-2a4c-46c1-807a-407d2cb560d5,0.0164,"The librarian pay equivalent shall be deemed to be 126 hours per 3 course credits of pay.
+19
+<<>>
+4.25.3 The workload of a Sessional Member shall normally not exceed twelve (12) credits per Fall/Winte...",dae68fda-c792-45b7-94d3-d1cc30eb2ea5,0.5072,"10.06 Other Paid Professional Activities
+The nature ofthe professional competence ofmany faculty members affords opportunities for the exercise ofthat
+competence outside the member's University duties...",ae415be8-2a4c-46c1-807a-407d2cb560d5,0.0161,"The librarian pay equivalent shall be deemed to be 126 hours per 3 course credits of pay.
+4.25.3 The workload of a Sessional Member shall normally not exceed twelve (12) credits per Fall/Winter
+19
+<<>...",e602ea85-1a03-48d0-9fa1-be00006114d5,0.5063,"10.06 Other Paid Professional Activities
+The nature of the professional competence of many faculty members affords opportunities for the exercise of that
+competence outside the member's University dut...",0.507198,0.507198,0.016393,test_en_055,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Outside Activities,medium,0.5185,0.1208,0.5,0.1852,0.4643,0.4561,0.2,0.3869,0.0,0.0,1.0,1.0,0.8,1.0
+test_en_057,Is health and safety the responsibility of the university?,ERROR,llama3.2:3b-instruct-q4_K_M,English,0,False,,,,,,,,,,,,,,,,0.0,0.0,0.0,test_en_057,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Health and Safety,easy,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+test_en_058,Is there a Joint Health and Safety Committee?,"Yes, there is a Joint Health and Safety Committee. According to Section 9 of the Occupational Health and Safety Act and Section 3.25.1 of the Collective Agreement, the Employer is required to establish a Joint Health and Safety Committee in the workplace, which includes:
+
+* 2 representatives from the unionized groups (including LUFA)
+* 1 representative from the Science/Engineering Safety Committee
+* 1 Employer representative with the power to co-opt other members
+
+The Committee's work will include an examination of procedures and physical facilities brought to its attention, as they relate to health, safety, and security.",llama3.2:3b-instruct-q4_K_M,English,1,True,171dcace-aceb-4fcf-9d02-31e8d76340a9,0.4087,"Copies of the Act and its
+Regulations are available for reference from the Library, Health and Safety
+Bulletin Boards throughout campus, on the Web at www.labour.gov.on.ca/
+english/hs/index.php, at Hu...",ee3e3c1d-0aab-4eaf-a2ee-e1fb9a6f80b1,0.3975,"THE WORKER MUST:
++ work in compliance of the Act and regulations;
++ report any hazards or contravention of this Act to the supervisor,
+* wear any equipment, protective devices, or clothing that the em...",5b206014-82aa-4c05-aa25-2c3b0007f4ce,0.3751,"The charge for replacement will be fifteen
+dollars ($15) per card.
+3.20.5 In their offices and once every four (4) years,
+Members shall be supplied with “a standard computer” as determined by the Comp...",5b206014-82aa-4c05-aa25-2c3b0007f4ce,0.3751,"The charge for replacement will be fifteen
+dollars ($15) per card.
+3.20.5 In their offices and once every four (4) years,
+Members shall be supplied with “a standard computer” as determined by the Comp...",60a7fbd6-f25c-452a-b49c-0d6092ab7fbf,0.358,"All Sessional Members teaching activity courses and
+experientially based courses in the School of Human Kinetics shall be granted the same privilege during
+the session(s) in which they are employed.
+1...",0.408656,0.408656,0.032787,test_en_058,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Health and Safety,easy,0.2895,0.0128,0.1947,0.036,0.177,0.3428,1.0,1.0,1.0,1.0,1.0,1.0,0.8,0.4
+test_en_059,What access do members have to their personnel files?,"According to Article 5.70.2 of the Collective Agreement, members have the right to examine their personnel files during normal business hours, after notice in writing, in the presence of the Dean/University Librarian or a person authorized by the Dean/University Librarian. Material in the files that is to be held confidential will be removed from the files prior to their inspection by the member. However, an inventory of the confidential material, certified by the Dean/University Librarian, will be provided to the member, which will identify all confidential documents by authorship (if appropriate), date, and general subject matter only.",llama3.2:3b-instruct-q4_K_M,English,3,True,9f8dc618-5599-4533-bd62-e73d5c14526d,0.4688,"Should the
+applicant fail to
+1
+<<>>
+Collective Agreement 2017-2020 nominate one (1) or both external referees, the Member’s Department/School will
+nominate the required referees. The additional extern...",9f8dc618-5599-4533-bd62-e73d5c14526d,0.4688,"Should the
+applicant fail to
+1
+<<>>
+Collective Agreement 2017-2020 nominate one (1) or both external referees, the Member’s Department/School will
+nominate the required referees. The additional extern...",8d1d21eb-fb69-45a7-b991-20290cd53291,0.4799,"The Employer agrees not to use any unofficial personnel information that is not
+maintained in accordance with this Article for any official purposes including disciplinary measures. There
+shall be two...",616adaa2-69be-44f8-abb0-d9bc49b52435,0.0164,"ARTICLE 8.4 - STRIKES AND LOCKOUTS
+1. The University and the Association hereby agree that there shall not be,
+during the currency of this Agreement, any lockout by the University or any
+strike by Mem...",4b3dfb01-42c9-4d90-a9e3-df2a30fcb64e,0.0161,"INNIS
+Registrar
+The above description of the bargaining unit is subject to the following qualifications:
+215 of 246
+<<>>
+Collective Agreement 2008-11
+CLARITY NOTE:
+For the purposes of clarity, the par...",0.468841,0.468841,0.030214,test_en_059,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Personnel Files,medium,0.3023,0.0497,0.2097,0.0984,0.1935,0.2798,0.3333,0.5,0.0,1.0,1.0,1.0,0.6,0.4
+test_en_060,Can anonymous complaints be added to a member's personnel file?,"No, anonymous complaints cannot be added to a member's personnel file. According to Section 5.70.4 of the Collective Agreement, ""No anonymous material concerning any Member shall be kept by the Employer for inclusion in the Member's personnel file."" This means that any complaint or material submitted anonymously cannot be used as part of a member's personnel file.",llama3.2:3b-instruct-q4_K_M,English,1,True,8d1d21eb-fb69-45a7-b991-20290cd53291,0.471,"The Employer agrees not to use any unofficial personnel information that is not
+maintained in accordance with this Article for any official purposes including disciplinary measures. There
+shall be two...",8d1d21eb-fb69-45a7-b991-20290cd53291,0.4465,"Requests for additional copies will be filled at the convenience of the Vice-President,
+Academic and Provost.
+5.70.4 No anonymous material concerning any
+Member shall be kept by the Employer for inclu...",8d1d21eb-fb69-45a7-b991-20290cd53291,0.4418,"No anonymous material concerning any Member shall be kept by the Employer for
+inclusion in the Member’s personnel file. Statistical summaries of student evaluations
+or written summaries of student com...",00a3191d-4c96-4941-9ebf-41caf439b043,0.4776,"Archival files shall contain material which has been
+banned for use in subsequent proceedings as in clauses 5.70.5 to
+5.70.9 below but which the University requires for matters other than those relate...",8d1d21eb-fb69-45a7-b991-20290cd53291,0.4465,"Requests for additional copies will be filled at the convenience of the Vice-President,
+Academic and Provost.
+5.70.4 No anonymous material concerning any
+Member shall be kept by the Employer for inclu...",0.471039,0.471039,0.031778,test_en_060,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Personnel Files,medium,0.4478,0.089,0.3371,0.1609,0.2697,0.4606,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_062,Is technical support guaranteed for online courses?,"Unfortunately, the provided text does not mention technical support for online courses. However, it does mention the provision of information about faculty teaching loads, including online courses, as part of the Employer's obligations under Article 2.50.
+
+Article 2.50.2 lists various reports and information that the Employer is required to provide to the Union, including:
+
+* An electronic list of full-time Members in October of each year
+* Electronic lists of Sessional Members and limited term appointments in October, February, and May of each year
+* Lists of courses taught by full-time and non-Member faculty in May of each year
+* Lists of course or workload releases for full-time Members in October and February of each year
+
+While this information may provide some insight into faculty teaching loads, it does not specifically address technical support for online courses.
+
+To determine if technical support is guaranteed for online courses, you would need to review the Collective Agreement's provisions related to online courses, such as Article 11.23, which specifies that each offer of appointment shall include information about the course number(s), number of credits, terms and conditions of employment, and will reference individuals to the collective agreement for benefits, professional development funds, establishment/seniority, deemed hours and cancellation conditions.",llama3.2:3b-instruct-q4_K_M,English,3,True,de5ae8f0-7cb6-4973-b372-b0a06dbe9d95,0.4268,"ARTICLE 2.50 – INFORMATION
+2.50.1 The Parties recognise that their mutual goals stated in Article 1.20 – Purpose of the Collective Agreement
+can only be realised if both Parties have access to necessa...",7df45af3-d9de-447b-89bf-4a6fa6b5010b,0.0164,"Hermann Falter
+for Laurentian University for Laurentian University
+Faculty Association of Sudbury
+Collective Agreement 2002-2005 149
+<<>>
+Collective Agreement 2002-2005 150
+<<>>
+APPENDIX I
+Letter of U...",528bb61e-3fff-4c73-b5a8-7a9319f8713f,0.4395,"11.23 Each offer ofappointment shall specify the course number(s), the number of credits, terms and conditions of
+employment including salary, and will reference individuals to the collective agreemen...",e421da6e-81ca-44b8-8cad-fa7ac7ae0209,0.0161,"During the term of any such leave, the Members shall be entitled to leave without remuneration. Such Members
+shall not be entitled to any rights or privileges under this
+Collective Agreement except in...",528bb61e-3fff-4c73-b5a8-7a9319f8713f,0.4395,"11.23 Each offer ofappointment shall specify the course number(s), the number of credits, terms and conditions of
+employment including salary, and will reference individuals to the collective agreemen...",0.426779,0.426779,0.016393,test_en_062,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Working Conditions,medium,0.1905,0.0071,0.113,0.0263,0.087,0.2155,0.0,0.0,0.0,0.0,0.0,1.0,0.8,0.6
+test_en_063,What happens if a scheduled class is cancelled due to low enrollment?,"If a scheduled class is cancelled due to low enrollment, there arises an obligation on the part of the Member to undertake additional work in order to maintain fairness and equity within the Department/School. The nature and extent of such work shall be determined in discussions between the Member, the Chair of the Department/School, and the Dean. In the event that the Member was scheduled to receive an overload stipend, such a stipend should be reduced appropriately. In the case where additional work assigned is in the form of a course, such course shall be one the Member has taught in the last two (2) years, unless otherwise agreed to by the Member.
+
+(5.40.8 Collective Agreement 2008-11, page 73 and 246)",llama3.2:3b-instruct-q4_K_M,English,1,True,78b84e7c-a90f-4089-9571-3c303a1d0a5e,0.3692,"In the assignment of teaching loads, the Deans, in consultation
+with the Departments/Schools, shall consider not only the number of courses taught by a
+Member, but the size and type of such courses as...",91cb00c0-8427-485f-a6d1-2ca1e2437d28,0.4075,"Notwithstanding the provisions of this Article, when an assigned course(s) is cancelled because of zero registration in the
+course(s) there arises an obligation on the part of the Member to undertake ...",91cb00c0-8427-485f-a6d1-2ca1e2437d28,0.4075,"Notwithstanding the provisions of this Article, when an assigned course(s) is cancelled because of zero registration in the
+course(s) there arises an obligation on the part of the Member to undertake ...",91cb00c0-8427-485f-a6d1-2ca1e2437d28,0.4076,"Notwithstanding the provisions of this Article, when an assigned course(s) is cancelled because of zero registration in the
+course(s) there arises an obligation on the part of the Member to undertake ...",64cb980c-a0a7-4f02-b807-dd10f300bae4,0.4318,"12.07 The Employer reserves the right to cancel an elective course if the enrolment is less than 15.
+In case ofa required course or a first year religious studies course, it must be offered at least
+o...",0.369219,0.369219,0.030835,test_en_063,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Workload,medium,0.2828,0.0268,0.2119,0.1074,0.1722,0.2279,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_064,Are faculty members expected to be on campus during the summer term?,"Yes, according to Article 7.20.5, Departments/Schools must maintain a fair and equitable system to assure a reasonable presence sufficient to administer the Department/School, to deal with correspondence and to maintain on-going availability for student counselling and other unscheduled issues as they may from time to time arise during the summer term (from Spring Convocation to Labour Day).",llama3.2:3b-instruct-q4_K_M,English,1,True,0a2cf11c-effd-493d-b8cd-e57cf1b57399,0.3739,"12.09 Normally full-time academic staff will not teach at another campus. Full-time academic staff
+may be asked to accept teaching duties outside of Sudbury. In the event that an emergency
+interferes ...",906c2d58-8886-4589-97f6-569df805296e,0.0164,"This
+will include reporting to the Department Chair on the clinical budget, coordination of the clinic’s
+schedule, recruitment and intake of potential clients, oversight of the signed contractual
+agre...",0a2cf11c-effd-493d-b8cd-e57cf1b57399,0.374,"12.09 Normally full-time academic staff will not teach at another campus. Full-time academic staff
+may be asked to accept teaching duties outside of Sudbury. In the event that an emergency
+interferes ...",906c2d58-8886-4589-97f6-569df805296e,0.0161,"This
+will include reporting to the Department Chair on the clinical budget, coordination of the clinic’s
+schedule, recruitment and intake of potential clients, oversight of the signed contractual
+agre...",9c623c10-524b-48a4-ba98-7cb73addd721,0.3501,"Members are considered to be on vacation
+starting on the first working day after Spring Convocation.
+(b) Members retiring or resigning on December 31 shall be paid a number of working days equal to th...",0.373878,0.373878,0.016393,test_en_064,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Working Conditions,easy,0.1714,0.0155,0.2093,0.0238,0.1395,0.1619,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0
+test_en_065,How many vacation days do faculty members receive?,"According to the Collective Agreement, faculty members receive a maximum of 35 working days of vacation. This is calculated as follows:
+
+* For the first 5 full consecutive years of employment, faculty members receive 2 additional days of vacation for each year of employment thereafter.
+* The total number of vacation days is therefore 2 (initial days) + (number of years of employment after the first 5 years) x 2.
+
+Note that there is no information provided in the context about the number of days received by faculty members in a specific year or term.",llama3.2:3b-instruct-q4_K_M,English,1,True,91c53945-cdc4-4dc9-a0e1-566699643f33,0.4172,"When Members have accumulated five (5) full consecutive
+years of employment at the University, for each year of employment thereafter they shall be entitled to an additional two
+(2) days of vacation t...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.4172,"When Members have accumulated five (5) full consecutive
+years of employment at the University, for each year of employment thereafter they shall be entitled to an additional two
+(2) days of vacation t...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.4089,"When Members have accumulated five (5) full consecutive years of employment
+at the University, for each year of employment thereafter they shall be entitled to an additional two (2) days of vacation t...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.4089,"When Members have accumulated five (5) full consecutive years of employment
+at the University, for each year of employment thereafter they shall be entitled to an additional two (2) days of vacation t...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.403,"Members on contracts of less than one (1) year duration are
+entitled to a pro-rated period of vacation. When Members have accumulated five (5) full consecutive years of employment
+at the University, f...",0.417195,0.417195,0.031514,test_en_065,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,easy,0.2778,0.0228,0.1786,0.0727,0.1429,0.2735,0.0,0.0,0.0,0.0,0.0,0.8,0.8,0.8
+test_en_066,Is it possible to carry forward unused vacation days?,"According to the Collective Agreement 2011-14, Article 7.15.4, Vacation may not be accumulated from year to year. This means that unused vacation days cannot be carried forward from one year to the next.
+
+Additionally, Article 7.15.4 also states that Members are required to take the vacation to which they are entitled, and vacation may not be taken at a time that conflicts with scheduled duties.
+
+It appears that the only option for unused vacation days is to receive payment upon death of the Member, as stated in Article 7.15.5.",llama3.2:3b-instruct-q4_K_M,English,2,True,91c53945-cdc4-4dc9-a0e1-566699643f33,0.361,"Members on contracts of less than one (1) year duration are
+entitled to a pro-rated period of vacation. When Members have accumulated five (5) full consecutive years of employment
+at the University, f...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.361,"Members on contracts of less than one (1) year duration are
+entitled to a pro-rated period of vacation. When Members have accumulated five (5) full consecutive years of employment
+at the University, f...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.3538,"When Members have accumulated five (5) full consecutive years of employment
+at the University, for each year of employment thereafter they shall be entitled to an additional two (2) days of vacation t...",d8a7fd68-e902-42d3-a630-e6b8b584d48f,0.3699,"17.03 Members are required to take the vacation to which they are entitled. Vacation may not be accumulated from year
+to year.
+17.04 Members will continue to receive their normal earnings during vacat...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.0164,"LEAVES
+ARTICLE 7.10 – RECOGNIZED AND OTHER HOLIDAYS
+7.10.1 The following days and all days generally declared to be recognised holidays by Federal or Provincial
+authorities are recognised holidays and...",0.361005,0.361005,0.029762,test_en_066,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Leaves,medium,0.2927,0.0446,0.2542,0.1207,0.1695,0.3441,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4
+test_en_067,What is the Joint Committee on the Administration of the Agreement (JCAA)?,"I'm happy to help with your question about the Laurentian University Faculty Association collective agreement.
+
+Unfortunately, I don't see a direct answer to your question about the Joint Committee on the Administration of the Agreement (JCAA) in the provided text. However, I can tell you that the JCAA is mentioned in the 5.40 section of the collective agreement, which states:
+
+""...the parties agree that the Joint Committee on the Administration of the Agreement (JCAA) shall be established...""
+
+Unfortunately, the text does not provide further information about the JCAA, such as its composition, responsibilities, or how it will be established.
+
+If you're looking for more information about the JCAA, I would recommend checking the full text of the collective agreement or consulting with a representative from the Laurentian University Faculty Association or the university administration.",llama3.2:3b-instruct-q4_K_M,English,1,True,61e470ca-8d46-4082-b958-76bd245c03be,0.3515,"Hereinafter, this title shall
+be referred to as the Collective Agreement. ARTICLE 1.15 – OFFICIAL LANGUAGES
+1.15.1 Both the English and French versions of the Collective Agreement shall be official an...",d876dc30-855e-4370-93db-5bfd73f995c4,0.3582,"The approval of a Plan by the University’s creditors, as well as
+the Court’s approval, will be required for the University to emerge from CCAA protection. Of all the criteria considered by interest ar...",304160ee-4308-41ea-b13d-810122d2a9f5,0.0164,"Earnings that is below
+the year’s basic Effective July 1, 2021,
+exemption as defined the sum of:
+by the Canada Pension
+Plan; a) 6.7% of Pensionable
+Earnings up to the
+(b) Effective June YAMPE; and
+30,...",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.3561,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+...",304160ee-4308-41ea-b13d-810122d2a9f5,0.0161,"In that
+spirit, recognizing that
+no outcome is binding
+on either party except
+as may be mutually
+agreed in writing, the
+University and the
+Union commit to
+engaging in collegial,
+open and transparent
+d...",0.351549,0.351549,0.030798,test_en_067,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Labor Relations,hard,0.2708,0.0309,0.1863,0.0881,0.1366,0.3084,0.0,0.0,0.0,0.0,0.0,0.4,1.0,1.0
+test_en_069,Does the Union get space on campus?,"Yes, the Union (LUFA) gets space on campus. According to Article 2.40, the Employer agrees to provide the Union with:
+
+* A private serviced office in an academic area of the University, with a floor area no less than the current space allocated to the Union (as at July 1st, 2017).
+* Access to the University Club for use by Union Members and their guests.
+* A common room for use by Union Members and their guests, specifically room J234 in the JN Desmarais Library Building.
+* Use of University premises as meeting rooms on the same basis as University organizations.
+* Use of University printing, computer, and audio-visual facilities at the same rate as University users, subject to availability.
+* A monthly account to which charges incurred by the Union shall be debited.
+
+Source: Collective Agreement 2008-11, Article 2.40.",llama3.2:3b-instruct-q4_K_M,English,1,True,08a79060-5215-4534-a551-582f69961a69,0.4468,"The Employer shall provide individual office space for newly hired Members on the start date of their
+appointment. The Employer shall comply with its obligations regarding thermal comfort and air qual...",00a3191d-4c96-4941-9ebf-41caf439b043,0.0164,"Archival files shall contain material which has been
+banned for use in subsequent proceedings as in clauses 5.70.5 to
+5.70.9 below but which the University requires for matters other than those relate...",d728f6cb-1903-46a3-a753-35f21b58ff5e,0.4433,"ARTICLE 2.40 – RIGHTS AND PRIVILEGES OF THE UNION
+2.40.1 The Employer agrees to provide the Union with the use of a private serviced office, in an academic area
+of the University. The office floor are...",00a3191d-4c96-4941-9ebf-41caf439b043,0.0161,"Archival files shall contain material which has been
+banned for use in subsequent proceedings as in clauses 5.70.5 to
+5.70.9 below but which the University requires for matters other than those relate...",d728f6cb-1903-46a3-a753-35f21b58ff5e,0.4412,"ARTICLE 2.40 – RIGHTS AND PRIVILEGES OF THE UNION
+2.40.1 The Employer agrees to provide the Union with the use of a private serviced office, in an academic area
+of the University. The office floor are...",0.446802,0.446802,0.016393,test_en_069,llama3.2:3b-instruct-q4_K_M,llama3.2:3b-instruct-q4_K_M,Union Rights,easy,0.24,0.0444,0.1911,0.1032,0.1656,0.3274,0.3333,0.8869,0.0,1.0,1.0,1.0,1.0,1.0
+test_en_071,Is there a provision for court leave?,"Yes, there is a provision for court leave in the Collective Agreement. According to Article 14.03, Paid leave shall be granted to any member who is called for jury duty or who is compelled by subpoena to attend as a witness by any body in Canada with powers of subpoena.",llama3.2:3b-instruct-q4_K_M,English,2,True,b99b88fa-40b4-402e-b7cd-53737b1f2f90,0.4261,"When a Member elects to defer such decisions, she/he shall provide
+the
+Dean/University Librarian, or equivalent, with written notice of her/his intention to do so.
+(f) The Parties agree that the provi...",b99b88fa-40b4-402e-b7cd-53737b1f2f90,0.4261,"When a Member elects to defer such decisions, she/he shall provide
+the
+Dean/University Librarian, or equivalent, with written notice of her/his intention to do so.
+(f) The Parties agree that the provi...",266f2f22-f266-4f60-957f-b9be903d0345,0.4598,"14.03 Court Leave
+Paid leave shall be granted to any member who is called for jury duty or who is compelled by subpoena to attend as a
+witness by any body in Canada with powers of subpoena.
+The member...",c30d65fe-0b87-4f21-b23d-7d339ce4ef63,0.0164,"<<>>
+COLLECTIVE
+AGREEMENT
+BETWEEN
+THE LAURENTIAN UNIVERSITY
+FACULTY ASSOCIATION
+AND
+THE BOARD OF GOVERNORS OF
+LAURENTIAN UNIVERSITY
+1 JULY 2011 TO 30 JUNE 2014
+<<>>
+Collective Agreement 2011-14
