@@ -1,0 +1,228 @@
+
+<div class="mb-8">
+  <h1 class="text-3xl font-bold text-white mb-1">🎓 LUFA RAG Evaluation Dashboard</h1>
+  <p class="text-slate-400 text-sm">Agentic RAG for Cross-Lingual Retrieval of University Collective Agreements &nbsp;·&nbsp;
+     <span id="gen-at" class="text-slate-500"></span></p>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8" id="kpi-row"></div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  <div class="card">
+    <div class="section-title">Generation Metrics by Model</div>
+    <canvas id="genChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">Retrieval Metrics by Model</div>
+    <canvas id="retChart"></canvas>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  <div class="card">
+    <div class="section-title">LLM-as-Judge Metrics (Radar)</div>
+    <canvas id="radarChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">Performance by Language</div>
+    <canvas id="langChart"></canvas>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  <div class="card">
+    <div class="section-title">F1 Score by Difficulty</div>
+    <canvas id="diffChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">ROUGE-L by Category</div>
+    <canvas id="catChart"></canvas>
+  </div>
+</div>
+
+<div class="card mb-8">
+  <div class="section-title">Detailed Results</div>
+  <div style="max-height:400px;overflow:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Question</th><th>Model</th><th>Lang</th>
+          <th>F1</th><th>BLEU</th><th>ROUGE-L</th><th>METEOR</th>
+          <th>MRR</th><th>Recall@5</th>
+          <th>Relevance</th><th>Faithful</th><th>Precision</th>
+          <th>Grounded</th><th>Attempts</th>
+        </tr>
+      </thead>
+      <tbody id="results-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<p class="text-center text-slate-600 text-xs pb-4">
+  LUFA Agentic RAG Thesis &nbsp;·&nbsp; Laurentian University &nbsp;·&nbsp;
+  Computational Sciences &nbsp;·&nbsp; Generated <span id="footer-date"></span>
+</p>
+
+<script>
+const COLORS = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4'];
+const LIGHT  = ['#93c5fd','#6ee7b7','#fcd34d','#fca5a5','#c4b5fd','#f9a8d4','#67e8f9'];
+
+function scoreClass(v){ return v>=0.7?'score-high':v>=0.4?'score-mid':'score-low'; }
+function fmt(v){ return (typeof v==='number')?v.toFixed(3):v||''; }
+
+document.getElementById('gen-at').textContent = D.generated_at;
+document.getElementById('footer-date').textContent = D.generated_at;
+
+// ── KPI Cards ─────────────────────────────────────────────────────────────────
+const kpis = [
+  {label:'Questions', value: D.total_questions, unit:'', icon:'📊'},
+  {label:'Avg F1', value: (D.overall.token_f1_score||0).toFixed(3), unit:'', icon:'🎯'},
+  {label:'Avg ROUGE-L',value: (D.overall.rougeL||0).toFixed(3),unit:'',icon:'📝'},
+  {label:'Avg MRR', value: (D.overall.mrr||0).toFixed(3), unit:'', icon:'🔍'},
+  {label:'Recall@5', value: (D.overall.recall_5||0).toFixed(3),unit:'',icon:'📈'},
+  {label:'Faithfulness',value:(D.overall.faithfulness||0).toFixed(3),unit:'',icon:'✅'},
+  {label:'Grounded', value: (D.grounded_rate*100||0).toFixed(1),unit:'%',icon:'🔒'},
+  {label:'Avg Attempts',value: D.avg_attempts, unit:'', icon:'🔄'},
+];
+const kpiRow = document.getElementById('kpi-row');
+kpis.forEach(k=>{
+  kpiRow.innerHTML += `<div class="metric-card text-center">
+    <div class="text-2xl mb-1">${k.icon}</div>
+    <div class="text-2xl font-bold text-blue-300">${k.value}${k.unit}</div>
+    <div class="text-xs text-slate-400 mt-1">${k.label}</div>
+  </div>`;
+});
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function barChart(id, labels, datasets, opts={}){
+  new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{labels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}}},
+      scales:{
+        x:{ticks:{color:'#64748b'},grid:{color:'#1e293b'}},
+        y:{ticks:{color:'#64748b'},grid:{color:'#334155'}, beginAtZero:true, max:1,...(opts.yMax?{max:opts.yMax}:{})},
+      },
+    }
+  });
+}
+
+const models = D.models.length ? D.models : ['default'];
+
+// ── Generation Chart ──────────────────────────────────────────────────────────
+{
+  const metrics = ['token_f1_score','sentence_bleu_score','rouge1','rouge2','rougeL','meteor'];
+  const labels = ['F1','BLEU','ROUGE-1','ROUGE-2','ROUGE-L','METEOR'];
+  const datasets = models.map((m,i)=>({
+    label: m,
+    data: metrics.map(met=>(D.by_model[met]||{})[m]||0),
+    backgroundColor: COLORS[i%COLORS.length]+'99',
+    borderColor: COLORS[i%COLORS.length],
+    borderWidth:1,
+  }));
+  barChart('genChart', labels, datasets);
+}
+
+// ── Retrieval Chart ───────────────────────────────────────────────────────────
+{
+  const metrics = ['mrr','ndcg_at_k','recall_1','recall_3','recall_5'];
+  const labels = ['MRR','NDCG','Recall@1','Recall@3','Recall@5'];
+  const datasets = models.map((m,i)=>({
+    label: m,
+    data: metrics.map(met=>(D.by_model[met]||{})[m]||0),
+    backgroundColor: LIGHT[i%LIGHT.length]+'88',
+    borderColor: LIGHT[i%LIGHT.length],
+    borderWidth:1,
+  }));
+  barChart('retChart', labels, datasets);
+}
+
+// ── Radar Chart (LLM-Judge) ───────────────────────────────────────────────────
+{
+  const judgeLabels = ['Answer Relevance','Faithfulness','Context Precision'];
+  const judgeKeys = ['answer_relevance','faithfulness','context_precision'];
+  new Chart(document.getElementById('radarChart'),{
+    type:'radar',
+    data:{
+      labels: judgeLabels,
+      datasets: models.map((m,i)=>({
+        label: m,
+        data: judgeKeys.map(k=>(D.by_model[k]||{})[m]||0),
+        borderColor: COLORS[i%COLORS.length],
+        backgroundColor: COLORS[i%COLORS.length]+'33',
+        pointBackgroundColor: COLORS[i%COLORS.length],
+        borderWidth:2,
+      })),
+    },
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      scales:{r:{min:0,max:1,ticks:{stepSize:.2,color:'#475569',backdropColor:'transparent'},
+        grid:{color:'#334155'},pointLabels:{color:'#94a3b8',font:{size:11}}}},
+      plugins:{legend:{labels:{color:'#94a3b8'}}},
+    }
+  });
+}
+
+// ── Language Chart ────────────────────────────────────────────────────────────
+{
+  const langs = Object.keys(D.by_language.token_f1_score||{});
+  const datasets = [
+    {label:'F1', data:langs.map(l=>(D.by_language.token_f1_score||{})[l]||0), backgroundColor:COLORS[0]+'99',borderColor:COLORS[0],borderWidth:1},
+    {label:'ROUGE-L',data:langs.map(l=>(D.by_language.rougeL||{})[l]||0), backgroundColor:COLORS[1]+'99',borderColor:COLORS[1],borderWidth:1},
+    {label:'METEOR', data:langs.map(l=>(D.by_language.meteor||{})[l]||0), backgroundColor:COLORS[2]+'99',borderColor:COLORS[2],borderWidth:1},
+  ];
+  barChart('langChart', langs, datasets);
+}
+
+// ── Difficulty Chart ──────────────────────────────────────────────────────────
+{
+  const diffs = Object.keys(D.by_difficulty.token_f1_score||{});
+  barChart('diffChart', diffs, [{
+    label:'F1 by Difficulty',
+    data: diffs.map(d=>(D.by_difficulty.token_f1_score||{})[d]||0),
+    backgroundColor: diffs.map((_,i)=>COLORS[i%COLORS.length]+'bb'),
+    borderColor: diffs.map((_,i)=>COLORS[i%COLORS.length]),
+    borderWidth:1,
+  }]);
+}
+
+// ── Category Chart ────────────────────────────────────────────────────────────
+{
+  const cats = Object.keys(D.by_category.rougeL||{});
+  barChart('catChart', cats.map(c=>c.length>18?c.slice(0,16)+'…':c), [{
+    label:'ROUGE-L by Category',
+    data: cats.map(c=>(D.by_category.rougeL||{})[c]||0),
+    backgroundColor: cats.map((_,i)=>LIGHT[i%LIGHT.length]+'99'),
+    borderColor: cats.map((_,i)=>LIGHT[i%LIGHT.length]),
+    borderWidth:1,
+  }]);
+}
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+const tbody = document.getElementById('results-tbody');
+(D.rows||[]).forEach((r,i)=>{
+  const langBadge = r.language==='en'?'badge-en':r.language==='fr'?'badge-fr':'badge-other';
+  tbody.innerHTML += `<tr>
+    <td class="text-slate-500">${i+1}</td>
+    <td class="max-w-xs truncate" title="${(r.question||'').replace(/"/g,"'").replace(/</g,"&lt;").replace(/>/g,"&gt;")}">
+      ${(r.question||'').slice(0,60)}${(r.question||'').length>60?'…':''}</td>
+    <td class="text-blue-300 text-xs">${r.rag_base_model||''}</td>
+    <td><span class="badge ${langBadge}">${r.language||''}</span></td>
+    <td class="${scoreClass(r.token_f1_score)}">${fmt(r.token_f1_score)}</td>
+    <td class="${scoreClass(r.sentence_bleu_score)}">${fmt(r.sentence_bleu_score)}</td>
+    <td class="${scoreClass(r.rougeL)}">${fmt(r.rougeL)}</td>
+    <td class="${scoreClass(r.meteor)}">${fmt(r.meteor)}</td>
+    <td class="${scoreClass(r.mrr)}">${fmt(r.mrr)}</td>
+    <td class="${scoreClass(r.recall_5)}">${fmt(r.recall_5)}</td>
+    <td class="${scoreClass(r.answer_relevance)}">${fmt(r.answer_relevance)}</td>
+    <td class="${scoreClass(r.faithfulness)}">${fmt(r.faithfulness)}</td>
+    <td class="${scoreClass(r.context_precision)}">${fmt(r.context_precision)}</td>
+    <td>${r.grounded?'<span class="text-green-400">✓</span>':'<span class="text-red-400">✗</span>'}</td>
+    <td class="text-center text-slate-400">${r.attempts||1}</td>
+  </tr>`;
+});
+</script>
+</body>
+</html>
