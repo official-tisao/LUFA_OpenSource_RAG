@@ -142,70 +142,98 @@ class BilingualRAGEngine:
         return self.query(query_text, return_sources=False)['response']
 
     # ── Agentic helpers ───────────────────────────────────────────────────────
-
-    # def _retrieve_nodes(self, query: str, top_k: int):
-    #     retriever = VectorIndexRetriever(
-    #         index=self.index,
-    #         similarity_top_k=top_k,
-    #     )
-    #
-    #     #def _retrieve_hybrid_nodes(self, query: str, top_k: int = 5) -> list:
-    #     return retriever.retrieve(query)
-
-    # Add this method to your BilingualRAGEngine class in src/rag_engine.py
-    # Make sure to import: from rank_bm25 import BM25Okapi
-    # and tokenize helper: import re
-
     def _retrieve_nodes(self, query: str, top_k: int = 5) -> list:
         """
-        Executes hybrid retrieval by combining dense vector scores from ChromaDB
-        and sparse token matching scores from rank-bm25, fused via RRF.
+        Executes advanced hybrid retrieval. Sorts dense vector nodes by recency weights
+        during similarity ties, then merges them with sparse BM25 tokens via RRF.
+        Directly reads from ChromaDB to avoid ZeroDivisionError.
         """
-        # 1. Fetch dense candidates
+        # 1. Fetch dense candidates from the index vector space
         dense_retriever = VectorIndexRetriever(
             index=self.index,
             similarity_top_k=top_k * 2,
         )
-        dense_nodes = dense_retriever.retrieve(query)
+        raw_dense_nodes = dense_retriever.retrieve(query)
 
-        # 2. Extract text pool for BM25 from the index
-        # For a fully dynamic production system, you can pull corpus nodes directly:
-        all_nodes = list(self.index.docstore.docs.values())
+        # 2. Apply Recency Reranker sorting to the dense pool as a pre-pass tiebreaker
+        if raw_dense_nodes:
+            # Initial descending sort by raw semantic cosine similarity score
+            raw_dense_nodes.sort(key=lambda x: x.score, reverse=True)
+
+            dense_nodes = []
+            i = 0
+            tie_threshold = 0.02
+
+            while i < len(raw_dense_nodes):
+                bucket_score = raw_dense_nodes[i].score
+                bucket = []
+                j = i
+                # Group nodes falling within the narrow similarity tie threshold window
+                while j < len(raw_dense_nodes) and (bucket_score - raw_dense_nodes[j].score) < tie_threshold:
+                    bucket.append(raw_dense_nodes[j])
+                    j += 1
+
+                # Sort the tie bucket internally by document metadata recency weight
+                bucket.sort(key=lambda x: float(x.node.metadata.get("recency_weight", 1.0)), reverse=True)
+                dense_nodes.extend(bucket)
+                i = j
+        else:
+            dense_nodes = []
+
+        # 3. Extract text pool for BM25 from ChromaDB collection directly to prevent ZeroDivisionError
+        from llama_index.core.schema import TextNode
+        import chromadb
+        chroma_client = chromadb.PersistentClient(path=self.db_path)
+        chroma_collection = chroma_client.get_collection(self.collection_name)
+        collection_data = chroma_collection.get(include=["documents", "metadatas"])
+
+        all_nodes = []
+        if collection_data and collection_data.get("ids"):
+            for cid, doc, meta in zip(collection_data["ids"], collection_data["documents"],
+                                      collection_data["metadatas"]):
+                node = TextNode(id_=cid, text=doc, metadata=meta)
+                all_nodes.append(node)
+
+        if not all_nodes:
+            # Fallback to avoid ZeroDivisionError if the database is unpopulated
+            return dense_nodes
+
         tokenized_corpus = [re.findall(r'\b\w+\b', node.text.lower()) for node in all_nodes]
         bm25 = BM25Okapi(tokenized_corpus)
 
-        # 3. Fetch sparse candidates
+        # 4. Fetch sparse candidates
         tokenized_query = re.findall(r'\b\w+\b', query.lower())
         bm25_scores = bm25.get_scores(tokenized_query)
 
         # Sort top nodes based on BM25 score
-        top_bm25_indices = sorted(range(len(bm25_scores)), key=lambda i: bm25_scores[i], reverse=True)[:top_k * 2]
+        top_bm25_indices = sorted(range(len(bm25_scores)), key=lambda idx: bm25_scores[idx], reverse=True)[:top_k * 2]
         sparse_nodes = [all_nodes[idx] for idx in top_bm25_indices]
 
-        # 4. Apply Reciprocal Rank Fusion (RRF)
+        # 5. Apply Reciprocal Rank Fusion (RRF) across prioritized channels
         rrf_scores = {}
         node_mapping = {}
 
+        # Process dense nodes using their recency-adjusted array positions
         for rank, node in enumerate(dense_nodes, start=1):
             node_id = node.node.node_id
             node_mapping[node_id] = node
+            # Save the original dense cosine score in metadata to fix evaluation logging view
+            node.node.metadata["original_cosine_score"] = str(node.score)
             rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
 
         for rank, node in enumerate(sparse_nodes, start=1):
             node_id = node.node_id
             if node_id not in node_mapping:
-                # Wrap standard node in NodeWithScore for compatibility
                 from llama_index.core.schema import NodeWithScore
                 node_mapping[node_id] = NodeWithScore(node=node, score=0.0)
             rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
 
-        # Sort by unified RRF ranking
+        # Sort final unified node keys by global RRF ranking
         sorted_node_ids = sorted(rrf_scores.keys(), key=lambda k: rrf_scores[k], reverse=True)[:top_k]
 
         final_nodes = []
         for nid in sorted_node_ids:
             wrapped_node = node_mapping[nid]
-            # Assign unified fusion calculation score
             wrapped_node.score = rrf_scores[nid]
             final_nodes.append(wrapped_node)
 
