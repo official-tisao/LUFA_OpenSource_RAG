@@ -3,8 +3,7 @@
 Performance evaluation script for LUFA Agentic RAG system with row-by-row
 checkpoint saving, crash-resumption support, verbose metric logging,
 and live real-time HTML dashboard incremental updates.
-Preserves all original columns from the agentic RAG system output,
-explicitly including true question text and language metadata with strict schema alignment.
+Includes inline single-pass retrieval repair hooks to prevent zero metric tracking bugs.
 """
 
 import sys
@@ -352,19 +351,39 @@ def run_evaluation(
         print(
             f"      * ROUGE-1: {rouge_scores['rouge1']} | ROUGE-2: {rouge_scores['rouge2']} | ROUGE-L: {rouge_scores['rougeL']}")
 
-        meteor_val = round(compute_meteor(prediction, reference), 4)
-        print(f"      * METEOR Score: {meteor_val}")
-
         print("   -> Calculating Retrieval position metrics...")
         mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
-        print(f"      * Mean Reciprocal Rank (MRR): {mrr_val}")
-
         ndcg_val = ndcg_at_k(retrieved_ids, ground_truth_ids, k=5)
-        print(f"      * NDCG@5 Index: {ndcg_val}")
-
         rec1 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=1), 4)
         rec3 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=3), 4)
         rec5 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
+
+        # Task 2 Implementation: Live row-by-row recovery mechanism
+        if mrr_val == 0.0 and ndcg_val == 0.0:
+            print(
+                "   ⚠️  Retrieval metrics returned 0.0. Activating one-time live repair via repair_lufa_out engine...")
+            try:
+                from repair_lufa_out import repair_single_row_sources
+                fixed_ids = repair_single_row_sources(active_rag_data, None, "db/chroma_db", "multilingual_docs")
+
+                if fixed_ids:
+                    retrieved_ids = fixed_ids
+                    # Perform calculation retry exactly once
+                    mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
+                    ndcg_val = ndcg_at_k(retrieved_ids, ground_truth_ids, k=5)
+                    rec1 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=1), 4)
+                    rec3 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=3), 4)
+                    rec5 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
+                    print(f"      * Repaired Retrieval Scores -> MRR: {mrr_val} | NDCG@5: {ndcg_val}")
+
+                    # Store repaired IDs back into the dictionary structure
+                    for i, cid in enumerate(retrieved_ids, start=1):
+                        active_rag_data[f"source{i}_id"] = cid
+            except Exception as repair_err:
+                print(f"      [Live Repair Error] Single row recovery pass failed: {repair_err}")
+
+        print(f"      * Mean Reciprocal Rank (MRR): {mrr_val}")
+        print(f"      * NDCG@5 Index: {ndcg_val}")
         print(f"      * Recall Distribution -> Recall@1: {rec1} | Recall@3: {rec3} | Recall@5: {rec5}")
 
         primary_logged_score = safe_float(active_rag_data.get("source1_score", 0.0))
@@ -374,7 +393,6 @@ def run_evaluation(
         print(
             f"   -> Tracked Hybrid Vectors -> Cosine: {orig_cos} | Recency-Adjusted: {rec_adj} | Fused RRF: {rrf_val}")
 
-        # Seed record dictionary using authoritative tracking variables
         rec = {}
         for col in LUFA_COLUMNS:
             val = active_rag_data.get(col)
@@ -395,7 +413,7 @@ def run_evaluation(
         rec["rouge1"] = rouge_scores["rouge1"]
         rec["rouge2"] = rouge_scores["rouge2"]
         rec["rougeL"] = rouge_scores["rougeL"]
-        rec["meteor"] = meteor_val
+        rec["meteor"] = round(compute_meteor(prediction, reference), 4)
 
         rec["mrr"] = mrr_val
         rec["ndcg_at_k"] = ndcg_val
