@@ -1,306 +1,112 @@
-"""
-RAG engine module for bilingual question-answering.
-Handles query processing, cross-lingual retrieval, and response generation.
-"""
+        context     = "\n\n---\n\n".join([n.node.text for n in nodes])
+        system      = self.query_handler.get_system_prompt(lang)
+        instruction = "Réponds en français." if lang == "fr" else "Respond in English."
 
-from typing import List, Optional
-from language_detector import detect_language
-from query_handler import QueryHandler, SYSTEM_PROMPTS
-from query_rewriter import rewrite_query
-from reflector import reflect
-from llama_index.core import VectorStoreIndex, StorageContext
-from llama_index.core.retrievers import VectorIndexRetriever
-from llama_index.core.query_engine import RetrieverQueryEngine
-from llama_index.core.response_synthesizers import get_response_synthesizer
-from llama_index.llms.ollama import Ollama
-from llama_index.embeddings.ollama import OllamaEmbedding
-from llama_index.vector_stores.chroma import ChromaVectorStore
-import chromadb
+        prompt = f"""{system}
+{instruction}
+Answer ONLY using the context below.
+Cite the source document name and page number for every claim.
+Context:
+{context}
 
-# Constants
-PREVIEW_LENGTH = 200  # Length of text preview for source documents
+Question: {original_query}
+Answer:"""
+        return str(self.llm.complete(prompt)).strip()
 
-
-class BilingualRAGEngine:
-    """
-    Bilingual RAG engine for Laurentian University Faculty Association collective agreement.
-    Features:
-    - Auto-detect query language
-    - Cross-lingual retrieval with nomic-embed-text-v2-moe
-    - Respond in the query language
-    - Top 5 chunks with 0.7 similarity threshold
-    """
-    
-    def __init__(
+    def agentic_query(
         self,
-        db_path: str = "db/chroma_db",
-        collection_name: str = "multilingual_docs",
-        llm_model: str = "llama3.2:3b-instruct-q4_K_M",
-        embedding_model: str = "nomic-embed-text-v2-moe",
-        similarity_top_k: int = 5,
-        max_reflect_attempts: int = 2
-    ):
-        """
-        Initialize the bilingual RAG engine.
-        
-        Args:
-            db_path: Path to ChromaDB database
-            collection_name: Name of the ChromaDB collection
-            llm_model: Name of the LLM model to use (default: llama3.2:3b-instruct-q4_K_M)
-            embedding_model: Name of the embedding model to use (default: nomic-embed-text-v2-moe)
-            similarity_top_k: Number of similar documents to retrieve (default: 5)
-            max_reflect_attempts: Maximum reflection/re-retrieval attempts (default: 2,
-                set to 1 to disable re-retrieval)
-        """
-        self.db_path = db_path
-        self.collection_name = collection_name
-        self.similarity_top_k = similarity_top_k
-        self.max_reflect_attempts = max_reflect_attempts
-        
-        # Initialize query handler
-        self.query_handler = QueryHandler()
-        
-        # Initialize LLM
-        print(f"Initializing LLM: {llm_model}")
-        self.llm = Ollama(
-            model=llm_model,
-            base_url="http://localhost:11434",
-            request_timeout=120.0,
-        )
-        
-        # Initialize embedding model
-        print(f"Initializing embedding model: {embedding_model}")
-        self.embed_model = OllamaEmbedding(
-            model_name=embedding_model,
-            base_url="http://localhost:11434",
-        )
-        
-        # Initialize index
-        self.index = self._load_index()
-        
-        # Create query engine
-        self.query_engine = self._create_query_engine()
-    
-    def _load_index(self) -> VectorStoreIndex:
-        """
-        Load the vector store index from ChromaDB.
-        
-        Returns:
-            VectorStoreIndex object
-        """
-        print(f"Loading index from {self.db_path}...")
-        
-        # Initialize ChromaDB
-        chroma_client = chromadb.PersistentClient(path=self.db_path)
-        
-        # Get collection
-        chroma_collection = chroma_client.get_or_create_collection(self.collection_name)
-        
-        # Create vector store
-        vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-        
-        # Create index from existing vector store
-        index = VectorStoreIndex.from_vector_store(
-            vector_store=vector_store,
-            embed_model=self.embed_model,
-        )
-        
-        print("Index loaded successfully")
-        return index
-    
-    def set_similarity_top_k(self, top_k: int):
-        """
-        Update the number of similar documents to retrieve.
-        
-        Args:
-            top_k: Number of documents to retrieve
-        """
-        self.similarity_top_k = top_k
-        if hasattr(self, 'query_engine') and hasattr(self.query_engine, 'retriever'):
-            # Note: Direct access to _similarity_top_k is necessary because LlamaIndex
-            # VectorIndexRetriever doesn't provide a public setter method
-            self.query_engine.retriever._similarity_top_k = top_k
-    
-    def _create_query_engine(self) -> RetrieverQueryEngine:
-        """
-        Create a query engine with custom retriever and response synthesizer.
-        
-        Returns:
-            RetrieverQueryEngine object
-        """
-        # Create retriever
-        retriever = VectorIndexRetriever(
-            index=self.index,
-            similarity_top_k=self.similarity_top_k,
-        )
-        
-        # Create response synthesizer
-        response_synthesizer = get_response_synthesizer(
-            llm=self.llm,
-            response_mode="compact",
-        )
-        
-        # Create query engine
-        query_engine = RetrieverQueryEngine(
-            retriever=retriever,
-            response_synthesizer=response_synthesizer,
-        )
-        
-        return query_engine
-    
-    def detect_query_language(self, query: str) -> str:
-        """
-        Detect the language of a query.
-        
-        Args:
-            query: Input query text
-            
-        Returns:
-            Language code ('en' or 'fr')
-        """
-        return self.query_handler.detect_query_language(query)
-    
-    def create_language_aware_prompt(self, query: str, language: str) -> str:
-        """
-        Create a language-aware prompt using LUFA-specific system prompts.
-        
-        Args:
-            query: Original user query
-            language: Detected language code
-            
-        Returns:
-            Enhanced query with language instruction
-        """
-        # Get the LUFA-specific system prompt
-        system_prompt = self.query_handler.get_system_prompt(language)
-        
-        # Add response language instruction
-        if language == 'fr':
-            instruction = "Réponds en français. "
+        query_text:     str,
+        return_sources: bool = False,
+        max_retries:    int  = MAX_RETRIES
+    ) -> dict:
+        """Agentic RAG query loop with cross-lingual support."""
+        original_lang      = detect_full_language(query_text)
+        translation_applied = needs_translation(original_lang)
+        translated_query   = None
+
+        if translation_applied:
+            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
+            print(f"[AgenticRAG] Non-native language detected: {original_lang} ({lang_name})")
+            print(f"[AgenticRAG] Translating query to English for processing...")
+            translated_query = translate_to_english(query_text, original_lang, self.llm)
+            processing_query = translated_query
+            pipeline_lang    = "en"
         else:
-            instruction = "Respond in English. "
-        
-        return instruction + query
-    
-    def query(self, query_text: str, return_sources: bool = False) -> dict:
-        """
-        Process a query and return the response.
-        
-        Args:
-            query_text: User query text
-            return_sources: Whether to return source documents
-            
-        Returns:
-            Dictionary containing response and metadata
-        """
-        # Detect query language
-        detected_language = self.detect_query_language(query_text)
-        print(f"Detected query language: {detected_language}")
+            processing_query = query_text
+            pipeline_lang    = original_lang
 
-        # Rewrite query for more precise retrieval
-        rewritten_query = rewrite_query(query_text, detected_language, self.llm)
-        if rewritten_query != query_text:
-            print(f"[RAGEngine] Query rewritten: {rewritten_query!r}")
+        print(f"[AgenticRAG] Pipeline language: {pipeline_lang}")
 
-        # Create language-aware prompt
-        enhanced_query = self.create_language_aware_prompt(rewritten_query, detected_language)
+        current_query    = processing_query
+        rewritten_query  = processing_query
+        nodes            = []
+        answer           = ""
+        is_grounded      = False
 
-        # Execute query with reflection loop
-        grounded = False
-        reflection_attempts = 0
-        for attempt in range(self.max_reflect_attempts):
-            reflection_attempts = attempt + 1
-            response = self.query_engine.query(enhanced_query)
+        for attempt in range(1, max_retries + 1):
+            print(f"[AgenticRAG] Attempt {attempt}/{max_retries}")
+            rewritten_query = rewrite_query(current_query, pipeline_lang, self.llm)
 
-            # Extract source chunks for grounding check
-            chunks = []
-            if hasattr(response, 'source_nodes'):
-                chunks = [node.node.text for node in response.source_nodes]
 
-            if reflect(str(response), chunks, self.llm):
-                grounded = True
-                break  # Answer is grounded
+            print(f"[AgenticRAG] Rewritten: {rewritten_query}")
 
-            if attempt < self.max_reflect_attempts - 1:
-                print(
-                    f"[RAGEngine] Answer not grounded, retrying "
-                    f"({attempt + 1}/{self.max_reflect_attempts})"
-                )
+            top_k = self.similarity_top_k + (attempt-1)
+            nodes = self._retrieve_nodes(rewritten_query, top_k=top_k)
+            print(f"[AgenticRAG] Retrieved {len(nodes)} chunks (top_k={top_k})")
 
-        # Prepare result
+            answer = self._generate_from_nodes(processing_query, nodes, pipeline_lang)
+
+            chunk_texts = [n.node.text for n in nodes]
+            is_grounded = reflect(answer, chunk_texts, self.llm)
+            print(f"[AgenticRAG] Grounded: {is_grounded}")
+
+            if is_grounded:
+                break
+
+            current_query = rewritten_query
+
+        final_answer = answer
+        if translation_applied:
+            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
+            print(f"[AgenticRAG] Translating answer back to {lang_name}...")
+            final_answer = translate_to_target(answer, original_lang, self.llm)
+
         result = {
-            'response': str(response),
-            'detected_language': detected_language,
-            'grounded': grounded,
-            'reflection_attempts': reflection_attempts,
+            'response':            final_answer,
+            'english_response':    answer if translation_applied else None,
+            'detected_language':   pipeline_lang,
+            'original_language':   original_lang,
+            'original_query':      query_text,
+            'translated_query':    translated_query,
+            'rewritten_query':     rewritten_query,
+            'attempts':            attempt,
+            'grounded':            is_grounded,
+            'translation_applied': translation_applied,
         }
-        
-        # Add source information if requested
-        if return_sources and hasattr(response, 'source_nodes'):
+
+        if return_sources:
             sources = []
-            for node in response.source_nodes:
-                text = node.node.text
+            for node in nodes:
+                text    = node.node.text
                 preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
-                source_info = {
-                    'text': preview,
-                    'score': node.score,
+                sources.append({
+                    'text':     preview,
+                    'score':    node.score,
                     'metadata': node.node.metadata,
-                }
-                sources.append(source_info)
+                    'node_id':  node.node.node_id
+                })
             result['sources'] = sources
-        
+
         return result
-    
-    def chat(self, query_text: str) -> str:
-        """
-        Simple chat interface that returns just the response text.
-        
-        Args:
-            query_text: User query text
-            
-        Returns:
-            Response text
-        """
-        result = self.query(query_text, return_sources=False)
-        return result['response']
 
 
 def create_rag_engine(
-    db_path: str = "db/chroma_db",
-    llm_model: str = "llama3.2:3b-instruct-q4_K_M",
+    db_path:         str = "db/chroma_db",
+    llm_model:       str = "llama3.2:3b-instruct-q4_K_M",
     embedding_model: str = "nomic-embed-text-v2-moe"
 ) -> BilingualRAGEngine:
-    """
-    Factory function to create a BilingualRAGEngine instance for LUFA collective agreement.
-    
-    Args:
-        db_path: Path to ChromaDB database
-        llm_model: Name of the LLM model to use (default: llama3.2:3b-instruct-q4_K_M)
-        embedding_model: Name of the embedding model to use (default: nomic-embed-text-v2-moe)
-        
-    Returns:
-        BilingualRAGEngine instance
-    """
     return BilingualRAGEngine(
         db_path=db_path,
         llm_model=llm_model,
         embedding_model=embedding_model,
     )
-
-
-if __name__ == "__main__":
-    # Test the RAG engine
-    print("Testing RAG engine...")
-    engine = create_rag_engine()
-    
-    # Test with English query
-    print("\nTesting English query:")
-    result = engine.query("What is this document about?", return_sources=True)
-    print(f"Response: {result['response']}")
-    print(f"Language: {result['detected_language']}")
-    
-    # Test with French query
-    print("\nTesting French query:")
-    result = engine.query("De quoi parle ce document?", return_sources=True)
-    print(f"Response: {result['response']}")
-    print(f"Language: {result['detected_language']}")

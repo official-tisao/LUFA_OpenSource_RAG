@@ -1,117 +1,19 @@
-# Quick Start Guide
+Command: python src/run_simulation.py
+Input: data/combined_test_data.csv
+Output: tests/lufa_out_data.csv
+Note: If the script crashes or is stopped, running it again will automatically resume from the last successful non-error row.
 
-## Prerequisites Check
+### Step 3: Evaluate Performance
+This script compares the simulation outputs against the ground truth. It calculates Generation NLP metrics (BLEU, ROUGE, F1) and Retrieval position metrics (MRR, NDCG). It also calls the LLM-as-a-Judge.
+Command: python src/evaluate.py
+Input: tests/lufa_out_data.csv & tests/combined_test_data_and_ground_truth.csv
+Output: tests/evaluation_results.csv & dashboard/index.html
+Note: If simulation gaps exist, evaluate.py will dynamically run the simulation for that missing row inline.
 
-Before starting, ensure you have:
-- [ ] Python 3.8+ installed
-- [ ] Anaconda/Miniconda installation
-- [ ] Ollama installed and running
-- [ ] Required models pulled (`llama3.2` and `nomic-embed-text-v2-moe`)
-
-## Setup (5 minutes)
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/official-tisao/LUFA_OpenSource_RAG.git
-cd LUFA_OpenSource_RAG
-
-# 2. Run bootstrap
-./bootstrap.sh
-
-# 3. Pull Ollama models (if not already done)
-ollama pull llama3.2
-ollama pull nomic-embed-text-v2-moe
-
-conda create -n lufa_rag python=3.11 -y
-conda init
-```
-
-## Using the System (3 steps)
-
-### Step 1: Add Your Documents
-```bash
-# Copy your files
-cp your-english-doc.pdf data/english/
-cp your-french-doc.pdf data/french/
-```
-
-### Step 2: Ingest Documents
-```bash
-conda activate lufa_rag
-# source venv/bin/activate # Uncomment this to use venv over conda
-python src/ingestion.py
-```
-
-### Step 3: Start the App
-```bash
-streamlit run src/app.py
-```
-
-That's it! Open your browser to http://localhost:8501
-
-## Testing Your Setup
-
-```bash
-# Basic tests (no dependencies needed)
-python test_basic.py
-
-# Full tests (after setup)
-
-conda activate lufa_rag
-
-#command for bash
-source venv/bin/activate
-
-#command for powershell
-.\venv\Scripts\Activate.ps1
-
-#command for cmd
-venv\Scripts\activate.bat
-
-python test_integration.py
-```
-
-## Common Issues
-
-### "Ollama not running"
-```bash
-# Start Ollama
-ollama serve
-```
-
-### "Model not found"
-```bash
-# Pull the models
-ollama pull llama3.2
-ollama pull nomic-embed-text-v2-moe
-```
-
-### "No documents found"
-```bash
-# Make sure documents are in the right place
-ls data/english/
-ls data/french/
-```
-
-## Example Queries
-
-Try these in the app:
-
-**English:**
-- "What are the main topics in these documents?"
-- "Summarize the key findings"
-- "What is artificial intelligence?"
-
-**French:**
-- "Quels sont les principaux sujets de ces documents?"
-- "Résume les principales conclusions"
-- "Qu'est-ce que l'intelligence artificielle?"
-
-## Next Steps
-
-- Add more documents to `data/english/` and `data/french/`
-- Run ingestion again to update the index
-- Customize the UI in `src/app.py`
-- Adjust retrieval parameters in `src/rag_engine.py`
+### Step 4: System Repair (If Necessary)
+If older logs generated _chunkX placeholders instead of real database UUIDs, this script will read the raw text snippets, search ChromaDB for the exact match, and overwrite both CSV files. It will then recalculate the retrieval metrics and refresh the dashboard.
+Command: python src/repair_metrics.py
+Input: tests/lufa_out_data.csv & tests/evaluation_results.csv
+Output: Overwrites both CSVs and dashboard/index.html natively.
 
 Need help? Check the full [README.md](README.md) or open an issue!

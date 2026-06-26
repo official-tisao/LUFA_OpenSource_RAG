@@ -1,229 +1,85 @@
-"""
-Streamlit application for the bilingual RAG system.
-Provides a user-friendly interface for querying documents in English and French.
-"""
+                        if result.get("translation_applied"):
+                            _render_translation_expander(
+                                orig_lang=result.get("original_language", "unknown"),
+                                lang_names=lang_names,
+                                original_query=result.get("original_query", query),
+                                translated_query=result.get("translated_query", ""),
+                                english_response=result.get("english_response", ""),
+                                final_response=result["response"],
+                            )
 
-import streamlit as st
-import sys
-import os
-from pathlib import Path
+                        # ── Language caption ──────────────────────────────────
+                        detected = result.get("detected_language", "unknown")
+                        lang_emoji = (
+                            "🇬🇧" if detected == "en"
+                            else "🇫🇷" if detected == "fr"
+                            else "🌐"
+                        )
+                        st.caption(f"{lang_emoji} Detected language: {detected}")
 
-# Add src directory to path
-sys.path.insert(0, str(Path(__file__).parent))
+                        # ── Sources expander (new query) ──────────────────────
+                        if show_sources and result.get("sources"):
+                            _render_sources_expander(result["sources"])
 
-from rag_engine import BilingualRAGEngine
-
-
-def initialize_session_state():
-    """Initialize Streamlit session state variables."""
-    if 'rag_engine' not in st.session_state:
-        st.session_state.rag_engine = None
-    if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = []
-
-
-def load_rag_engine():
-    """Load or initialize the RAG engine."""
-    if st.session_state.rag_engine is None:
-        with st.spinner("Loading RAG engine... This may take a moment."):
-            try:
-                st.session_state.rag_engine = BilingualRAGEngine(
-                    db_path="db/chroma_db",
-                    llm_model="llama3.2:3b-instruct-q4_K_M",
-                    embedding_model="nomic-embed-text-v2-moe",
-                    similarity_top_k=5
-                )
-                st.success("RAG engine loaded successfully!")
-            except Exception as e:
-                st.error(f"Error loading RAG engine: {e}")
-                st.info("Make sure you have run the ingestion script and Ollama is running.")
-                return None
-    return st.session_state.rag_engine
-
-
-def main():
-    """Main application function."""
-    st.set_page_config(
-        page_title="LUFA Collective Agreement - Bilingual RAG",
-        page_icon="🌍",
-        layout="wide",
-    )
-    
-    # Initialize session state
-    initialize_session_state()
-    
-    # Header
-    st.title("🌍 LUFA Collective Agreement - Bilingual RAG (EN/FR)")
-    st.markdown("""
-    Ask questions about the **Laurentian University Faculty Association collective agreement** 
-    in **English** or **French**, and get answers from the document collection.
-    
-    **Features:**
-    - 🔍 Cross-lingual retrieval with nomic-embed-text-v2-moe
-    - 🌐 Auto-detect query language
-    - 💬 Responds in your language
-    - 📚 Top 5 most relevant chunks
-    """)
-    
-    # Sidebar
-    with st.sidebar:
-        st.header("⚙️ Configuration")
-        
-        # Language selector
-        language = st.selectbox("Language / Langue", ["English", "Français"], key="ui_language")
-        
-        # Display system info
-        st.subheader("System Information")
-        st.info("""
-        **Models:**
-        - LLM: llama3.2:3b-instruct-q4_K_M
-        - Embeddings: nomic-embed-text-v2-moe
-        
-        **Database:**
-        - ChromaDB (db/chroma_db)
-        
-        **Retrieval:**
-        - Top 5 chunks
-        - 0.7 similarity threshold
-        """)
-        
-        # Advanced settings
-        with st.expander("Advanced Settings"):
-            top_k = st.slider("Number of retrieved documents", 1, 10, 5)
-            show_sources = st.checkbox("Show source documents", value=False)
-        
-        st.divider()
-        
-        # Instructions
-        st.subheader("📖 Instructions")
-        if language == "English":
-            st.markdown("""
-            1. Make sure Ollama is running
-            2. Ensure documents are ingested
-            3. Type your question below
-            4. Get your answer!
-        
-            **Example queries:**
-            - "What are the office hours requirements?"
-            - "What is the policy on academic freedom?"
-            """)
-        else:
-            st.markdown("""
-            1. Assurez-vous qu'Ollama fonctionne
-            2. Assurez-vous que les documents sont ingérés
-            3. Tapez votre question ci-dessous
-            4. Obtenez votre réponse!
-        
-            **Exemples de questions:**
-            - "Quelles sont les exigences concernant les heures de bureau?"
-            - "Quelle est la politique sur la liberté académique?"
-            """)
-        
-        # Reset button
-        if st.button("🔄 Reset Chat History"):
-            st.session_state.chat_history = []
-            st.rerun()
-    
-    # Main content area
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.header("💬 Chat Interface")
-        
-        # Load RAG engine
-        rag_engine = load_rag_engine()
-        
-        if rag_engine is None:
-            st.warning("⚠️ RAG engine not loaded. Please check the configuration.")
-            return
-        
-        # Update top_k if changed
-        if hasattr(rag_engine, 'set_similarity_top_k'):
-            rag_engine.set_similarity_top_k(top_k)
-        
-        # Display chat history
-        for i, chat in enumerate(st.session_state.chat_history):
-            with st.chat_message("user"):
-                st.write(chat['query'])
-            with st.chat_message("assistant"):
-                st.write(chat['response'])
-                if show_sources and 'sources' in chat:
-                    with st.expander("📚 View Sources"):
-                        for j, source in enumerate(chat['sources']):
-                            st.markdown(f"**Source {j+1}** (Score: {source['score']:.3f})")
-                            st.markdown(f"*Language: {source['metadata'].get('language', 'unknown')}*")
-                            st.text(source['text'])
-                            st.divider()
-        
-        # Query input
-        if language == "English":
-            query = st.chat_input("Ask a question / Posez une question")
-        else:
-            query = st.chat_input("Posez une question / Ask a question")
-        
-        if query:
-            # Add user query to chat
-            with st.chat_message("user"):
-                st.write(query)
-            
-            # Get response
-            with st.chat_message("assistant"):
-                with st.spinner("Thinking..."):
-                    try:
-                        result = rag_engine.query(query, return_sources=show_sources)
-                        st.write(result['response'])
-                        
-                        # Show language detection
-                        lang_emoji = "🇬🇧" if result['detected_language'] == 'en' else "🇫🇷"
-                        st.caption(f"{lang_emoji} Detected language: {result['detected_language']}")
-                        
-                        # Show sources if enabled
-                        if show_sources and 'sources' in result:
-                            with st.expander("📚 View Sources"):
-                                for j, source in enumerate(result['sources']):
-                                    st.markdown(f"**Source {j+1}** (Score: {source['score']:.3f})")
-                                    st.markdown(f"*Language: {source['metadata'].get('language', 'unknown')}*")
-                                    st.text(source['text'])
-                                    st.divider()
-                        
-                        # Save to chat history
+                        # ── Persist to session state ──────────────────────────
                         st.session_state.chat_history.append({
-                            'query': query,
-                            'response': result['response'],
-                            'language': result['detected_language'],
-                            'sources': result.get('sources', [])
+                            "query": query,
+                            "response": result["response"],
+                            "language": detected,
+                            "sources": result.get("sources", []),
+                            "translation_applied": result.get("translation_applied", False),
+                            "original_language": result.get("original_language"),
+                            "original_query": result.get("original_query"),
+                            "translated_query": result.get("translated_query"),
+                            "english_response": result.get("english_response"),
                         })
-                    
+
                     except Exception as e:
                         st.error(f"Error processing query: {e}")
-                        st.info("Make sure Ollama is running and the models are available.")
-    
+                        st.info(
+                            "Make sure Ollama is running and the models are available."
+                        )
+
+    # ── Statistics panel ──────────────────────────────────────────────────────
     with col2:
         st.header("📊 Statistics")
-        
-        # Chat statistics
-        st.metric("Total Questions Asked", len(st.session_state.chat_history))
-        
-        if st.session_state.chat_history:
-            # Language distribution
-            languages = [chat['language'] for chat in st.session_state.chat_history]
-            en_count = languages.count('en')
-            fr_count = languages.count('fr')
-            
+
+        total = len(st.session_state.chat_history)
+        st.metric("Total Questions Asked", total)
+
+        if total:
+            languages = [c.get("language", "unknown") for c in st.session_state.chat_history]
+            en_count = languages.count("en")
+            fr_count = languages.count("fr")
+            other_count = total - en_count - fr_count
+
             st.subheader("Language Distribution")
-            col_a, col_b = st.columns(2)
+            col_a, col_b, col_c = st.columns(3)
             with col_a:
-                st.metric("🇬🇧 English", en_count)
+                st.metric("🇬🇧 EN", en_count)
             with col_b:
-                st.metric("🇫🇷 French", fr_count)
-        
-        # Recent queries
-        if st.session_state.chat_history:
+                st.metric("🇫🇷 FR", fr_count)
+            with col_c:
+                st.metric("🌐 Other", other_count)
+
+            # Translation usage metric
+            translated_count = sum(
+                1 for c in st.session_state.chat_history if c.get("translation_applied")
+            )
+            if translated_count:
+                st.metric("🌐 Queries Translated", translated_count)
+
             st.subheader("Recent Queries")
             for chat in reversed(st.session_state.chat_history[-5:]):
-                lang_emoji = "🇬🇧" if chat['language'] == 'en' else "🇫🇷"
-                with st.expander(f"{lang_emoji} {chat['query'][:50]}..."):
+                lang = chat.get("language", "unknown")
+                lang_emoji = "🇬🇧" if lang == "en" else "🇫🇷" if lang == "fr" else "🌐"
+                preview = chat["query"][:50]
+                ellipsis = "..." if len(chat["query"]) > 50 else ""
+                with st.expander(f"{lang_emoji} {preview}{ellipsis}"):
                     st.write(f"**Query:** {chat['query']}")
+                    if chat.get("translation_applied"):
+                        orig_lang = chat.get("original_language", "?")
+                        st.write(f"**Translated from:** {orig_lang.upper()}")
                     st.write(f"**Response:** {chat['response'][:200]}...")
 
 

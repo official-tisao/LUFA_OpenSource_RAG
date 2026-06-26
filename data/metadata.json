@@ -1,16 +1,6 @@
-{
-  "documents": [],
-  "ingestion_history": [
-    {
-      "timestamp": "2026-02-14T10:14:24.007212",
-      "english_count": 2039,
-      "french_count": 1482
-    }
-  ],
-  "statistics": {
-    "total_documents": 3521,
-    "english_documents": 2039,
-    "french_documents": 1482,
-    "last_updated": "2026-02-14T10:14:24.007212"
+    "total_documents": 34,
+    "english_documents": 21,
+    "french_documents": 13,
+    "last_updated": "2026-06-21T09:59:51.773636"
   }
 }
