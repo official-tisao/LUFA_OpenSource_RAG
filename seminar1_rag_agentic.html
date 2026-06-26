@@ -1,3 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280">
+    <title>From RAG to Agentic RAG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #07090f;
+            --p: #818cf8;
+            --a: #22d3ee;
+            --g: #10b981;
+            --warn: #f59e0b;
+            --txt: #e2e8f0;
+            --muted: #ffffff;
+            --card: #0f172a;
+            --border: #1e2d40;
+            --grad: linear-gradient(135deg, #6366f1, #22d3ee)
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #030507;
+            color: var(--txt);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .scaler {
+            position: absolute;
+            transform-origin: top left
+        }
+
+        .deck {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, .9);
+            background: var(--bg)
+        }
+
+        .global-logo {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            z-index: 50;
+            pointer-events: none;
+            display: none
+        }
+
+        .global-logo img {
+            height: 44px;
+            filter: brightness(0) invert(1);
+            opacity: .85
+        }
+
+        .global-footer {
+            position: absolute;
+            bottom: 0;
+            margin: 15px;
+            left: 0;
+            right: 0;
+            height: 36px;
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            background: linear-gradient(transparent, rgba(7, 9, 15, .9));
+            display: none
+        }
+
+        .global-footer span {
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 500
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 58px 88px 52px 88px;
+            opacity: 0;
+            transform: translateY(70px) scale(.97);
+            transition: opacity .6s cubic-bezier(.4, 0, .2, 1), transform .6s cubic-bezier(.4, 0, .2, 1);
+            pointer-events: none
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+            z-index: 2
+        }
+
+        .slide.exit {
+            opacity: 0;
+            transform: translateY(-70px) scale(.97);
+            z-index: 1
+        }
+
+        .slide-cover {
+            align-items: center;
+            text-align: center;
+            padding: 0
+        }
+
+        .slide-cover .bg-gfx {
+            position: absolute;
+            inset: 0;
+            overflow: hidden
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: .35
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(99, 102, 241, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, .07) 1px, transparent 1px);
+            background-size: 64px 64px
+        }
+
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(99, 102, 241, .12)
+        }
+
+        .tag {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--a);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .tag::before {
+            content: '';
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--grad)
+        }
+
+        h1.cover {
+            font-size: 54px;
+            font-weight: 900;
+            line-height: 1.08;
+            letter-spacing: -2px;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            max-width: 820px;
+            margin: 0 auto 12px
+        }
+
+        h2 {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -1.5px;
+            margin-bottom: 28px;
+            color: var(--txt)
+        }
+
+        h2 span {
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .sub {
+            font-size: 20px;
+            font-weight: 300;
+            color: var(--muted);
+            max-width: 680px;
+            line-height: 1.6;
+            margin-bottom: 14px
+        }
+
+        ul.pts {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px
+        }
+
+        ul.pts li {
+            font-size: 19px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.5
+        }
+
+        ul.pts li::before {
+            content: '▸';
+            color: var(--a);
+            font-size: 13px;
+            margin-top: 5px;
+            flex-shrink: 0
+        }
+
+        ul.pts li strong {
+            color: var(--p)
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 44px;
+            width: 100%
+        }
+
+        .pipe {
+            display: flex;
+            align-items: center;
+            margin-top: 28px;
+            flex-wrap: wrap;
+            gap: 4px
+        }
+
+        .pbox {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 20px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 15px;
+            min-width: 140px
+        }
+
+        .pbox.hi {
+            border-color: var(--p);
+            color: var(--p);
+            background: rgba(99, 102, 241, .1)
+        }
+
+        .pbox.hg {
+            border-color: var(--g);
+            color: var(--g);
+            background: rgba(16, 185, 129, .1)
+        }
+
+        .arr {
+            color: var(--muted);
+            font-size: 24px;
+            padding: 0 8px
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 24px
+        }
+
+        .card h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--a);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .card p,
+        .card ul {
+            font-size: 14px;
+            color: #ffffff;
+            line-height: 1.6
+        }
+
+        .card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 5px
+        }
+
+        .card ul li::before {
+            content: '→ ';
+            color: var(--p)
+        }
+
+        .grid4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+            margin-top: 14px
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            background: #0a1628;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px 24px;
+            line-height: 1.9;
+            color: #e2e8f0;
+            width: 100%;
+            margin-top: 14px
+        }
+
+        .mono .dim {
+            color: var(--muted)
+        }
+
+        .mono .hi {
+            color: var(--a)
+        }
+
+        .mono .good {
+            color: var(--g)
+        }
+
+        .mono .warn {
+            color: var(--warn)
+        }
+
+        .flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 840px
+        }
+
+        .frow {
+            display: flex;
+            align-items: center
+        }
+
+        .fbox {
+            border-radius: 9px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .fbox.q {
+            background: rgba(99, 102, 241, .15);
+            border: 1.5px solid var(--p);
+            color: var(--p)
+        }
+
+        .fbox.r {
+            background: rgba(34, 211, 238, .12);
+            border: 1.5px solid var(--a);
+            color: var(--a)
+        }
+
+        .fbox.gen {
+            background: rgba(16, 185, 129, .12);
+            border: 1.5px solid var(--g);
+            color: var(--g)
+        }
+
+        .fbox.ref {
+            background: rgba(245, 158, 11, .12);
+            border: 1.5px solid var(--warn);
+            color: var(--warn)
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px
+        }
+
+        .chip {
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600
+        }
+
+        .chip.p {
+            background: rgba(99, 102, 241, .15);
+            border: 1px solid var(--p);
+            color: var(--p)
+        }
+
+        .chip.a {
+            background: rgba(34, 211, 238, .12);
+            border: 1px solid var(--a);
+            color: var(--a)
+        }
+
+        .chip.g {
+            background: rgba(16, 185, 129, .12);
+            border: 1px solid var(--g);
+            color: var(--g)
+        }
+
+        .chip.w {
+            background: rgba(245, 158, 11, .1);
+            border: 1px solid var(--warn);
+            color: var(--warn)
+        }
+
+        .vs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            width: 100%;
+            align-items: start;
+            margin-top: 14px
+        }
+
+        .vs-card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 22px 26px;
+            border: 1px solid var(--border)
+        }
+
+        .vs-card.left {
+            border-color: #ef4444;
+            border-top: 3px solid #ef4444
+        }
+
+        .vs-card.right {
+            border-color: var(--g);
+            border-top: 3px solid var(--g)
+        }
+
+        .vs-card h4 {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 14px
+        }
+
+        .vs-card.left h4 {
+            color: #f87171
+        }
+
+        .vs-card.right h4 {
+            color: var(--g)
+        }
+
+        .vs-mid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--muted)
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600
+        }
+
+        .pill.bad {
+            background: rgba(239, 68, 68, .15);
+            color: #f87171
+        }
+
+        .pill.ok {
+            background: rgba(16, 185, 129, .15);
+            color: var(--g)
+        }
+
+        .sumbox {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 20px 28px;
+            border-left: 4px solid var(--p);
+            width: 100%
+        }
+
+        .sumbox+.sumbox {
+            border-left-color: var(--a);
+            margin-top: 14px
+        }
+
+        .sumbox+.sumbox+.sumbox {
+            border-left-color: var(--g)
+        }
+
+        .sumbox h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 6px
+        }
+
+        .sumbox p {
+            font-size: 17px;
+            color: var(--txt);
+            line-height: 1.5
+        }
+
+        .appgrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 18px;
+            width: 100%
+        }
+
+        .appcard {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: border-color .3s
+        }
+
+        .appcard:hover {
+            border-color: var(--p)
+        }
+
+        .appicon {
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0
+        }
+
+        .appcard h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--txt);
+            margin-bottom: 3px
+        }
+
+        .appcard p {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .half {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            width: 100%;
+            align-items: start
+        }
+
+        .progress {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            padding: 0 0 14px 0;
+            gap: 7px
+        }
+
+        .pdot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all .3s
+        }
+
+        .pdot.on {
+            background: var(--p);
+            transform: scale(1.4)
+        }
+
+        .navbtn {
+            position: fixed;
+            z-index: 100;
+            background: rgba(15, 23, 42, .85);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 9px 14px;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 18px;
+            transition: all .3s;
+            backdrop-filter: blur(8px)
+        }
+
+        .navbtn:hover {
+            color: var(--txt);
+            border-color: var(--p)
+        }
+
+        #nb {
+            bottom: 20px;
+            right: 100px
+        }
+
+        #pb {
+            bottom: 20px;
+            right: 152px
+        }
+
+        .ctr {
+            position: fixed;
+            bottom: 22px;
+            right: 20px;
+            z-index: 100;
+            font-size: 12px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(15, 23, 42, .8);
+            padding: 6px 12px;
+            border-radius: 7px;
+            border: 1px solid var(--border)
+        }
+
+        .slide-dl {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(ellipse at 50% 40%, rgba(99, 102, 241, .15) 0%, transparent 60%), var(--bg)
+        }
+
+        .dl-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 40px;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 2px solid var(--p);
+            background: rgba(99, 102, 241, .15);
+            color: #c7d2fe;
+            transition: all .3s;
+            margin-top: 28px;
+            font-family: 'Inter', sans-serif
+        }
+
+        .dl-btn:hover {
+            background: rgba(99, 102, 241, .3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, .3)
+        }
+
+        .dl-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .prog-wrap {
+            margin-top: 20px;
+            width: 440px;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            display: none
+        }
+
+        .prog-bar {
+            height: 100%;
+            background: var(--grad);
+            border-radius: 4px;
+            transition: width .2s;
+            width: 0%
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 0 80px
+        }
+
+        .cover-logo {
+            margin-top: 44px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px
+        }
+
+        .cover-logo img {
+            height: 76px;
+            filter: brightness(0) invert(1);
+            opacity: .92
+        }
+
+        .cover-logo p {
+            font-size: 12px;
+            color: rgb(255, 255, 255);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 500
+        }
+
+        .cover-divider {
+            width: 100%;
+            max-width: 700px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, .5), rgba(34, 211, 238, .5), transparent);
+            margin: 22px 0
+        }
+
+        .cover-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: -10px
+        }
+
+        .cover-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 999px;
+            background: rgba(34, 211, 238, .1);
+            border: 1px solid rgba(34, 211, 238, .25);
+            color: var(--a);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 18px
+        }
+
+        .cover-info {
+            display: flex;
+            gap: 0;
+            margin-top: 24px;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: 16px;
+            overflow: hidden
+        }
+
+        .cover-info-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 20px 56px
+        }
+
+        .cover-info-block .lbl {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+            font-weight: 700
+        }
+
+        .cover-info-block .val {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--txt)
+        }
+
+        .cover-info-block .sv {
+            font-size: 12px;
+            color: rgba(148, 163, 184, .7);
+            font-weight: 500
+        }
+
+        .cover-info-sep {
+            width: 1px;
+
+            background: rgba(255, 255, 255, .07);
+            align-self: stretch
+        }
+
+        .cover-bottom {
+            padding: 16px 0 24px;
+            font-size: 11px;
+            color: rgb(255, 255, 255);
+            letter-spacing: 2px;
+            text-transform: uppercase
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scaler" id="scaler">
+        <div class="deck" id="deck">
+            <div class="global-logo" id="glogo">
+                <img src="https://upload.wikimedia.org/wikipedia/en/3/39/Laurentian_University.svg"
+                    alt="Laurentian University" crossorigin="anonymous">
+            </div>
+            <div class="global-footer" id="gfooter">
+                <span>From RAG to Agentic RAG &nbsp;·&nbsp; Seminar 1 &nbsp;·&nbsp; School of Engineering and Computer
+                    Science</span>
+            </div>
+
+            <!-- Slide 0: Cover -->
+            <div class="slide slide-cover active" id="s0">
+                <div class="bg-gfx">
+                    <div class="grid-bg"></div>
+                    <div class="orb" style="width:600px;height:600px;background:#6366f1;top:-200px;left:-100px"></div>
+                    <div class="orb" style="width:500px;height:500px;background:#22d3ee;bottom:-150px;right:-100px">
+                    </div>
+                    <div class="ring" style="width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%)">
+                    </div>
+                    <div class="ring"
+                        style="width:750px;height:750px;top:50%;left:50%;transform:translate(-50%,-50%);border-color:rgba(34,211,238,.07)">
+                    </div>
+                </div>
+                <div class="cover-content">
+                    <div class="cover-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/3/39/Laurentian_University.svg"
+                            alt="Laurentian University" crossorigin="anonymous">
+                        <p>Laurentian University &nbsp;·&nbsp; School of Engineering and Computer Science</p>
+                    </div>
+                    <div class="cover-divider"></div>
+                    <div class="cover-main">
+                        <div class="cover-badge">✦ Seminar 1 · 2026</div>
+                        <h1 class="cover">From RAG to Agentic RAG</h1>
+                        <p
+                            style="font-size:17px;color:rgb(255, 255, 255);max-width:640px;line-height:1.6;font-weight:300">
+                            The Evolution of Retrieval-Augmented Generation:<br>From Static Pipelines to Agentic Systems
+                        </p>
+                        <div class="cover-info">
+                            <div class="cover-info-block">
+                                <span class="lbl">Presenter</span>
+                                <span class="val">Saheed Oluwatosin Tiamiyu</span>
+<!--                                <span class="sv">Student Id: 0466367</span>-->
+
+                            </div>
+                            <div class="cover-info-sep"></div>
+                            <div class="cover-info-block">
+                                <span class="lbl">Supervisor</span>
+                                <span class="val">Professor Kalpdrum Passi</span>
+<!--                                <span class="sv">Full Professor</span>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cover-bottom">March 2026 &nbsp;·&nbsp; Sudbury, Ontario, Canada</div>
+                </div>
+            </div>
+
+            <!-- Slide 1 -->
+            <div class="slide" id="s1">
+                <div class="two-col">
+                    <div>
+                        <div class="tag">Slide 2</div>
+                        <h2>The Problem with <span>LLMs Alone</span></h2>
+                        <ul class="pts">
+                            <li>LLMs have a <strong>fixed knowledge cutoff</strong></li>
+                            <li>They <strong>hallucinate confidently</strong> in domain-specific queries</li>
+                            <li>No citations, no verifiability</li>
+                            <li>Especially dangerous in <strong>Contract / agreement </strong> contexts</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="card" style="border-color:#ef4444;border-top:3px solid #ef4444;margin-top:6px">
+                            <h4 style="color:#f87171">⚠️ Hallucination Example</h4>
+                            <p style="margin-bottom:10px;font-size:13px">User asks ChatGPT about a collective agreement
+                                clause:</p>
+                            <div
+                                style="background:#0a1628;border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.8;border-left:3px solid #ef4444">
+                                <span style="color:#ffffff">Q: "What is Article 15.3 of the LUFA agreement?"</span><br>
+                                <span style="color:#f87171">A: "Article 15.3 states that faculty are entitled<br>to 30
+                                    days annual leave with full pay..."</span><br><br>
+                                <span style="color:rgba(239,68,68,.5)">❌ This clause does not exist.</span>
+                            </div>
+                        </div>
+                        <div class="card" style="margin-top:14px">
+                            <p>LLMs are trained on general web data. They have <strong style="color:#f87171">no
+                                    access</strong> to your institution's private documents.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide" id="s2">
+                <div class="tag">Slide 3</div>
+                <h2>What is <span>RAG?</span></h2>
+                <p class="sub" style="margin-bottom:8px">Retrieve → Augment → Generate: grounding LLMs in real
+                    documents</p>
+                <div class="pipe">
+                    <div class="pbox hi">🔍 Query</div>
+                    <div class="arr">→</div>
+                    <div class="pbox" style="border-color:#8b5cf6;color:#a78bfa;background:rgba(139,92,246,.1)">📚
+                        Vector DB</div>
+                    <div class="arr">→</div>
+                    <div class="pbox" style="border-color:#f59e0b;color:#fbbf24;background:rgba(245,158,11,.1)">📦 Top-K
+                        Chunks</div>
+                    <div class="arr">→</div>
+                    <div class="pbox" style="border-color:#ec4899;color:#f472b6;background:rgba(236,72,153,.1)">🧠 LLM
+                    </div>
+                    <div class="arr">→</div>
+                    <div class="pbox hg">✅ Answer + Citations</div>
+                </div>
+                <div class="grid4" style="margin-top:24px">
+                    <div class="card">
+                        <h4>📄 Document Indexing</h4>
+                        <p>PDFs split into chunks → converted to vectors → stored in vector database</p>
+                    </div>
+                    <div class="card">
+                        <h4>🔎 Query Time</h4>
+                        <p>User query → embedded → similarity search → retrieve most relevant chunks</p>
+                    </div>
+                    <div class="card">
+                        <h4>🧠 Augmented Prompt</h4>
+                        <p>Retrieved chunks + original query sent together to the LLM as context</p>
+                    </div>
+                    <div class="card">
+                        <h4>📌 Grounded Answer</h4>
+                        <p>LLM generates answer based only on retrieved text, with page citations</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide" id="s3">
+                <div class="half">
+                    <div>
+                        <div class="tag">Slide 4</div>
+                        <h2>How RAG Works <span>Technically</span></h2>
+                        <ul class="pts">
+                            <li><strong>Text → Chunks → Embeddings → Vector Store</strong></li>
+                            <li>At query time: embed query → similarity search → retrieve top-K</li>
+                            <li>Feed chunks + query to LLM as context</li>
+                        </ul>
+                        <div class="mono">
+                            <span class="dim">doc.txt</span> → <span class="hi">chunks(1024 tokens)</span><br>
+                            chunk → <span class="warn">embed()</span> → <span class="hi">[0.23,-0.11,...]</span><br>
+                            vectors → <span class="good">ChromaDB.store()</span><br><br>
+                            <span class="dim"># At query time:</span><br>
+                            q = <span class="warn">embed</span>("salary grid?")<br>
+                            chunks = <span class="good">db.similarity_search</span>(q, k=5)<br>
+                            answer = <span class="hi">LLM</span>(chunks + query)
+                        </div>
+                    </div>
+                    <div>
+                        <div
+                            style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px">
+                            <p
+                                style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:16px">
+                                Embedding Space</p>
+                            <svg width="320" height="240" viewBox="0 0 320 240">
+                                <defs>
+                                    <radialGradient id="rg1" cx="50%" cy="50%">
+                                        <stop offset="0%" stop-color="#6366f1" stop-opacity=".25" />
+                                        <stop offset="100%" stop-color="#6366f1" stop-opacity="0" />
+                                    </radialGradient>
+                                    <radialGradient id="rg2" cx="50%" cy="50%">
+                                        <stop offset="0%" stop-color="#22d3ee" stop-opacity=".18" />
+                                        <stop offset="100%" stop-color="#22d3ee" stop-opacity="0" />
+                                    </radialGradient>
+                                </defs>
+                                <circle cx="145" cy="130" r="55" fill="url(#rg1)" />
+                                <circle cx="210" cy="80" r="40" fill="url(#rg2)" />
+                                <circle cx="140" cy="135" r="10" fill="#6366f1" opacity=".9" /><text x="155" y="140"
+                                    fill="#a5b4fc" font-size="12" font-family="Inter">Chunk A</text>
+                                <circle cx="155" cy="115" r="8" fill="#818cf8" opacity=".8" /><text x="168" y="119"
+                                    fill="#a5b4fc" font-size="12" font-family="Inter">Chunk B</text>
+                                <circle cx="125" cy="120" r="7" fill="#a78bfa" opacity=".7" />
+                                <circle cx="205" cy="75" r="10" fill="#22d3ee" opacity=".9" /><text x="218" y="80"
+                                    fill="#67e8f9" font-size="12" font-family="Inter">Query</text>
+                                <line x1="205" y1="75" x2="155" y2="115" stroke="#22d3ee" stroke-width="1.5"
+                                    stroke-dasharray="4,3" opacity=".6" />
+                                <line x1="205" y1="75" x2="140" y2="135" stroke="#22d3ee" stroke-width="1.5"
+                                    stroke-dasharray="4,3" opacity=".4" />
+                                <circle cx="50" cy="190" r="9" fill="#ef4444" opacity=".6" /><text x="64" y="195"
+                                    fill="#ffffff" font-size="12" font-family="Inter">Unrelated doc</text>
+                                <text x="20" y="30" fill="#475569" font-size="11" font-family="Inter">High similarity →
+                                    retrieved</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="slide" id="s4">
+                <div class="tag">Slide 5</div>
+                <h2>Limitations of <span>Standard RAG</span></h2>
+                <div class="grid4">
+                    <div class="card" style="border-color:#ef4444">
+                        <h4 style="color:#f87171">❌ Single-Shot</h4>
+                        <p>One query → one retrieval → one answer. No iteration. No second chance if retrieval is poor.
+                        </p>
+                    </div>
+                    <div class="card" style="border-color:#ef4444">
+                        <h4 style="color:#f87171">❌ Fails on Vague Queries</h4>
+                        <p>"What about the salary?" too vague. Standard RAG retrieves random chunks with no
+                            refinement.</p>
+                    </div>
+                    <div class="card" style="border-color:#ef4444">
+                        <h4 style="color:#f87171">❌ No Self-Correction</h4>
+                        <p>If retrieval returns irrelevant chunks, the LLM still generates an answer, just a bad one.
+                        </p>
+                    </div>
+                    <div class="card" style="border-color:#ef4444">
+                        <h4 style="color:#f87171">❌ No Memory Across Turns</h4>
+                        <p>Each query is independent. Cannot answer follow-ups like "And what about part-time faculty?"
+                        </p>
+                    </div>
+                </div>
+                <div
+                    style="margin-top:22px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:14px 22px;display:flex;align-items:center;gap:14px">
+                    <span style="font-size:24px">⚡</span>
+                    <p style="font-size:16px;color:#cbd5e1">Standard RAG is a <strong style="color:#f87171">fixed,
+                            one-pass pipeline</strong>. Works for simple queries, breaks in real-world contract/agreement retrieval
+                        where questions are nuanced and multi-part.</p>
+                </div>
+            </div>
+
+            <!-- Slide 5 -->
+            <div class="slide" id="s5">
+                <div class="tag">Slide 6</div>
+                <h2>Enter <span>Agentic RAG</span></h2>
+                <p class="sub" style="margin-bottom:16px">Adding a "brain", dynamic, self-correcting, multi-step</p>
+                <div class="grid4">
+                    <div class="card" style="border-color:var(--p)">
+                        <h4>🔄 Query Rewriter</h4>
+                        <ul>
+                            <li>"salary?" → "What is the 2024 faculty salary grid per rank?"</li>
+                            <li>Rephrases vague queries for precision</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="border-color:var(--a)">
+                        <h4>🎯 Retrieval Evaluator</h4>
+                        <ul>
+                            <li>Grades retrieved chunks: relevant or not?</li>
+                            <li>Triggers re-retrieval if score is low</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="border-color:var(--g)">
+                        <h4>🪞 Self-Reflection</h4>
+                        <ul>
+                            <li>"Is this answer grounded in retrieved text?"</li>
+                            <li>Prevents hallucination by verifying sources</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="border-color:var(--warn)">
+                        <h4>🔁 Re-retrieval Loop</h4>
+                        <ul>
+                            <li>If reflection fails → search again</li>
+                            <li>Iterates until answer is trustworthy</li>
+                        </ul>
+                    </div>
+                </div>
+                <div
+                    style="margin-top:20px;display:flex;align-items:center;gap:14px;background:rgba(99,102,241,.08);border-radius:10px;padding:12px 20px;border:1px solid rgba(99,102,241,.2)">
+                    <span style="font-size:22px">💡</span>
+                    <p style="font-size:15px;color:#a5b4fc">The agent <strong>decides dynamically</strong> how many
+                        retrieval steps are needed, not hardcoded like standard RAG</p>
+                </div>
+            </div>
+
+            <!-- Slide 6 -->
+            <div class="slide" id="s6">
+                <div class="half">
+                    <div>
+                        <div class="tag">Slide 7</div>
+                        <h2>The <span>4-Step Loop</span></h2>
+                        <p style="font-size:15px;color:var(--muted);margin-bottom:18px">Dynamic reasoning pipeline</p>
+                        <div class="flow">
+                            <div class="frow">
+                                <div class="fbox q">👤 User Query: "salary?"</div>
+                            </div>
+                            <div style="height:10px;width:2px;background:var(--border);margin-left:16px"></div>
+                            <div class="frow">
+                                <div class="fbox r">🔄 Query Rewriter → "What is the 2024 faculty salary grid?"</div>
+                            </div>
+                            <div style="height:10px;width:2px;background:var(--border);margin-left:16px"></div>
+                            <div class="frow">
+                                <div class="fbox"
+                                    style="background:rgba(99,102,241,.12);border:1.5px solid var(--p);color:var(--p)">
+                                    📚 Retrieval: Top-5 chunks from vector DB</div>
+                            </div>
+                            <div style="height:10px;width:2px;background:var(--border);margin-left:16px"></div>
+                            <div class="frow">
+                                <div class="fbox gen">✍️ Generation: Draft answer</div>
+                            </div>
+                            <div style="height:10px;width:2px;background:var(--border);margin-left:16px"></div>
+                            <div class="frow">
+                                <div class="fbox ref">🪞 Reflection: "Is this grounded?"</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin-top:36px;display:flex;flex-direction:column;gap:14px">
+                            <div
+                                style="display:flex;align-items:center;gap:14px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:14px 18px">
+                                <span style="font-size:24px">❌</span>
+                                <div>
+                                    <p style="font-size:13px;font-weight:700;color:#f87171">If NOT grounded</p>
+                                    <p style="font-size:13px;color:#ffffff">→ Re-retrieve with refined query →
+                                        Regenerate</p>
+                                </div>
+                            </div>
+                            <div
+                                style="display:flex;align-items:center;gap:14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:14px 18px">
+                                <span style="font-size:24px">✅</span>
+                                <div>
+                                    <p style="font-size:13px;font-weight:700;color:var(--g)">If grounded</p>
                                     <p style="font-size:13px;color:#ffffff">→ Return Final Answer + Source Citations</p>
                                 </div>
                             </div>

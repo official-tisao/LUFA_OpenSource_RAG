@@ -1,3 +1,224 @@
+#!/usr/bin/env python3
+"""
+RAG engine module for bilingual question-answering.
+Handles query processing, cross-lingual hybrid retrieval, and response generation.
+"""
+import re
+from rank_bm25 import BM25Okapi
+from llama_index.core.schema import NodeWithScore
+from typing import List, Optional
+from language_detector import detect_language
+from query_handler import QueryHandler, SYSTEM_PROMPTS
+from query_rewriter import rewrite_query
+from reflector import reflect
+from translator import (
+    detect_full_language,
+    needs_translation,
+    translate_to_english,
+    translate_to_target,
+    LANGUAGE_NAMES,
+)
+from llama_index.core import VectorStoreIndex, StorageContext
+from llama_index.core.retrievers import VectorIndexRetriever
+from llama_index.core.query_engine import RetrieverQueryEngine
+from llama_index.core.response_synthesizers import get_response_synthesizer
+from llama_index.llms.ollama import Ollama
+from llama_index.embeddings.ollama import OllamaEmbedding
+from llama_index.vector_stores.chroma import ChromaVectorStore
+import chromadb
+
+PREVIEW_LENGTH = 200
+MAX_RETRIES    = 3
+
+
+class BilingualRAGEngine:
+    """
+    Bilingual RAG engine for Laurentian University Faculty Association collective agreement.
+    Features cross-lingual retrieval, query rewriting, and hybrid RRF retrieval.
+    """
+
+    def __init__(
+        self,
+        db_path: str = "db/chroma_db",
+        collection_name: str = "multilingual_docs",
+        llm_model: str = "llama3.2:3b-instruct-q4_K_M",
+        embedding_model: str = "nomic-embed-text-v2-moe",
+        similarity_top_k: int = 5
+    ):
+        self.db_path          = db_path
+        self.collection_name  = collection_name
+        self.similarity_top_k = similarity_top_k
+        self.query_handler    = QueryHandler()
+
+        print(f"Initializing LLM: {llm_model}")
+        self.llm = Ollama(
+            model=llm_model,
+            base_url="http://localhost:11434",
+            request_timeout=120.0,
+        )
+
+        print(f"Initializing embedding model: {embedding_model}")
+        self.embed_model = OllamaEmbedding(
+            model_name=embedding_model,
+            base_url="http://localhost:11434",
+        )
+
+        self.index        = self._load_index()
+        self.query_engine = self._create_query_engine()
+
+    def _load_index(self) -> VectorStoreIndex:
+        print(f"Loading index from {self.db_path}...")
+        chroma_client     = chromadb.PersistentClient(path=self.db_path)
+        chroma_collection = chroma_client.get_or_create_collection(self.collection_name)
+        vector_store      = ChromaVectorStore(chroma_collection=chroma_collection)
+        index = VectorStoreIndex.from_vector_store(
+            vector_store=vector_store,
+            embed_model=self.embed_model,
+        )
+        print("Index loaded successfully")
+        return index
+
+    def set_similarity_top_k(self, top_k: int):
+        self.similarity_top_k = top_k
+        if hasattr(self, 'query_engine') and hasattr(self.query_engine, 'retriever'):
+            self.query_engine.retriever._similarity_top_k = top_k
+
+    def _create_query_engine(self) -> RetrieverQueryEngine:
+        retriever = VectorIndexRetriever(
+            index=self.index,
+            similarity_top_k=self.similarity_top_k,
+        )
+        response_synthesizer = get_response_synthesizer(
+            llm=self.llm,
+            response_mode="compact",
+        )
+        return RetrieverQueryEngine(
+            retriever=retriever,
+            response_synthesizer=response_synthesizer,
+        )
+
+    def detect_query_language(self, query: str) -> str:
+        return self.query_handler.detect_query_language(query)
+
+    def create_language_aware_prompt(self, query: str, language: str) -> str:
+        system_prompt = self.query_handler.get_system_prompt(language)
+        instruction   = "Réponds en français. " if language == 'fr' else "Respond in English. "
+        return instruction + query
+
+    def query(self, query_text: str, return_sources: bool = False) -> dict:
+        """Standard single-pass RAG query."""
+        detected_language = self.detect_query_language(query_text)
+        print(f"Detected query language: {detected_language}")
+        enhanced_query    = self.create_language_aware_prompt(query_text, detected_language)
+        response          = self.query_engine.query(enhanced_query)
+
+        result = {
+            'response': str(response),
+            'detected_language': detected_language,
+        }
+
+        if return_sources and hasattr(response, 'source_nodes'):
+            sources = []
+            for node in response.source_nodes:
+                text = node.node.text
+                preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
+                sources.append({
+                    'text': preview,
+                    'score': node.score,
+                    'metadata': node.node.metadata,
+                    'node_id': node.node.node_id
+                })
+            result['sources'] = sources
+
+        return result
+
+    def chat(self, query_text: str) -> str:
+        return self.query(query_text, return_sources=False)['response']
+
+    def _retrieve_nodes(self, query: str, top_k: int = 5) -> list:
+        """
+        Executes advanced hybrid retrieval. Sorts dense vector nodes by recency weights
+        during similarity ties, then merges them with sparse BM25 tokens via RRF.
+        Directly reads from ChromaDB to avoid ZeroDivisionError.
+        """
+        dense_retriever = VectorIndexRetriever(
+            index=self.index,
+            similarity_top_k=top_k * 2,
+        )
+        raw_dense_nodes = dense_retriever.retrieve(query)
+
+        if raw_dense_nodes:
+            raw_dense_nodes.sort(key=lambda x: x.score, reverse=True)
+            dense_nodes = []
+            i = 0
+            tie_threshold = 0.02
+
+            while i < len(raw_dense_nodes):
+                bucket_score = raw_dense_nodes[i].score
+                bucket = []
+                j = i
+                while j < len(raw_dense_nodes) and (bucket_score - raw_dense_nodes[j].score) < tie_threshold:
+                    bucket.append(raw_dense_nodes[j])
+                    j += 1
+
+                bucket.sort(key=lambda x: float(x.node.metadata.get("recency_weight", 1.0)), reverse=True)
+                dense_nodes.extend(bucket)
+                i = j
+        else:
+            dense_nodes = []
+
+        from llama_index.core.schema import TextNode
+        chroma_client = chromadb.PersistentClient(path=self.db_path)
+        chroma_collection = chroma_client.get_or_create_collection(self.collection_name)
+        collection_data = chroma_collection.get(include=["documents", "metadatas"])
+
+        all_nodes = []
+        if collection_data and collection_data.get("ids"):
+            for cid, doc, meta in zip(collection_data["ids"], collection_data["documents"],
+                                      collection_data["metadatas"]):
+                node = TextNode(id_=cid, text=doc, metadata=meta)
+                all_nodes.append(node)
+
+        if not all_nodes:
+            return dense_nodes
+
+        tokenized_corpus = [re.findall(r'\b\w+\b', node.text.lower()) for node in all_nodes]
+        bm25 = BM25Okapi(tokenized_corpus)
+
+        tokenized_query = re.findall(r'\b\w+\b', query.lower())
+        bm25_scores = bm25.get_scores(tokenized_query)
+
+        top_bm25_indices = sorted(range(len(bm25_scores)), key=lambda idx: bm25_scores[idx], reverse=True)[:top_k * 2]
+        sparse_nodes = [all_nodes[idx] for idx in top_bm25_indices]
+
+        rrf_scores = {}
+        node_mapping = {}
+
+        for rank, node in enumerate(dense_nodes, start=1):
+            node_id = node.node.node_id
+            node_mapping[node_id] = node
+            node.node.metadata["original_cosine_score"] = str(node.score)
+            rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
+
+        for rank, node in enumerate(sparse_nodes, start=1):
+            node_id = node.node_id
+            if node_id not in node_mapping:
+                from llama_index.core.schema import NodeWithScore
+                node_mapping[node_id] = NodeWithScore(node=node, score=0.0)
+            rrf_scores[node_id] = rrf_scores.get(node_id, 0.0) + (1.0 / (60 + rank))
+
+        sorted_node_ids = sorted(rrf_scores.keys(), key=lambda k: rrf_scores[k], reverse=True)[:top_k]
+
+        final_nodes = []
+        for nid in sorted_node_ids:
+            wrapped_node = node_mapping[nid]
+            wrapped_node.score = rrf_scores[nid]
+            final_nodes.append(wrapped_node)
+
+        return final_nodes
+
+    def _generate_from_nodes(self, original_query: str, nodes, lang: str) -> str:
+
         context     = "\n\n---\n\n".join([n.node.text for n in nodes])
         system      = self.query_handler.get_system_prompt(lang)
         instruction = "Réponds en français." if lang == "fr" else "Respond in English."
