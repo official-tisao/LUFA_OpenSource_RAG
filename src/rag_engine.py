@@ -101,8 +101,8 @@ class BilingualRAGEngine:
         return self.query_handler.detect_query_language(query)
 
     def create_language_aware_prompt(self, query: str, language: str) -> str:
-        system_prompt = self.query_handler.get_system_prompt(language)
-        instruction   = "Réponds en français. " if language == 'fr' else "Respond in English. "
+        query = self.query_handler.augment_query_with_year(query, language)
+        instruction = "Réponds en français. " if language == "fr" else "Respond in English. "
         return instruction + query
 
     def query(self, query_text: str, return_sources: bool = False) -> dict:
