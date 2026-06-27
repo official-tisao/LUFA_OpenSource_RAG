@@ -635,7 +635,7 @@ def df_to_js_data(df):
         "by_difficulty": {m: avg_by("difficulty", m) for m in gen_metrics + ret_metrics if m in cleaned_df.columns},
         "by_category": {m: avg_by("category", m) for m in gen_metrics + judge_metrics if m in cleaned_df.columns},
         "grounded_rate": round(
-            float(pd.to_numeric(cleaned_df["grounded"], errors='coerce').fillna(0).astype(bool).mean()),
+            float(cleaned_df["grounded"].astype(str).str.strip().str.lower().isin(["true", "1", "yes"]).mean()),
             4) if "grounded" in cleaned_df.columns else 0,
         "avg_attempts": round(float(pd.to_numeric(cleaned_df["attempts"], errors='coerce').fillna(1).mean()),
                               2) if "attempts" in cleaned_df.columns else 1,
