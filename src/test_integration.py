@@ -14,9 +14,8 @@ sys.path.insert(0, str(Path(__file__).parent / 'src'))
 def check_ollama():
     """Check if Ollama is running."""
     print("Checking Ollama connection...")
-    try:
-        import requests
-        response = requests.get("http://localhost:11434/api/tags", timeout=5)
+        import httpx
+        response = httpx.get("http://localhost:11434/api/tags", timeout=5.0)
         if response.status_code == 200:
             print("✓ Ollama is running")
             return True
