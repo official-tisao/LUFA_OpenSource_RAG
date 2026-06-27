@@ -3126,20 +3126,6 @@ Labour Day, unless prior permission for another time has been granted by the Pre
 ARTICLE 7.10 – RECOGNIZED AND OTHER HOLIDAYS
 7.10.1 The following days and all days generally declared to be recognised holidays by Federal or Provincial
 authorities are recognised holidays and...",0.432393,0.432393,0.030886
-test_en_077,Who defines the curriculum for a degree program?,"The answer is not explicitly stated in the provided text. However, according to Article 5.10 - Academic Qualifications Guidelines, the Chair/Coordinator is responsible for ""approving the mark forms for courses offered in the department/program"" (Article 33.08), but it does not explicitly state who defines the curriculum for a degree program.
-
-It is likely that the curriculum for a degree program is defined by the department or program's faculty, in consultation with the Chair/Coordinator, as mentioned in Article 33.08. However, this is not explicitly stated in the provided text.",llama3.2:3b-instruct-q4_K_M,en,3,False,ea338095-2ce6-4b09-a84a-641836f6ea11,0.4365,"The Vice-President, Academic and Provost will
-communicate her/his decision on the request prior to the planned date of the course evaluation.
-(b) It is the responsibility of Members to maintain on an ...",d4f7ffc5-dba4-4663-a2fc-8face3ce0c33,0.0164,"At any time, Members may transfer the monetary value of the accumulated credits into their
-professional development expenditure account.
-(iv) Once the supervisory work has been completed, it shall be ...",61e470ca-8d46-4082-b958-76bd245c03be,0.4266,"Hereinafter, this title shall
-be referred to as the Collective Agreement. ARTICLE 1.15 – OFFICIAL LANGUAGES
-1.15.1 Both the English and French versions of the Collective Agreement shall be official an...",54c2be3f-7082-497e-bc00-742f7c09b06d,0.0161,"At any time, Members may transfer the monetary value of the accumulated credits into their
-professional development expenditure account.
-(iv) Once the supervisory work has been completed, it shall be ...",f75c97aa-e60c-4f0f-9268-aa47534dcc9c,0.4185,"In interpreting these guidelines, the following shall apply:
-a) Article 5.10 – Academic Qualifications Guidelines
-b) Article 5.15 – Rights, Responsibilities and Duties of Academics
-c) Article 5.50 – A...",0.436467,0.436467,0.016393
 test_en_079,What is a bipartite appointment?,"There is no information provided in the context about a ""bipartite appointment"". The provided sections of the Collective Agreement do not mention this term.",llama3.2:3b-instruct-q4_K_M,en,1,True,294c8c2d-6f79-48ae-88de-9f2b0e423528,0.4183,"Alternatively, the Dean/University Librarian shall work together with the Department/School to substitute one (1) of the
 short-listed names.
 5.20.5 Appointments shall be made only to the ranks referre...",d13cd7dc-dd48-4b57-9d51-4e5ba05e3836,0.4146,"If
@@ -3151,15 +3137,6 @@ the short list contains fewer than three (3) names, this change can only be an a
 Department/School to substi...",01e33ebb-9451-4c36-988d-e479381053bc,0.4165,"Where this requirement
 cannot be fulfilled, the Dean/University Librarian, in consultation with the Department/School, shall
 appoint a suitable Member from another Department/School to the search comm...",0.418263,0.418263,0.031514
-test_en_080,What is a tripartite appointment?,I don't have information on what a tripartite appointment is from the provided text.,llama3.2:3b-instruct-q4_K_M,en,3,False,d55567e9-7145-4527-8933-c352f4183d9e,0.4059,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
-Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illn...",0073964a-94d9-44c7-b7ae-824e7f121629,0.0164,"Grievance of Appointment Decision of Sessional Members
-4.15.25 In the event that an unsuccessful applicant for a sessional teaching position believes that someone else was
-appointed to the position in...",42a5e3ae-7628-41ff-b185-592615aa671d,0.4059,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
-Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illn...",9c235f0e-4fce-42ea-9be1-b89131d9bb9e,0.0161,"Grievance of Appointment Decision of Sessional Members
-4.15.25 In the event that an unsuccessful applicant for a sessional teaching position believes that someone else was
-appointed to the position in...",01e33ebb-9451-4c36-988d-e479381053bc,0.4046,"Where this requirement
-cannot be fulfilled, the Dean/University Librarian, in consultation with the Department/School, shall
-appoint a suitable Member from another Department/School to the search comm...",0.405899,0.405899,0.016393
 test_fr_002,Qui est reconnu comme l'agent négociateur exclusif des professeurs ?,"Une personne n'est pas explicitement identifiée dans le texte fourni comme l'agent négociateur exclusif des professeurs. Cependant, les professeurs sont mentionnés comme faisant partie de l'unité de négociation, ce qui suggère qu'ils peuvent négocier leurs conditions de travail avec l'Université, mais sans spécifier qui est l'agent négociateur exclusif.
 
 Cependant, il est possible de déduire que les professeurs sont représentés par l'Association des professeur(e)s de l'Université Laurentienne, qui est une organisation syndicale qui négocie les conditions de travail des professeurs avec l'Université. Mais il n'est pas spécifié qui est l'agent négociateur exclusif de cette association.",llama3.2:3b-instruct-q4_K_M,fr,2,True,09ceb709-f70c-4df2-933f-5f59b2bdac51,0.4564,"11.27 Administrateurs supérieurs chargés des affaires professorales
@@ -3197,17 +3174,6 @@ savoir, la liberté universitaire est essentielle à ses ...",0f4dd1b6-71a2-4ee7
 avant qu’une décision ne soit prise.
 5.50.6 Au plus tard, le 15 juillet, l’Association recevra de l’Emp...",0.464803,0.464803,0.032787
 test_fr_005,La liberté universitaire protège-t-elle les professeurs dans leur recherche ?,ERROR,llama3.2:3b-instruct-q4_K_M,French,0,False,,,,,,,,,,,,,,,,,,
-test_fr_010,Qu'est-ce qu'un grief ?,"Un grief est une allégation, un litige ou une plainte concernant l'interprétation, l'application, l'administration ou la violation présumée de la présente Convention collective.",llama3.2:3b-instruct-q4_K_M,fr,3,False,c48049c8-23ba-416a-9e01-8ada0b10c847,0.3859,"L’amendement des délais prescrits est précisé par écrit.
-11.10.5 Nonobstant l’Article 11.10.2 ci-dessus, un plaignant a recours à la procédure de grief établie ci-dessous si ce
-plaignant est convaincu...",95d1f457-bb0d-4a8c-93d9-c6418944cc25,0.3859,"L’amendement des délais prescrits est précisé par écrit.
-11.10.5 Nonobstant l’Article 11.10.2 ci-dessus, un plaignant a recours à la procédure de grief établie ci-dessous si ce
-plaignant est convaincu...",780f3658-a85a-4f4a-9e20-d95f8f2e3768,0.3806,"23.02 Aucune des personnes qui interviennent dans la procédure ne doit faire l’objet d’aucune forme de discrimination, de
-harcèlement ou de coercition.
-23,03 Les Parties conviennent de faire tous les ...",74e1fffd-55a5-42ba-a768-ea014fe0783c,0.0164,"ARTICLE 23 - PROCÉDURE DE RÈGLEMENT DES GRIEFS
-23.01 Un grief est une allégation, un litige ou une plainte concernant l’interprétation, l’application, l’administration ou la
-violation présumée de la p...",30ded2ed-d855-4bac-8305-afe7a80ac949,0.3806,"23.02 Aucune des personnes qui interviennent dans la procédure ne doit faire l’objet d’aucune forme de discrimination, de
-harcèlement ou de coercition.
-23,03 Les Parties conviennent de faire tous les ...",0.38588,0.38588,0.030366
 test_fr_012,L'APPUL peut-elle déposer un grief de principe ?,"Non, l'APPUL ne peut pas déposer un grief de principe selon l'article 11.10.3 de la Convention collective 2017-2020. Un grief de principe est un grief déposé par un Syndicat et qui concerne une politique générale ou une application générale de la Convention collective, mais l'APPUL n'est pas un Syndicat. Il s'agit d'une organisation professionnelle qui représente les professeurs de l'Université Laurentienne, et non un Syndicat.",llama3.2:3b-instruct-q4_K_M,fr,2,True,c48049c8-23ba-416a-9e01-8ada0b10c847,0.382,"L’amendement des délais prescrits est précisé par écrit.
 11.10.5 Nonobstant l’Article 11.10.2 ci-dessus, un plaignant a recours à la procédure de grief établie ci-dessous si ce
 plaignant est convaincu...",0c51f02c-b3de-4f93-a376-1182a37b4c3f,0.0164,"GRIEF ET ARBITRAGE
@@ -3220,14 +3186,6 @@ ARTICLE 11.10 – PROCÉDURE DE GRIEF
 11.10.1 Il est convenu que les personnes concernées par ces procédures ne sont exposées à la discrimination, au
 harcèlement ou à la coercition en ...",17c7fd2a-958a-413e-9c31-6d38ef07a663,0.3822,"Pendant le trimestre normal, il doit être libre pour les consultations étudiantes au moins une (1) heure par
 semaine pour un cours de trois crédits et préciser les heures de bureau ou de communication...",0.381983,0.381983,0.016393
-test_fr_019,Les plaintes anonymes peuvent-elles être ajoutées au dossier personnel ?,"Non, les documents anonymes ne peuvent pas être ajoutés au dossier personnel, selon l'article 5.70.3 de la Convention collective : ""L'Employeur ne peut retenir pour inclusion dans le dossier d'un Membre, aucun document anonyme concernant ce dernier.""",llama3.2:3b-instruct-q4_K_M,fr,3,False,77c77569-f194-4008-baae-38bdc02ad208,0.3844,"21.08 Les membres peuvent demander au Recteur de leur fournir un exemplaire de leur dossier personnel, à l’exclusion
-des documents considérés comme confidentiels en vertu des dispositions de la présen...",e09c1991-f3d5-445c-956e-102a8cebfa34,0.0164,"Gi) Un membre qui a pris un congé de grossesse, un congé parental ou un congé d’adoption peut choisir de reporter une
-demande de renouvellement, de permanence ou de promotion d’un an par congé.
-(c) Do...",e9e94c89-1fff-4586-903b-e5b2590ef152,0.3844,"21.08 Les membres peuvent demander au Recteur de leur fournir un exemplaire de leur dossier personnel, à l’exclusion
-des documents considérés comme confidentiels en vertu des dispositions de la présen...",c006c8b2-01a1-45bc-ac3e-5f1a2a8e8289,0.0161,"Gi) Un membre qui a pris un congé de grossesse, un congé parental ou un congé d’adoption peut choisir de reporter une
-demande de renouvellement, de permanence ou de promotion d’un an par congé.
-(c) Do...",0004f329-d59d-4ad9-95f2-5d86d364c73e,0.3844,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures subséquentes telles que
-celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",0.3844,0.3844,0.016393
 test_fr_021,Quels sont les rangs pour les professeurs ?,"Selon l'article 11.02 de la Convention collective 2015-2018 :
 
 Toute nomination initiale de professeurs à temps plein se fait à l’un des rangs suivants :
@@ -3264,17 +3222,6 @@ Chargé de cours
 11.03 Cat...",b7fe53b9-79fd-42b6-8d3f-faa90b438f18,0.3799,"11.04 Critères de détermination du rang
 Les critères suivants servent de lignes directrices générales lorsqu'on considère les exigences minimales concernant les
 qualifications des membres dans l’attri...",0.365101,0.365101,0.032266
-test_fr_023,Quelle est la durée de la période d'essai pour un professeur adjoint ?,La durée de la période d'essai pour un professeur adjoint est de cinq (5) ans.,llama3.2:3b-instruct-q4_K_M,fr,3,False,e21239ca-13f8-4619-8d11-5eca9dfdfbd6,0.4139,"Nomination à l'essai et nomination avec permanence –
-5.20.17 Les nominations à l'essai sont définies de la façon suivante : nominations ayant une durée de cinq (5) ans au plus
-pendant lesquels l'Emplo...",275f08ac-7386-4d2b-a87e-2f4f8f50887f,0.3967,"Les limites (de trois (3) et
-cinq (5) ans) s’appliquent, qu’il s’agisse ou non de nominations qui se succèdent avec ou sans interruption.
-5.20.16 Le non-renouvellement d’une nomination à durée limitée...",d1c65e95-c69a-40a1-8381-957fd073b934,0.3943,"Les limites (de trois (3) et
-cinq (5) ans) s’appliquent, qu’il s’agisse ou non de nominations qui se succèdent avec ou sans interruption.
-5.20.16 Le non-renouvellement d’une nomination à durée limitée...",481e9bf2-4a30-429e-a448-e3c0cf10e627,0.4139,"Nomination à l'essai et nomination avec permanence –
-5.20.17 Les nominations à l'essai sont définies de la façon suivante : nominations ayant une durée de cinq (5) ans au plus
-pendant lesquels l'Emplo...",721435db-24b3-4d13-b0e3-e6cf01d2b222,0.0164,"La façon normale de procéder à la nomination s’applique.
-5.20.14 Les personnes qui ont un contrat limité ne peuvent faire une demande de promotion pendant la dernière année
-de la nomination à durée li...",0.413852,0.413852,0.031258
 test_fr_029,Des évaluateurs externes sont-ils requis pour les promotions ?,"Oui, des évaluateurs externes sont requis pour les promotions. Conformément à l'article 5.65.9 de la Convention collective 2008-11, le CCPF/CCPLF/CBAP examine l'appréciation des travaux d'érudition du Membre par quatre (4) évaluateurs externes.",llama3.2:3b-instruct-q4_K_M,fr,2,True,4dd90777-1512-482d-aadb-6b51bcf9b0c2,0.3512,"8.04 Évaluation – renouvellement des nominations à l’essai, des promotions et de la permanence
 11 de 59
 <<>>
@@ -3305,22 +3252,6 @@ avant qu’une décision ne soit prise.
 5.50.6 Au plus tard, le 15 juillet, l’Association recevra de l’Emp...",30a91fc5-955c-4a81-a6b3-f993334b6aca,0.382,"11.09 et 11,10, la nomination à temps partiel est d’abord offerte à celui qui possède le plus d’années de service et, en cas
 d'égalité, à celui qui possède le plus de crédits.
 Lorsqu'il n’existe aucun...",0.369703,0.369703,0.02901
-test_fr_031,Qu'est-ce qu'une nomination tripartite ?,"Je n'ai trouvé aucune information sur une ""nomination tripartite"" dans la convention collective de l'Association des professeur(e)s de l'Université Laurentienne. Cependant, je peux vous dire que la convention collective mentionne les différentes catégories de membres, notamment les membres du corps professoral, les membres nouvellement engagés et les membres de l'unité.",llama3.2:3b-instruct-q4_K_M,fr,3,False,147d9fb4-832b-42e1-9fcc-3cb36ecbbe13,0.4006,"11.24 L'Université n’est pas responsable des dépenses que le membre à temps partiel engage pour aller au travail, peu
-importe le lieu, à moins d’une entente mutuelle entre les
-Parties.
-32 de 66
-<<>>
-C...",164cf36f-82d1-4e6f-a8ee-861f619eba3b,0.0164,"0.02 Liberté universitaire
-(a) L'Université ayant pour objectiffondamental la recherche de nouvelles connaissances et la libre dissémination du
-savoir, la liberté universitaire est essentielle à ses a...",7e75ccbd-1e0f-4ffb-957f-c2d3ad02c81e,0.4006,"11.24 L'Université n’est pas responsable des dépenses que le membre à temps partiel engage pour aller au travail, peu
-importe le lieu, à moins d’une entente mutuelle entre les
-Parties.
-32 de 66
-<<>>
-C...",0291f727-0ad1-4959-b26e-a45b90289815,0.0161,"0.02 Liberté universitaire
-(a) L'Université ayant pour objectiffondamental la recherche de nouvelles connaissances et la libre dissémination du
-savoir, la liberté universitaire est essentielle à ses a...",a1e9a27b-7b86-4495-ab59-1c5d4d0d5553,0.3893,"11.23 Chaque offre de nomination précise le nombre de cours, le nombre de crédits, les conditions d’emploi incluant le
-traitement, et renvoie la personne à la Convention collective pour les avantages ...",0.400588,0.400588,0.016393
 test_fr_033,Quelle est la charge normale d'enseignement pour un professeur menant à la permanence ?,ERROR,llama3.2:3b-instruct-q4_K_M,French,0,False,,,,,,,,,,,,,,,,,,
 test_fr_038,Que se passe-t-il si un cours est annulé pour manque d'étudiants ?,"Si un cours est annulé pour manque d'étudiants, le Membre à temps partiel qui avait été confié ce cours sera attribué un autre cours pour lequel il est qualifié au cours de la même Année universitaire, sous réserve que ce cours soit prévu à l'horaire et qu'il n'ait pas été attribué à un autre Membre.",llama3.2:3b-instruct-q4_K_M,fr,2,True,b0310b56-ac72-460a-b43e-5bf35f1a1e71,0.3528,"11.24 Contrats à temps partiel et résiliations de contrats
 (a) Après consultation avec le Directeur du
@@ -3369,44 +3300,12 @@ $173,328 per annum, the PTR will be nil.
 Qualifications In...",5fbb92d8-4e89-46ed-ab03-76a8f6bebd3f,0.0159,"Il est obligatoire de cotiser au régime d’indemnité pour invalidité à long terme,
 qui procure des indemnités après les six (6) premiers mois d‘invalidité complète ininterrompue.
 14. ASSURANCE VIE, Y C...",0.297847,0.297847,0.032787
-test_fr_057,Les frais de scolarité des enfants des membres sont-ils couverts ?,"Non, les frais de scolarité des enfants des membres ne sont pas couverts. Selon l'article 8.50.2(b) de la convention collective, les étudiants exempts des droits de scolarité ne sont pas exempts des autres droits. De plus, l'article 8.50.4(e) précise que les droits de scolarité internationaux ne seront couverts qu'au taux des droits de scolarité pour étudiants canadiens, et que le solde restant est de la responsabilité de l'étudiant.",llama3.2:3b-instruct-q4_K_M,fr,3,False,168e0b20-bfb5-4dd7-8760-f78f748f84ae,0.3948,"ARTICLE 8.50 – EXEMPTION DES DROITS DE
-SCOLARITÉ ET CARTE DE BIBLIOTHÈQUE POUR LE
-CONJOINT
-Exemption de droits de scolarité
-8.50.1 Les suivants peuvent bénéficier d'une exemption des droits de scolari...",081aeea3-72f5-442f-b264-2e73d280ef07,0.4008,"ARTICLE 8.50 – EXEMPTION DES DROITS DE SCOLARITÉ
-ET CARTE DE BIBLIOTHÈQUE POUR LE CONJOINT
-Exemption de droits de scolarité
-8.50.1 Les suivants peuvent bénéficier d'une exemption des droits de scolari...",9f156831-dc8c-45aa-ac57-6be118019afb,0.3948,"ARTICLE 8.50 – EXEMPTION DES DROITS DE
-SCOLARITÉ ET CARTE DE BIBLIOTHÈQUE POUR LE
-CONJOINT
-Exemption de droits de scolarité
-8.50.1 Les suivants peuvent bénéficier d'une exemption des droits de scolari...",179fdfd5-8161-4019-ad90-7dd2bb0e110b,0.4008,"ARTICLE 8.50 – EXEMPTION DES DROITS DE SCOLARITÉ
-ET CARTE DE BIBLIOTHÈQUE POUR LE CONJOINT
-Exemption de droits de scolarité
-8.50.1 Les suivants peuvent bénéficier d'une exemption des droits de scolari...",ee0e31b2-0958-4577-b762-4e09e1d3659b,0.4035,"Les personnes à charge sont l’épouse et
-l’époux
-(y compris le conjoint de fait) et les enfants jusqu'à l'âge de vingt-six (26) ans (y compris les enfants naturels, les enfants
-du conjoint, les enfants...",0.394807,0.394807,0.032266
 test_fr_061,Quelle est la rémunération pendant un congé sabbatique de 12 mois ?,"Selon l'article 12.09 de la Convention collective 2015-2018, un membre qui prend un congé sabbatique de 12 mois reçoit une rémunération équivalant à 85 % de son traitement normal.",llama3.2:3b-instruct-q4_K_M,fr,3,True,7b2c6817-72ea-4a3e-8b60-0a109add7ed1,0.5253,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
 traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",e32344d9-1ea8-4a1e-a507-0d721131d5d7,0.5253,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
 traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",91b559f8-d06f-4b46-ab8f-556d8d3de150,0.5352,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
 traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",d6a64b47-642d-43ef-a694-1d67046f467e,0.5352,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
 traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",c8e28c4f-24aa-43a3-a3d2-e5db5da87f79,0.5543,"12.09 Un membre qui prend un congé sabbatique de 12 mois reçoit une rémunération équivalant à 85 % de son
 traitement normal. Un membre ayant été six années consécutives réelles à l'emploi de l’Univers...",0.525343,0.525343,0.031778
-test_fr_062,Peut-on prendre un congé sabbatique de 6 mois ?,"Non, il n'est pas spécifié dans le texte que l'on puisse prendre un congé sabbatique de 6 mois. En fait, la convention collective mentionne que l'Université Laurentienne fournit une copie du contrat de congé sabbatique pour tous les membres du corps professoral à qui on a accordé un congé sabbatique ou un autre congé. Cela ne montre pas qu'il est possible de prendre un congé sabbatique de 6 mois.",llama3.2:3b-instruct-q4_K_M,fr,3,False,22a5c77f-e5a8-444d-9d15-0bc7cb1a7db6,0.47,"Les deux parties s'engagent à faire preuve de
-discrétion professionnelle en utilisant ces renseignements qui sont présentés sur copie papier et, si possible, en format
-électronique.
-12 de 243
-<<>>
-Con...",63e3c87c-0bc7-4c7f-b899-08a0cc6ec40e,0.0164,"Si vous les trouvez acceptables, veuillez signer le formulaire et
-nous en retourner un exemplaire. Un exemplaire de la convention collective avec l’Association des professeures et des professeurs de l...",d9c614a0-a4ba-410a-bf0f-e798489c7b81,0.47,"Les deux parties s'engagent à faire preuve de
-discrétion professionnelle en utilisant ces renseignements qui sont présentés sur copie papier et, si possible, en format
-électronique.
-12 de 243
-<<>>
-Con...",35d9e359-e2cb-42ac-942e-4c21f8be8b92,0.0161,"Si vous les trouvez acceptables, veuillez signer le formulaire et
-nous en retourner un exemplaire. Un exemplaire de la convention collective avec l’Association des professeures et des professeurs de l...",0004f329-d59d-4ad9-95f2-5d86d364c73e,0.4504,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures subséquentes telles que
-celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",0.470025,0.470025,0.016393
 test_fr_065,Le congé parental est-il prévu dans l'entente ?,"Oui, le congé parental est prévu dans l'entente. L'article 14.05 de la Convention collective 2008-11 précise que tout membre qui est le parent et qui a choisi de prendre un congé parental en vertu de la Loi sur l'assurance-emploi et de toute autre loi applicable aura droit à un congé parental d'une durée maximale de trente-cinq (35) semaines.",llama3.2:3b-instruct-q4_K_M,fr,1,True,0d499da7-f98c-4a5d-92b7-f6cfec813829,0.363,"Lorsque le Membre décide de différer ces décisions, il
 informe par écrit le Doyen/Bibliothécaire en chef de sa décision.
 (f) Les Parties conviennent que les dispositions du présent Article sont proche...",9dbc45d1-1c05-4997-9825-8e4da86f6768,0.3724,"Lorsque le
@@ -3419,23 +3318,99 @@ Doyen/Bibliothécaire en chef de sa décision.
 À l’occasion de la naissance d’un enfant, tout membre qui est le parent et qui a choisi de prendre un congé parental en
 vertu de la Loi sur l’assurance-emploi et de toute autre lo...",bd3b20d3-e295-48be-a7e6-3c06370e6daa,0.0164,"AUTRES CONDITIONS. a) Sans limiter le caractère général de ce qui précède, la présente nomination à l’essai se
 termine automatiquement si vous n’obtenez pas de nomination comportant la permanence. L’U...",0.363018,0.363018,0.031025
-test_fr_072,Y a-t-il un congé prévu pour une assignation à témoigner au tribunal ?,"Oui, il y a un congé prévu pour une assignation à témoigner au tribunal, mais il ne s'agit pas d'un congé payé. Selon l'article 7.45.1, un congé payé est normalement accordé aux Membres, sauf s'ils sont bénéficiaires d'un congé non rémunéré, s'ils sont cités en justice en tant que juré, témoin ou expert-conseil, ou cités à comparaître devant un tribunal ou tout organe judiciaire ou statutaire du Canada habilité à contraindre les témoins à comparaître devant lui.
-
-Par contre, il n'y a pas de congé spécifiquement prévu pour une assignation à témoigner au tribunal, mais les dispositions de l'article 7.45 s'appliquent dans ce cas, et le Membre doit signaler par écrit son absence imminente et apporter une preuve de sa comparution effective si on le demande.",llama3.2:3b-instruct-q4_K_M,fr,3,False,aa16bc97-a683-48c0-9bdd-c6eb3ce78828,0.3482,"La décision finale appartient au Vice-recteur aux
-études et Provost.
-7.40.4 Normalement, le congé non payé dont il est question au présent Article ne peut pas durer plus de deux (2)
-ans.
-7.40.5 Le Mem...",db349e8b-8de4-4375-8a4a-a759f5dcc147,0.3457,"La décision finale appartient au Vice-recteur aux
-études et Provost.
-7.40.4 Normalement, le congé non payé dont il est question au présent Article ne peut pas durer plus de deux (2)
-ans.
-7.40.5 Le Mem...",b10d80ef-ed9f-4ed9-bb8e-e6bdfeb9967a,0.3772,"14.03 Congé pour comparution
-Un congé rémunéré est accordé à tout membre cité en justice en tant que juré ou témoin devant tout organe ayant
-pouvoir de contraindre à comparaître au Canada. Le membre a...",5a88e524-fb3e-4058-b0ce-06df7426e9ad,0.0164,"Le consentement de l’Employeur est requis dans ces deux situations.
-(b) Dans un délai d’un (1) mois après son retour, le Membre est tenu d'établir et de faire parvenir par
-83
-<<>>
-écrit à son Doyen/Di...",c5fc570a-c885-4fc5-91b9-05796d7f1fba,0.3772,"14.03 Congé pour comparution
-Un congé rémunéré est accordé à tout membre cité en justice en tant que juré ou témoin devant tout organe ayant
-pouvoir de contraindre à comparaître au Canada. Le membre a...",0.348224,0.348224,0.030366
 test_fr_096,Les professeurs à temps partiel ou chargés de cours font-ils partie de la même unité ?,ERROR,llama3.2:3b-instruct-q4_K_M,French,0,False,,,,,,,,,,,,,,,,,,
+test_en_077,Who defines the curriculum for a degree program?,"The Chair/Director of a Department/School defines the curriculum for a degree program, in consultation with other appropriate University bodies and officers, including the Office of the Registrar and the Centre for Continuing Education.",llama3.2:3b-instruct-q4_K_M,en,2,True,61e470ca-8d46-4082-b958-76bd245c03be,0.4424,"Hereinafter, this title shall
+be referred to as the Collective Agreement. ARTICLE 1.15 – OFFICIAL LANGUAGES
+1.15.1 Both the English and French versions of the Collective Agreement shall be official an...",8b625bbd-33ac-4342-a449-b83f548313dd,0.4251,"They serve as the representatives of their
+Departments/Schools in administrative matters, as well as the official spokesperson of their
+Departments/Schools and they report to the
+Dean/University Libra...",8b625bbd-33ac-4342-a449-b83f548313dd,0.4251,"They serve as the representatives of their
+Departments/Schools in administrative matters, as well as the official spokesperson of their
+Departments/Schools and they report to the
+Dean/University Libra...",8b625bbd-33ac-4342-a449-b83f548313dd,0.4241,"They serve as the representatives of their
+Departments/Schools in administrative matters, as well as the official spokesperson of their
+Departments/Schools and they report to the
+Dean/University Libra...",8b625bbd-33ac-4342-a449-b83f548313dd,0.4241,"They serve as the representatives of their
+Departments/Schools in administrative matters, as well as the official spokesperson of their
+Departments/Schools and they report to the
+Dean/University Libra...",0.442379,0.442379,0.032266
+test_en_080,What is a tripartite appointment?,I'm unable to provide an answer to your question based on the provided context.,llama3.2:3b-instruct-q4_K_M,en,1,True,8672b8bb-fbf1-483b-8a28-af28cb93f3bb,0.3896,"Each month at Senate, the Vice-President, Academic and Provost shall table as a
+separate Information item a list of any newly appointed Adjunct faculty Members including their names,
+Department/School...",afa63931-280b-40f6-839b-f8f30a9e93d8,0.0164,"Termination of The parties agree that the one counsellor listed in confidential
+Counsellor Schedule “B” to this term sheet shall be terminated (the
+“Terminated Counsellor”), with an effective terminat...",16c69608-efbe-44d0-bf80-8e6b893ff216,0.3919,"4.02 The Parties acknowledge that the University benefits when it recognizes Emeritus, Adjunct, and/or Visiting
+Professors. Such individuals shall be excluded from the bargaining unit unless they are ...",afa63931-280b-40f6-839b-f8f30a9e93d8,0.0161,"Year 1 (July 1, 2020 – June 30, 2021)
+(i) ATB to Base Salary: 0%
+(ii) Annual Progress-Through-the-Ranks: $0
+(iii) Promotion and Additional Qualifications: $2,900
+Year 2 (July 1, 2021 – June 30, 2022)
+...",16c69608-efbe-44d0-bf80-8e6b893ff216,0.3919,"4.02 The Parties acknowledge that the University benefits when it recognizes Emeritus, Adjunct, and/or Visiting
+Professors. Such individuals shall be excluded from the bargaining unit unless they are ...",0.389599,0.389599,0.016393
+test_fr_010,Qu'est-ce qu'un grief ?,"D'après la convention collective 2017-2020, un grief est défini comme une « violation grave et directe de la sécurité personnelle d’un autre Membre, de membres de la communauté universitaire et/ou des étudiants de la communauté universitaire » (5.80.2 (a)).",llama3.2:3b-instruct-q4_K_M,fr,2,True,363675f6-5d04-42ad-8431-9103552e07b2,0.4409,"Ne constitue un renvoi, ni le non-renouvellement à son
+terme d'un contrat à durée limitée ou à l'essai, ni la décision de ne pas accorder la permanence, ni la résiliation d'un
+contrat en vue de la ret...",b5a28204-01c5-4f82-810e-0ed48c36a219,0.0164,"Après avoir examiné la
+demande selon les critères établis aux Articles 7.25.1 et
+7.25.2 ci-dessus, et ayant pris en ligne de compte la recommandation du
+Doyen/Bibliothécaire en chef, le Vice- recteur ...",363675f6-5d04-42ad-8431-9103552e07b2,0.4409,"Ne constitue un renvoi, ni le non-renouvellement à son
+terme d'un contrat à durée limitée ou à l'essai, ni la décision de ne pas accorder la permanence, ni la résiliation d'un
+contrat en vue de la ret...",b5a28204-01c5-4f82-810e-0ed48c36a219,0.0161,"Après avoir examiné la
+demande selon les critères établis aux Articles 7.25.1 et
+7.25.2 ci-dessus, et ayant pris en ligne de compte la recommandation du
+Doyen/Bibliothécaire en chef, le Vice- recteur ...",bee60054-a44f-45d7-acf2-1d409f6bc3b7,0.3898,"Un candidat dont la demande est acceptée peut annuler son congé en avisant le
+Recteur par écrit au plus tard le 31 janvier.
+13.09 Il est convenu qu’un membre retourne à l’Université pour une période é...",0.440912,0.440912,0.016393
+test_fr_019,Les plaintes anonymes peuvent-elles être ajoutées au dossier personnel ?,"Non, les documents anonymes ne peuvent pas être ajoutés au dossier personnel. En effet, l'article 5.70.4 de la Convention collective précise que l'Employeur ne peut retenir pour inclusion dans le dossier d'un Membre, aucun document anonyme concernant ce dernier.",llama3.2:3b-instruct-q4_K_M,fr,3,False,0004f329-d59d-4ad9-95f2-5d86d364c73e,0.3653,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures subséquentes telles que
+celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",a30f66ec-b4d3-48ba-92e1-19effb881cf3,0.3653,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures subséquentes telles que
+celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",a070ebaf-d448-4911-b10e-ee671e89665b,0.3673,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures
+subséquentes telles que celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",89faa4bd-d501-4234-be3a-504d4c2eea89,0.3673,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures
+subséquentes telles que celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",5d1f8760-47d4-4a1b-adf0-14e621901587,0.4033,"21.03 Les membres ont le droit de faire corriger ou compléter leur dossier en cas d’erreur ou de lacune. Les membres ont
+le droit de faire ajouter d’autres pièces à leur dossier.
+46 de 66
+<<>>
+Convent...",0.365323,0.365323,0.029877
+test_fr_023,Quelle est la durée de la période d'essai pour un professeur adjoint ?,"La durée de la période d'essai pour un professeur adjoint est de 5 ans, en fonction du rang auquel il est nommé.",llama3.2:3b-instruct-q4_K_M,fr,2,True,d1c65e95-c69a-40a1-8381-957fd073b934,0.3906,"Les limites (de trois (3) et
+cinq (5) ans) s’appliquent, qu’il s’agisse ou non de nominations qui se succèdent avec ou sans interruption.
+5.20.16 Le non-renouvellement d’une nomination à durée limitée...",d1c65e95-c69a-40a1-8381-957fd073b934,0.3879,"Les limites (de trois (3) et
+cinq (5) ans) s’appliquent, qu’il s’agisse ou non de nominations qui se succèdent avec ou sans interruption.
+5.20.16 Le non-renouvellement d’une nomination à durée limitée...",d1c65e95-c69a-40a1-8381-957fd073b934,0.3994,"Nomination à l'essai et nomination avec permanence –
+5.20.17 Les nominations à l'essai sont définies de la façon suivante : nominations ayant une durée de cinq (5) ans au plus
+pendant lesquels l'Emplo...",d1c65e95-c69a-40a1-8381-957fd073b934,0.3994,"Nomination à l'essai et nomination avec permanence –
+5.20.17 Les nominations à l'essai sont définies de la façon suivante : nominations ayant une durée de cinq (5) ans au plus
+pendant lesquels l'Emplo...",90210290-a623-4871-bfde-166892961602,0.4048,"Traitement initial de XXX par an, basé sur l’équivalent de XXX années d’expérience universitaire,
+de XXX années d’autre expérience pertinente à votre discipline, ainsi que d’autres facteurs affectant ...",0.39063,0.39063,0.031099
+test_fr_031,Qu'est-ce qu'une nomination tripartite ?,"Je n'ai trouvé aucune information sur une ""nomination tripartite"" dans le contexte de la Convention collective de l'Association des professeures et des professeurs de l'Université Laurentienne. Cependant, je peux vous suggérer de consulter le document original ou de demander plus d'informations pour obtenir une réponse précise.",llama3.2:3b-instruct-q4_K_M,fr,3,False,a1e9a27b-7b86-4495-ab59-1c5d4d0d5553,0.3634,"11.23 Chaque offre de nomination précise le nombre de cours, le nombre de crédits, les conditions d’emploi incluant le
+traitement, et renvoie la personne à la Convention collective pour les avantages ...",a7e33961-99fc-4669-b1b1-7fe5031366a7,0.0164,"Vous recevrez une subvention de démarrage de XXX pour la recherche/les
+activités créatrices. Ce financement est à utiliser en respectant les règlements de l’Université en matière de subvention de
+déma...",a1e9a27b-7b86-4495-ab59-1c5d4d0d5553,0.3634,"11.23 Chaque offre de nomination précise le nombre de cours, le nombre de crédits, les conditions d’emploi incluant le
+traitement, et renvoie la personne à la Convention collective pour les avantages ...",a7e33961-99fc-4669-b1b1-7fe5031366a7,0.0161,"Vous recevrez une subvention de démarrage de XXX pour la recherche/les
+activités créatrices. Ce financement est à utiliser en respectant les règlements de l’Université en matière de subvention de
+déma...",295ff73f-d519-452e-ad58-b412b6a23d03,0.3815,"11.05 Critères de détermination de la catégorie
+Les critères suivants sont des directives générales à utiliser lorsqu’on considère les membres en vue de la catégorie
+indiquée.
+(a) Nomination à durée l...",0.363393,0.363393,0.016393
+test_fr_057,Les frais de scolarité des enfants des membres sont-ils couverts ?,"Non, les frais de scolarité internationaux ne seront couverts qu'au taux des droits de scolarité pour étudiants canadiens. Le solde restant est de la responsabilité de l'étudiant.",llama3.2:3b-instruct-q4_K_M,fr,2,True,cf042214-92b2-4d3d-b082-67d7128312fe,0.3921,"ARTICLE 8.50 – EXEMPTION DES DROITS DE
+SCOLARITÉ ET CARTE DE BIBLIOTHÈQUE POUR LE
+CONJOINT
+Exemption de droits de scolarité
+8.50.1 Les suivants peuvent bénéficier d'une exemption des droits de scolari...",cf042214-92b2-4d3d-b082-67d7128312fe,0.3921,"ARTICLE 8.50 – EXEMPTION DES DROITS DE
+SCOLARITÉ ET CARTE DE BIBLIOTHÈQUE POUR LE
+CONJOINT
+Exemption de droits de scolarité
+8.50.1 Les suivants peuvent bénéficier d'une exemption des droits de scolari...",1d18a3e0-e37f-4390-97fe-365c68c0adf8,0.3914,"Dans le cas contraire, l'étudiant peut reprendre à ses frais le
+ou les cours en question ou suivre des cours équivalents afin de rétablir sa cote et de se trouver
+admissible à une nouvelle exemption.
+...",cf042214-92b2-4d3d-b082-67d7128312fe,0.4039,"ARTICLE 8.50 – EXEMPTION DES DROITS DE SCOLARITÉ
+ET CARTE DE BIBLIOTHÈQUE POUR LE CONJOINT
+Exemption de droits de scolarité
+8.50.1 Les suivants peuvent bénéficier d'une exemption des droits de scolari...",1d18a3e0-e37f-4390-97fe-365c68c0adf8,0.3904,"Dans le cas contraire, l'étudiant peut reprendre à ses frais le
+ou les cours en question ou suivre des cours équivalents afin de rétablir sa cote et de se trouver
+admissible à une nouvelle exemption.
+...",0.392055,0.392055,0.031746
+test_fr_062,Peut-on prendre un congé sabbatique de 6 mois ?,ERROR,llama3.2:3b-instruct-q4_K_M,French,0,False,,,,,,,,,,,,,,,,,,
+test_fr_072,Y a-t-il un congé prévu pour une assignation à témoigner au tribunal ?,"Non, il n'y a pas de mention de congé prévu pour une assignation à témoigner au tribunal dans les documents fournis.",llama3.2:3b-instruct-q4_K_M,fr,3,True,37c4812f-d224-4a04-890a-8246624bcdbf,0.2949,"18.03 Members shall have the right to have their files supplemented or corrected in the event of
+error or inadequacy. Members shall have the right to provide additional material for
+inclusion in their...",67b72ee1-71f1-42c0-bd70-7c5a6b4aa4ae,0.0164,"En cas de fermeture d’une unité d’enseignement ou d’un programme, les Membres ayant des contrats menant à la permanence,
+et qui sont affectés par les décisions prises dans des campus autres que celui ...",537e66bb-f3d9-4b0d-8e48-247f1f1c7de2,0.2908,"Si l'auteur décide de ne pas entreprendre la révision, ou s'il n'a pas accepté la demande de révision de
+l'Université dans une période d'un (1) mois après avoir reçu cette demande, ou s'il n'est plus ...",67b72ee1-71f1-42c0-bd70-7c5a6b4aa4ae,0.0161,"En cas de fermeture d’une unité d’enseignement ou d’un programme, les Membres ayant des contrats menant à la permanence,
+et qui sont affectés par les décisions prises dans des campus autres que celui ...",537e66bb-f3d9-4b0d-8e48-247f1f1c7de2,0.2908,"Si l'auteur décide de ne pas entreprendre la révision, ou s'il n'a pas accepté la demande de révision de
+l'Université dans une période d'un (1) mois après avoir reçu cette demande, ou s'il n'est plus ...",0.294866,0.294866,0.016393
