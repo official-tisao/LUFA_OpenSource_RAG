@@ -128,7 +128,7 @@ def run_pipeline(csv_path, db_path, collection_name, output_path):
 
     df = pd.read_csv(csv_path)
     total_records = len(df)
-    print(f"[Initialization] Total entries detected to process: {total_records}")
+    print(f"[Initialization] Total entries detected to process: {total_records} ")
 
     df["ground_source_truth_id"] = ""
     df["ground_source_truth"] = ""
