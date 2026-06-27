@@ -1,5 +1,5 @@
 # Configuration file for Bilingual RAG System
-# Copy  this file to config.py and customize as needed
+# Copy this file to config.py and customize as needed
 
 # Ollama Configuration
 OLLAMA_BASE_URL = "http://localhost:11434"
