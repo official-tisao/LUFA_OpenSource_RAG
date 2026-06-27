@@ -62,7 +62,7 @@ In more detail, academic freedom includes the right to:
 * Freedom to acquire, preserve, and provide access to documentary material in all formats
 * Freedom to participate in professional and representative academic bodies
 * Freedom to engage in service to the institution and the community
-* Freedom to express one’s opinion about the University, its administration, and the system in which one works. (Article 3.10.2)",llama3.2:3b-instruct-q4_K_M,en,1,True,8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.5623,"Academic freedom is the right to search for truth, knowledge and understanding and to express freely what one believes. The
+* Freedom to express one’s opinion about the University, its administration, and the system in which one works. (Article 3.10.2)",llama3.2:3b-instruct-q4_K_M,en,1,True,d16f73eb-6417-4570-b0e4-113213bf9199,0.5623,"Academic freedom is the right to search for truth, knowledge and understanding and to express freely what one believes. The
 University as an institution and the community of its scholars have a duty t...",c4372400-441b-4afa-ad53-784efbb6305b,0.5385,"0.02 Academic freedom
 (a) As the fundamental objective of the University is the search for new knowledge and the free dissemination of what is
 known, academic freedom is essential to its teaching and ...",8674c976-bb1f-44a8-aaa5-d37bc2be7947,0.5623,"Academic freedom is the right to search for truth, knowledge and understanding and to express freely what one believes. The
@@ -128,7 +128,7 @@ The article does not specifically state that the Union can only file a policy gr
 
 In general, the article does not provide any restrictions on the number of members that can be included in a policy grievance. Therefore, it is reasonable to assume that the Union can file a policy grievance on behalf of multiple members, as long as the grievance is related to a matter of general policy or general application of the Collective Agreement.
 
-However, it is worth noting that the article does not provide any specific guidance on how the Union should proceed in such cases, and it is ultimately up to the Union and the Employer to negotiate and agree on the scope and procedures for the grievance.",llama3.2:3b-instruct-q4_K_M,en,3,True,79e5c279-ce00-43ab-8971-02035017af63,0.4627,"ARTICLE 11.10 – GRIEVANCE PROCEDURE
+However, it is worth noting that the article does not provide any specific guidance on how the Union should proceed in such cases, and it is ultimately up to the Union and the Employer to negotiate and agree on the scope and procedures for the grievance.",llama3.2:3b-instruct-q4_K_M,en,3,True,3819b4da-d98a-46b3-afab-1056ff0d26ba,0.4627,"ARTICLE 11.10 – GRIEVANCE PROCEDURE
 11.10.1 There shall be no discrimination, harassment or coercion, of any kind, practised
 against any persons involved in these procedures.
 11.10.2 The Union and the...",2894b142-cfb3-47f2-8c28-de192ad806e1,0.0164,"Article 2.15.1 will be amended to add as a 4th paragraph that the bargaining unit includes:
@@ -144,7 +144,7 @@ ARTICLE 11.10 – GRIEVANCE PROCEDURE
 these procedures....",0.462748,0.462748,0.016393
 test_en_010,Is discrimination on the basis of political affiliation permitted?,"No, discrimination on the basis of political affiliation is not permitted according to Article 3.15.3 (b) of the Collective Agreement, which states: ""b) The Parties agree, however, that no Members or person acting as an officer of the University shall take part in formal discussions or vote with respect to the determination of any term or condition of employment of a member of her/his immediate family as defined in Article 1.30 – Definitions.""
 
-This article prohibits Members from participating in discussions or votes that would affect the employment terms of their immediate family members, and by extension, it can be inferred that it also prohibits discrimination on the basis of political affiliation.",llama3.2:3b-instruct-q4_K_M,en,3,True,4f269396-c101-4bbc-9133-9abbd04fd702,0.3702,"To that end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor
+This article prohibits Members from participating in discussions or votes that would affect the employment terms of their immediate family members, and by extension, it can be inferred that it also prohibits discrimination on the basis of political affiliation.",llama3.2:3b-instruct-q4_K_M,en,3,True,c45e2f80-a287-4e30-a0ab-c6b0b77d46ed,0.3702,"To that end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor
 and has created a discrimination and harassment policy.
 3.15.2 The Parties agree that in accordance wi...",4f269396-c101-4bbc-9133-9abbd04fd702,0.3521,"To that
 end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor and has created a
@@ -190,7 +190,7 @@ The Parties agree that there shall be no discrimination, interference, restricti
 ...",658662d3-0c53-4e6f-85e3-dd2d824a87ea,0.4426,"ARTICLE 3 — NO DISCRIMINATION
 3.01 Human Rights Code: The Parties agree to abide by the Ontario Human Rights Code. There
 shall be no discrimination or harassment exercised or practiced with respect to...",0.404263,0.404263,0.031514
-test_en_012,What is the standard normal teaching load for a tenure-track faculty member?,"According to Article 10.07(c)(i), the standard normal teaching load for a full-time faculty member is 15 credits per academic year, which includes a minimum of 12 credits of live teaching.",llama3.2:3b-instruct-q4_K_M,en,1,True,78b84e7c-a90f-4089-9571-3c303a1d0a5e,0.4334,"All leaves.
+test_en_012,What is the standard normal teaching load for a tenure-track faculty member?,"According to Article 10.07(c)(i), the standard normal teaching load for a full-time faculty member is 15 credits per academic year, which includes a minimum of 12 credits of live teaching.",llama3.2:3b-instruct-q4_K_M,en,1,True,26c9d4ca-c6af-4bbf-bf28-aafe0ddca6c8,0.4334,"All leaves.
 5.40.4 The composition of the workload of Members may vary with their discipline, and will take into account the
 capabilities of the Members, the need to maximize their potential and any o...",101a3771-8f41-4a64-b72e-7f5c38569842,0.4186,"10.07 Annual Academic Workload
 (a) The President must ensure that the annual academic workload is determined, distributed, and scheduled as equitably
@@ -339,7 +339,7 @@ Library, together with three copies of all necessary and...",f2a41562-c5cb-4d72-
 work must be judged by four (4) external referees, who shall normally be
 Full Professors in an academic institution, and at least two (2) of these referees may be nominated by the applicant; and
 ...",0.456545,0.456545,0.030118
-test_en_023,Can external referees be used in the promotion process?,"Yes, external referees can be used in the promotion process, according to Article 5.65.8 of the collective agreement. For appointment/promotion to the rank of Full Professor/Librarian, the assessors shall consider the assessment of the Member's scholarly activity as judged by four (4) external referees.",llama3.2:3b-instruct-q4_K_M,en,3,True,b5c4085d-4789-47e3-92c3-31cdb150dd96,0.3629,"A copy of
+test_en_023,Can external referees be used in the promotion process?,"Yes, external referees can be used in the promotion process, according to Article 5.65.8 of the collective agreement. For appointment/promotion to the rank of Full Professor/Librarian, the assessors shall consider the assessment of the Member's scholarly activity as judged by four (4) external referees.",llama3.2:3b-instruct-q4_K_M,en,3,True,699fafce-3102-45a1-a8f9-5328252734c1,0.3629,"A copy of
 this assessment will immediately be forwarded to the Member who will then have one (1) week to decide
 whether or not to proceed with the application.
 5.65.6 The following documents must be a...",b5c4085d-4789-47e3-92c3-31cdb150dd96,0.3629,"A copy of
@@ -472,7 +472,7 @@ denial of the request.
 4.85.2 All...",a2125c46-75e1-4989-817d-87fea6e5f203,0.4302,"30.07 Sessional Members shall be eligible for professional development money of two hundred and
 fifty (250) dollars, per each three credit course that they teach up to a limit of two thousand
 (2,000) ...",0.392421,0.392421,0.030777
-test_en_032,When is a faculty member eligible for a sabbatical leave?,"According to Article 7.25.2, a faculty member is eligible for a sabbatical leave if they have been full-time faculty members of the University for the past six (6) consecutive years, holding the rank of Full Professor/Librarian, Associate Professor/Librarian, and Assistant Professor/Librarian at the time of application.",llama3.2:3b-instruct-q4_K_M,en,1,True,3a1ce08b-56cc-416a-8bed-7dc423e2597e,0.5879,"Sabbatical leave will not be automatic and
+test_en_032,When is a faculty member eligible for a sabbatical leave?,"According to Article 7.25.2, a faculty member is eligible for a sabbatical leave if they have been full-time faculty members of the University for the past six (6) consecutive years, holding the rank of Full Professor/Librarian, Associate Professor/Librarian, and Assistant Professor/Librarian at the time of application.",llama3.2:3b-instruct-q4_K_M,en,1,True,c30b573f-8d0f-4b3b-bde2-58ebdb6c585d,0.5879,"Sabbatical leave will not be automatic and
 shall be granted following an approved application procedure, outlined below.
 (b) In order to attract qualified faculty, the Vice-President, Academic and Pro...",c30b573f-8d0f-4b3b-bde2-58ebdb6c585d,0.0164,"However, Members who terminate their employment between June 1 and Labour Day,
 and who have no formal teaching duties during all or part of that period, shall take and
@@ -721,7 +721,7 @@ Counsellor Schedule “B” to this term sheet shall be terminated (the
 Guidelines
 (b) Article 5.15 – Rights, Responsibilities and Duties of Academics
 (c) Article 5.50 ...",0.424375,0.424375,0.02837
-test_en_047,Can student evaluations be the sole metric for teaching performance?,"No, student evaluations cannot be the sole metric for teaching performance. According to Article 4.35 of the Collective Agreement 2011-14, ""Student course evaluations shall not be the sole means of determining the quality of the Sessional Member's teaching performance. The Sessional Member's entire teaching dossier shall be considered.""",llama3.2:3b-instruct-q4_K_M,en,1,True,ea338095-2ce6-4b09-a84a-641836f6ea11,0.3821,"The Vice-President, Academic and Provost will
+test_en_047,Can student evaluations be the sole metric for teaching performance?,"No, student evaluations cannot be the sole metric for teaching performance. According to Article 4.35 of the Collective Agreement 2011-14, ""Student course evaluations shall not be the sole means of determining the quality of the Sessional Member's teaching performance. The Sessional Member's entire teaching dossier shall be considered.""",llama3.2:3b-instruct-q4_K_M,en,1,True,003e2ac8-a452-462d-bc19-815654b44e7f,0.3821,"The Vice-President, Academic and Provost will
 communicate her/his decision on the request prior to the planned date of the course evaluation.
 (b) It is the responsibility of Members to maintain on an ...",876a228f-aeb7-4a55-9432-18fa48b82b49,0.0164,"The credits taught by
 Sessional Members in off-campus courses shall not be included in these totals.
@@ -749,7 +749,7 @@ Here's a step-by-step overview of the selection process:
 3. If the Dean/University Librarian is prepared to accept the Selection Committee's recommendation, the Dean/University Librarian will forward this recommendation together with their own to the Vice-President, Academic and Provost, who will make the appointment (Article 9.15.10).
 4. If the Dean/University Librarian is not prepared to accept the Selection Committee's recommendation, the Dean/University Librarian shall indicate their reservations to the Selection Committee and the Department/School. If the Dean/University Librarian and the Selection Committee are unable to agree on an appointment, the selection procedure shall be reinstituted as in clause 9.15.3 above (Article 9.15.11).
 
-It's worth noting that in exceptional circumstances, the Vice-President, Academic and Provost and the Dean/University Librarian, after consultation with a Department/School, may appoint an acting Chair/Director for a period of up to four (4) months, consistent with Article 9.20 – Term of Office of Chairs/Directors and Article 9.30 – Removal from Office of Chairs/Directors (Article 9.15.13).",llama3.2:3b-instruct-q4_K_M,en,1,True,e956bb4d-d9b9-431f-894e-5fb66d28355a,0.4667,"The ballots shall be opened and counted in the
+It's worth noting that in exceptional circumstances, the Vice-President, Academic and Provost and the Dean/University Librarian, after consultation with a Department/School, may appoint an acting Chair/Director for a period of up to four (4) months, consistent with Article 9.20 – Term of Office of Chairs/Directors and Article 9.30 – Removal from Office of Chairs/Directors (Article 9.15.13).",llama3.2:3b-instruct-q4_K_M,en,1,True,9c7b3ebd-9b6e-4b27-9d89-f2a0d6646871,0.4667,"The ballots shall be opened and counted in the
 presence of the Selection Committee.
 9.15.9 The Chair of the Selection Committee shall report the results of the selection process and its recommendation...",e956bb4d-d9b9-431f-894e-5fb66d28355a,0.4667,"The ballots shall be opened and counted in the
 presence of the Selection Committee.
@@ -800,7 +800,7 @@ Special Voluntary Early Retirement and the remaining incentive amount would be c
 223 of 246
 <<>>
 Collective Agreement 2008-1...",0.420397,0.420397,0.031545
-test_en_052,Are phased retirement options available?,"Oui, phased retirement options sont disponibles. Selon l'article 1 de l'Accord collectif 2008-11, un programme de retraite progressive a été mis en place le 1er juillet 2006 et continue à être en vigueur. Les membres peuvent se rétirer progressivement sur une période de trois ans et demie.",llama3.2:3b-instruct-q4_K_M,fr,1,True,c3ad47b4-5541-4d7a-9d44-2643efd788d8,0.4659,"For phased retirement, the cumulative appointment over the two (2) year phased retirement period will be at
+test_en_052,Are phased retirement options available?,"Oui, phased retirement options sont disponibles. Selon l'article 1 de l'Accord collectif 2008-11, un programme de retraite progressive a été mis en place le 1er juillet 2006 et continue à être en vigueur. Les membres peuvent se rétirer progressivement sur une période de trois ans et demie.",llama3.2:3b-instruct-q4_K_M,fr,1,True,c08d9013-e02c-475c-88f6-46e9280f9546,0.4659,"For phased retirement, the cumulative appointment over the two (2) year phased retirement period will be at
 least one hundred percent (100%) but not more than one hundred and twenty-five percent (125%...",c3ad47b4-5541-4d7a-9d44-2643efd788d8,0.4659,"For phased retirement, the cumulative appointment over the two (2) year phased retirement period will be at
 least one hundred percent (100%) but not more than one hundred and twenty-five percent (125%...",80463d6b-6281-4798-aa39-c8bc9ddb7c66,0.3433,"Modify Early Retirement Provisions
 For members who have not attained age 62 as of July 1, 2021:
@@ -817,7 +817,7 @@ Within two (2) days of giving notice, the Board of Governors shall forward all f
 
 Within fifteen (15) days of the notice, the Parties shall establish a Financial Commission to consider the alleged financial exigency and either confirm it (under whatever conditions it chooses to impose) or reject it (Article 10.15.7).
 
-The Financial Commission shall be chosen as an Arbitration Board, with no member being a government official (Article 10.15.8). Decisions of the Financial Commission under this Article shall be final and binding on all Parties (Article 10.15.8). The onus of proof shall be on the Employer to establish to the satisfaction of the Financial Commission that a state of financial exigency exists within the meaning of this Article (Article 10.15.9).",llama3.2:3b-instruct-q4_K_M,en,1,True,d5658d8b-b87c-4fa8-a117-b642d11425a6,0.5261,"ARTICLE 10.15 – FINANCIAL EXIGENCY
+The Financial Commission shall be chosen as an Arbitration Board, with no member being a government official (Article 10.15.8). Decisions of the Financial Commission under this Article shall be final and binding on all Parties (Article 10.15.8). The onus of proof shall be on the Employer to establish to the satisfaction of the Financial Commission that a state of financial exigency exists within the meaning of this Article (Article 10.15.9).",llama3.2:3b-instruct-q4_K_M,en,1,True,e6ba4dbc-ca5f-4cdb-9238-437b65de90f9,0.5261,"ARTICLE 10.15 – FINANCIAL EXIGENCY
 10.15.1 The Board of Governors and the Union agree that the first duty of the University is to ensure that its academic
 priorities remain paramount, particularly wit...",d5658d8b-b87c-4fa8-a117-b642d11425a6,0.5261,"ARTICLE 10.15 – FINANCIAL EXIGENCY
 10.15.1 The Board of Governors and the Union agree that the first duty of the University is to ensure that its academic
@@ -856,7 +856,7 @@ Grievances
 those not involving the expenditure of money such as
 accommodation, denial of tenure or unjust dismissal, which arise
 on or afte...",0.36638,0.36638,0.032258
-test_en_055,Are faculty members allowed to engage in outside professional activities?,"Yes, faculty members are allowed to engage in outside professional activities, but such activities must not interfere with their obligations, duties, and responsibilities as full-time employees of the University.",llama3.2:3b-instruct-q4_K_M,en,2,True,dae68fda-c792-45b7-94d3-d1cc30eb2ea5,0.5072,"10.06 Other Paid Professional Activities
+test_en_055,Are faculty members allowed to engage in outside professional activities?,"Yes, faculty members are allowed to engage in outside professional activities, but such activities must not interfere with their obligations, duties, and responsibilities as full-time employees of the University.",llama3.2:3b-instruct-q4_K_M,en,2,True,e602ea85-1a03-48d0-9fa1-be00006114d5,0.5072,"10.06 Other Paid Professional Activities
 The nature ofthe professional competence ofmany faculty members affords opportunities for the exercise ofthat
 competence outside the member's University duties...",ae415be8-2a4c-46c1-807a-407d2cb560d5,0.0164,"The librarian pay equivalent shall be deemed to be 126 hours per 3 course credits of pay.
 19
@@ -981,7 +981,7 @@ test_en_065,How many vacation days do faculty members receive?,"According to the
 * For the first 5 full consecutive years of employment, faculty members receive 2 additional days of vacation for each year of employment thereafter.
 * The total number of vacation days is therefore 2 (initial days) + (number of years of employment after the first 5 years) x 2.
 
-Note that there is no information provided in the context about the number of days received by faculty members in a specific year or term.",llama3.2:3b-instruct-q4_K_M,en,1,True,91c53945-cdc4-4dc9-a0e1-566699643f33,0.4172,"When Members have accumulated five (5) full consecutive
+Note that there is no information provided in the context about the number of days received by faculty members in a specific year or term.",llama3.2:3b-instruct-q4_K_M,en,1,True,1ae30de3-c792-4b47-a6d3-6147f1740182,0.4172,"When Members have accumulated five (5) full consecutive
 years of employment at the University, for each year of employment thereafter they shall be entitled to an additional two
 (2) days of vacation t...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.4172,"When Members have accumulated five (5) full consecutive
 years of employment at the University, for each year of employment thereafter they shall be entitled to an additional two
@@ -994,7 +994,7 @@ test_en_066,Is it possible to carry forward unused vacation days?,"According to 
 
 Additionally, Article 7.15.4 also states that Members are required to take the vacation to which they are entitled, and vacation may not be taken at a time that conflicts with scheduled duties.
 
-It appears that the only option for unused vacation days is to receive payment upon death of the Member, as stated in Article 7.15.5.",llama3.2:3b-instruct-q4_K_M,en,2,True,91c53945-cdc4-4dc9-a0e1-566699643f33,0.361,"Members on contracts of less than one (1) year duration are
+It appears that the only option for unused vacation days is to receive payment upon death of the Member, as stated in Article 7.15.5.",llama3.2:3b-instruct-q4_K_M,en,2,True,1ae30de3-c792-4b47-a6d3-6147f1740182,0.361,"Members on contracts of less than one (1) year duration are
 entitled to a pro-rated period of vacation. When Members have accumulated five (5) full consecutive years of employment
 at the University, f...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.361,"Members on contracts of less than one (1) year duration are
 entitled to a pro-rated period of vacation. When Members have accumulated five (5) full consecutive years of employment
@@ -1093,7 +1093,7 @@ test_en_072,How is a complaint of harassment handled?,"A complaint of harassment
 6. If the Application Officer determines that the Complaint falls outside the Policy, is fraudulent, malicious, frivolous, or vexatious, or is entirely without factual basis, the Complaint is dismissed.
 7. If the Application Officer determines that a Complaint is valid, the Application Officer may facilitate an informal resolution of the Complaint, or refer the Complaint to a Hearing Panel.
 
-According to Section 21 of the 2017-2020 Thorneloe-LUFA Collective Agreement, the President is responsible for rendering a final decision regarding whether the alleged harassment or discrimination occurred, and informing all parties in writing of the Final Decision.",llama3.2:3b-instruct-q4_K_M,en,1,True,e3948a52-b7b9-44db-a6da-7c0c2cbe6961,0.4426,"Where the Application Officer reports a harassment or discrimination complaint
+According to Section 21 of the 2017-2020 Thorneloe-LUFA Collective Agreement, the President is responsible for rendering a final decision regarding whether the alleged harassment or discrimination occurred, and informing all parties in writing of the Final Decision.",llama3.2:3b-instruct-q4_K_M,en,1,True,75062832-f038-47c8-a417-0debdd8dadf8,0.4426,"Where the Application Officer reports a harassment or discrimination complaint
 because there is a health a safety risk, the President, or an individual appointed
 by the Board of Governors, may exercis...",75062832-f038-47c8-a417-0debdd8dadf8,0.4154,"Displaying of derogatory or offensive pictures or material; or
 e. Refusing to work or interact with an employee. Sexual Harassment
@@ -1644,7 +1644,7 @@ PROFESSEURS
 42 de 59
 <<>>
 Convention collective 20...",0.414022,0.414022,0.016393
-test_fr_020,Un membre peut-il ajouter des commentaires à son dossier personnel ?,"Oui, un membre a le droit de faire ajouter d'autres pièces à son dossier personnel, ce qui inclut également la possibilité d'ajouter des commentaires. Cela est indiqué dans l'article 21.03 de la Convention collective 2018-2021 : ""Les membres ont le droit de faire corriger ou compléter leur dossier en cas d’erreur ou de lacune. Les membres ont le droit de faire ajouter d’autres pièces à leur dossier.""",llama3.2:3b-instruct-q4_K_M,fr,3,True,4f3e0a26-4892-4af4-8a9a-adfc0aabb7f2,0.4254,"21.03 Les membres ont le droit de faire corriger ou compléter leur dossier en cas d’erreur ou de lacune. Les membres ont
+test_fr_020,Un membre peut-il ajouter des commentaires à son dossier personnel ?,"Oui, un membre a le droit de faire ajouter d'autres pièces à son dossier personnel, ce qui inclut également la possibilité d'ajouter des commentaires. Cela est indiqué dans l'article 21.03 de la Convention collective 2018-2021 : ""Les membres ont le droit de faire corriger ou compléter leur dossier en cas d’erreur ou de lacune. Les membres ont le droit de faire ajouter d’autres pièces à leur dossier.""",llama3.2:3b-instruct-q4_K_M,fr,3,True,da6733ea-e196-4a9f-82c4-cb7a26ee1969,0.4254,"21.03 Les membres ont le droit de faire corriger ou compléter leur dossier en cas d’erreur ou de lacune. Les membres ont
 le droit de faire ajouter d’autres pièces à leur dossier.",cd2ff341-dc83-4fcb-9aec-dbdc910bf703,0.0164,"ARTICLE 15 – DROITS D’AUTEUR
 15.01 Les droits d’auteurs s’appliquent à toutes les œuvres originales, qu’elles soient écrites, artistiques ou enregistrées.
 Ces œuvres comprennent notamment, sans s’y li...",4f3e0a26-4892-4af4-8a9a-adfc0aabb7f2,0.4254,"21.03 Les membres ont le droit de faire corriger ou compléter leur dossier en cas d’erreur ou de lacune. Les membres ont
@@ -1655,7 +1655,7 @@ le droit de faire ajouter d’autres pièces à leur dossier.
 46 de 66
 <<>>
 Convent...",0.425426,0.425426,0.016393
-test_fr_022,Qu'est-ce qu'une nomination à durée déterminée (LTA) ?,"Une nomination à durée déterminée (LTA) est une nomination qui ne comporte aucune obligation de renouvellement ou de continuation au-delà de la période indiquée, ni de considération en vue de l'obtention de la permanence. Elle permet de faire venir des personnalités à l'Université, faire des échanges avec d'autres universités, remplacer des membres en congé, trouver une solution intérimaire pour des raisons budgétaires ou de programme d'enseignement, et d'engager du personnel pour des programmes expérimentaux ou financés provisoirement. (Source : Article 5.20.11)",llama3.2:3b-instruct-q4_K_M,fr,1,True,e0ae03da-c44e-4e86-a96f-bfdbdfd5103a,0.4381,"La façon normale de procéder à la nomination s'applique.
+test_fr_022,Qu'est-ce qu'une nomination à durée déterminée (LTA) ?,"Une nomination à durée déterminée (LTA) est une nomination qui ne comporte aucune obligation de renouvellement ou de continuation au-delà de la période indiquée, ni de considération en vue de l'obtention de la permanence. Elle permet de faire venir des personnalités à l'Université, faire des échanges avec d'autres universités, remplacer des membres en congé, trouver une solution intérimaire pour des raisons budgétaires ou de programme d'enseignement, et d'engager du personnel pour des programmes expérimentaux ou financés provisoirement. (Source : Article 5.20.11)",llama3.2:3b-instruct-q4_K_M,fr,1,True,bbfba659-b2c0-4f6f-97e3-da8b2cfd91e0,0.4381,"La façon normale de procéder à la nomination s'applique.
 5.20.13 Les personnes qui détiennent un contrat limité ne peuvent faire une demande de promotion pendant la dernière
 année de leur nomination à...",5100221d-a8b7-47aa-970d-4bea11b6df49,0.0164,"Cette
 demande doit être faite chaque année au Doyen et ne doit pas être refusée déraisonnablement.
@@ -1681,7 +1681,7 @@ ce qui est essentiellement le même cours (p. ex., un cours de six (6) crédits 
 ayant la permanence les options suivantes :
 (a) Préretraite volontaire dans le cas d'un Membre âgé de cinquante-cinq (55) ans ou plus;
 (b) Transfert intégral ou ...",0.43232,0.43232,0.027222
-test_fr_026,Qui fait l'évaluation initiale pour la permanence ?,"Le Comité du corps professoral de la faculté commente chaque aspect des critères indiqués. Le Comité du corps professoral de la faculté se prononce sur la progression du rendement réalisé pendant la période initiale d’essai. (Article 5.60 – Mécanisme d'évaluation en vue de la permanence, Article 5.60.3 (d) et (e))",llama3.2:3b-instruct-q4_K_M,fr,3,True,1aadc78d-3b86-4a49-924b-e6aeda3a22a8,0.4395,"Exceptionnellement et sur recommandation du Département/de l’École et du
+test_fr_026,Qui fait l'évaluation initiale pour la permanence ?,"Le Comité du corps professoral de la faculté commente chaque aspect des critères indiqués. Le Comité du corps professoral de la faculté se prononce sur la progression du rendement réalisé pendant la période initiale d’essai. (Article 5.60 – Mécanisme d'évaluation en vue de la permanence, Article 5.60.3 (d) et (e))",llama3.2:3b-instruct-q4_K_M,fr,3,True,c9bc559e-1ef0-4ed4-962b-9c07b53f8dd9,0.4395,"Exceptionnellement et sur recommandation du Département/de l’École et du
 Vice-recteur aux études et
 Provost, lorsqu'un Membre est nommé au rang de Professeur agrégé ou de
 2
@@ -1812,7 +1812,7 @@ Convention collective 2017-2020
 statut prioritaire et ...",0.364238,0.364238,0.016393
 test_fr_043,Un membre peut-il être transféré d'un campus à l'autre ?,"Oui, selon l'article 2 de la Convention collective 2017-2020, les membres du corps professoral employés par l'Université Laurentienne pour enseigner des cours permettant d'obtenir des crédits universitaires sont inclus dans l'unité de négociation représentée par le Syndicat [l'Association] pourvu qu'ils remplissent les conditions existant à Sudbury.
 
-De plus, l'article 2.2 de la Convention collective 2017-2020 précise que les Membres ayant des contrats menant à la permanence, et qui sont affectés par les décisions prises dans des campuses autres que celui de Sudbury, ont le droit d'être transférés dans la même unité ou le même programme sur le campus de Sudbury en conservant les mêmes droits et privilèges dont ils jouissaient sur le campus de l'extérieur.",llama3.2:3b-instruct-q4_K_M,fr,1,True,ae91cec4-dd77-4337-9941-99f2b252b05e,0.3368,"Le Membre bénéficie tant d'une indemnité de rupture de contrat, que des droits de rappel,
+De plus, l'article 2.2 de la Convention collective 2017-2020 précise que les Membres ayant des contrats menant à la permanence, et qui sont affectés par les décisions prises dans des campuses autres que celui de Sudbury, ont le droit d'être transférés dans la même unité ou le même programme sur le campus de Sudbury en conservant les mêmes droits et privilèges dont ils jouissaient sur le campus de l'extérieur.",llama3.2:3b-instruct-q4_K_M,fr,1,True,3598be29-4ec7-40e1-998e-fe2caccf3e74,0.3368,"Le Membre bénéficie tant d'une indemnité de rupture de contrat, que des droits de rappel,
 selon les dispositions de l’Article 11.10.18 ci-dessous.
 124
 <<>>
@@ -1948,7 +1948,7 @@ test_fr_055,L'université offre-t-elle une assurance santé ?,"Oui, l'Universit�
 
 En particulier, les membres chargés de cours qui donnent des cours d’activité et des cours axés sur l’expérience à l’École des sciences de l’activité physique ont droit aux mêmes avantages, notamment en ce qui concerne la santé, pendant le ou les trimestres de leur emploi (Article 3.25.1).
 
-Cependant, il est important de noter que l'Université ne fournit pas une assurance santé complète, mais plutôt une assurance de protection contre les accidents du travail et les maladies professionnelles, en vertu de la Loi sur la santé et la sécurité au travail de l’Ontario.",llama3.2:3b-instruct-q4_K_M,fr,3,True,2615d75e-b836-4d13-a54f-c5bdc8a83945,0.4041,"Tous les membres chargés de cours qui
+Cependant, il est important de noter que l'Université ne fournit pas une assurance santé complète, mais plutôt une assurance de protection contre les accidents du travail et les maladies professionnelles, en vertu de la Loi sur la santé et la sécurité au travail de l’Ontario.",llama3.2:3b-instruct-q4_K_M,fr,3,True,a3b9b830-3626-4484-bb50-5bd87b9a38f1,0.4041,"Tous les membres chargés de cours qui
 donnent des cours d’activité et des cours axés sur l’expérience à l’École des sciences de l’activité physique ont droit aux
 mêmes avantages pendant le ou les trim...",2615d75e-b836-4d13-a54f-c5bdc8a83945,0.4041,"Tous les membres chargés de cours qui
 donnent des cours d’activité et des cours axés sur l’expérience à l’École des sciences de l’activité physique ont droit aux
@@ -1958,7 +1958,7 @@ ni à aucun autre moment.
 ni à aucun autre moment.
 7.55.6 Le montant des prestations versées par le régime de protection contre les accidents du travail, ou d...",00d8445b-a62b-45b2-9eb2-8236986f85e8,0.4221,"Article 3 - Conditions de travail, à l'exception de l'Article 3.10 - Liberté universitaire ; Article 4.45 – Maladie
 physique et mentale pour les Membres chargés de cours, Article 4.50 – Responsabilité...",0.404073,0.404073,0.030366
-test_fr_056,Y a-t-il une allocation pour le perfectionnement professionnel (PER) ?,"Oui, il y a une allocation pour le perfectionnement professionnel (PER) selon l'article 6.45 de la Convention collective 2017-2020. Le montant de cette allocation est limité à deux mille quatre cent cinquante dollars (2 450 $) par année.",llama3.2:3b-instruct-q4_K_M,fr,1,True,689ac95d-15bb-40dc-8164-8f3c73c2af52,0.3548,"Si le Comité ne fait pas de
+test_fr_056,Y a-t-il une allocation pour le perfectionnement professionnel (PER) ?,"Oui, il y a une allocation pour le perfectionnement professionnel (PER) selon l'article 6.45 de la Convention collective 2017-2020. Le montant de cette allocation est limité à deux mille quatre cent cinquante dollars (2 450 $) par année.",llama3.2:3b-instruct-q4_K_M,fr,1,True,a9a8ce4e-5673-458c-be1a-16a910d3f04c,0.3548,"Si le Comité ne fait pas de
 recommandation dans les délais stipulés, le Vice-recteur aux études et Provost peut prendre les
 mesures spécifiées à l'Article 6.40.3 (d) ci-dessous.
 (d) Une (1) semaine ap...",689ac95d-15bb-40dc-8164-8f3c73c2af52,0.3521,"Si le Comité ne fait pas de
@@ -2041,7 +2041,7 @@ annexe) et de la ratification de ce protoc...",ef4e8040-380a-49b9-a71f-46f252314
 Convention collective 2015-2018
 En cas de décès dans la famille immédiate du membre, le membre reçoit un congé d’un maximum de cinq jours
 ouvrables consécutifs sans ...",0.433266,0.433266,0.031778
-test_fr_069,Combien de jours de vacances les professeurs ont-ils ?,"Selon l'article 7.15.2 de la Convention collective 2017-2020, les membres ont droit à un (1) mois, soit vingt-cinq (25) jours ouvrables de vacances, en plus des jours fériés reconnus, après onze (11) mois de service.",llama3.2:3b-instruct-q4_K_M,fr,1,True,5b6005dc-c69a-4292-b64e-32ec90a1467a,0.4006,"Si les dépenses engagées sont relativement peu élevées, c’est-à-dire inférieures à cinquante
+test_fr_069,Combien de jours de vacances les professeurs ont-ils ?,"Selon l'article 7.15.2 de la Convention collective 2017-2020, les membres ont droit à un (1) mois, soit vingt-cinq (25) jours ouvrables de vacances, en plus des jours fériés reconnus, après onze (11) mois de service.",llama3.2:3b-instruct-q4_K_M,fr,1,True,ebdfc320-0f1b-4421-9118-70c5a95410ef,0.4006,"Si les dépenses engagées sont relativement peu élevées, c’est-à-dire inférieures à cinquante
 pour cent (50 %) du total de l’allocation, ou au restant de l’allocation totale, les remboursements seront ...",5b6005dc-c69a-4292-b64e-32ec90a1467a,0.4006,"Si les dépenses engagées sont relativement peu élevées, c’est-à-dire inférieures à cinquante
 pour cent (50 %) du total de l’allocation, ou au restant de l’allocation totale, les remboursements seront ...",5b6005dc-c69a-4292-b64e-32ec90a1467a,0.4054,"Si les dépenses engagées sont relativement peu élevées, c’est-à-dire inférieures à cinquante
 pour cent (50 %) du total de l’allocation, ou au restant de l’allocation totale, les remboursements seront ...",5b6005dc-c69a-4292-b64e-32ec90a1467a,0.4054,"Si les dépenses engagées sont relativement peu élevées, c’est-à-dire inférieures à cinquante
@@ -2105,7 +2105,7 @@ un paiement de surcharge (ou un pourcentage du paiement de surcharge) au lieu de
 retraite si tel est son désir. Si le Membre a au moins soixante (60) ans, il peut être admissible aux prestations du
 Régime de pensions d...",471a2fc3-1f8e-454d-b6ac-a59b2738f617,0.352,"Lorsque le Doyen a confié au Membre une pleine charge d'enseignement, avec l'accord de ce dernier, le Membre touche
 un paiement de surcharge (ou un pourcentage du paiement de surcharge) au lieu de bén...",0.362589,0.362589,0.030366
-test_fr_080,Quel est l'âge de retraite obligatoire ?,"L'âge de retraite obligatoire est de 65 ans, selon l'article 5.90.1 de la Convention collective 2017-2020, page 27.",llama3.2:3b-instruct-q4_K_M,fr,1,True,418545bf-5671-4316-8c31-e62984b1cf18,0.3702,"ARTICLE 5.90 – RETRAITE
+test_fr_080,Quel est l'âge de retraite obligatoire ?,"L'âge de retraite obligatoire est de 65 ans, selon l'article 5.90.1 de la Convention collective 2017-2020, page 27.",llama3.2:3b-instruct-q4_K_M,fr,1,True,84138ec8-394b-4179-8fb0-6c773e6fafaa,0.3702,"ARTICLE 5.90 – RETRAITE
 5.90.1 Date normale de retraite
 Aux fins de l’administration du régime de retraite, la retraite normale d'un Membre commence à dater du premier (1er)
 jour de juillet après qu'i...",418545bf-5671-4316-8c31-e62984b1cf18,0.3702,"ARTICLE 5.90 – RETRAITE
@@ -2459,7 +2459,7 @@ test_en_038,What is the policy for sick leave?,"The policy for sick leave in the
 * To have a sick leave benefits period reinstated up to the maximum, Members who have been absent and in receipt of sick leave benefits must return to full duties for at least one (1) full working day in the case of a completely unrelated and different disability cause, and for thirty (30) calendar days in the case of the same disability cause (5.45.04).
 * Sick leave benefits will be reduced by the amount of any Worker's Compensation benefits or similar disability income benefits which the Member is eligible to receive by reason of accident or sickness, from a government plan, except Employment Insurance (5.45.07).
 
-It is also worth noting that the agreement requires a report to be submitted for any sick leave period in excess of five (5) consecutive working days, and that the report shall not contain any diagnosis of the Member's condition, unless the Member, in consultation with the Union, requests that the diagnosis be included (7.55.7).",llama3.2:3b-instruct-q4_K_M,en,1,True,6e98b843-6f0f-4b13-9c00-8292e4dc254a,0.4479,"Such a report will
+It is also worth noting that the agreement requires a report to be submitted for any sick leave period in excess of five (5) consecutive working days, and that the report shall not contain any diagnosis of the Member's condition, unless the Member, in consultation with the Union, requests that the diagnosis be included (7.55.7).",llama3.2:3b-instruct-q4_K_M,en,1,True,a180e699-9165-4963-8a01-6d98ec4f1039,0.4479,"Such a report will
 be required:
 a, for any sick leave period in excess of five (5) consecutive working days;
 b. in the event a Membet’s sick leave pattern raises substantial doubt of the claim, even i...",2f433a7e-6df2-4230-a7fd-24c6413bcf99,0.0164,"29.04 Any Member on an unpaid leave of absence shall make special arrangements for benefit
@@ -2583,7 +2583,7 @@ the
 <<>>
 Collective Agreement 2008-11
 Retiring Allowance shall be paid to...",0.385717,0.385717,0.029644
-test_en_088,What happens if a member resigns?,"According to Article 19 of the Collective Agreement 2018-2021, if a member resigns, all leaves to which a resigning member would be entitled must be terminated at the date of resignation (Article 19.01).",llama3.2:3b-instruct-q4_K_M,en,1,True,e79e77ee-33da-4341-aebd-fd124ff04ac1,0.5216,"19.03 Normally a member may resign effective 30 June or 30
+test_en_088,What happens if a member resigns?,"According to Article 19 of the Collective Agreement 2018-2021, if a member resigns, all leaves to which a resigning member would be entitled must be terminated at the date of resignation (Article 19.01).",llama3.2:3b-instruct-q4_K_M,en,1,True,34e5e5f2-ad6a-4d07-a80e-a6a2677e1a6d,0.5216,"19.03 Normally a member may resign effective 30 June or 30
 December, with at least one month’s written notice to the
 President. All leaves to which a resigning member would be entitled must be termina...",2585c312-ae5d-4b4a-a35b-1f213c30d7aa,0.0164,"The period of leave shall be included as credited years ofservice in determining
 University pension benefits.
@@ -2686,7 +2686,7 @@ Laurentienne.
 d’intimidation à l’Université
 Laurentienne.
 3.15.2 Le Syndicat veille et ...",0.429846,0.429846,0.031545
-test_fr_013,Quel est le rôle d'un arbitre ?,"Selon l'article 12.15.2 de la Convention collective, un arbitre n'est pas autorisé à prendre des décisions qui ne sont pas conformes aux provisions de la Convention collective. De plus, il ne peut adapter, modifier, ajouter ou amender aucune partie de la Convention collective. Il s'agit de garantir la cohérence et l'application uniforme des dispositions de la Convention collective.",llama3.2:3b-instruct-q4_K_M,fr,3,False,fc87016f-712b-4ad8-8e6b-75299201fe83,0.4012,"12.15.2 L'arbitre n’est pas autorisé à prendre des décisions qui ne sont pas conformes aux provisions de la présente
+test_fr_013,Quel est le rôle d'un arbitre ?,"Selon l'article 12.15.2 de la Convention collective, un arbitre n'est pas autorisé à prendre des décisions qui ne sont pas conformes aux provisions de la Convention collective. De plus, il ne peut adapter, modifier, ajouter ou amender aucune partie de la Convention collective. Il s'agit de garantir la cohérence et l'application uniforme des dispositions de la Convention collective.",llama3.2:3b-instruct-q4_K_M,fr,3,False,4c91bdd2-a157-4f63-afea-b47f2be09c03,0.4012,"12.15.2 L'arbitre n’est pas autorisé à prendre des décisions qui ne sont pas conformes aux provisions de la présente
 Convention collective, non plus à adapter, à modifier, à ajouter ou à amender quelq...",d429297d-8fe1-4e79-9fc7-29db0928008b,0.0164,"ARTICLE 5.30 – INITIATIVE D’ÉQUITÉ EN MATIÈRE D’EMPLOI
 DES AUTOCHTONES
 5.30.1 À la suite du rapport de 2007 du Comité sur l’équité en matière d’emploi des autochtones dont la Convention
@@ -2744,7 +2744,7 @@ test_fr_011,Quelles sont les étapes formelles de la procédure de grief ?,"Selo
 3. Si le grief est réglé à cette étape, le règlement est dressé et contresigné par le représentant du Syndicat et le représentant de l’Employeur au plus tard quinze (15) jours ouvrables après la réunion où le règlement est atteint.
 4. Si le grief n'est pas réglé à cette étape, le représentant de la partie répondant au grief transmet par écrit au représentant de l'autre partie les raisons du rejet du grief.
 
-Il est important de noter que si le représentant du Syndicat et le représentant de l’Employeur ne peuvent pas régler le grief dans les quinze (15) jours ouvrables qui suivent la ou les réunions indiquées à l’Article 12.10.11 (c) ci-dessus, le processus d'arbitrage est initié selon les dispositions de l'Article 12.15.",llama3.2:3b-instruct-q4_K_M,fr,1,True,fa375b02-faea-40b2-a012-af044e32f6d7,0.4878,"12.10.10 Étape 2 – Procédure formelle de grief
+Il est important de noter que si le représentant du Syndicat et le représentant de l’Employeur ne peuvent pas régler le grief dans les quinze (15) jours ouvrables qui suivent la ou les réunions indiquées à l’Article 12.10.11 (c) ci-dessus, le processus d'arbitrage est initié selon les dispositions de l'Article 12.15.",llama3.2:3b-instruct-q4_K_M,fr,1,True,22b46d8d-149e-4c61-940b-03052399e488,0.4878,"12.10.10 Étape 2 – Procédure formelle de grief
 (a) À défaut de règlement à l'étape 1, le plaignant dépose un avis par écrit auprès du Vice-recteur aux
 études et Provost, ou auprès du président du Synd...",721f02b4-3210-4997-a5aa-059099e1a011,0.0164,"Dans les quinze (15) jours qui suivent, l’autre
 partie accepte l'arbitre proposé ou propose un arbitre suppléant. Si les
@@ -2757,7 +2757,7 @@ provision s’applique à un arbitre.
 Jours fériés statutaires et autres, y inclus les con...",1e3f4dfb-1b96-48a7-b3ec-29f0bcf67244,0.4849,"12.10.9 Étape 1 – Procédure informelle de grief
 Le Syndicat et l’Employeur conviennent de faire tous les efforts raisonnables pour régler informellement les
 griefs de façon expéditive et à l’amiable. ...",0.48778,0.48778,0.016393
-test_fr_082,Qu'est-ce qu'une exigence financière (crise financière) ?,"Une situation financière critique, également appelée crise financière, se définit en termes de déficits substantiels et répétés qui menacent la solvabilité à long terme de l'Université dans son ensemble (Article 11.15.2 de la convention collective).",llama3.2:3b-instruct-q4_K_M,fr,3,False,05aee415-f2e5-47e9-b4d8-500c65b82fae,0.4014,"ARTICLE 11.15 – SITUATION FINANCIÈRE CRITIQUE
+test_fr_082,Qu'est-ce qu'une exigence financière (crise financière) ?,"Une situation financière critique, également appelée crise financière, se définit en termes de déficits substantiels et répétés qui menacent la solvabilité à long terme de l'Université dans son ensemble (Article 11.15.2 de la convention collective).",llama3.2:3b-instruct-q4_K_M,fr,3,False,3171ace5-2bc0-4ce3-8598-8d474538e1bf,0.4014,"ARTICLE 11.15 – SITUATION FINANCIÈRE CRITIQUE
 11.15.1 Il est convenu par l’Employeur et le Syndicat que le devoir essentiel de l'Université est d'assurer que ses
 priorités universitaires demeurent d'i...",05aee415-f2e5-47e9-b4d8-500c65b82fae,0.3975,"ARTICLE 11.15 – SITUATION FINANCIÈRE CRITIQUE
 11.15.1 Il est convenu par l’Employeur et le Syndicat que le devoir essentiel de l'Université est d'assurer que ses
@@ -2768,7 +2768,7 @@ universitaires demeurent d'i...",05aee415-f2e5-47e9-b4d8-500c65b82fae,0.3895,"AR
 universitaires demeurent d'i...",05aee415-f2e5-47e9-b4d8-500c65b82fae,0.3916,"ARTICLE 10.15 – SITUATION FINANCIÈRE CRITIQUE
 10.15.1 Il est convenu par l’Employeur et le Syndicat que le devoir essentiel de l'Université est d'assurer que ses priorités
 universitaires demeurent d'i...",0.401384,0.401384,0.032522
-test_fr_084,L'employeur est-il responsable de la santé et sécurité au travail ?,"Oui, l'employeur est responsable de la santé et sécurité au travail, selon l'article 3.25.1 de la convention collective 2011-14. L'employeur se charge de pourvoir les employés d'un milieu propre à protéger leur santé, leur sécurité et leur sûreté pendant qu'ils s'acquittent de leurs fonctions.",llama3.2:3b-instruct-q4_K_M,fr,1,True,2615d75e-b836-4d13-a54f-c5bdc8a83945,0.4084,"Tous les membres chargés de cours qui
+test_fr_084,L'employeur est-il responsable de la santé et sécurité au travail ?,"Oui, l'employeur est responsable de la santé et sécurité au travail, selon l'article 3.25.1 de la convention collective 2011-14. L'employeur se charge de pourvoir les employés d'un milieu propre à protéger leur santé, leur sécurité et leur sûreté pendant qu'ils s'acquittent de leurs fonctions.",llama3.2:3b-instruct-q4_K_M,fr,1,True,37871b57-a090-45f3-b873-c0266b357967,0.4084,"Tous les membres chargés de cours qui
 donnent des cours d’activité et des cours axés sur l’expérience à l’École des sciences de l’activité physique ont droit aux
 mêmes avantages pendant le ou les trim...",2615d75e-b836-4d13-a54f-c5bdc8a83945,0.4084,"Tous les membres chargés de cours qui
 donnent des cours d’activité et des cours axés sur l’expérience à l’École des sciences de l’activité physique ont droit aux
@@ -2942,7 +2942,7 @@ Lorsque le rendement d’un membre est évalué, tous les membres du Comité se 
 Convention collective 2015-2018
 Lorsque le rendement d’un membre est évalué, tous les membr...",4dd90777-1512-482d-aadb-6b51bcf9b0c2,0.4092,"8.04 Évaluation — renouvellement des nominations à l’essai, des promotions et de la permanence
 Lorsque le rendement d’un membre est évalué, tous les membres du Comité se fondent uniquement sur les nor...",0.45098,0.45098,0.032787
-test_fr_068,Un professeur peut-il obtenir un congé sans solde ?,"Oui, un professeur peut obtenir un congé sans solde si il en fait la demande par écrit au Recteur, qui consulte ensuite le Département du professeur. Le Recteur avise le professeur par écrit de son autorisation ou de son refus et achemine une copie de sa lettre au syndicat. Si le congé est autorisé, les conditions en sont précisées dans la lettre d'autorisation. (Article 14.01 de la Convention collective 2008-11)",llama3.2:3b-instruct-q4_K_M,fr,1,True,9c6decbd-c61f-4c0c-ae2f-be7ebf461bb9,0.4099,"ARTICLE 14 – CONGÉS
+test_fr_068,Un professeur peut-il obtenir un congé sans solde ?,"Oui, un professeur peut obtenir un congé sans solde si il en fait la demande par écrit au Recteur, qui consulte ensuite le Département du professeur. Le Recteur avise le professeur par écrit de son autorisation ou de son refus et achemine une copie de sa lettre au syndicat. Si le congé est autorisé, les conditions en sont précisées dans la lettre d'autorisation. (Article 14.01 de la Convention collective 2008-11)",llama3.2:3b-instruct-q4_K_M,fr,1,True,bee60054-a44f-45d7-acf2-1d409f6bc3b7,0.4099,"ARTICLE 14 – CONGÉS
 14.01 Congé sans solde
 Un membre peut demander et l’Employeur peut accorder un congé sans solde. Le membre en fait la demande par écrit
 au Recteur qui consulte alors le Département...",9c6decbd-c61f-4c0c-ae2f-be7ebf461bb9,0.4099,"ARTICLE 14 – CONGÉS
@@ -2970,7 +2970,7 @@ Jour de l’An Jour de la famille
 Vendredi saint Lundi de Pâques
 Fête de la Reine Victoria Fête du Canada
 Fête ci...",0.335675,0.335675,0.016393
-test_fr_074,Qui possède les revenus d'une invention brevetable ?,"Selon l'article 6.30.3 de la Convention collective, les Membres ont le droit de prendre des dispositions pour faire breveter une invention, sous réserve des obligations du présent article, et ils ont droit à toutes les redevances, sauf si l'invention a été faite en utilisant les fonds, le personnel ou l'équipement de l'Employeur.",llama3.2:3b-instruct-q4_K_M,fr,1,True,1f20b73e-c4a3-47bb-bb49-9e51933a40ab,0.3683,"Si le Membre ne fait
+test_fr_074,Qui possède les revenus d'une invention brevetable ?,"Selon l'article 6.30.3 de la Convention collective, les Membres ont le droit de prendre des dispositions pour faire breveter une invention, sous réserve des obligations du présent article, et ils ont droit à toutes les redevances, sauf si l'invention a été faite en utilisant les fonds, le personnel ou l'équipement de l'Employeur.",llama3.2:3b-instruct-q4_K_M,fr,1,True,754fe29c-e50d-4d85-bec1-6bfa2b99dfad,0.3683,"Si le Membre ne fait
 pas connaître l'existence de sa demande de brevet dans les trois (3) mois, il est entendu que l'Employeur
 maintient ses droits en vertu du présent Article jusqu'à ce qu'une telle ...",1f20b73e-c4a3-47bb-bb49-9e51933a40ab,0.3679,"Si le Membre ne fait
 pas connaître l'existence de sa demande de brevet dans les trois (3) mois, il est entendu que l'Employeur
@@ -3002,10 +3002,10 @@ Cross-appointments, where a faculty member is appointed to a position in both a 
 
 To determine the specific procedures for cross-appointments, it would be necessary to consult other relevant provisions of the Collective Agreement or seek guidance from the university administration or relevant departments.",llama3.2:3b-instruct-q4_K_M,en,1,True,01e33ebb-9451-4c36-988d-e479381053bc,0.4084,"Where this requirement
 cannot be fulfilled, the Dean/University Librarian, in consultation with the Department/School, shall
-appoint a suitable Member from another Department/School to the search comm...",b7564a3e-a8af-41d8-84f4-bb44331240ea,0.0164,"Notwithstanding the provisions of this Article, when an assigned course(s) is cancelled because of zero registration in the
+appoint a suitable Member from another Department/School to the search comm...",91cb00c0-8427-485f-a6d1-2ca1e2437d28,0.0164,"Notwithstanding the provisions of this Article, when an assigned course(s) is cancelled because of zero registration in the
 course(s) there arises an obligation on the part of the Member to undertake ...",52af41e7-98ac-4de0-b828-bb43e087b7b5,0.3962,"11.15 The department shall respect the establishment and the roster process when making its sessional appointment
-recommendation to the administration. Where more than one candidate meets the criteria...",c108c605-cc21-4c07-8f77-35f00ef2d3ac,0.0161,"Notwithstanding the provisions of this Article, when an assigned course(s) is cancelled because of zero registration in the
-course(s) there arises an obligation on the part of the Member to undertake ...",4c49dc68-9980-42a5-b3ef-d8f1ad938dce,0.3962,"11.15 The department shall respect the establishment and the roster process when making its sessional appointment
+recommendation to the administration. Where more than one candidate meets the criteria...",91cb00c0-8427-485f-a6d1-2ca1e2437d28,0.0161,"Notwithstanding the provisions of this Article, when an assigned course(s) is cancelled because of zero registration in the
+course(s) there arises an obligation on the part of the Member to undertake ...",52af41e7-98ac-4de0-b828-bb43e087b7b5,0.3962,"11.15 The department shall respect the establishment and the roster process when making its sessional appointment
 recommendation to the administration. Where more than one candidate meets the criteria...",0.408427,0.408427,0.016393
 test_en_105,What are the provisions for sabbatical leave?,ERROR,llama3.2:3b-instruct-q4_K_M,English,0,False,,,,,,,,,,,,,,,,,,
 test_fr_006,Quels sont les motifs de discrimination interdits ?,ERROR,llama3.2:3b-instruct-q4_K_M,French,0,False,,,,,,,,,,,,,,,,,,
@@ -3038,14 +3038,14 @@ working days of the appointment of the second nominee, they shall request
 the Minis...",96e1ff86-1791-4c79-bfa9-cdc6392d35bf,0.0164,"ARTICLE 2.00 - RIGHTS, RESPONSIBILITIES AND DUTIES OF
 ACADEMICS
 The Members of the bargaining unit have rights, duties and responsibilities
-which derive from their positions as teachers/professional l...",0a4db345-1871-43f1-abbc-7223a93c6ff4,0.4127,"36.02 The arbitrator shall have the authority to issue interim orders requiring the Employer to
+which derive from their positions as teachers/professional l...",921a960a-2476-4c54-823c-83a3119f76aa,0.4127,"36.02 The arbitrator shall have the authority to issue interim orders requiring the Employer to
 provide relief. The arbitrator shall not have the power to alter, add to or modify the
-Agreement in any ...",325f217a-10ce-40ba-932e-279483411ff6,0.0161,"Members wishing to delay their final
+Agreement in any ...",5ff8c9b7-5ae5-4e90-936c-47af5b9ef650,0.0161,"Members wishing to delay their final
 tenure evaluation must apply in writing to the appropriate
 Dean/University Librarian by May 1 of the final year of their probationary appointment describing the sp...",0d9825a2-c08f-4a5c-bea2-68ac1d3ea584,0.4284,"24.02 No person may be appointed as an arbitrator who has been involved in an attempt to negotiate or settle the
 grievance.
 24.03 The Arbitration Board shall not be authorized to make any decision inc...",0.413131,0.413131,0.016393
-test_en_026,What is a Career Development Increment (CDI)?,"Unfortunately, the provided text does not explicitly define what a Career Development Increment (CDI) is. However, it does mention that a Counsellor's salary will be increased by one Career Development Increment (CDI) of 2.3% annually (ARTICLE 10.55.3).",llama3.2:3b-instruct-q4_K_M,en,3,True,4cd774be-1063-4377-95e2-2cc214068c2d,0.3803,"The
+test_en_026,What is a Career Development Increment (CDI)?,"Unfortunately, the provided text does not explicitly define what a Career Development Increment (CDI) is. However, it does mention that a Counsellor's salary will be increased by one Career Development Increment (CDI) of 2.3% annually (ARTICLE 10.55.3).",llama3.2:3b-instruct-q4_K_M,en,3,True,063ff2fc-51af-470f-9a14-8d7855fe047b,0.3803,"The
 Progress-Through-The-Ranks increments shall have a value of two thousand
 nine hundred dollars ($2,900).
 (c) Additional qualification increments shall be awarded pursuant to Article 8.30 –
@@ -3056,23 +3056,23 @@ nine hundred dollars ($2,900).
 Addition...",1b81abd7-0569-4d1c-b081-620c639ad4d8,0.0164,"ARTICLE 10.40 – PROFESSIONAL DEVELOPMENT EXPENDITURE
 10.40.1 Expenditure
 The parties agree that the University is best served when staff have the opportunities for personal
-development and career adva...",692d41a9-ab16-4c89-bd74-9e38dea8d056,0.0161,"ARTICLE 10.40 – PROFESSIONAL DEVELOPMENT EXPENDITURE
+development and career adva...",1b81abd7-0569-4d1c-b081-620c639ad4d8,0.0161,"ARTICLE 10.40 – PROFESSIONAL DEVELOPMENT EXPENDITURE
 10.40.1 Expenditure
 The parties agree that the University is best served when staff have the opportunities for personal
-development and career adva...",8a94c04a-1ff0-4fe1-8ced-96cc5625c2c5,0.3645,"For all ranks, where a Member’s salary exceeds
+development and career adva...",0c2edb8b-73fa-488e-9929-f9da2b01daf6,0.3645,"For all ranks, where a Member’s salary exceeds
 $173,328 per annum, the PTR will be nil.
 (c) Additional qualification increments shall be awarded pursuant to Article 8.30 – Additional
 Qualifications In...",0.380301,0.380301,0.032266
-test_en_027,Are faculty members eligible for overload teaching pay?,"Yes, faculty members are eligible for overload teaching pay. According to Article 8.35.1 of the Collective Agreement, all ranks of full-time Members who are teaching a course on a paid overload basis will receive a stipend.",llama3.2:3b-instruct-q4_K_M,en,2,True,6e8de146-8004-4ee2-a544-27be54b39a9e,0.4811,"26.02 Overload stipend for a full-time academic staff will be equivalent to the base pay of a
+test_en_027,Are faculty members eligible for overload teaching pay?,"Yes, faculty members are eligible for overload teaching pay. According to Article 8.35.1 of the Collective Agreement, all ranks of full-time Members who are teaching a course on a paid overload basis will receive a stipend.",llama3.2:3b-instruct-q4_K_M,en,2,True,1428e3ab-3a81-42a5-959b-8e1e8b5a5117,0.4811,"26.02 Overload stipend for a full-time academic staff will be equivalent to the base pay of a
 Sessional Member for teaching a course.
-26.03 Under regular circumstances, a course taught in spring sessi...",f163b036-630c-4c6c-816f-f8eac7cbcab7,0.0164,"In all instances, a written statement of the equivalency will be provided in advance by the
+26.03 Under regular circumstances, a course taught in spring sessi...",ef9bcd6c-23d4-4dd8-9b3f-1c995fb9aea4,0.0164,"In all instances, a written statement of the equivalency will be provided in advance by the
 Dean when the work is part of assigned workload and by the Director of Continuing
 Education otherwise.
 8.40....",1428e3ab-3a81-42a5-959b-8e1e8b5a5117,0.4949,"26.02 Overload stipend for a full-time academic staff will be equivalent to the base pay of a
 Sessional Member for teaching a course.
 LUFA-H Collective Agreement 2012-2016 39
 <<>>
-26.03 Under regular ...",61728970-81e4-43f0-8af1-09e46c7e2a0a,0.0161,"In all instances, a written statement of the equivalency will be provided in advance by the
+26.03 Under regular ...",ef9bcd6c-23d4-4dd8-9b3f-1c995fb9aea4,0.0161,"In all instances, a written statement of the equivalency will be provided in advance by the
 Dean when the work is part of assigned workload and by the Director of Continuing
 Education otherwise.
 8.40....",790bd99e-ccde-4681-97d6-dca6aa66a51d,0.4694,"The Member shall apply for an additional increment
@@ -3081,14 +3081,14 @@ through the Dean/University Librarian and must furnish a copy of the appropriate
 test_en_041,What constitutes 'just cause' for discipline?,ERROR,llama3.2:3b-instruct-q4_K_M,English,0,False,,,,,,,,,,,,,,,,,,
 test_en_056,Do members need to report their outside professional activities?,"Yes, members are required to report their outside professional activities. According to Article 10.06 of the Collective Agreement, outside paid professional activities shall be included in a member's annual report (section f). Additionally, the scope and nature of any professional activities of a substantial nature, whether paid or unpaid, shall be reported in writing to the Dean/University Librarian as part of the annual report of Members (Section 5.15.32).",llama3.2:3b-instruct-q4_K_M,en,2,True,dae68fda-c792-45b7-94d3-d1cc30eb2ea5,0.3659,"10.06 Other Paid Professional Activities
 The nature ofthe professional competence ofmany faculty members affords opportunities for the exercise ofthat
-competence outside the member's University duties...",3ca9e798-6156-4ead-a22a-dd3a1b54abbc,0.3659,"10.06 Other Paid Professional Activities
+competence outside the member's University duties...",dae68fda-c792-45b7-94d3-d1cc30eb2ea5,0.3659,"10.06 Other Paid Professional Activities
 The nature ofthe professional competence ofmany faculty members affords opportunities for the exercise ofthat
 competence outside the member's University duties...",4ba0f5b4-30ea-4b4a-b9a5-b36a4f2ee774,0.3107,"Priority Three:
 D) Outside Professional Activities
 5.15.31 The Parties encourage Members to participate in outside professional activities.
 5.15.32 The scope and nature of any professional activities ...",e602ea85-1a03-48d0-9fa1-be00006114d5,0.3643,"10.06 Other Paid Professional Activities
 The nature of the professional competence of many faculty members affords opportunities for the exercise of that
-competence outside the member's University dut...",893e3c25-dba3-4cf3-aaea-14d626546bd4,0.3092,"Priority Three:
+competence outside the member's University dut...",4ba0f5b4-30ea-4b4a-b9a5-b36a4f2ee774,0.3092,"Priority Three:
 D) Outside Professional Activities
 5.15.31 The Parties encourage Members to participate in outside professional activities.
 5.15.32 The scope and nature of any professional activities ...",0.365881,0.365881,0.031545
@@ -3098,12 +3098,12 @@ to the President no later than April
 30"" ofthe calendar year for the following academic year.
 6.05 Dues deduction
 The Employer shall deduct from the salary ofeach
-Membe...",1200deb9-13b1-4cdc-abd4-fec2bf3addb8,0.4432,"The union will make the request
+Membe...",2b2b257e-afed-40a2-87ba-9cf4e7568bdf,0.4432,"The union will make the request
 to the President no later than April
 30"" ofthe calendar year for the following academic year.
 6.05 Dues deduction
 The Employer shall deduct from the salary ofeach
-Membe...",35554463-61ff-4cf9-bd05-93804c61af54,0.4415,"8.04 Indemnification
+Membe...",ce36a2ec-cdb7-4f9e-8673-b040597a0845,0.4415,"8.04 Indemnification
 In consideration of the deducting and forwarding of Union dues, the Union shall indemnify
 and save harmless the Employer, its agents and/or employees acting on behalf of the
 Emplo...",03752cce-9492-4bde-afed-49ced1d59925,0.4446,"6.07 Indemnification
@@ -3115,24 +3115,24 @@ Emplo...",0.443208,0.443208,0.032522
 test_en_070,What happens if a holiday falls on a member's scheduled vacation?,"Unfortunately, the provided context does not explicitly state what happens if a holiday falls on a member's scheduled vacation.",llama3.2:3b-instruct-q4_K_M,en,1,True,1ae30de3-c792-4b47-a6d3-6147f1740182,0.4324,"ARTICLE 3.0 - RECOGNIZED AND OTHER HOLIDAYS
 The following days and all days generally declared to be recognised holidays
 by Federal or Provincial authorities are recognised holidays and paid time
-off ...",65ff40a1-8baa-47fe-b89e-6d4a62773491,0.4112,"LEAVES
+off ...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.4112,"LEAVES
 ARTICLE 7.10 – RECOGNIZED AND OTHER HOLIDAYS
 7.10.1 The following days and all days generally declared to be recognised holidays by Federal or Provincial
-authorities are recognised holidays and...",7e3aa315-1b2e-498e-8078-309ff4bcd205,0.4425,"17.05 Members shall schedule their vacation between 1 June and
+authorities are recognised holidays and...",6b01673b-adc4-4271-a91f-dbd2d4dd223a,0.4425,"17.05 Members shall schedule their vacation between 1 June and
 Labour Day, unless prior permission for another time has been granted by the President.
-17.06 Members may take their annual vacation at a...",bf88ab1e-51b8-4ddb-8361-9edf1234fea3,0.4425,"17.05 Members shall schedule their vacation between 1 June and
+17.06 Members may take their annual vacation at a...",6b01673b-adc4-4271-a91f-dbd2d4dd223a,0.4425,"17.05 Members shall schedule their vacation between 1 June and
 Labour Day, unless prior permission for another time has been granted by the President.
 17.06 Members may take their annual vacation at a...",91c53945-cdc4-4dc9-a0e1-566699643f33,0.0161,"LEAVES
 ARTICLE 7.10 – RECOGNIZED AND OTHER HOLIDAYS
 7.10.1 The following days and all days generally declared to be recognised holidays by Federal or Provincial
 authorities are recognised holidays and...",0.432393,0.432393,0.030886
-test_en_079,What is a bipartite appointment?,"There is no information provided in the context about a ""bipartite appointment"". The provided sections of the Collective Agreement do not mention this term.",llama3.2:3b-instruct-q4_K_M,en,1,True,294c8c2d-6f79-48ae-88de-9f2b0e423528,0.4183,"Alternatively, the Dean/University Librarian shall work together with the Department/School to substitute one (1) of the
+test_en_079,What is a bipartite appointment?,"There is no information provided in the context about a ""bipartite appointment"". The provided sections of the Collective Agreement do not mention this term.",llama3.2:3b-instruct-q4_K_M,en,1,True,01e33ebb-9451-4c36-988d-e479381053bc,0.4183,"Alternatively, the Dean/University Librarian shall work together with the Department/School to substitute one (1) of the
 short-listed names.
-5.20.5 Appointments shall be made only to the ranks referre...",d13cd7dc-dd48-4b57-9d51-4e5ba05e3836,0.4146,"If
+5.20.5 Appointments shall be made only to the ranks referre...",01e33ebb-9451-4c36-988d-e479381053bc,0.4146,"If
 the short list contains fewer than three (3) names, this change can only be an additional name. Alternatively, the Dean/University Librarian shall work together with the
-Department/School to substi...",b094e97d-fc6f-429b-80e8-d4710732e12d,0.4183,"Alternatively, the Dean/University Librarian shall work together with the Department/School to substitute one (1) of the
+Department/School to substi...",01e33ebb-9451-4c36-988d-e479381053bc,0.4183,"Alternatively, the Dean/University Librarian shall work together with the Department/School to substitute one (1) of the
 short-listed names.
-5.20.5 Appointments shall be made only to the ranks referre...",5f2e9f64-a0e0-4dff-8c62-61514b00edc8,0.4146,"If
+5.20.5 Appointments shall be made only to the ranks referre...",01e33ebb-9451-4c36-988d-e479381053bc,0.4146,"If
 the short list contains fewer than three (3) names, this change can only be an additional name. Alternatively, the Dean/University Librarian shall work together with the
 Department/School to substi...",01e33ebb-9451-4c36-988d-e479381053bc,0.4165,"Where this requirement
 cannot be fulfilled, the Dean/University Librarian, in consultation with the Department/School, shall
@@ -3146,15 +3146,15 @@ continue d’être à...",52a31748-e8cb-495a-b310-8dc4699b2df4,0.0164,"Un avis d
 <<>>
 Annexe “BB”
 L’APPUL convient de ce qui suit :
-a. De retirer toute demande de réparation pécuniaire dans la p...",16883185-3780-42e2-9a65-eb4118b28c0b,0.4564,"11.27 Administrateurs supérieurs chargés des affaires professorales
+a. De retirer toute demande de réparation pécuniaire dans la p...",09ceb709-f70c-4df2-933f-5f59b2bdac51,0.4564,"11.27 Administrateurs supérieurs chargés des affaires professorales
 Un administrateur supérieur chargé des affaires professorales qui cesse d’occuper sa fonction administrative, mais
-continue d’être à...",2f45666c-3049-4410-bf80-fd628a513510,0.0161,"Un Directeur a fait une recommandation pour un congé sabbatique qui, à sa connaissance, fut acceptée. Cependant,
+continue d’être à...",0fa7488a-0439-462c-8106-4bce68a85394,0.0161,"Un Directeur a fait une recommandation pour un congé sabbatique qui, à sa connaissance, fut acceptée. Cependant,
 les autres n'ont pas, en tant que directeurs, à s'engager, bien que certains pensent po...",dcaf1a8a-817a-4bd4-9101-c11986c8a081,0.4215,"11.30 À toutes fins relatives à la présente Convention, un membre qui a été administrateur supérieur chargé des affaires
 professorales est considéré membre de l’unité de négociation comme s’il n’avait...",0.456418,0.456418,0.016393
-test_fr_003,Les droits de la direction sont-ils soumis à la convention collective ?,"Oui, les droits des directeurs sont soumis à la convention collective. En effet, selon l'article 2.10.2 de la Convention collective, le Syndicat reconnaît que l'Employeur retient, possède et continue d'exercer tous les droits, fonctions, pouvoirs, privilèges, et toute l'autorité dont il jouissait selon les dispositions de la Loi constitutive avant le passage de la présente Convention collective avec le Syndicat, mais selon les limites spécifiques de cette Convention collective ou les modifications de la Loi.",llama3.2:3b-instruct-q4_K_M,fr,3,True,2f45666c-3049-4410-bf80-fd628a513510,0.3922,"Un Directeur a fait une recommandation pour un congé sabbatique qui, à sa connaissance, fut acceptée. Cependant,
-les autres n'ont pas, en tant que directeurs, à s'engager, bien que certains pensent po...",e07a827e-c9bc-4593-b8f6-b30d21ba876f,0.0164,"Vice-recteur aux études et Provost signifie le Vice-recteur aux études et Provost de l’Université Laurentienne
+test_fr_003,Les droits de la direction sont-ils soumis à la convention collective ?,"Oui, les droits des directeurs sont soumis à la convention collective. En effet, selon l'article 2.10.2 de la Convention collective, le Syndicat reconnaît que l'Employeur retient, possède et continue d'exercer tous les droits, fonctions, pouvoirs, privilèges, et toute l'autorité dont il jouissait selon les dispositions de la Loi constitutive avant le passage de la présente Convention collective avec le Syndicat, mais selon les limites spécifiques de cette Convention collective ou les modifications de la Loi.",llama3.2:3b-instruct-q4_K_M,fr,3,True,0fa7488a-0439-462c-8106-4bce68a85394,0.3922,"Un Directeur a fait une recommandation pour un congé sabbatique qui, à sa connaissance, fut acceptée. Cependant,
+les autres n'ont pas, en tant que directeurs, à s'engager, bien que certains pensent po...",fefe3358-2cfd-4575-ad5f-e81b7e34d16e,0.0164,"Vice-recteur aux études et Provost signifie le Vice-recteur aux études et Provost de l’Université Laurentienne
 de Sudbury, ou son mandataire. ARTICLE 1.35 – COPIES
-1.35.1 L’Employeur s’engage à fourni...",df213aa9-3330-4427-be37-33ef4c192979,0.3922,"Un Directeur a fait une recommandation pour un congé sabbatique qui, à sa connaissance, fut acceptée. Cependant,
+1.35.1 L’Employeur s’engage à fourni...",0fa7488a-0439-462c-8106-4bce68a85394,0.3922,"Un Directeur a fait une recommandation pour un congé sabbatique qui, à sa connaissance, fut acceptée. Cependant,
 les autres n'ont pas, en tant que directeurs, à s'engager, bien que certains pensent po...",fefe3358-2cfd-4575-ad5f-e81b7e34d16e,0.0161,"Vice-recteur aux études et Provost signifie le Vice-recteur aux études et Provost de l’Université Laurentienne
 de Sudbury, ou son mandataire. ARTICLE 1.35 – COPIES
 1.35.1 L’Employeur s’engage à fourni...",c2d25a11-eb5d-4e32-96b5-24729050bc92,0.3803,"Les Directeurs assignent leurs tâches aux secrétaires faisant partie du personnel de soutien, et ils évaluent leur
@@ -3164,27 +3164,27 @@ travail. Cependant, ces fonctions
 Convention collective 2008-11 deman...",0.39221,0.39221,0.016393
 test_fr_004,Comment la liberté universitaire est-elle définie ?,"La liberté universitaire est définie comme la liberté d'examiner, de critiquer, d'enseigner et d'apprendre, y compris le droit d'enquêter, d'élaborer des interprétations et de commenter publiquement, de mener des recherches et d'en disséminer les résultats. C'est aussi le droit de choisir l'objet et la méthode de ses recherches et libres de publier les résultats et conclusions de celles-ci, sans égard à quelque doctrine que ce soit, dans le respect des droits et responsabilités explicites du Sénat.",llama3.2:3b-instruct-q4_K_M,fr,1,True,164cf36f-82d1-4e6f-a8ee-861f619eba3b,0.4648,"0.02 Liberté universitaire
 (a) L'Université ayant pour objectiffondamental la recherche de nouvelles connaissances et la libre dissémination du
-savoir, la liberté universitaire est essentielle à ses a...",0291f727-0ad1-4959-b26e-a45b90289815,0.4648,"0.02 Liberté universitaire
+savoir, la liberté universitaire est essentielle à ses a...",164cf36f-82d1-4e6f-a8ee-861f619eba3b,0.4648,"0.02 Liberté universitaire
 (a) L'Université ayant pour objectiffondamental la recherche de nouvelles connaissances et la libre dissémination du
 savoir, la liberté universitaire est essentielle à ses a...",9704f595-2abb-4f60-9b54-aced36aaef27,0.4533,"0.02 Liberté universitaire
 (a) L’Université ayant pour objectif fondamental la recherche de nouvelles connaissances et la libre dissémination du
-savoir, la liberté universitaire est essentielle à ses ...",49c5ba14-af4f-4d66-a2cc-9bd0d47b6f09,0.4533,"0.02 Liberté universitaire
+savoir, la liberté universitaire est essentielle à ses ...",9704f595-2abb-4f60-9b54-aced36aaef27,0.4533,"0.02 Liberté universitaire
 (a) L’Université ayant pour objectif fondamental la recherche de nouvelles connaissances et la libre dissémination du
-savoir, la liberté universitaire est essentielle à ses ...",0f4dd1b6-71a2-4ee7-9691-81b9172e9b65,0.0159,"Toutes les mises à jour du dossier doivent être signalées au Vice- recteur aux études et Provost
+savoir, la liberté universitaire est essentielle à ses ...",e1428490-7bd0-4647-847b-8885ad4aaa39,0.0159,"Toutes les mises à jour du dossier doivent être signalées au Vice- recteur aux études et Provost
 avant qu’une décision ne soit prise.
 5.50.6 Au plus tard, le 15 juillet, l’Association recevra de l’Emp...",0.464803,0.464803,0.032787
 test_fr_005,La liberté universitaire protège-t-elle les professeurs dans leur recherche ?,ERROR,llama3.2:3b-instruct-q4_K_M,French,0,False,,,,,,,,,,,,,,,,,,
-test_fr_012,L'APPUL peut-elle déposer un grief de principe ?,"Non, l'APPUL ne peut pas déposer un grief de principe selon l'article 11.10.3 de la Convention collective 2017-2020. Un grief de principe est un grief déposé par un Syndicat et qui concerne une politique générale ou une application générale de la Convention collective, mais l'APPUL n'est pas un Syndicat. Il s'agit d'une organisation professionnelle qui représente les professeurs de l'Université Laurentienne, et non un Syndicat.",llama3.2:3b-instruct-q4_K_M,fr,2,True,c48049c8-23ba-416a-9e01-8ada0b10c847,0.382,"L’amendement des délais prescrits est précisé par écrit.
+test_fr_012,L'APPUL peut-elle déposer un grief de principe ?,"Non, l'APPUL ne peut pas déposer un grief de principe selon l'article 11.10.3 de la Convention collective 2017-2020. Un grief de principe est un grief déposé par un Syndicat et qui concerne une politique générale ou une application générale de la Convention collective, mais l'APPUL n'est pas un Syndicat. Il s'agit d'une organisation professionnelle qui représente les professeurs de l'Université Laurentienne, et non un Syndicat.",llama3.2:3b-instruct-q4_K_M,fr,2,True,488ea658-4f9f-429f-931e-fcb798d8aa03,0.382,"L’amendement des délais prescrits est précisé par écrit.
 11.10.5 Nonobstant l’Article 11.10.2 ci-dessus, un plaignant a recours à la procédure de grief établie ci-dessous si ce
 plaignant est convaincu...",0c51f02c-b3de-4f93-a376-1182a37b4c3f,0.0164,"GRIEF ET ARBITRAGE
 ARTICLE 11.10 – PROCÉDURE DE GRIEF
 11.10.1 Il est convenu que les personnes concernées par ces procédures ne sont exposées à la discrimination, au
-harcèlement ou à la coercition en ...",95d1f457-bb0d-4a8c-93d9-c6418944cc25,0.382,"L’amendement des délais prescrits est précisé par écrit.
+harcèlement ou à la coercition en ...",488ea658-4f9f-429f-931e-fcb798d8aa03,0.382,"L’amendement des délais prescrits est précisé par écrit.
 11.10.5 Nonobstant l’Article 11.10.2 ci-dessus, un plaignant a recours à la procédure de grief établie ci-dessous si ce
-plaignant est convaincu...",00736281-a2da-461d-8d3a-24d3dc53f8fa,0.0161,"GRIEF ET ARBITRAGE
+plaignant est convaincu...",0c51f02c-b3de-4f93-a376-1182a37b4c3f,0.0161,"GRIEF ET ARBITRAGE
 ARTICLE 11.10 – PROCÉDURE DE GRIEF
 11.10.1 Il est convenu que les personnes concernées par ces procédures ne sont exposées à la discrimination, au
-harcèlement ou à la coercition en ...",17c7fd2a-958a-413e-9c31-6d38ef07a663,0.3822,"Pendant le trimestre normal, il doit être libre pour les consultations étudiantes au moins une (1) heure par
+harcèlement ou à la coercition en ...",50df2e3a-5f09-4993-8a3d-181d566dd949,0.3822,"Pendant le trimestre normal, il doit être libre pour les consultations étudiantes au moins une (1) heure par
 semaine pour un cours de trois crédits et préciser les heures de bureau ou de communication...",0.381983,0.381983,0.016393
 test_fr_021,Quels sont les rangs pour les professeurs ?,"Selon l'article 11.02 de la Convention collective 2015-2018 :
 
@@ -3195,13 +3195,13 @@ Toute nomination initiale de professeurs à temps plein se fait à l’un des ra
 3. Professeur adjoint
 4. Chargé de cours
 
-Ces informations sont présentes sur la page 21 de 59 de la Convention collective 2015-2018.",llama3.2:3b-instruct-q4_K_M,fr,1,True,1db9941d-8da8-40ef-8b65-aeb556222a39,0.3651,"11.02 Rangs de nomination
+Ces informations sont présentes sur la page 21 de 59 de la Convention collective 2015-2018.",llama3.2:3b-instruct-q4_K_M,fr,1,True,a600e2e0-c98d-4d4e-9c60-6b7180365e27,0.3651,"11.02 Rangs de nomination
 Toute nomination initiale de professeurs à temps plein se fait à l’un des rangs suivants :
 Professeur titulaire
 Professeur agrégé
 Professeur adjoint
 Chargé de cours
-11.03 Cat...",6978af61-d4c3-4b8a-8e5d-dd42000275a9,0.3651,"11.02 Rangs de nomination
+11.03 Cat...",a600e2e0-c98d-4d4e-9c60-6b7180365e27,0.3651,"11.02 Rangs de nomination
 Toute nomination initiale de professeurs à temps plein se fait à l’un des rangs suivants :
 Professeur titulaire
 Professeur agrégé
@@ -3213,59 +3213,59 @@ Professeur titulaire
 Professeur agrégé
 Professeur adjoint
 Chargé de cours
-11.03 Cat...",a0e3ebc0-db57-4d4c-85dd-033f4b9d05ad,0.3511,"11.02 Rangs de nomination
+11.03 Cat...",a600e2e0-c98d-4d4e-9c60-6b7180365e27,0.3511,"11.02 Rangs de nomination
 Toute nomination initiale de professeurs à temps plein se fait à l’un des rangs suivants :
 Professeur titulaire
 Professeur agrégé
 Professeur adjoint
 Chargé de cours
-11.03 Cat...",b7fe53b9-79fd-42b6-8d3f-faa90b438f18,0.3799,"11.04 Critères de détermination du rang
+11.03 Cat...",400a05e3-2b6a-44b0-b4d3-0455af004acf,0.3799,"11.04 Critères de détermination du rang
 Les critères suivants servent de lignes directrices générales lorsqu'on considère les exigences minimales concernant les
 qualifications des membres dans l’attri...",0.365101,0.365101,0.032266
 test_fr_029,Des évaluateurs externes sont-ils requis pour les promotions ?,"Oui, des évaluateurs externes sont requis pour les promotions. Conformément à l'article 5.65.9 de la Convention collective 2008-11, le CCPF/CCPLF/CBAP examine l'appréciation des travaux d'érudition du Membre par quatre (4) évaluateurs externes.",llama3.2:3b-instruct-q4_K_M,fr,2,True,4dd90777-1512-482d-aadb-6b51bcf9b0c2,0.3512,"8.04 Évaluation – renouvellement des nominations à l’essai, des promotions et de la permanence
 11 de 59
 <<>>
 Convention collective 2015-2018
-Lorsque le rendement d’un membre est évalué, tous les membr...",832163b8-0b61-4bae-afd9-505b65d558b8,0.3512,"8.04 Évaluation – renouvellement des nominations à l’essai, des promotions et de la permanence
+Lorsque le rendement d’un membre est évalué, tous les membr...",4dd90777-1512-482d-aadb-6b51bcf9b0c2,0.3512,"8.04 Évaluation – renouvellement des nominations à l’essai, des promotions et de la permanence
 11 de 59
 <<>>
 Convention collective 2015-2018
-Lorsque le rendement d’un membre est évalué, tous les membr...",9ef2bced-d80d-4558-a328-0d97d10ff4bd,0.3512,"Contributions exceptionnelles dans un domaine pour contrebalancer un rendement moindre dans un autre domaine. a)
+Lorsque le rendement d’un membre est évalué, tous les membr...",2955887e-7f68-4b53-90d8-2b3f2588d031,0.3512,"Contributions exceptionnelles dans un domaine pour contrebalancer un rendement moindre dans un autre domaine. a)
 Enseignement (Articles 5.50.4 et 5.10.2 (c) (v)) b) Participation à la régie et à l’adm...",92a32891-645c-4a74-947e-d738253b8440,0.0164,"Deux (2) d'entre eux seront retenus.
 (ii) Un exemplaire des travaux de recherche et de création que le candidat désire soumettre à l'appréciation en rapport
-avec l'examen de sa demande, étant entendu ...",acd00d9d-a830-4b8d-b630-4d3bb688e49b,0.3512,"Contributions exceptionnelles dans un domaine pour contrebalancer un rendement moindre dans un autre domaine. a)
+avec l'examen de sa demande, étant entendu ...",2955887e-7f68-4b53-90d8-2b3f2588d031,0.3512,"Contributions exceptionnelles dans un domaine pour contrebalancer un rendement moindre dans un autre domaine. a)
 Enseignement (Articles 5.50.4 et 5.10.2 (c) (v)) b) Participation à la régie et à l’adm...",0.351177,0.351177,0.029877
 test_fr_030,Qu'est-ce qu'une nomination bipartite ?,"Je n'ai trouvé aucune information dans les documents fournis sur la Convention collective 2011-14 et les conventions collective 2017-2020, qui pourrait définir ce qu'est une nomination bipartite.",llama3.2:3b-instruct-q4_K_M,fr,2,True,13d443ae-42b5-4a1e-9000-a911bdb7471f,0.3697,"Le poids de ces recommandations est à peu près proportionnel aux obligations du membre dans chaque unité ou
 programme.
 55 de 243
 <<>>
 Convention collective 2011-14
-(d) Les annonces de tous les postes ...",8b545de2-f5fa-4b6d-8843-11399d9e5697,0.3697,"Le poids de ces recommandations est à peu près proportionnel aux obligations du membre dans chaque unité ou
+(d) Les annonces de tous les postes ...",13d443ae-42b5-4a1e-9000-a911bdb7471f,0.3697,"Le poids de ces recommandations est à peu près proportionnel aux obligations du membre dans chaque unité ou
 programme.
 55 de 243
 <<>>
 Convention collective 2011-14
-(d) Les annonces de tous les postes ...",94015a25-e218-42a2-9080-14a6b23ab9ba,0.382,"11.09 et 11,10, la nomination à temps partiel est d’abord offerte à celui qui possède le plus d’années de service et, en cas
+(d) Les annonces de tous les postes ...",7c8e2cfa-ba64-438f-8909-e06a3ec1f7a8,0.382,"11.09 et 11,10, la nomination à temps partiel est d’abord offerte à celui qui possède le plus d’années de service et, en cas
 d'égalité, à celui qui possède le plus de crédits.
-Lorsqu'il n’existe aucun...",0f4dd1b6-71a2-4ee7-9691-81b9172e9b65,0.0164,"Toutes les mises à jour du dossier doivent être signalées au Vice- recteur aux études et Provost
+Lorsqu'il n’existe aucun...",e1428490-7bd0-4647-847b-8885ad4aaa39,0.0164,"Toutes les mises à jour du dossier doivent être signalées au Vice- recteur aux études et Provost
 avant qu’une décision ne soit prise.
-5.50.6 Au plus tard, le 15 juillet, l’Association recevra de l’Emp...",30a91fc5-955c-4a81-a6b3-f993334b6aca,0.382,"11.09 et 11,10, la nomination à temps partiel est d’abord offerte à celui qui possède le plus d’années de service et, en cas
+5.50.6 Au plus tard, le 15 juillet, l’Association recevra de l’Emp...",7c8e2cfa-ba64-438f-8909-e06a3ec1f7a8,0.382,"11.09 et 11,10, la nomination à temps partiel est d’abord offerte à celui qui possède le plus d’années de service et, en cas
 d'égalité, à celui qui possède le plus de crédits.
 Lorsqu'il n’existe aucun...",0.369703,0.369703,0.02901
 test_fr_033,Quelle est la charge normale d'enseignement pour un professeur menant à la permanence ?,ERROR,llama3.2:3b-instruct-q4_K_M,French,0,False,,,,,,,,,,,,,,,,,,
 test_fr_038,Que se passe-t-il si un cours est annulé pour manque d'étudiants ?,"Si un cours est annulé pour manque d'étudiants, le Membre à temps partiel qui avait été confié ce cours sera attribué un autre cours pour lequel il est qualifié au cours de la même Année universitaire, sous réserve que ce cours soit prévu à l'horaire et qu'il n'ait pas été attribué à un autre Membre.",llama3.2:3b-instruct-q4_K_M,fr,2,True,b0310b56-ac72-460a-b43e-5bf35f1a1e71,0.3528,"11.24 Contrats à temps partiel et résiliations de contrats
 (a) Après consultation avec le Directeur du
 Département, le Recteur peut annuler un cours confié à un professeur à temps partiel. Avant
-29 de...",87f6d3bc-2621-48f1-b059-3e53ea5bbaa6,0.3528,"11.24 Contrats à temps partiel et résiliations de contrats
+29 de...",b0310b56-ac72-460a-b43e-5bf35f1a1e71,0.3528,"11.24 Contrats à temps partiel et résiliations de contrats
 (a) Après consultation avec le Directeur du
 Département, le Recteur peut annuler un cours confié à un professeur à temps partiel. Avant
 29 de...",d9592026-721d-4564-be24-783d49638e95,0.3706,"11.25 Annulation de contrats
 (a) Après consultation avec le Directeur du
 Département, le Recteur peut annuler un cours confié à un Membre à temps partiel. Avant l'annulation, le Recteur tient
-compte d...",48a92e74-93e7-47a8-80d7-9c3ed7aece7d,0.0164,"Toutefois, des modifications aux
+compte d...",0a6cca0b-5aa2-41bb-937c-5690465ab42a,0.0164,"Toutefois, des modifications aux
 cours qui sont motivées par les exigences du programme et le faible nombre
 d’inscriptions sont permises dans les 30 jours suivant le début du trimestre pendant
-lequel ...",58363838-51d4-4c2b-99f6-7c1145291f6b,0.3706,"11.25 Annulation de contrats
+lequel ...",d9592026-721d-4564-be24-783d49638e95,0.3706,"11.25 Annulation de contrats
 (a) Après consultation avec le Directeur du
 Département, le Recteur peut annuler un cours confié à un Membre à temps partiel. Avant l'annulation, le Recteur tient
 compte d...",0.352758,0.352758,0.032002
@@ -3275,13 +3275,13 @@ qualité qui correspond à la contribution au savoir décrite à l’Article 5.1
 79 de 246
 <<>>
 Convention collective 2008-11 s’appliquent :
-(i) Pour les cours enseignés successivement par deux (2...",31209bff-36a6-43a8-ad6b-9009c6411567,0.3727,"Dans chaque cas, le Membre doit faire preuve d’un travail de bonne
+(i) Pour les cours enseignés successivement par deux (2...",866e77ea-6c60-46e7-b308-85e1d1a31839,0.3727,"Dans chaque cas, le Membre doit faire preuve d’un travail de bonne
 qualité qui correspond à la contribution au savoir décrite à l’Article 5.15.20 ci-dessus.
-(a) La rédaction ou la direction et la publ...",614dc049-6ecf-4e0f-9f94-6fe9341add62,0.0161,"Dans le cas des cours enseignés avec un autre professeur, les dispositions suivantes
+(a) La rédaction ou la direction et la publ...",3611b0aa-d35c-4777-800a-0909c4d09311,0.0161,"Dans le cas des cours enseignés avec un autre professeur, les dispositions suivantes
 79 de 246
 <<>>
 Convention collective 2008-11 s’appliquent :
-(i) Pour les cours enseignés successivement par deux (2...",9d5dae29-a195-45a6-a6be-c8c4bea85faa,0.3598,"Dans chaque cas, le Membre doit faire preuve d’un travail de bonne qualité qui
+(i) Pour les cours enseignés successivement par deux (2...",866e77ea-6c60-46e7-b308-85e1d1a31839,0.3598,"Dans chaque cas, le Membre doit faire preuve d’un travail de bonne qualité qui
 correspond à la contribution au savoir décrite à l’Article
 5.15.20 ci-dessus.
 (a) La rédaction ou la direction et la publ...",0.377421,0.377421,0.016393
@@ -3294,29 +3294,29 @@ nine hundred dollars ($2,900).
 (c) Additional qualification increments shall be awarded pursuant to Article 8.30 –
 Addition...",fb934b8c-9eaa-4f3f-90e8-9405b170c57d,0.0161,"Tous les jours de perfectionnement professionnel doivent, dans la
 mesure du possible, être demandés sept (7) jours à l'avance et seront accordés sous réserve des exigences
-opérationnelles. Les demande...",8a94c04a-1ff0-4fe1-8ced-96cc5625c2c5,0.2889,"For all ranks, where a Member’s salary exceeds
+opérationnelles. Les demande...",0c2edb8b-73fa-488e-9929-f9da2b01daf6,0.2889,"For all ranks, where a Member’s salary exceeds
 $173,328 per annum, the PTR will be nil.
 (c) Additional qualification increments shall be awarded pursuant to Article 8.30 – Additional
-Qualifications In...",5fbb92d8-4e89-46ed-ab03-76a8f6bebd3f,0.0159,"Il est obligatoire de cotiser au régime d’indemnité pour invalidité à long terme,
+Qualifications In...",a7e33961-99fc-4669-b1b1-7fe5031366a7,0.0159,"Il est obligatoire de cotiser au régime d’indemnité pour invalidité à long terme,
 qui procure des indemnités après les six (6) premiers mois d‘invalidité complète ininterrompue.
 14. ASSURANCE VIE, Y C...",0.297847,0.297847,0.032787
-test_fr_061,Quelle est la rémunération pendant un congé sabbatique de 12 mois ?,"Selon l'article 12.09 de la Convention collective 2015-2018, un membre qui prend un congé sabbatique de 12 mois reçoit une rémunération équivalant à 85 % de son traitement normal.",llama3.2:3b-instruct-q4_K_M,fr,3,True,7b2c6817-72ea-4a3e-8b60-0a109add7ed1,0.5253,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
-traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",e32344d9-1ea8-4a1e-a507-0d721131d5d7,0.5253,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
+test_fr_061,Quelle est la rémunération pendant un congé sabbatique de 12 mois ?,"Selon l'article 12.09 de la Convention collective 2015-2018, un membre qui prend un congé sabbatique de 12 mois reçoit une rémunération équivalant à 85 % de son traitement normal.",llama3.2:3b-instruct-q4_K_M,fr,3,True,f25b8f2c-44a7-4a03-8d25-f93a4b6d1162,0.5253,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
+traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",91b559f8-d06f-4b46-ab8f-556d8d3de150,0.5253,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
 traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",91b559f8-d06f-4b46-ab8f-556d8d3de150,0.5352,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
-traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",d6a64b47-642d-43ef-a694-1d67046f467e,0.5352,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
-traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",c8e28c4f-24aa-43a3-a3d2-e5db5da87f79,0.5543,"12.09 Un membre qui prend un congé sabbatique de 12 mois reçoit une rémunération équivalant à 85 % de son
+traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",91b559f8-d06f-4b46-ab8f-556d8d3de150,0.5352,"12.10 Un membre qui prend un congé sabbatique d’une demi- année reçoit une rémunération équivalant à 85 % de son
+traitement normal. L’Employeur peut exiger qu’un congé sabbatique d’une demi-année soit...",f25b8f2c-44a7-4a03-8d25-f93a4b6d1162,0.5543,"12.09 Un membre qui prend un congé sabbatique de 12 mois reçoit une rémunération équivalant à 85 % de son
 traitement normal. Un membre ayant été six années consécutives réelles à l'emploi de l’Univers...",0.525343,0.525343,0.031778
-test_fr_065,Le congé parental est-il prévu dans l'entente ?,"Oui, le congé parental est prévu dans l'entente. L'article 14.05 de la Convention collective 2008-11 précise que tout membre qui est le parent et qui a choisi de prendre un congé parental en vertu de la Loi sur l'assurance-emploi et de toute autre loi applicable aura droit à un congé parental d'une durée maximale de trente-cinq (35) semaines.",llama3.2:3b-instruct-q4_K_M,fr,1,True,0d499da7-f98c-4a5d-92b7-f6cfec813829,0.363,"Lorsque le Membre décide de différer ces décisions, il
+test_fr_065,Le congé parental est-il prévu dans l'entente ?,"Oui, le congé parental est prévu dans l'entente. L'article 14.05 de la Convention collective 2008-11 précise que tout membre qui est le parent et qui a choisi de prendre un congé parental en vertu de la Loi sur l'assurance-emploi et de toute autre loi applicable aura droit à un congé parental d'une durée maximale de trente-cinq (35) semaines.",llama3.2:3b-instruct-q4_K_M,fr,1,True,1c9920d8-4c25-462a-93f3-002f55996ac8,0.363,"Lorsque le Membre décide de différer ces décisions, il
 informe par écrit le Doyen/Bibliothécaire en chef de sa décision.
-(f) Les Parties conviennent que les dispositions du présent Article sont proche...",9dbc45d1-1c05-4997-9825-8e4da86f6768,0.3724,"Lorsque le
+(f) Les Parties conviennent que les dispositions du présent Article sont proche...",1c9920d8-4c25-462a-93f3-002f55996ac8,0.3724,"Lorsque le
 Membre décide de différer ces décisions, il informe par écrit le
 Doyen/Bibliothécaire en chef de sa décision.
-(f) Les Parties conviennent que les dispositions du présent Article sont proche...",ea1d3941-d6fd-44ec-a2d6-35528ee90f38,0.3724,"Lorsque le
+(f) Les Parties conviennent que les dispositions du présent Article sont proche...",1c9920d8-4c25-462a-93f3-002f55996ac8,0.3724,"Lorsque le
 Membre décide de différer ces décisions, il informe par écrit le
 Doyen/Bibliothécaire en chef de sa décision.
 (f) Les Parties conviennent que les dispositions du présent Article sont proche...",0d86f548-3dbd-4f53-a80d-4e4923b8a5f4,0.3974,"14.05 Congé parental
 À l’occasion de la naissance d’un enfant, tout membre qui est le parent et qui a choisi de prendre un congé parental en
-vertu de la Loi sur l’assurance-emploi et de toute autre lo...",bd3b20d3-e295-48be-a7e6-3c06370e6daa,0.0164,"AUTRES CONDITIONS. a) Sans limiter le caractère général de ce qui précède, la présente nomination à l’essai se
+vertu de la Loi sur l’assurance-emploi et de toute autre lo...",a7e33961-99fc-4669-b1b1-7fe5031366a7,0.0164,"AUTRES CONDITIONS. a) Sans limiter le caractère général de ce qui précède, la présente nomination à l’essai se
 termine automatiquement si vous n’obtenez pas de nomination comportant la permanence. L’U...",0.363018,0.363018,0.031025
 test_fr_096,Les professeurs à temps partiel ou chargés de cours font-ils partie de la même unité ?,ERROR,llama3.2:3b-instruct-q4_K_M,French,0,False,,,,,,,,,,,,,,,,,,
 test_en_077,Who defines the curriculum for a degree program?,"The Chair/Director of a Department/School defines the curriculum for a degree program, in consultation with other appropriate University bodies and officers, including the Office of the Registrar and the Centre for Continuing Education.",llama3.2:3b-instruct-q4_K_M,en,2,True,61e470ca-8d46-4082-b958-76bd245c03be,0.4424,"Hereinafter, this title shall
@@ -3334,7 +3334,7 @@ Dean/University Libra...",8b625bbd-33ac-4342-a449-b83f548313dd,0.4241,"They serv
 Departments/Schools in administrative matters, as well as the official spokesperson of their
 Departments/Schools and they report to the
 Dean/University Libra...",0.442379,0.442379,0.032266
-test_en_080,What is a tripartite appointment?,I'm unable to provide an answer to your question based on the provided context.,llama3.2:3b-instruct-q4_K_M,en,1,True,8672b8bb-fbf1-483b-8a28-af28cb93f3bb,0.3896,"Each month at Senate, the Vice-President, Academic and Provost shall table as a
+test_en_080,What is a tripartite appointment?,I'm unable to provide an answer to your question based on the provided context.,llama3.2:3b-instruct-q4_K_M,en,1,True,e2ff997f-3679-455f-aed8-31d8c70bb227,0.3896,"Each month at Senate, the Vice-President, Academic and Provost shall table as a
 separate Information item a list of any newly appointed Adjunct faculty Members including their names,
 Department/School...",afa63931-280b-40f6-839b-f8f30a9e93d8,0.0164,"Termination of The parties agree that the one counsellor listed in confidential
 Counsellor Schedule “B” to this term sheet shall be terminated (the
@@ -3359,15 +3359,6 @@ demande selon les critères établis aux Articles 7.25.1 et
 Doyen/Bibliothécaire en chef, le Vice- recteur ...",bee60054-a44f-45d7-acf2-1d409f6bc3b7,0.3898,"Un candidat dont la demande est acceptée peut annuler son congé en avisant le
 Recteur par écrit au plus tard le 31 janvier.
 13.09 Il est convenu qu’un membre retourne à l’Université pour une période é...",0.440912,0.440912,0.016393
-test_fr_019,Les plaintes anonymes peuvent-elles être ajoutées au dossier personnel ?,"Non, les documents anonymes ne peuvent pas être ajoutés au dossier personnel. En effet, l'article 5.70.4 de la Convention collective précise que l'Employeur ne peut retenir pour inclusion dans le dossier d'un Membre, aucun document anonyme concernant ce dernier.",llama3.2:3b-instruct-q4_K_M,fr,3,False,0004f329-d59d-4ad9-95f2-5d86d364c73e,0.3653,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures subséquentes telles que
-celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",a30f66ec-b4d3-48ba-92e1-19effb881cf3,0.3653,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures subséquentes telles que
-celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",a070ebaf-d448-4911-b10e-ee671e89665b,0.3673,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures
-subséquentes telles que celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",89faa4bd-d501-4234-be3a-504d4c2eea89,0.3673,"Les dossiers d'archives renferment des données dont l'emploi a été interdit dans des procédures
-subséquentes telles que celles mentionnées aux clauses 5.70.5 à 5.70.9 ci-dessous du présent article mai...",5d1f8760-47d4-4a1b-adf0-14e621901587,0.4033,"21.03 Les membres ont le droit de faire corriger ou compléter leur dossier en cas d’erreur ou de lacune. Les membres ont
-le droit de faire ajouter d’autres pièces à leur dossier.
-46 de 66
-<<>>
-Convent...",0.365323,0.365323,0.029877
 test_fr_023,Quelle est la durée de la période d'essai pour un professeur adjoint ?,"La durée de la période d'essai pour un professeur adjoint est de 5 ans, en fonction du rang auquel il est nommé.",llama3.2:3b-instruct-q4_K_M,fr,2,True,d1c65e95-c69a-40a1-8381-957fd073b934,0.3906,"Les limites (de trois (3) et
 cinq (5) ans) s’appliquent, qu’il s’agisse ou non de nominations qui se succèdent avec ou sans interruption.
 5.20.16 Le non-renouvellement d’une nomination à durée limitée...",d1c65e95-c69a-40a1-8381-957fd073b934,0.3879,"Les limites (de trois (3) et
@@ -3378,16 +3369,6 @@ pendant lesquels l'Emplo...",d1c65e95-c69a-40a1-8381-957fd073b934,0.3994,"Nomina
 5.20.17 Les nominations à l'essai sont définies de la façon suivante : nominations ayant une durée de cinq (5) ans au plus
 pendant lesquels l'Emplo...",90210290-a623-4871-bfde-166892961602,0.4048,"Traitement initial de XXX par an, basé sur l’équivalent de XXX années d’expérience universitaire,
 de XXX années d’autre expérience pertinente à votre discipline, ainsi que d’autres facteurs affectant ...",0.39063,0.39063,0.031099
-test_fr_031,Qu'est-ce qu'une nomination tripartite ?,"Je n'ai trouvé aucune information sur une ""nomination tripartite"" dans le contexte de la Convention collective de l'Association des professeures et des professeurs de l'Université Laurentienne. Cependant, je peux vous suggérer de consulter le document original ou de demander plus d'informations pour obtenir une réponse précise.",llama3.2:3b-instruct-q4_K_M,fr,3,False,a1e9a27b-7b86-4495-ab59-1c5d4d0d5553,0.3634,"11.23 Chaque offre de nomination précise le nombre de cours, le nombre de crédits, les conditions d’emploi incluant le
-traitement, et renvoie la personne à la Convention collective pour les avantages ...",a7e33961-99fc-4669-b1b1-7fe5031366a7,0.0164,"Vous recevrez une subvention de démarrage de XXX pour la recherche/les
-activités créatrices. Ce financement est à utiliser en respectant les règlements de l’Université en matière de subvention de
-déma...",a1e9a27b-7b86-4495-ab59-1c5d4d0d5553,0.3634,"11.23 Chaque offre de nomination précise le nombre de cours, le nombre de crédits, les conditions d’emploi incluant le
-traitement, et renvoie la personne à la Convention collective pour les avantages ...",a7e33961-99fc-4669-b1b1-7fe5031366a7,0.0161,"Vous recevrez une subvention de démarrage de XXX pour la recherche/les
-activités créatrices. Ce financement est à utiliser en respectant les règlements de l’Université en matière de subvention de
-déma...",295ff73f-d519-452e-ad58-b412b6a23d03,0.3815,"11.05 Critères de détermination de la catégorie
-Les critères suivants sont des directives générales à utiliser lorsqu’on considère les membres en vue de la catégorie
-indiquée.
-(a) Nomination à durée l...",0.363393,0.363393,0.016393
 test_fr_057,Les frais de scolarité des enfants des membres sont-ils couverts ?,"Non, les frais de scolarité internationaux ne seront couverts qu'au taux des droits de scolarité pour étudiants canadiens. Le solde restant est de la responsabilité de l'étudiant.",llama3.2:3b-instruct-q4_K_M,fr,2,True,cf042214-92b2-4d3d-b082-67d7128312fe,0.3921,"ARTICLE 8.50 – EXEMPTION DES DROITS DE
 SCOLARITÉ ET CARTE DE BIBLIOTHÈQUE POUR LE
 CONJOINT
@@ -3414,3 +3395,28 @@ et qui sont affectés par les décisions prises dans des campus autres que celui
 l'Université dans une période d'un (1) mois après avoir reçu cette demande, ou s'il n'est plus ...",67b72ee1-71f1-42c0-bd70-7c5a6b4aa4ae,0.0161,"En cas de fermeture d’une unité d’enseignement ou d’un programme, les Membres ayant des contrats menant à la permanence,
 et qui sont affectés par les décisions prises dans des campus autres que celui ...",537e66bb-f3d9-4b0d-8e48-247f1f1c7de2,0.2908,"Si l'auteur décide de ne pas entreprendre la révision, ou s'il n'a pas accepté la demande de révision de
 l'Université dans une période d'un (1) mois après avoir reçu cette demande, ou s'il n'est plus ...",0.294866,0.294866,0.016393
+test_fr_019,Les plaintes anonymes peuvent-elles être ajoutées au dossier personnel ?,"Non, selon l'article 5.70.4 de la convention collective, ""No anonymous material concerning any Member shall be kept by the Employer for inclusion in the Member's personnel file.""",llama3.2:3b-instruct-q4_K_M,fr,3,False,8d1d21eb-fb69-45a7-b991-20290cd53291,0.3586,"The Employer agrees not to use any unofficial personnel information that is not
+maintained in accordance with this Article for any official purposes including disciplinary measures. There
+shall be two...",88e69718-81b0-468c-9d6c-9cef0086a436,0.0164,"ARTICLE 7.20 – ABSENCES - GÉNÉRALITÉS
+7.20.1 L'Université, en tant que communauté de savants, doit compter sur la disponibilité de ses Membres sur une
+base régulière et continue pour que toutes les ac...",8d1d21eb-fb69-45a7-b991-20290cd53291,0.3536,"The Employer agrees not to use any unofficial personnel information that is not
+maintained in accordance with this Article for any official purposes including disciplinary measures. There
+shall be two...",88e69718-81b0-468c-9d6c-9cef0086a436,0.0161,"ARTICLE 7.20 – ABSENCES - GÉNÉRALITÉS
+7.20.1 L'Université, en tant que communauté de savants, doit compter sur la disponibilité de ses Membres sur une
+base régulière et continue pour que toutes les ac...",8c57fb48-3748-4c11-b712-1fc6e73ba3e3,0.3476,"The complaint shall be in writing (""the Complaint’), providing the particulars of the
+alleged harassment or discrimination including the name of the individuals(s)
+complained about, the time, place, a...",0.358644,0.358644,0.016393
+test_fr_031,Qu'est-ce qu'une nomination tripartite ?,"Je suis désolé, mais je n'ai pas trouvé d'information sur le sujet ""nomination tripartite"" dans le texte fourni. Cependant, en fonction du contexte de la Convention collective 2011-14, il est possible que la question se réfère au Comité consultatif paritaire sur l'exécution de la Convention collective, composé de trois représentants de chaque partie, dont un représentant du Syndicat, un représentant de l'Employeur et un représentant du Syndicat nommé par le Vice-recteur aux études et provost.
+
+Dans ce cas, une nomination tripartite pourrait désigner le processus par lequel ces trois représentants sont nommés pour assurer la représentation équilibrée et la coopération entre les parties. Il est possible que les Parties aient convenu de ce processus dans le cadre de la Convention collective.",llama3.2:3b-instruct-q4_K_M,fr,3,False,fefe3358-2cfd-4575-ad5f-e81b7e34d16e,0.3714,"ARTICLE 1.35 – COPIES
+1.35.1 L’Employeur s’engage à fournir gratuitement à chaque Membre du Syndicat, dans les trente (30) jours qui suivent
+l’approbation de la traduction de la
+Convention collective ...",fefe3358-2cfd-4575-ad5f-e81b7e34d16e,0.3714,"ARTICLE 1.35 – COPIES
+1.35.1 L’Employeur s’engage à fournir gratuitement à chaque Membre du Syndicat, dans les trente (30) jours qui suivent
+l’approbation de la traduction de la
+Convention collective ...",950f8b1b-cfb0-4f82-8ae7-a345f99885b1,0.3696,"12.10.1 Il est convenu que les personnes concernées par ces procédures ne sont exposées à la discrimination, au
+harcèlement ou à la coercition en aucune façon.
+12.10.2 Le Syndicat et l’Employeur convi...",34164ed8-efbe-4500-867b-429b76ce370b,0.0164,"La date d'entrée en vigueur de cette combinaison des unités de négociation sera (1) celle à laquelle les
+Parties deviennent liées par une Convention collective couvrant l'actuelle unité de négociation...",950f8b1b-cfb0-4f82-8ae7-a345f99885b1,0.3693,"12.10.1 Il est convenu que les personnes concernées par ces procédures ne sont exposées à la discrimination, au
+harcèlement ou à la coercition en aucune façon.
+12.10.2 Le Syndicat et l’Employeur convi...",0.371446,0.371446,0.028169
