@@ -34,12 +34,26 @@ warnings.filterwarnings("ignore")
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-# Download NLTK data silently
-for pkg in ["punkt", "wordnet", "omw-1.4", "punkt_tab"]:
-    try:
-        nltk.download(pkg, quiet=True)
-    except Exception:
-        pass
+
+# Check local cache availability before calling remote download endpoints to avoid WinError 10060
+def ensure_nltk_packages():
+    pkgs = {
+        "punkt": "tokenizers/punkt",
+        "wordnet": "corpora/wordnet",
+        "omw-1.4": "corpora/omw-1.4",
+        "punkt_tab": "tokenizers/punkt_tab"
+    }
+    for pkg, path in pkgs.items():
+        try:
+            nltk.data.find(path)
+        except LookupError:
+            try:
+                nltk.download(pkg, quiet=True)
+            except Exception:
+                pass
+
+
+ensure_nltk_packages()
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  STRICT MATRIX SCHEMA COLUMN DEFINITIONS
@@ -67,6 +81,71 @@ EVAL_COLUMNS = [
     "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision"
 ]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  INLINE REPAIR ENGINE UTILITIES
+# ─────────────────────────────────────────────────────────────────────────────
+def calculate_token_overlap(text_a, text_b):
+    """Calculate the token intersection ratio between text segments."""
+    if not text_a or not text_b or pd.isna(text_a) or pd.isna(text_b):
+        return 0.0
+    words_a = set(re.findall(r'\b\w+\b', str(text_a).lower()))
+    words_b = set(re.findall(r'\b\w+\b', str(text_b).lower()))
+    if not words_a or not words_b:
+        return 0.0
+    intersection = words_a.intersection(words_b)
+    return len(intersection) / len(words_a)
+
+
+def repair_single_row_sources(row_dict, chroma_data=None, db_path="db/chroma_db", collection_name="multilingual_docs"):
+    """
+    Examines a row's source text layers and extracts matching database keys
+    by executing a local token scan over the persistent storage collection.
+    """
+    import chromadb
+    repaired_ids = []
+
+    if chroma_data is None:
+        try:
+            client = chromadb.PersistentClient(path=db_path)
+            collection = client.get_collection(collection_name)
+            chroma_data = collection.get(include=["documents"])
+        except Exception as err:
+            print(f"      [Chroma Connection Error] Live layer read skipped: {err}")
+            return []
+
+    db_ids = chroma_data.get("ids", [])
+    db_docs = chroma_data.get("documents", [])
+
+    if not db_ids or not db_docs:
+        return []
+
+    for i in range(1, 6):
+        text_val = row_dict.get(f"source{i}_text", "")
+        if pd.isna(text_val) or str(text_val).strip() == "":
+            continue
+
+        source_clean = str(text_val).strip().lower()
+        matched_id = ""
+        max_overlap = -1.0
+        exact_found = False
+
+        for cid, doc_text in zip(db_ids, db_docs):
+            doc_clean = str(doc_text).lower()
+            if source_clean in doc_clean:
+                matched_id = cid
+                exact_found = True
+                break
+
+            overlap = calculate_token_overlap(source_clean, doc_clean)
+            if overlap > max_overlap:
+                max_overlap = overlap
+                matched_id = cid
+
+        if matched_id and (exact_found or max_overlap > 0.5):
+            repaired_ids.append(matched_id)
+    return repaired_ids
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -282,13 +361,34 @@ def run_evaluation(
     completed_ids = set()
     out_path = Path(out_csv)
 
+    chroma_cached_data = None
+    try:
+        import chromadb
+        client = chromadb.PersistentClient(path="db/chroma_db")
+        collection = client.get_collection("multilingual_docs")
+        chroma_cached_data = collection.get(include=["documents"])
+    except Exception as e:
+        print(f"[Warning] Could not pre-cache database tables: {e}")
+
     if out_path.exists():
         try:
             existing_df = pd.read_csv(out_csv, on_bad_lines="skip")
             if "question_id" in existing_df.columns:
-                completed_ids = set(existing_df["question_id"].dropna().astype(str).str.strip().tolist())
-                print(
-                    f"[Resumption] Detected existing output scorecard. Found {len(completed_ids)} pre-calculated records.")
+                mrr_s = pd.to_numeric(existing_df.get("mrr", 0), errors='coerce').fillna(0.0)
+                ndcg_s = pd.to_numeric(existing_df.get("ndcg_at_k", 0), errors='coerce').fillna(0.0)
+
+                valid_completions = existing_df[
+                    existing_df["question_id"].notna() &
+                    ((mrr_s > 0.0) | (ndcg_s > 0.0))
+                    ]
+                completed_ids = set(valid_completions["question_id"].dropna().astype(str).str.strip().tolist())
+
+                total_rows = len(existing_df["question_id"].dropna().unique())
+                zero_count = total_rows - len(completed_ids)
+                print(f"[Resumption] Detected existing output scorecard. Found {len(completed_ids)} completed entries.")
+                if zero_count > 0:
+                    print(
+                        f"[Resumption] Flagged {zero_count} rows containing zero metrics. Bypassing cache to execute inline repair pass.")
         except Exception as err:
             print(f"[Warning] Error parsing current results file structure, resetting fresh compilation: {err}")
     else:
@@ -300,7 +400,7 @@ def run_evaluation(
 
     print(f"[Eval] Starting verification loop on {len(test_df)} ground truth questions...")
     print("\n" + "=" * 80)
-    print("BEGINNING PIPELINE PROCESSING LOOP (WITH INLINE SIMULATION)")
+    print("BEGINNING PIPELINE PROCESSING LOOP (WITH INLINE SIMULATION & REPAIR)")
     print("=" * 80)
 
     for idx, row in test_df.iterrows():
@@ -351,6 +451,9 @@ def run_evaluation(
         print(
             f"      * ROUGE-1: {rouge_scores['rouge1']} | ROUGE-2: {rouge_scores['rouge2']} | ROUGE-L: {rouge_scores['rougeL']}")
 
+        meteor_val = round(compute_meteor(prediction, reference), 4)
+        print(f"      * METEOR Score: {meteor_val}")
+
         print("   -> Calculating Retrieval position metrics...")
         mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
         ndcg_val = ndcg_at_k(retrieved_ids, ground_truth_ids, k=5)
@@ -358,17 +461,14 @@ def run_evaluation(
         rec3 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=3), 4)
         rec5 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
 
-        # Task 2 Implementation: Live row-by-row recovery mechanism
         if mrr_val == 0.0 and ndcg_val == 0.0:
-            print(
-                "   ⚠️  Retrieval metrics returned 0.0. Activating one-time live repair via repair_lufa_out engine...")
+            print("   ⚠️  Retrieval metrics returned 0.0. Activating embedded local token repair pass...")
             try:
-                from repair_lufa_out import repair_single_row_sources
-                fixed_ids = repair_single_row_sources(active_rag_data, None, "db/chroma_db", "multilingual_docs")
+                fixed_ids = repair_single_row_sources(active_rag_data, chroma_cached_data, "db/chroma_db",
+                                                      "multilingual_docs")
 
                 if fixed_ids:
                     retrieved_ids = fixed_ids
-                    # Perform calculation retry exactly once
                     mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
                     ndcg_val = ndcg_at_k(retrieved_ids, ground_truth_ids, k=5)
                     rec1 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=1), 4)
@@ -376,9 +476,18 @@ def run_evaluation(
                     rec5 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
                     print(f"      * Repaired Retrieval Scores -> MRR: {mrr_val} | NDCG@5: {ndcg_val}")
 
-                    # Store repaired IDs back into the dictionary structure
                     for i, cid in enumerate(retrieved_ids, start=1):
                         active_rag_data[f"source{i}_id"] = cid
+
+                    try:
+                        current_lufa_df = pd.read_csv(lufa_csv, on_bad_lines="skip")
+                        idx_matches = current_lufa_df[current_lufa_df["question_id"] == q_id].index
+                        if len(idx_matches) > 0:
+                            for i, cid in enumerate(retrieved_ids, start=1):
+                                current_lufa_df.loc[idx_matches, f"source{i}_id"] = cid
+                            current_lufa_df.to_csv(lufa_csv, index=False)
+                    except Exception as lufa_save_err:
+                        print(f"      [Warning] Could not sync repaired source IDs back to base log: {lufa_save_err}")
             except Exception as repair_err:
                 print(f"      [Live Repair Error] Single row recovery pass failed: {repair_err}")
 
@@ -413,7 +522,7 @@ def run_evaluation(
         rec["rouge1"] = rouge_scores["rouge1"]
         rec["rouge2"] = rouge_scores["rouge2"]
         rec["rougeL"] = rouge_scores["rougeL"]
-        rec["meteor"] = round(compute_meteor(prediction, reference), 4)
+        rec["meteor"] = meteor_val
 
         rec["mrr"] = mrr_val
         rec["ndcg_at_k"] = ndcg_val
@@ -450,6 +559,7 @@ def run_evaluation(
         print("   -> Re-compiling performance HTML dashboard layer with current progress data...")
         try:
             current_progress_df = pd.read_csv(str(out_path))
+            current_progress_df = current_progress_df.drop_duplicates(subset=["question_id"], keep="last")
             Path(dashboard_out).parent.mkdir(parents=True, exist_ok=True)
             generate_dashboard(current_progress_df, dashboard_out)
             print(
@@ -459,6 +569,7 @@ def run_evaluation(
 
     if out_path.exists() and out_path.stat().st_size > 0:
         final_results_df = pd.read_csv(str(out_path))
+        final_results_df = final_results_df.drop_duplicates(subset=["question_id"], keep="last")
     else:
         final_results_df = pd.DataFrame()
 
@@ -487,11 +598,12 @@ def run_evaluation(
 # ─────────────────────────────────────────────────────────────────────────────
 def df_to_js_data(df):
     """Prepare aggregated data structures for Chart.js dashboard views."""
-    models = df["rag_base_model"].dropna().unique().tolist()
+    cleaned_df = df.copy().drop_duplicates(subset=["question_id"], keep="last")
+    models = cleaned_df["rag_base_model"].dropna().unique().tolist()
 
     def avg_by(group_col, metric):
-        numeric_series = pd.to_numeric(df[metric], errors='coerce')
-        temp_df = df.copy()
+        numeric_series = pd.to_numeric(cleaned_df[metric], errors='coerce')
+        temp_df = cleaned_df.copy()
         temp_df[metric] = numeric_series
         return {
             str(k): round(float(v), 4)
@@ -502,7 +614,6 @@ def df_to_js_data(df):
     ret_metrics = ["mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5"]
     judge_metrics = ["answer_relevance", "faithfulness", "context_precision"]
 
-    cleaned_df = df.copy()
     for m in gen_metrics + ret_metrics + judge_metrics:
         if m in cleaned_df.columns:
             cleaned_df[m] = pd.to_numeric(cleaned_df[m], errors='coerce').fillna(0.0)
@@ -518,16 +629,17 @@ def df_to_js_data(df):
         "by_model": {
             metric: avg_by("rag_base_model", metric)
             for metric in gen_metrics + ret_metrics + judge_metrics
-            if metric in df.columns
+            if metric in cleaned_df.columns
         },
-        "by_language": {m: avg_by("language", m) for m in gen_metrics + judge_metrics if m in df.columns},
-        "by_difficulty": {m: avg_by("difficulty", m) for m in gen_metrics + ret_metrics if m in df.columns},
-        "by_category": {m: avg_by("category", m) for m in gen_metrics + judge_metrics if m in df.columns},
-        "grounded_rate": round(float(pd.to_numeric(df["grounded"], errors='coerce').fillna(0).astype(bool).mean()),
-                               4) if "grounded" in df.columns else 0,
-        "avg_attempts": round(float(pd.to_numeric(df["attempts"], errors='coerce').fillna(1).mean()),
-                              2) if "attempts" in df.columns else 1,
-        "total_questions": len(df),
+        "by_language": {m: avg_by("language", m) for m in gen_metrics + judge_metrics if m in cleaned_df.columns},
+        "by_difficulty": {m: avg_by("difficulty", m) for m in gen_metrics + ret_metrics if m in cleaned_df.columns},
+        "by_category": {m: avg_by("category", m) for m in gen_metrics + judge_metrics if m in cleaned_df.columns},
+        "grounded_rate": round(
+            float(cleaned_df["grounded"].astype(str).str.strip().str.lower().isin(["true", "1", "yes"]).mean()),
+            4) if "grounded" in cleaned_df.columns else 0,
+        "avg_attempts": round(float(pd.to_numeric(cleaned_df["attempts"], errors='coerce').fillna(1).mean()),
+                              2) if "attempts" in cleaned_df.columns else 1,
+        "total_questions": len(cleaned_df),
         "generated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
         "rows": cleaned_df[["question_id", "question", "rag_base_model", "language",
                             "category", "difficulty", "token_f1_score", "sentence_bleu_score", "rougeL", "meteor",

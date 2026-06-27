@@ -1,0 +1,9 @@
+Property,English Version,French Version
+Total articles,42,26
+Total numbered clauses,688,450
+Total chunks after clause-boundary segmentation,2536,2055
+Average tokens per chunk,343,366
+Minimum tokens per chunk,30,30
+Maximum tokens per chunk,1280,1484
+Total corpus tokens,"869,887","751,304"
+Appendices and schedules,1122,1394

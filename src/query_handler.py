@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, Optional
 from language_detector import detect_language
 
-# Add project root to path to allow importing config
+# Add root to path to allow importing config
 _project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(_project_root))
 if (_project_root / 'config.py').exists():
