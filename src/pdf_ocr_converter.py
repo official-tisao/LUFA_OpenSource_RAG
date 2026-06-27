@@ -185,28 +185,25 @@ def write_pdf_from_pages(pages_lines: List[List[str]], out_path: Path, page_size
                     cur = w
 
                 if text_obj.getY() < bottom_margin + leading:
+                    # Finish current page and start a new one
                     c.drawText(text_obj)
                     c.showPage()
                     if page_sizes and page_idx < len(page_sizes):
                         c.setPageSize(page_sizes[page_idx])
-                    text_obj = c.beginText(x, height - top_margin)
-                    text_obj.setFont(font_name, font_size)
-                    text_obj.setLeading(leading)
-                if cur:
-                    text_obj.textLine(cur)
-
-                if text_obj.getY() < bottom_margin + leading:
-                    c.drawText(text_obj)
-                    c.showPage()
-                    if page_sizes and page_idx < len(page_sizes):
-                        c.setPageSize(page_sizes[page_idx])
+                    width, height = c._pagesize
                     text_obj = c.beginText(x, height - top_margin)
                     text_obj.setFont(font_name, font_size)
                     text_obj.setLeading(leading)
 
-                c.drawText(text_obj)
-                c.showPage()
-            c.save()
+            # Flush any remaining wrapped text for this line
+            if cur:
+                text_obj.textLine(cur)
+
+        # Finish page
+        c.drawText(text_obj)
+        c.showPage()
+
+    c.save()
 
 def is_image_based_pdf(pdf_path: Path) -> bool:
     try:
