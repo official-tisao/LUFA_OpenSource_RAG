@@ -3,7 +3,7 @@
 
 # Ollama Configuration
 OLLAMA_BASE_URL = "http://localhost:11434"
-LLM_MODEL = "llama3.2:latest"
+LLM_MODEL = "mistral:7b"
 EMBEDDING_MODEL = "nomic-embed-text-v2-moe:latest"
 OLLAMA_REQUEST_TIMEOUT = 120.0
 

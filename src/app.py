@@ -27,7 +27,7 @@ def load_rag_engine():
             try:
                 st.session_state.rag_engine = BilingualRAGEngine(
                     db_path="db/chroma_db",
-                    llm_model="llama3.2:3b-instruct-q4_K_M",
+                    llm_model="mistral:7b",
                     embedding_model="nomic-embed-text-v2-moe",
                     similarity_top_k=5,
                 )
@@ -111,7 +111,7 @@ def main():
         st.info(
             """
             **Models:**
-            - LLM: llama3.2:3b-instruct-q4_K_M
+            - LLM: mistral:7b
             - Embeddings: nomic-embed-text-v2-moe
 
             **Database:**

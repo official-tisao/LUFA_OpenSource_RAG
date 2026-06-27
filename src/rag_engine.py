@@ -41,7 +41,7 @@ class BilingualRAGEngine:
         self,
         db_path: str = "db/chroma_db",
         collection_name: str = "multilingual_docs",
-        llm_model: str = "llama3.2:3b-instruct-q4_K_M",
+        llm_model: str = "mistral:7b",
         embedding_model: str = "nomic-embed-text-v2-moe",
         similarity_top_k: int = 5
     ):
@@ -323,7 +323,7 @@ Answer:"""
 
 def create_rag_engine(
     db_path:         str = "db/chroma_db",
-    llm_model:       str = "llama3.2:3b-instruct-q4_K_M",
+    llm_model:       str = "mistral:7b",
     embedding_model: str = "nomic-embed-text-v2-moe"
 ) -> BilingualRAGEngine:
     return BilingualRAGEngine(

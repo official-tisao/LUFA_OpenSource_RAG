@@ -209,7 +209,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     cfg = load_config()
-    base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    base_model = cfg.get("models", {}).get("llm", {}).get("name", "mistral:7b")
     model_name = args.model or base_model
 
     ensure_ground_truth(args.input)

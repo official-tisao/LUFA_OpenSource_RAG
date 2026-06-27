@@ -148,7 +148,7 @@ def test_rag_engine_init(quick_mode=True):
 
         engine = BilingualRAGEngine(
             db_path="db/test_chroma_db",
-            llm_model="llama3.2:latest",
+            llm_model="mistral:7b",
             embedding_model="nomic-embed-text-v2-moe:latest"
         )
 
@@ -166,7 +166,7 @@ def main():
     print("Bilingual RAG System - Integration Tests")
     print("=" * 70)
     print("\nNote: Some tests require Ollama to be running with models pulled.")
-    print("Run: ollama pull llama3.2:latest && ollama pull nomic-embed-text-v2-moe:latest")
+    print("Run: ollama pull mistral:7b && ollama pull nomic-embed-text-v2-moe:latest")
     print()
 
     # Check if we're in quick mode (no Ollama required)

@@ -14,7 +14,7 @@ pip install -r requirements.txt
 
 # Start Ollama (prerequisite — must be running on :11434)
 ollama serve
-ollama pull llama3.2:3b-instruct-q4_K_M
+ollama pull mistral:7b
 ollama pull nomic-embed-text-v2-moe
 
 # Ingest PDFs into ChromaDB

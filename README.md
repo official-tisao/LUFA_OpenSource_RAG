@@ -116,7 +116,7 @@ conda activate lufa_rag
 1. **Llama 3.2:3b-instruct-q4_K_M** : Officially supports French, English, and 6 other languages[^4]
 
 # LLM for generation (3B parameter model, fits most GPUs)
-ollama pull llama3.2:3b-instruct-q4_K_M
+ollama pull mistral:7b
 
 # Multilingual embedding (100+ language support)
 ollama pull nomic-embed-text-v2-moe

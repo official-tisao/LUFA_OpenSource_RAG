@@ -30,7 +30,7 @@ def load_config(path: str = "config/config.yaml") -> dict:
         return {}
 
 _cfg          = load_config()
-LLM_MODEL     = _cfg.get("models", {}).get("llm",       {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+LLM_MODEL     = _cfg.get("models", {}).get("llm",       {}).get("name", "mistral:7b")
 EMBED_MODEL   = _cfg.get("models", {}).get("embedding", {}).get("name", "nomic-embed-text-v2-moe")
 DB_PATH       = _cfg.get("database",  {}).get("path",       "db/chroma_db")
 COLLECTION    = _cfg.get("database",  {}).get("collection",  "multilingual_docs")

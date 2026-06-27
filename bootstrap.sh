@@ -90,8 +90,8 @@ check_model() {
 
 MODELS_OK=true
 
-if ! check_model "llama3.2:3b-instruct-q4_K_M"; then
-    print_warning "Please pull the llama3.2:3b-instruct-q4_K_M model: ollama pull llama3.2:3b-instruct-q4_K_M"
+if ! check_model "mistral:7b"; then
+    print_warning "Please pull the mistral:7b model: ollama pull mistral:7b"
     MODELS_OK=false
 fi
 
@@ -102,7 +102,7 @@ fi
 
 if [ "$MODELS_OK" = false ]; then
     print_warning "Some models are missing. The system may not work correctly."
-    print_info "Run: ollama pull llama3.2:3b-instruct-q4_K_M && ollama pull nomic-embed-text-v2-moe"
+    print_info "Run: ollama pull mistral:7b && ollama pull nomic-embed-text-v2-moe"
 fi
 
 echo ""

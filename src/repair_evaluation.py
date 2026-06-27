@@ -103,7 +103,7 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
     print("=" * 80)
 
     cfg = load_config()
-    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "mistral:7b")
 
     chroma_cached_data = None
     try:
@@ -263,7 +263,7 @@ if __name__ == "__main__":
     parser.add_argument("--test_csv", default="tests/combined_test_data_and_ground_truth.csv")
     parser.add_argument("--db", default="db/chroma_db")
     parser.add_argument("--dashboard", default="dashboard/index.html")
-    parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
+    parser.add_argument("--llm_model", default="mistral:7b")
     parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
     args = parser.parse_args()

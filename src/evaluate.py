@@ -268,7 +268,7 @@ def extract_score(text):
     return float(match.group(1)) / 5.0 if match else 0.5
 
 
-def llm_judge_scores(question, answer, context, llm_model="llama3.2:3b-instruct-q4_K_M"):
+def llm_judge_scores(question, answer, context, llm_model="mistral:7b"):
     """Use local Ollama model as judge. Returns normalized 0–1 scores."""
     from llama_index.llms.ollama import Ollama
     llm = Ollama(model=llm_model, base_url="http://localhost:11434", request_timeout=60.0)
@@ -324,7 +324,7 @@ def run_evaluation(
         out_csv="tests/evaluation_results.csv",
         dashboard_out="dashboard/index.html",
         use_llm_judge=True,
-        llm_model="llama3.2:3b-instruct-q4_K_M",
+        llm_model="mistral:7b",
         sim_mode="local",
         api_url="http://localhost:8000"
 ):
@@ -395,7 +395,7 @@ def run_evaluation(
             f"[Eval] Output tracking database path '{out_csv}' not present. Will be generated dynamically row-by-row.")
 
     cfg = load_config()
-    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "mistral:7b")
 
     print(f"[Eval] Starting verification loop on {len(test_df)} ground truth questions...")
     print("\n" + "=" * 80)
@@ -926,7 +926,7 @@ if __name__ == "__main__":
     parser.add_argument("--out_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--dashboard", default="dashboard/index.html")
     parser.add_argument("--no_llm_judge", action="store_true", help="Skip LLM-as-judge step")
-    parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
+    parser.add_argument("--llm_model", default="mistral:7b")
     parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
     args = parser.parse_args()
