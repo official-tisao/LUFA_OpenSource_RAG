@@ -129,11 +129,13 @@ def repair_single_row_sources(row_dict, chroma_data=None, db_path="db/chroma_db"
         source_clean = str(text_val).strip().lower()
         matched_id = ""
         max_overlap = -1.0
+        exact_found = False
 
         for cid, doc_text in zip(db_ids, db_docs):
             doc_clean = str(doc_text).lower()
             if source_clean in doc_clean:
                 matched_id = cid
+                exact_found = True
                 break
 
             overlap = calculate_token_overlap(source_clean, doc_clean)
@@ -141,9 +143,8 @@ def repair_single_row_sources(row_dict, chroma_data=None, db_path="db/chroma_db"
                 max_overlap = overlap
                 matched_id = cid
 
-        if matched_id and (max_overlap > 0.5 or matched_id != ""):
+        if matched_id and (exact_found or max_overlap > 0.5):
             repaired_ids.append(matched_id)
-
     return repaired_ids
 
 
