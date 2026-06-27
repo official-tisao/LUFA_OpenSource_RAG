@@ -118,11 +118,10 @@ def main():
             - ChromaDB (db/chroma_db)
 
             **Retrieval:**
-            - Top 5 chunks
-            - 0.7 similarity threshold
-            - 5 retries on failure
-            - hybrid retrieval by (dense vector+rank-bm25)
-            - fused via Reciprocal Rank Fusion(RRF)
+            - Top-k chunks (configurable; default: 5)
+            - Hybrid retrieval (dense vector + rank-bm25)
+            - Fused via Reciprocal Rank Fusion (RRF)
+            - Agentic mode: up to 3 retries (if enabled)
             - Clause-based chunking
             """
         )
