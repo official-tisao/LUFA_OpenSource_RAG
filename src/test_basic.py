@@ -6,8 +6,8 @@ These tests verify that the modules can be imported and basic functions work.
 import sys
 from pathlib import Path
 
-# Add src directory to path
-sys.path.insert(0, str(Path(__file__).parent / 'src'))
+# Ensure this file can import sibling modules in the src/ directory
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 
 def test_imports():
