@@ -237,8 +237,8 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
     print("STAGE 3: Synchronizing Ledger Checkpoints & Compiling Dashboard UI")
     print("=" * 80)
 
-    lufa_df = lufa_df.drop_duplicates(subset=["question_id"], keep="last")
-    eval_df = eval_df.drop_duplicates(subset=["question_id"], keep="last")
+    lufa_df = lufa_df.drop_duplicates(subset=["question_id", "base_model_used"], keep="last")
+    eval_df = eval_df.drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
 
     lufa_df.to_csv(lufa_path, index=False)
     eval_df.to_csv(eval_path, index=False)

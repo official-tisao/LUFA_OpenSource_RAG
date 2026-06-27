@@ -13,7 +13,7 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
-from evaluate import generate_dashboard
+from dashboard_generator import generate_dashboard
 
 
 def calculate_token_overlap(text_a, text_b):

@@ -177,7 +177,7 @@ def _prepare_dataframe(
         lufa = lufa_df.copy()
         if "question_id" not in lufa.columns and "id" in lufa.columns:
             lufa["question_id"] = lufa["id"]
-        lufa = lufa.drop_duplicates(subset=["question_id"], keep="last")
+        lufa = lufa.drop_duplicates(subset=["question_id", "base_model_used"], keep="last")
         extra_cols = [c for c in lufa.columns if c not in df.columns or c in {"source1_id", "source1_text", "source1_score", "source2_id", "source2_text", "source2_score", "source3_id", "source3_text", "source3_score", "source4_id", "source4_text", "source4_score", "source5_id", "source5_text", "source5_score", "answer"}]
         df = df.merge(lufa[["question_id"] + [c for c in extra_cols if c != "question_id"]], on="question_id", how="left", suffixes=("", "__lufa"))
         for col in list(df.columns):
@@ -193,7 +193,7 @@ def _prepare_dataframe(
         gt = gt_df.copy()
         if "question_id" not in gt.columns and "id" in gt.columns:
             gt["question_id"] = gt["id"]
-        gt = gt.drop_duplicates(subset=["question_id"], keep="last")
+        gt = gt.drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
         gt_keep = [c for c in ["question_id", "expected_answer", "ground_source_truth_id", "ground_source_truth", "ground_truth_source_ids"] if c in gt.columns]
         if gt_keep:
             df = df.merge(gt[gt_keep], on="question_id", how="left", suffixes=("", "__gt"))
@@ -229,7 +229,7 @@ def _prepare_dataframe(
     )
     normalized["__normalizable__"] = normalized["__has_answer__"] & normalized["__has_top1__"]
 
-    normalized = normalized.drop_duplicates(subset=["question_id"], keep="last")
+    normalized = normalized.drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
     return normalized
 
 

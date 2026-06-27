@@ -149,7 +149,7 @@ def df_to_js_data(df):
     """
     cleaned = df.copy()
     if "question_id" in cleaned.columns:
-        cleaned = cleaned.drop_duplicates(subset=["question_id"], keep="last")
+        cleaned = cleaned.drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
         cleaned = cleaned[cleaned["question_id"].astype(str).str.strip() != ""]
 
     for m in NUMERIC_METRICS:
