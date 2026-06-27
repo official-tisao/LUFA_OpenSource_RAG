@@ -8,7 +8,7 @@ from rank_bm25 import BM25Okapi
 from llama_index.core.schema import NodeWithScore
 from typing import List, Optional
 from language_detector import detect_language
-from query_handler import QueryHandler, SYSTEM_PROMPTS
+from query_handler import QueryHandler
 from query_rewriter import rewrite_query
 from reflector import reflect
 from translator import (
