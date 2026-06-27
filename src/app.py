@@ -227,7 +227,7 @@ def main():
             with st.chat_message("assistant"):
                 with st.spinner("Thinking..."):
                     try:
-                        result = rag_engine.query(query, return_sources=show_sources)
+                        result = rag_engine.agentic_query(query, return_sources=show_sources, max_retries=3)
 
                         # ── Primary response ──────────────────────────────────
                         st.write(result["response"])
