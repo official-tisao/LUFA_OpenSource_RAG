@@ -52,13 +52,12 @@ That's it! Open your browser to http://localhost:8501
 ## Testing Your Setup
 
 ```bash
-# Basic tests (no dependencies needed)
-python test_basic.py
+# Basic tests (requires dependencies installed)
+python src/test_basic.py
 
 # Full tests (after setup)
-#source venv/bin/activate
-conda activate lufa_rag
-python test_integration.py
+source venv/bin/activate  # or conda activate lufa_rag
+python src/test_integration.py
 ```
 
 ## Common Issues
