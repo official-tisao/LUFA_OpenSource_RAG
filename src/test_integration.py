@@ -8,8 +8,7 @@ import os
 from pathlib import Path
 
 # Add src directory to path
-sys.path.insert(0, str(Path(__file__).parent / 'src'))
-
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 def check_ollama():
     """Check if Ollama is running."""
