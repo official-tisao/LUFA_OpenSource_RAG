@@ -23,7 +23,7 @@ from config_loader import cfg
 from evaluate import (
     token_f1, compute_bleu, compute_rouge, compute_meteor,
     mrr, ndcg_at_k, recall_at_k, llm_judge_scores,
-    parse_source_ids, build_retrieved_ids, build_context_from_row,
+    parse_source_ids, resolve_ground_truth_ids, build_retrieved_ids, build_context_from_row,
     safe_float, generate_dashboard, LUFA_COLUMNS, EVAL_COLUMNS
 )
 
@@ -135,7 +135,7 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         retrieved_ids = build_retrieved_ids(sim_output)
 
         gt_col = "ground_source_truth_id" if "ground_source_truth_id" in gt_df.columns else "ground_truth_source_ids"
-        ground_truth_ids = parse_source_ids(gt_row.get(gt_col, ""))
+        ground_truth_ids = resolve_ground_truth_ids(gt_row, chroma_data=chroma_cached_data)
 
         context = build_context_from_row(sim_output)
         question = str(gt_row.get("question", ""))

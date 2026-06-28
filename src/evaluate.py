@@ -207,6 +207,100 @@ def parse_source_ids(raw):
     return [s.strip() for s in str(raw).split("|") if s.strip()]
 
 
+def resolve_ground_truth_ids(row, chroma_data=None):
+    """
+    Resolve ground truth IDs for a row, supporting | -separated multi-chunk IDs
+    and falling back to text-based resolution when IDs are missing.
+
+    Resolution order:
+      1. ground_source_truth_id column (pipe-separated) → split into list
+      2. ground_truth_source_ids column (fallback column name) → split into list
+      3. ground_source_truth column → match text against ChromaDB chunks
+         to resolve chunk IDs (requires chroma_data pre-cache)
+
+    Args:
+        row:         DataFrame row dict (or pandas Series)
+        chroma_data: Pre-cached ChromaDB data dict with keys:
+                     {"ids": [...], "documents": [...], "metadatas": [...]}
+                     Only needed for text-based fallback (step 3).
+
+    Returns:
+        List of ground truth ID strings.
+    """
+    # Step 1: Try pipe-separated ground_source_truth_id
+    gt_col = "ground_source_truth_id" if "ground_source_truth_id" in row.index else (
+             "ground_truth_source_ids" if "ground_truth_source_ids" in row.index else None)
+    if gt_col:
+        ids = parse_source_ids(row.get(gt_col, ""))
+        if ids:
+            return ids
+
+    # Step 2: Try ground_truth_source_ids (alternate column name)
+    alt_col = "ground_truth_source_ids" if "ground_truth_source_ids" in row.index else None
+    if alt_col and alt_col != gt_col:
+        ids = parse_source_ids(row.get(alt_col, ""))
+        if ids:
+            return ids
+
+    # Step 3: Fallback — resolve from ground_source_truth text via ChromaDB matching
+    gt_text_col = "ground_source_truth" if "ground_source_truth" in row.index else None
+    if gt_text_col and chroma_data:
+        gt_text = str(row.get(gt_text_col, "")).strip()
+        if gt_text and gt_text != "nan" and len(gt_text) > 20:
+            return _resolve_ids_from_text(gt_text, chroma_data)
+
+    return []
+
+
+def _resolve_ids_from_text(text, chroma_data, min_overlap=0.3):
+    """
+    Resolve chunk IDs by matching ground_source_truth text against
+    pre-cached ChromaDB documents using token overlap.
+
+    Returns all chunk IDs whose overlap score >= min_overlap,
+    pipe-joined in database order.
+    """
+    gt_words = set(re.findall(r'\b\w+\b', text.lower()))
+    if not gt_words:
+        return []
+
+    db_ids = chroma_data.get("ids", [])
+    db_docs = chroma_data.get("documents", [])
+
+    matches = []
+    for cid, doc in zip(db_ids, db_docs):
+        if not doc:
+            continue
+        doc_words = set(re.findall(r'\b\w+\b', str(doc).lower()))
+        if not doc_words:
+            continue
+        # Overlap: what fraction of the ground truth text's tokens appear in this chunk
+        overlap = len(gt_words & doc_words) / len(gt_words)
+        if overlap >= min_overlap:
+            matches.append((cid, overlap))
+
+    if not matches:
+        # Lower threshold and retry with top-1 if nothing matched
+        for cid, doc in zip(db_ids, db_docs):
+            if not doc:
+                continue
+            doc_words = set(re.findall(r'\b\w+\b', str(doc).lower()))
+            if not doc_words:
+                continue
+            overlap = len(gt_words & doc_words) / len(gt_words)
+            if overlap > 0:
+                matches.append((cid, overlap))
+        if matches:
+            # Just return the best match
+            matches.sort(key=lambda x: x[1], reverse=True)
+            return [matches[0][0]]
+        return []
+
+    # Return IDs sorted by overlap score (descending)
+    matches.sort(key=lambda x: x[1], reverse=True)
+    return [cid for cid, _ in matches]
+
+
 def recall_at_k(retrieved, ground_truth, k):
     if not ground_truth:
         return 0.0
@@ -436,7 +530,7 @@ def run_evaluation(
         retrieved_ids = build_retrieved_ids(active_rag_data)
 
         gt_col = "ground_source_truth_id" if "ground_source_truth_id" in test_df.columns else "ground_truth_source_ids"
-        ground_truth_ids = parse_source_ids(row.get(gt_col, ""))
+        ground_truth_ids = resolve_ground_truth_ids(row, chroma_data=chroma_cached_data)
 
         context = build_context_from_row(active_rag_data)
         question = "" if pd.isna(row.get("question")) else str(row.get("question"))

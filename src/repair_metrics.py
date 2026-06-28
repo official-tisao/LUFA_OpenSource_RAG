@@ -61,18 +61,26 @@ def run_repair(lufa_csv, eval_csv, gt_csv, db_path, dash_out):
         print("Missing required CSV files. Repair aborted.")
         return
 
-    gt_lookup = {}
-    for _, row in gt_df.iterrows():
-        qid = str(row.get("id", "")).strip()
-        gt_col = "ground_source_truth_id" if "ground_source_truth_id" in row else "ground_truth_source_ids"
-        gt_lookup[qid] = [s.strip() for s in str(row.get(gt_col, "")).split("|") if s.strip()]
-
     import chromadb
     client = chromadb.PersistentClient(path=db_path)
     collection = client.get_collection(cfg("database.collection_name"))
     chroma_data = collection.get(include=["documents"])
     db_ids = chroma_data.get("ids", [])
     db_docs = chroma_data.get("documents", [])
+
+    gt_lookup = {}
+    try:
+        from evaluate import resolve_ground_truth_ids
+        use_resolver = True
+    except ImportError:
+        use_resolver = False
+    for _, row in gt_df.iterrows():
+        qid = str(row.get("id", "")).strip()
+        if use_resolver:
+            gt_lookup[qid] = resolve_ground_truth_ids(row, chroma_data=chroma_data)
+        else:
+            gt_col = "ground_source_truth_id" if "ground_source_truth_id" in row else "ground_truth_source_ids"
+            gt_lookup[qid] = [s.strip() for s in str(row.get(gt_col, "")).split("|") if s.strip()]
 
     updates = 0
     for idx, eval_row in eval_df.iterrows():
