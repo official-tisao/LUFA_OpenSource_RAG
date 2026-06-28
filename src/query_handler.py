@@ -9,13 +9,9 @@ from pathlib import Path
 from typing import Dict, Optional
 from language_detector import detect_language
 
-# Add root to path to allow importing config
-_project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(_project_root))
-if (_project_root / 'config.py').exists():
-    from config import DEFAULT_AGREEMENT_YEAR_RANGE
-else:
-    from config_template import DEFAULT_AGREEMENT_YEAR_RANGE
+# Load config from config/config.yaml via config_loader
+sys.path.insert(0, str(Path(__file__).parent))
+from config_loader import DEFAULT_AGREEMENT_YEAR_RANGE
 
 # System prompts for bilingual support
 SYSTEM_PROMPTS = {
