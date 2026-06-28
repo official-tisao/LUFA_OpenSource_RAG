@@ -132,6 +132,7 @@ def run_pipeline(csv_path, db_path, collection_name, output_path):
 
     df["ground_source_truth_id"] = ""
     df["ground_source_truth"] = ""
+    df["answer_ground_truth_alignment"] = 0.0
 
     print(f"[Initialization] Establishing persistent connection to ChromaDB at: {db_path}")
 
@@ -162,12 +163,14 @@ def run_pipeline(csv_path, db_path, collection_name, output_path):
 
             df.at[idx, "ground_source_truth_id"] = gt_id
             df.at[idx, "ground_source_truth"] = gt_text
+            df.at[idx, "answer_ground_truth_alignment"] = answer_overlap_pct
 
             if gt_id:
                 print(f"   ✅ Success: Chunk linked successfully.")
                 print(f"      - Database Node UUID: {gt_id}")
                 print(f"      - Text Alignment Score (Doc-to-Expected): {overlap_pct:.2%}")
                 print(f"      - Answer Footprint Cross-Check (Expected-in-Doc): {answer_overlap_pct:.2%}")
+                print(f"      - Answer-Ground-Truth Alignment: {answer_overlap_pct:.2%}")
             else:
                 print(f"   ❌ Null Extraction: Found no underlying text blocks.")
 
