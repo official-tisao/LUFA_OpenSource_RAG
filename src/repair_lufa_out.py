@@ -14,10 +14,13 @@ from pathlib import Path
 import pandas as pd
 import chromadb
 
+sys.path.insert(0, str(Path(__file__).parent))
+from config_loader import cfg
+
 DEFAULT_LUFA_CSV = "tests/lufa_out_data.csv"
 DEFAULT_GROUND_TRUTH_CSV = "tests/combined_test_data_and_ground_truth.csv"
-DEFAULT_DB = "db/chroma_db"
-DEFAULT_COLLECTION = "multilingual_docs"
+DEFAULT_DB = cfg("database.path")
+DEFAULT_COLLECTION = cfg("database.collection_name")
 
 
 def calculate_token_overlap(text_a, text_b):
@@ -107,8 +110,11 @@ def repair_dataset(lufa_path, gt_path, db_path, collection_name):
             # Strategy 1: Cross-verify Source 1 text with ground truth registry text directly
             if i == 1 and gt_row:
                 gt_text = str(gt_row.get("ground_source_truth", "")).lower()
-                gt_id = str(gt_row.get("ground_source_truth_id", "")).strip()
-                if gt_text and gt_id:
+                gt_id_raw = str(gt_row.get("ground_source_truth_id", "")).strip()
+                # Support pipe-separated ground_source_truth_id — use all IDs for matching
+                gt_ids = [s.strip() for s in gt_id_raw.split("|") if s.strip()]
+                gt_id = gt_ids[0] if gt_ids else ""  # primary ID for single-match scenarios
+                if gt_text and gt_ids:
                     overlap = calculate_token_overlap(source_clean, gt_text)
                     if overlap > 0.85 or source_clean in gt_text:
                         repaired_id = gt_id

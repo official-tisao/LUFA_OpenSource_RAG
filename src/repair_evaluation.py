@@ -18,11 +18,12 @@ from datetime import datetime
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
-from run_simulation import query_single_record, load_config
+from run_simulation import query_single_record
+from config_loader import cfg
 from evaluate import (
     token_f1, compute_bleu, compute_rouge, compute_meteor,
     mrr, ndcg_at_k, recall_at_k, llm_judge_scores,
-    parse_source_ids, build_retrieved_ids, build_context_from_row,
+    parse_source_ids, resolve_ground_truth_ids, build_retrieved_ids, build_context_from_row,
     safe_float, generate_dashboard, LUFA_COLUMNS, EVAL_COLUMNS
 )
 
@@ -102,14 +103,13 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
     print("STAGE 2: EXECUTING RE-GENERATION AND METRIC RESCORING LOOP")
     print("=" * 80)
 
-    cfg = load_config()
-    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    cfg_base_model = cfg("models.llm.name")
 
     chroma_cached_data = None
     try:
         import chromadb
         client = chromadb.PersistentClient(path=db_path)
-        collection = client.get_collection("multilingual_docs")
+        collection = client.get_collection(cfg("database.collection_name"))
         chroma_cached_data = collection.get(include=["documents"])
     except Exception as dberr:
         print(f"[Warning] Chroma connection failed: {dberr}")
@@ -135,7 +135,7 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         retrieved_ids = build_retrieved_ids(sim_output)
 
         gt_col = "ground_source_truth_id" if "ground_source_truth_id" in gt_df.columns else "ground_truth_source_ids"
-        ground_truth_ids = parse_source_ids(gt_row.get(gt_col, ""))
+        ground_truth_ids = resolve_ground_truth_ids(gt_row, chroma_data=chroma_cached_data)
 
         context = build_context_from_row(sim_output)
         question = str(gt_row.get("question", ""))
@@ -159,7 +159,8 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
             print("      ⚠️  Warning: Rescored retrieval returned 0.0. Attempting embedded text match recovery...")
             try:
                 from evaluate import repair_single_row_sources
-                fixed_ids = repair_single_row_sources(sim_output, chroma_cached_data, db_path, "multilingual_docs")
+                fixed_ids = repair_single_row_sources(sim_output, chroma_cached_data, db_path,
+                                                      cfg("database.collection_name"))
                 if fixed_ids:
                     retrieved_ids = fixed_ids
                     mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
@@ -237,8 +238,8 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
     print("STAGE 3: Synchronizing Ledger Checkpoints & Compiling Dashboard UI")
     print("=" * 80)
 
-    lufa_df = lufa_df.drop_duplicates(subset=["question_id"], keep="last")
-    eval_df = eval_df.drop_duplicates(subset=["question_id"], keep="last")
+    lufa_df = lufa_df.drop_duplicates(subset=["question_id", "base_model_used"], keep="last")
+    eval_df = eval_df.drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
 
     lufa_df.to_csv(lufa_path, index=False)
     eval_df.to_csv(eval_path, index=False)
@@ -261,12 +262,15 @@ if __name__ == "__main__":
     parser.add_argument("--lufa_csv", default="tests/lufa_out_data.csv")
     parser.add_argument("--eval_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--test_csv", default="tests/combined_test_data_and_ground_truth.csv")
-    parser.add_argument("--db", default="db/chroma_db")
+    parser.add_argument("--db", default=None)
     parser.add_argument("--dashboard", default="dashboard/index.html")
-    parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
+    parser.add_argument("--llm_model", default=None)
     parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
     args = parser.parse_args()
+
+    args.db = args.db or cfg("database.path")
+    args.llm_model = args.llm_model or cfg("models.llm.name")
 
     process_healing_cycle(
         lufa_path=args.lufa_csv,

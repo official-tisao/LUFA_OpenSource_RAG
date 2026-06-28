@@ -18,15 +18,14 @@ Available models (GitHub Models API — March 2026):
 GitHub Models endpoint: https://models.inference.ai.azure.com
 """
 
-import os, sys, yaml
+import os, sys
 from pathlib import Path
 from typing import Optional
 
 from openai import OpenAI
 
 sys.path.insert(0, str(Path(__file__).parent))
-
-GITHUB_MODELS_ENDPOINT = "https://models.inference.ai.azure.com"
+from config_loader import cfg
 
 # Mapping of user-friendly aliases → actual GitHub Models API model IDs
 MODEL_ALIASES = {
@@ -78,31 +77,31 @@ class CopilotEngine:
             config_path: str = "config/config.yaml",
     ):
         self.model = MODEL_ALIASES.get(model, model)
-        token = (
-                github_token
+
+        # Resolve API credentials from MODEL_API_AUTH (with default fallback),
+        # then overlay legacy sources (GITHUB_TOKEN, copilot config) for backward compat.
+        from model_api_auth import resolve_model_auth
+        auth = resolve_model_auth(self.model)
+        api_key = (
+                auth.get("api_key")
+                or github_token
                 or os.environ.get("GITHUB_TOKEN")
-                or self._load_token_from_config(config_path)
+                or cfg("copilot.github_token")
         )
-        if not token:
+        api_base = auth.get("api_base") or cfg("copilot.github_models_endpoint")
+
+        if not api_key:
             raise EnvironmentError(
-                "GITHUB_TOKEN not found. Set it as an environment variable or in config.yaml "
-                "under copilot.github_token. Get a token at https://github.com/settings/tokens"
+                "API key not found. Set it in MODEL_API_AUTH config, as an env var "
+                "(GITHUB_TOKEN / MODEL_API_KEY_*), or in config.yaml under "
+                "copilot.github_token. Get a token at https://github.com/settings/tokens"
             )
 
         self.client = OpenAI(
-            base_url=GITHUB_MODELS_ENDPOINT,
-            api_key=token,
+            base_url=api_base,
+            api_key=api_key,
         )
-        print(f"[CopilotEngine] Initialized with model: {self.model}")
-
-    @staticmethod
-    def _load_token_from_config(path: str) -> Optional[str]:
-        try:
-            with open(path) as f:
-                cfg = yaml.safe_load(f) or {}
-            return cfg.get("copilot", {}).get("github_token")
-        except FileNotFoundError:
-            return None
+        print(f"[CopilotEngine] Initialized with model: {self.model} (base: {api_base})")
 
     def generate(self, query: str, context: str, lang: str = "en") -> str:
         """

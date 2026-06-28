@@ -12,14 +12,11 @@ import argparse
 import math
 import re
 import warnings
-import os
 from pathlib import Path
 from datetime import datetime
-from collections import defaultdict
+from dashboard_generator import generate_dashboard
 
 import pandas as pd
-import numpy as np
-from tqdm import tqdm
 
 # NLP metrics
 import nltk
@@ -28,11 +25,12 @@ from nltk.translate.meteor_score import meteor_score
 from rouge_score import rouge_scorer
 
 # Dynamic simulation hooks
-from run_simulation import query_single_record, load_config
+from run_simulation import query_single_record
 
 warnings.filterwarnings("ignore")
 
 sys.path.insert(0, str(Path(__file__).parent))
+from config_loader import cfg
 
 
 # Check local cache availability before calling remote download endpoints to avoid WinError 10060
@@ -98,7 +96,9 @@ def calculate_token_overlap(text_a, text_b):
     return len(intersection) / len(words_a)
 
 
-def repair_single_row_sources(row_dict, chroma_data=None, db_path="db/chroma_db", collection_name="multilingual_docs"):
+def repair_single_row_sources(row_dict, chroma_data=None, db_path=None, collection_name=None):
+    db_path = db_path or cfg("database.path")
+    collection_name = collection_name or cfg("database.collection_name")
     """
     Examines a row's source text layers and extracts matching database keys
     by executing a local token scan over the persistent storage collection.
@@ -207,6 +207,100 @@ def parse_source_ids(raw):
     return [s.strip() for s in str(raw).split("|") if s.strip()]
 
 
+def resolve_ground_truth_ids(row, chroma_data=None):
+    """
+    Resolve ground truth IDs for a row, supporting | -separated multi-chunk IDs
+    and falling back to text-based resolution when IDs are missing.
+
+    Resolution order:
+      1. ground_source_truth_id column (pipe-separated) → split into list
+      2. ground_truth_source_ids column (fallback column name) → split into list
+      3. ground_source_truth column → match text against ChromaDB chunks
+         to resolve chunk IDs (requires chroma_data pre-cache)
+
+    Args:
+        row:         DataFrame row dict (or pandas Series)
+        chroma_data: Pre-cached ChromaDB data dict with keys:
+                     {"ids": [...], "documents": [...], "metadatas": [...]}
+                     Only needed for text-based fallback (step 3).
+
+    Returns:
+        List of ground truth ID strings.
+    """
+    # Step 1: Try pipe-separated ground_source_truth_id
+    gt_col = "ground_source_truth_id" if "ground_source_truth_id" in row.index else (
+             "ground_truth_source_ids" if "ground_truth_source_ids" in row.index else None)
+    if gt_col:
+        ids = parse_source_ids(row.get(gt_col, ""))
+        if ids:
+            return ids
+
+    # Step 2: Try ground_truth_source_ids (alternate column name)
+    alt_col = "ground_truth_source_ids" if "ground_truth_source_ids" in row.index else None
+    if alt_col and alt_col != gt_col:
+        ids = parse_source_ids(row.get(alt_col, ""))
+        if ids:
+            return ids
+
+    # Step 3: Fallback — resolve from ground_source_truth text via ChromaDB matching
+    gt_text_col = "ground_source_truth" if "ground_source_truth" in row.index else None
+    if gt_text_col and chroma_data:
+        gt_text = str(row.get(gt_text_col, "")).strip()
+        if gt_text and gt_text != "nan" and len(gt_text) > 20:
+            return _resolve_ids_from_text(gt_text, chroma_data)
+
+    return []
+
+
+def _resolve_ids_from_text(text, chroma_data, min_overlap=0.3):
+    """
+    Resolve chunk IDs by matching ground_source_truth text against
+    pre-cached ChromaDB documents using token overlap.
+
+    Returns all chunk IDs whose overlap score >= min_overlap,
+    pipe-joined in database order.
+    """
+    gt_words = set(re.findall(r'\b\w+\b', text.lower()))
+    if not gt_words:
+        return []
+
+    db_ids = chroma_data.get("ids", [])
+    db_docs = chroma_data.get("documents", [])
+
+    matches = []
+    for cid, doc in zip(db_ids, db_docs):
+        if not doc:
+            continue
+        doc_words = set(re.findall(r'\b\w+\b', str(doc).lower()))
+        if not doc_words:
+            continue
+        # Overlap: what fraction of the ground truth text's tokens appear in this chunk
+        overlap = len(gt_words & doc_words) / len(gt_words)
+        if overlap >= min_overlap:
+            matches.append((cid, overlap))
+
+    if not matches:
+        # Lower threshold and retry with top-1 if nothing matched
+        for cid, doc in zip(db_ids, db_docs):
+            if not doc:
+                continue
+            doc_words = set(re.findall(r'\b\w+\b', str(doc).lower()))
+            if not doc_words:
+                continue
+            overlap = len(gt_words & doc_words) / len(gt_words)
+            if overlap > 0:
+                matches.append((cid, overlap))
+        if matches:
+            # Just return the best match
+            matches.sort(key=lambda x: x[1], reverse=True)
+            return [matches[0][0]]
+        return []
+
+    # Return IDs sorted by overlap score (descending)
+    matches.sort(key=lambda x: x[1], reverse=True)
+    return [cid for cid, _ in matches]
+
+
 def recall_at_k(retrieved, ground_truth, k):
     if not ground_truth:
         return 0.0
@@ -269,10 +363,12 @@ def extract_score(text):
     return float(match.group(1)) / 5.0 if match else 0.5
 
 
-def llm_judge_scores(question, answer, context, llm_model="llama3.2:3b-instruct-q4_K_M"):
+def llm_judge_scores(question, answer, context, llm_model=None):
+    llm_model = llm_model or cfg("models.llm.name")
     """Use local Ollama model as judge. Returns normalized 0–1 scores."""
     from llama_index.llms.ollama import Ollama
-    llm = Ollama(model=llm_model, base_url="http://localhost:11434", request_timeout=60.0)
+    from model_api_auth import get_ollama_client
+    llm = get_ollama_client(llm_model, request_timeout=60.0)
     scores = {}
     for metric, prompt_template in LLM_JUDGE_PROMPTS.items():
         try:
@@ -325,10 +421,11 @@ def run_evaluation(
         out_csv="tests/evaluation_results.csv",
         dashboard_out="dashboard/index.html",
         use_llm_judge=True,
-        llm_model="llama3.2:3b-instruct-q4_K_M",
+        llm_model=None,
         sim_mode="local",
         api_url="http://localhost:8000"
 ):
+    llm_model = llm_model or cfg("models.llm.name")
     print(f"[Eval] Verifying ground truth data file from: {test_csv}")
     if not Path(test_csv).exists():
         raise FileNotFoundError(
@@ -364,8 +461,8 @@ def run_evaluation(
     chroma_cached_data = None
     try:
         import chromadb
-        client = chromadb.PersistentClient(path="db/chroma_db")
-        collection = client.get_collection("multilingual_docs")
+        client = chromadb.PersistentClient(path=cfg("database.path"))
+        collection = client.get_collection(cfg("database.collection_name"))
         chroma_cached_data = collection.get(include=["documents"])
     except Exception as e:
         print(f"[Warning] Could not pre-cache database tables: {e}")
@@ -395,8 +492,7 @@ def run_evaluation(
         print(
             f"[Eval] Output tracking database path '{out_csv}' not present. Will be generated dynamically row-by-row.")
 
-    cfg = load_config()
-    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    cfg_base_model = cfg("models.llm.name")
 
     print(f"[Eval] Starting verification loop on {len(test_df)} ground truth questions...")
     print("\n" + "=" * 80)
@@ -434,7 +530,7 @@ def run_evaluation(
         retrieved_ids = build_retrieved_ids(active_rag_data)
 
         gt_col = "ground_source_truth_id" if "ground_source_truth_id" in test_df.columns else "ground_truth_source_ids"
-        ground_truth_ids = parse_source_ids(row.get(gt_col, ""))
+        ground_truth_ids = resolve_ground_truth_ids(row, chroma_data=chroma_cached_data)
 
         context = build_context_from_row(active_rag_data)
         question = "" if pd.isna(row.get("question")) else str(row.get("question"))
@@ -464,8 +560,9 @@ def run_evaluation(
         if mrr_val == 0.0 and ndcg_val == 0.0:
             print("   ⚠️  Retrieval metrics returned 0.0. Activating embedded local token repair pass...")
             try:
-                fixed_ids = repair_single_row_sources(active_rag_data, chroma_cached_data, "db/chroma_db",
-                                                      "multilingual_docs")
+                fixed_ids = repair_single_row_sources(active_rag_data, chroma_cached_data,
+                                                      cfg("database.path"),
+                                                      cfg("database.collection_name"))
 
                 if fixed_ids:
                     retrieved_ids = fixed_ids
@@ -559,7 +656,7 @@ def run_evaluation(
         print("   -> Re-compiling performance HTML dashboard layer with current progress data...")
         try:
             current_progress_df = pd.read_csv(str(out_path))
-            current_progress_df = current_progress_df.drop_duplicates(subset=["question_id"], keep="last")
+            current_progress_df = current_progress_df.drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
             Path(dashboard_out).parent.mkdir(parents=True, exist_ok=True)
             generate_dashboard(current_progress_df, dashboard_out)
             print(
@@ -569,7 +666,7 @@ def run_evaluation(
 
     if out_path.exists() and out_path.stat().st_size > 0:
         final_results_df = pd.read_csv(str(out_path))
-        final_results_df = final_results_df.drop_duplicates(subset=["question_id"], keep="last")
+        final_results_df = final_results_df.drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
     else:
         final_results_df = pd.DataFrame()
 
@@ -598,7 +695,7 @@ def run_evaluation(
 # ─────────────────────────────────────────────────────────────────────────────
 def df_to_js_data(df):
     """Prepare aggregated data structures for Chart.js dashboard views."""
-    cleaned_df = df.copy().drop_duplicates(subset=["question_id"], keep="last")
+    cleaned_df = df.copy().drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
     models = cleaned_df["rag_base_model"].dropna().unique().tolist()
 
     def avg_by(group_col, metric):
@@ -649,276 +746,14 @@ def df_to_js_data(df):
     }
     return data
 
+#
+# def generate_dashboard(df, output_path):
+#     data = df_to_js_data(df)
+#     data_json = json.dumps(data, ensure_ascii=False, default=str)
+#     html = DASHBOARD_TEMPLATE.replace("__DATA_PLACEHOLDER__", data_json)
+#     with open(output_path, "w", encoding="utf-8") as f:
+#         f.write(html)
 
-def generate_dashboard(df, output_path):
-    data = df_to_js_data(df)
-    data_json = json.dumps(data, ensure_ascii=False, default=str)
-    html = DASHBOARD_TEMPLATE.replace("__DATA_PLACEHOLDER__", data_json)
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(html)
-
-
-DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LUFA RAG Evaluation Dashboard</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<style>
-  body { background:#0f172a; color:#e2e8f0; font-family:'Segoe UI',sans-serif; }
-  .card { background:#1e293b; border-radius:12px; padding:20px; border:1px solid #334155; }
-  .metric-card { background:linear-gradient(135deg,#1e3a5f,#1e293b); border-radius:10px; padding:16px; border:1px solid #2563eb44; }
-  .section-title { font-size:1.1rem; font-weight:700; color:#93c5fd; margin-bottom:12px; text-transform:uppercase; letter-spacing:.05em; }
-  .badge { display:inline-block; padding:2px 8px; border-radius:9999px; font-size:.7rem; font-weight:600; }
-  .badge-en { background:#1d4ed8; color:#bfdbfe; }
-  .badge-fr { background:#7c3aed; color:#ddd6fe; }
-  .badge-other { background:#374151; color:#d1d5db; }
-  table { width:100%; border-collapse:collapse; font-size:.78rem; }
-  th { background:#0f172a; color:#94a3b8; padding:8px 10px; text-align:left; position:sticky; top:0; }
-  td { padding:7px 10px; border-bottom:1px solid #1e293b; }
-  tr:hover td { background:#1e3a5f22; }
-  .score-high { color:#4ade80; }
-  .score-mid  { color:#facc15; }
-  .score-low  { color:#f87171; }
-  canvas { max-height:280px; }
-  ::-webkit-scrollbar { width:6px; height:6px; }
-  ::-webkit-scrollbar-track { background:#0f172a; }
-  ::-webkit-scrollbar-thumb { background:#334155; border-radius:3px; }
-</style>
-</head>
-<body class="p-6">
-
-<script>const D = __DATA_PLACEHOLDER__;</script>
-
-<div class="mb-8">
-  <h1 class="text-3xl font-bold text-white mb-1">🎓 LUFA RAG Evaluation Dashboard</h1>
-  <p class="text-slate-400 text-sm">Agentic RAG for Cross-Lingual Retrieval of University Collective Agreements &nbsp;·&nbsp;
-     <span id="gen-at" class="text-slate-500"></span></p>
-</div>
-
-<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8" id="kpi-row"></div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-  <div class="card">
-    <div class="section-title">Generation Metrics by Model</div>
-    <canvas id="genChart"></canvas>
-  </div>
-  <div class="card">
-    <div class="section-title">Retrieval Metrics by Model</div>
-    <canvas id="retChart"></canvas>
-  </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-  <div class="card">
-    <div class="section-title">LLM-as-Judge Metrics (Radar)</div>
-    <canvas id="radarChart"></canvas>
-  </div>
-  <div class="card">
-    <div class="section-title">Performance by Language</div>
-    <canvas id="langChart"></canvas>
-  </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-  <div class="card">
-    <div class="section-title">F1 Score by Difficulty</div>
-    <canvas id="diffChart"></canvas>
-  </div>
-  <div class="card">
-    <div class="section-title">ROUGE-L by Category</div>
-    <canvas id="catChart"></canvas>
-  </div>
-</div>
-
-<div class="card mb-8">
-  <div class="section-title">Detailed Results</div>
-  <div style="max-height:400px;overflow:auto;">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Question</th><th>Model</th><th>Lang</th>
-          <th>F1</th><th>BLEU</th><th>ROUGE-L</th><th>METEOR</th>
-          <th>MRR</th><th>Recall@5</th>
-          <th>Relevance</th><th>Faithful</th><th>Precision</th>
-          <th>Grounded</th><th>Attempts</th>
-        </tr>
-      </thead>
-      <tbody id="results-tbody"></tbody>
-    </table>
-  </div>
-</div>
-
-<p class="text-center text-slate-600 text-xs pb-4">
-  LUFA Agentic RAG Thesis &nbsp;·&nbsp; Laurentian University &nbsp;·&nbsp;
-  Computational Sciences &nbsp;·&nbsp; Generated <span id="footer-date"></span>
-</p>
-
-<script>
-const COLORS = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4'];
-const LIGHT  = ['#93c5fd','#6ee7b7','#fcd34d','#fca5a5','#c4b5fd','#f9a8d4','#67e8f9'];
-
-function scoreClass(v){ return v>=0.7?'score-high':v>=0.4?'score-mid':'score-low'; }
-function fmt(v){ return (typeof v==='number')?v.toFixed(3):v||''; }
-
-document.getElementById('gen-at').textContent = D.generated_at;
-document.getElementById('footer-date').textContent = D.generated_at;
-
-// ── KPI Cards ─────────────────────────────────────────────────────────────────
-const kpis = [
-  {label:'Questions', value: D.total_questions, unit:'', icon:'📊'},
-  {label:'Avg F1', value: (D.overall.token_f1_score||0).toFixed(3), unit:'', icon:'🎯'},
-  {label:'Avg ROUGE-L',value: (D.overall.rougeL||0).toFixed(3),unit:'',icon:'📝'},
-  {label:'Avg MRR', value: (D.overall.mrr||0).toFixed(3), unit:'', icon:'🔍'},
-  {label:'Recall@5', value: (D.overall.recall_5||0).toFixed(3),unit:'',icon:'📈'},
-  {label:'Faithfulness',value:(D.overall.faithfulness||0).toFixed(3),unit:'',icon:'✅'},
-  {label:'Grounded', value: (D.grounded_rate*100||0).toFixed(1),unit:'%',icon:'🔒'},
-  {label:'Avg Attempts',value: D.avg_attempts, unit:'', icon:'🔄'},
-];
-const kpiRow = document.getElementById('kpi-row');
-kpis.forEach(k=>{
-  kpiRow.innerHTML += `<div class="metric-card text-center">
-    <div class="text-2xl mb-1">${k.icon}</div>
-    <div class="text-2xl font-bold text-blue-300">${k.value}${k.unit}</div>
-    <div class="text-xs text-slate-400 mt-1">${k.label}</div>
-  </div>`;
-});
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function barChart(id, labels, datasets, opts={}){
-  new Chart(document.getElementById(id), {
-    type:'bar',
-    data:{labels, datasets},
-    options:{
-      responsive:true, maintainAspectRatio:true,
-      plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}}},
-      scales:{
-        x:{ticks:{color:'#64748b'},grid:{color:'#1e293b'}},
-        y:{ticks:{color:'#64748b'},grid:{color:'#334155'}, beginAtZero:true, max:1,...(opts.yMax?{max:opts.yMax}:{})},
-      },
-    }
-  });
-}
-
-const models = D.models.length ? D.models : ['default'];
-
-// ── Generation Chart ──────────────────────────────────────────────────────────
-{
-  const metrics = ['token_f1_score','sentence_bleu_score','rouge1','rouge2','rougeL','meteor'];
-  const labels = ['F1','BLEU','ROUGE-1','ROUGE-2','ROUGE-L','METEOR'];
-  const datasets = models.map((m,i)=>({
-    label: m,
-    data: metrics.map(met=>(D.by_model[met]||{})[m]||0),
-    backgroundColor: COLORS[i%COLORS.length]+'99',
-    borderColor: COLORS[i%COLORS.length],
-    borderWidth:1,
-  }));
-  barChart('genChart', labels, datasets);
-}
-
-// ── Retrieval Chart ───────────────────────────────────────────────────────────
-{
-  const metrics = ['mrr','ndcg_at_k','recall_1','recall_3','recall_5'];
-  const labels = ['MRR','NDCG','Recall@1','Recall@3','Recall@5'];
-  const datasets = models.map((m,i)=>({
-    label: m,
-    data: metrics.map(met=>(D.by_model[met]||{})[m]||0),
-    backgroundColor: LIGHT[i%LIGHT.length]+'88',
-    borderColor: LIGHT[i%LIGHT.length],
-    borderWidth:1,
-  }));
-  barChart('retChart', labels, datasets);
-}
-
-// ── Radar Chart (LLM-Judge) ───────────────────────────────────────────────────
-{
-  const judgeLabels = ['Answer Relevance','Faithfulness','Context Precision'];
-  const judgeKeys = ['answer_relevance','faithfulness','context_precision'];
-  new Chart(document.getElementById('radarChart'),{
-    type:'radar',
-    data:{
-      labels: judgeLabels,
-      datasets: models.map((m,i)=>({
-        label: m,
-        data: judgeKeys.map(k=>(D.by_model[k]||{})[m]||0),
-        borderColor: COLORS[i%COLORS.length],
-        backgroundColor: COLORS[i%COLORS.length]+'33',
-        pointBackgroundColor: COLORS[i%COLORS.length],
-        borderWidth:2,
-      })),
-    },
-    options:{
-      responsive:true, maintainAspectRatio:true,
-      scales:{r:{min:0,max:1,ticks:{stepSize:.2,color:'#475569',backdropColor:'transparent'},
-        grid:{color:'#334155'},pointLabels:{color:'#94a3b8',font:{size:11}}}},
-      plugins:{legend:{labels:{color:'#94a3b8'}}},
-    }
-  });
-}
-
-// ── Language Chart ────────────────────────────────────────────────────────────
-{
-  const langs = Object.keys(D.by_language.token_f1_score||{});
-  const datasets = [
-    {label:'F1', data:langs.map(l=>(D.by_language.token_f1_score||{})[l]||0), backgroundColor:COLORS[0]+'99',borderColor:COLORS[0],borderWidth:1},
-    {label:'ROUGE-L',data:langs.map(l=>(D.by_language.rougeL||{})[l]||0), backgroundColor:COLORS[1]+'99',borderColor:COLORS[1],borderWidth:1},
-    {label:'METEOR', data:langs.map(l=>(D.by_language.meteor||{})[l]||0), backgroundColor:COLORS[2]+'99',borderColor:COLORS[2],borderWidth:1},
-  ];
-  barChart('langChart', langs, datasets);
-}
-
-// ── Difficulty Chart ──────────────────────────────────────────────────────────
-{
-  const diffs = Object.keys(D.by_difficulty.token_f1_score||{});
-  barChart('diffChart', diffs, [{
-    label:'F1 by Difficulty',
-    data: diffs.map(d=>(D.by_difficulty.token_f1_score||{})[d]||0),
-    backgroundColor: diffs.map((_,i)=>COLORS[i%COLORS.length]+'bb'),
-    borderColor: diffs.map((_,i)=>COLORS[i%COLORS.length]),
-    borderWidth:1,
-  }]);
-}
-
-// ── Category Chart ────────────────────────────────────────────────────────────
-{
-  const cats = Object.keys(D.by_category.rougeL||{});
-  barChart('catChart', cats.map(c=>c.length>18?c.slice(0,16)+'…':c), [{
-    label:'ROUGE-L by Category',
-    data: cats.map(c=>(D.by_category.rougeL||{})[c]||0),
-    backgroundColor: cats.map((_,i)=>LIGHT[i%LIGHT.length]+'99'),
-    borderColor: cats.map((_,i)=>LIGHT[i%LIGHT.length]),
-    borderWidth:1,
-  }]);
-}
-
-// ── Table ─────────────────────────────────────────────────────────────────────
-const tbody = document.getElementById('results-tbody');
-(D.rows||[]).forEach((r,i)=>{
-  const langBadge = r.language==='en'?'badge-en':r.language==='fr'?'badge-fr':'badge-other';
-  tbody.innerHTML += `<tr>
-    <td class="text-slate-500">${i+1}</td>
-    <td class="max-w-xs truncate" title="${(r.question||'').replace(/"/g,"'").replace(/</g,"&lt;").replace(/>/g,"&gt;")}">
-      ${(r.question||'').slice(0,60)}${(r.question||'').length>60?'…':''}</td>
-    <td class="text-blue-300 text-xs">${r.rag_base_model||''}</td>
-    <td><span class="badge ${langBadge}">${r.language||''}</span></td>
-    <td class="${scoreClass(r.token_f1_score)}">${fmt(r.token_f1_score)}</td>
-    <td class="${scoreClass(r.sentence_bleu_score)}">${fmt(r.sentence_bleu_score)}</td>
-    <td class="${scoreClass(r.rougeL)}">${fmt(r.rougeL)}</td>
-    <td class="${scoreClass(r.meteor)}">${fmt(r.meteor)}</td>
-    <td class="${scoreClass(r.mrr)}">${fmt(r.mrr)}</td>
-    <td class="${scoreClass(r.recall_5)}">${fmt(r.recall_5)}</td>
-    <td class="${scoreClass(r.answer_relevance)}">${fmt(r.answer_relevance)}</td>
-    <td class="${scoreClass(r.faithfulness)}">${fmt(r.faithfulness)}</td>
-    <td class="${scoreClass(r.context_precision)}">${fmt(r.context_precision)}</td>
-    <td>${r.grounded?'<span class="text-green-400">✓</span>':'<span class="text-red-400">✗</span>'}</td>
-    <td class="text-center text-slate-400">${r.attempts||1}</td>
-  </tr>`;
-});
-</script>
-</body>
-</html>"""
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate LUFA RAG system performance")
@@ -927,7 +762,7 @@ if __name__ == "__main__":
     parser.add_argument("--out_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--dashboard", default="dashboard/index.html")
     parser.add_argument("--no_llm_judge", action="store_true", help="Skip LLM-as-judge step")
-    parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
+    parser.add_argument("--llm_model", default=None)
     parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
     args = parser.parse_args()

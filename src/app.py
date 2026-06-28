@@ -10,6 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from rag_engine import BilingualRAGEngine
+from config_loader import cfg
 
 
 def initialize_session_state():
@@ -26,10 +27,10 @@ def load_rag_engine():
         with st.spinner("Loading RAG engine... This may take a moment."):
             try:
                 st.session_state.rag_engine = BilingualRAGEngine(
-                    db_path="db/chroma_db",
-                    llm_model="llama3.2:3b-instruct-q4_K_M",
-                    embedding_model="nomic-embed-text-v2-moe",
-                    similarity_top_k=5,
+                    db_path=cfg("database.path"),
+                    llm_model=cfg("models.llm.name"),
+                    embedding_model=cfg("models.embedding.name"),
+                    similarity_top_k=cfg("retrieval.top_k"),
                 )
                 st.success("RAG engine loaded successfully!")
             except Exception as e:

@@ -25,6 +25,8 @@ from llama_index.core.response_synthesizers import get_response_synthesizer
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
+from model_api_auth import get_ollama_client
+from config_loader import cfg
 import chromadb
 
 PREVIEW_LENGTH = 200
@@ -39,29 +41,28 @@ class BilingualRAGEngine:
 
     def __init__(
         self,
-        db_path: str = "db/chroma_db",
-        collection_name: str = "multilingual_docs",
-        llm_model: str = "llama3.2:3b-instruct-q4_K_M",
-        embedding_model: str = "nomic-embed-text-v2-moe",
-        similarity_top_k: int = 5
+        db_path: str = None,
+        collection_name: str = None,
+        llm_model: str = None,
+        embedding_model: str = None,
+        similarity_top_k: int = None
     ):
+        # Defaults from config/config.yaml
+        db_path          = db_path          or cfg("database.path")
+        collection_name  = collection_name  or cfg("database.collection_name")
+        llm_model        = llm_model        or cfg("models.llm.name")
+        embedding_model  = embedding_model  or cfg("models.embedding.name")
+        similarity_top_k = similarity_top_k or cfg("retrieval.top_k")
         self.db_path          = db_path
         self.collection_name  = collection_name
         self.similarity_top_k = similarity_top_k
         self.query_handler    = QueryHandler()
 
         print(f"Initializing LLM: {llm_model}")
-        self.llm = Ollama(
-            model=llm_model,
-            base_url="http://localhost:11434",
-            request_timeout=120.0,
-        )
+        self.llm = get_ollama_client(llm_model, request_timeout=120.0)
 
         print(f"Initializing embedding model: {embedding_model}")
-        self.embed_model = OllamaEmbedding(
-            model_name=embedding_model,
-            base_url="http://localhost:11434",
-        )
+        self.embed_model = get_ollama_client(embedding_model, is_embedding=True)
 
         self.index        = self._load_index()
         self.query_engine = self._create_query_engine()
@@ -322,9 +323,9 @@ Answer:"""
 
 
 def create_rag_engine(
-    db_path:         str = "db/chroma_db",
-    llm_model:       str = "llama3.2:3b-instruct-q4_K_M",
-    embedding_model: str = "nomic-embed-text-v2-moe"
+    db_path:         str = None,
+    llm_model:       str = None,
+    embedding_model: str = None
 ) -> BilingualRAGEngine:
     return BilingualRAGEngine(
         db_path=db_path,

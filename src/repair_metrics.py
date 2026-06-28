@@ -13,7 +13,8 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
-from evaluate import generate_dashboard
+from dashboard_generator import generate_dashboard
+from config_loader import cfg
 
 
 def calculate_token_overlap(text_a, text_b):
@@ -60,18 +61,26 @@ def run_repair(lufa_csv, eval_csv, gt_csv, db_path, dash_out):
         print("Missing required CSV files. Repair aborted.")
         return
 
-    gt_lookup = {}
-    for _, row in gt_df.iterrows():
-        qid = str(row.get("id", "")).strip()
-        gt_col = "ground_source_truth_id" if "ground_source_truth_id" in row else "ground_truth_source_ids"
-        gt_lookup[qid] = [s.strip() for s in str(row.get(gt_col, "")).split("|") if s.strip()]
-
     import chromadb
     client = chromadb.PersistentClient(path=db_path)
-    collection = client.get_collection("multilingual_docs")
+    collection = client.get_collection(cfg("database.collection_name"))
     chroma_data = collection.get(include=["documents"])
     db_ids = chroma_data.get("ids", [])
     db_docs = chroma_data.get("documents", [])
+
+    gt_lookup = {}
+    try:
+        from evaluate import resolve_ground_truth_ids
+        use_resolver = True
+    except ImportError:
+        use_resolver = False
+    for _, row in gt_df.iterrows():
+        qid = str(row.get("id", "")).strip()
+        if use_resolver:
+            gt_lookup[qid] = resolve_ground_truth_ids(row, chroma_data=chroma_data)
+        else:
+            gt_col = "ground_source_truth_id" if "ground_source_truth_id" in row else "ground_truth_source_ids"
+            gt_lookup[qid] = [s.strip() for s in str(row.get(gt_col, "")).split("|") if s.strip()]
 
     updates = 0
     for idx, eval_row in eval_df.iterrows():
@@ -135,8 +144,9 @@ if __name__ == "__main__":
     parser.add_argument("--lufa_csv", default="tests/lufa_out_data.csv")
     parser.add_argument("--eval_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--gt_csv", default="tests/combined_test_data_and_ground_truth.csv")
-    parser.add_argument("--db", default="db/chroma_db")
+    parser.add_argument("--db", default=None)
     parser.add_argument("--dash", default="dashboard/index.html")
     args = parser.parse_args()
+    args.db = args.db or cfg("database.path")
 
     run_repair(args.lufa_csv, args.eval_csv, args.gt_csv, args.db, args.dash)

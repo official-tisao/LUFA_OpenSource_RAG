@@ -57,8 +57,8 @@ def clean_evaluation_file(file_path="tests/evaluation_results.csv", dashboard_pa
         ascending=[True, False, False, False]
     )
 
-    # Drop duplicates on the question_id keeping first, which locks in the best entry
-    cleaned_df = df_sorted.drop_duplicates(subset=["question_id"], keep="first")
+    # Drop duplicates on (question_id, rag_base_model) keeping first, which locks in the best entry per model
+    cleaned_df = df_sorted.drop_duplicates(subset=["question_id", "rag_base_model"], keep="first")
 
     # Clean up working columns before writing back to disk
     cleaned_df = cleaned_df.drop(columns=["grounded_bool", "is_corrupted_metric"])
@@ -76,7 +76,7 @@ def clean_evaluation_file(file_path="tests/evaluation_results.csv", dashboard_pa
     # Automatically re-compile the user dashboard metrics view
     try:
         sys.path.insert(0, str(Path(file_path).parent.parent / "src"))
-        from evaluate import generate_dashboard
+        from dashboard_generator import generate_dashboard
         generate_dashboard(cleaned_df, dashboard_path)
         print(f"Dashboard interface successfully updated with unique clean records at {dashboard_path}")
     except Exception as d_err:

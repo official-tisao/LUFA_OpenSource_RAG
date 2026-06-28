@@ -15,9 +15,9 @@ import traceback
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
-import yaml
 
 sys.path.insert(0, str(Path(__file__).parent))
+from config_loader import cfg
 
 INPUT_CSV = "tests/combined_test_data_and_ground_truth.csv"
 OUTPUT_CSV = "tests/lufa_out_data.csv"
@@ -35,11 +35,9 @@ OUTPUT_COLUMNS = [
 
 
 def load_config(path=CONFIG):
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
-    except FileNotFoundError:
-        return {}
+    """Backward-compatible wrapper — delegates to config_loader."""
+    from config_loader import cfg_raw
+    return cfg_raw()
 
 
 def extract_sources(sources, max_sources=5):
@@ -196,7 +194,7 @@ def ensure_ground_truth(csv_path):
     if "ground_source_truth_id" not in df.columns or df["ground_source_truth_id"].isnull().all():
         print("[Sim] ground_source_truth_id missing — running find_ground_truth.py first...")
         from find_ground_truth import run as find_gt
-        find_gt(csv_path, "db/chroma_db", "multilingual_docs", top_k=5)
+        find_gt(csv_path, cfg("database.path"), cfg("database.collection_name"), top_k=5)
 
 
 if __name__ == "__main__":
@@ -208,8 +206,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", default=OUTPUT_CSV, help="Output CSV path")
     args = parser.parse_args()
 
-    cfg = load_config()
-    base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    base_model = cfg("models.llm.name")
     model_name = args.model or base_model
 
     ensure_ground_truth(args.input)

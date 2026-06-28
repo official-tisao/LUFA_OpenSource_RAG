@@ -15,7 +15,7 @@ models:
     name: "llama3.2:3b-instruct-q4_K_M"
     base_url: "http://localhost:11434"
     request_timeout: 120.0
-  
+
   embedding:
     name: "nomic-embed-text-v2-moe"
     base_url: "http://localhost:11434"
@@ -27,19 +27,24 @@ database:
 
 # Document Processing
 ingestion:
-  chunk_size: 1024
-  chunk_overlap: 200
-  
+  chunk_size: 512
+  chunk_overlap: 50
+
 # Retrieval Settings
 retrieval:
   top_k: 5
   similarity_threshold: 0.7
+  response_mode: "compact"  # Options: compact, refine, tree_summarize
 
 # Data Directories
 data:
   english_dir: "data/english"
   french_dir: "data/french"
   metadata_file: "data/metadata.json"
+
+# Agreement Configuration
+agreement:
+  default_year_range: "2020 - 2025"
 
 # System Prompts
 prompts:
@@ -54,3 +59,37 @@ ui:
   languages:
     en: "English"
     fr: "Français"
+
+# Feature Flags
+features:
+  source_display: true
+  language_stats: true
+  chat_history: true
+
+# Copilot / Frontier Model Configuration
+copilot:
+  github_token: ""
+  github_models_endpoint: "https://models.inference.ai.azure.com"
+
+# Model API Authentication
+# Per-model (api_key, api_base) entries.  Unknown models fall back to "default".
+# Use env vars MODEL_API_KEY_<NAME> / MODEL_API_BASE_<NAME> to override at runtime.
+# Gemini / Claude entries point to the local model proxy (src/model_proxy.py — uses CLI, no API keys needed).
+# Gemini requests are routed through antigravity (Google Antigravity IDE with built-in Gemini).
+# Set GEMINI_FALLBACK_CLI=1 env var to use headless gemini CLI instead.
+model_api_auth:
+  default:
+    api_key: ""
+    api_base: "http://localhost:11434/api"
+  claude-3-opus-20240229:
+    api_key: ""
+    api_base: "https://api.anthropic.com/v1"
+  openrouter/owl-alpha:
+    api_key: ""
+    api_base: "https://api.openrouter.ai/v1"
+  gemini-2.5-pro:
+    api_key: ""
+    api_base: "http://localhost:9090/v1"
+  claude-sonnet-4-5:
+    api_key: ""
+    api_base: "http://localhost:9090/v1"
