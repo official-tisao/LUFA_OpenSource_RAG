@@ -18,7 +18,8 @@ from datetime import datetime
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
-from run_simulation import query_single_record, load_config
+from run_simulation import query_single_record
+from config_loader import cfg
 from evaluate import (
     token_f1, compute_bleu, compute_rouge, compute_meteor,
     mrr, ndcg_at_k, recall_at_k, llm_judge_scores,
@@ -102,14 +103,13 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
     print("STAGE 2: EXECUTING RE-GENERATION AND METRIC RESCORING LOOP")
     print("=" * 80)
 
-    cfg = load_config()
-    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    cfg_base_model = cfg("models.llm.name")
 
     chroma_cached_data = None
     try:
         import chromadb
         client = chromadb.PersistentClient(path=db_path)
-        collection = client.get_collection("multilingual_docs")
+        collection = client.get_collection(cfg("database.collection_name"))
         chroma_cached_data = collection.get(include=["documents"])
     except Exception as dberr:
         print(f"[Warning] Chroma connection failed: {dberr}")
@@ -159,7 +159,8 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
             print("      ⚠️  Warning: Rescored retrieval returned 0.0. Attempting embedded text match recovery...")
             try:
                 from evaluate import repair_single_row_sources
-                fixed_ids = repair_single_row_sources(sim_output, chroma_cached_data, db_path, "multilingual_docs")
+                fixed_ids = repair_single_row_sources(sim_output, chroma_cached_data, db_path,
+                                                      cfg("database.collection_name"))
                 if fixed_ids:
                     retrieved_ids = fixed_ids
                     mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
@@ -261,12 +262,15 @@ if __name__ == "__main__":
     parser.add_argument("--lufa_csv", default="tests/lufa_out_data.csv")
     parser.add_argument("--eval_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--test_csv", default="tests/combined_test_data_and_ground_truth.csv")
-    parser.add_argument("--db", default="db/chroma_db")
+    parser.add_argument("--db", default=None)
     parser.add_argument("--dashboard", default="dashboard/index.html")
-    parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
+    parser.add_argument("--llm_model", default=None)
     parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
     args = parser.parse_args()
+
+    args.db = args.db or cfg("database.path")
+    args.llm_model = args.llm_model or cfg("models.llm.name")
 
     process_healing_cycle(
         lufa_path=args.lufa_csv,
