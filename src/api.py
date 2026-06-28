@@ -8,7 +8,7 @@ Test with:   curl -X POST http://localhost:8000/agentic-query \
                -d '{"query":"What is the salary grid for 2024?","return_sources":true}'
 """
 
-import sys, yaml
+import sys
 from pathlib import Path
 from typing import Optional
 from contextlib import asynccontextmanager
@@ -20,21 +20,13 @@ from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).parent))
 from rag_engine import BilingualRAGEngine
+from config_loader import cfg
 
-
-def load_config(path: str = "config/config.yaml") -> dict:
-    try:
-        with open(path) as f:
-            return yaml.safe_load(f) or {}
-    except FileNotFoundError:
-        return {}
-
-_cfg          = load_config()
-LLM_MODEL     = _cfg.get("models", {}).get("llm",       {}).get("name", "llama3.2:3b-instruct-q4_K_M")
-EMBED_MODEL   = _cfg.get("models", {}).get("embedding", {}).get("name", "nomic-embed-text-v2-moe")
-DB_PATH       = _cfg.get("database",  {}).get("path",       "db/chroma_db")
-COLLECTION    = _cfg.get("database",  {}).get("collection",  "multilingual_docs")
-DEFAULT_TOP_K = _cfg.get("retrieval", {}).get("top_k", 5)
+LLM_MODEL     = cfg("models.llm.name")
+EMBED_MODEL   = cfg("models.embedding.name")
+DB_PATH       = cfg("database.path")
+COLLECTION    = cfg("database.collection_name")
+DEFAULT_TOP_K = cfg("retrieval.top_k")
 
 engine_instance: Optional[BilingualRAGEngine] = None
 
