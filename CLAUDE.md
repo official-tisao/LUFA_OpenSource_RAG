@@ -40,6 +40,13 @@ python src/repair_lufa_out.py
 
 # Open dashboard
 open dashboard/index.html
+
+# Model proxy — Gemini & Claude CLIs via OpenAI-compatible API (port 9090)
+# No API keys needed — uses your account subscriptions via installed CLIs
+# Gemini goes through antigravity (Google Antigravity IDE with built-in Gemini)
+# Set GEMINI_FALLBACK_CLI=1 to use headless gemini CLI instead of antigravity
+python src/model_proxy.py
+MODEL_PROXY_PORT=8080 python src/model_proxy.py  # custom port
 ```
 
 **API endpoints** (after `python src/api.py`):
@@ -48,7 +55,16 @@ open dashboard/index.html
 - `POST /agentic-query` — 3-pass agentic loop (60–180s, set high timeout)
 - `POST /copilot-query` — frontier model generation (needs `GITHUB_TOKEN`)
 
-Config lives in `config/config.yaml` (or falls back to defaults in `src/config_template.py`).
+**Model proxy endpoints** (after `python src/model_proxy.py` on port 9090):
+- `GET  /health` — liveness + CLI availability
+- `GET  /v1/models` — list available Gemini/Claude models
+- `POST /v1/chat/completions` — OpenAI-compatible chat completion (routes by model prefix via CLI sub-process)
+- Requires `claude` CLI (Claude Code) and/or `antigravity` (Google Antigravity with built-in Gemini) installed and authenticated — uses your standard account subscription, no API keys needed
+- Set `GEMINI_FALLBACK_CLI=1` to use the headless `gemini` CLI (`npm i -g @google/gemini-cli`) instead of antigravity for non-GUI environments
+
+**MODEL_API_AUTH**: All model API credentials are resolved from `config/config.yaml` `model_api_auth` section (per-model `api_key`/`api_base` entries, with `default` fallback). Runtime overrides via env vars `MODEL_API_KEY_<NAME>` / `MODEL_API_BASE_<NAME>`, or `LUFA_*` env vars for any config key. See `src/model_api_auth.py` and `src/config_loader.py`.
+
+Config lives in `config/config.yaml`. All modules load settings via `src/config_loader.py` (dotted-key access: `cfg("models.llm.name")`). Legacy `config.py` / `config_template.py` are no longer imported.
 
 ## Architecture
 
@@ -107,7 +123,7 @@ tests/evaluation_results.csv  +  dashboard/index.html (Chart.js)
 ## File state notes (branch: test-data)
 
 The git status shows many files as deleted from the working tree. Active files in `src/` and relevant to normal operation:
-- **Active**: `app.py`, `api.py`, `rag_engine.py`, `ingestion.py`, `clause_chunker.py`, `translator.py`, `query_handler.py`, `language_detector.py`, `query_rewriter.py`, `reflector.py`, `recency_reranker.py`, `copilot_engine.py`, `evaluate.py`, `run_simulation.py`, `find_ground_truth.py`, `generate_test_question.py`, `repair_lufa_out.py`, `repair_evaluation.py`, `get_lufa_stats.py`, `pdf_ocr_converter.py`, `bilingual_pdf_splitter.py`, `side_by_side_clause_chunker.py`, `config_template.py`
+- **Active**: `app.py`, `api.py`, `rag_engine.py`, `ingestion.py`, `clause_chunker.py`, `translator.py`, `query_handler.py`, `language_detector.py`, `query_rewriter.py`, `reflector.py`, `recency_reranker.py`, `copilot_engine.py`, `evaluate.py`, `run_simulation.py`, `find_ground_truth.py`, `generate_test_question.py`, `repair_lufa_out.py`, `repair_evaluation.py`, `get_lufa_stats.py`, `pdf_ocr_converter.py`, `bilingual_pdf_splitter.py`, `side_by_side_clause_chunker.py`, `config_loader.py`, `model_api_auth.py`, `model_proxy.py`
 - **Deleted from working tree** (still in git history): `test_basic.py`, `test_integration.py`, `test_reflector.py`, `bootstrap-backup.sh`, `pdf_ocr_converter.py` (old location), `src/ingestion.py` (old version), `src/bilingual_pdf_splitter.py` (old version)
 
 PDFs under `data/english/` and `data/french/` are also deleted from the working tree — they must be re-added before ingestion.
