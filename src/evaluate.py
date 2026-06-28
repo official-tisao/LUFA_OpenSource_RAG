@@ -25,11 +25,12 @@ from nltk.translate.meteor_score import meteor_score
 from rouge_score import rouge_scorer
 
 # Dynamic simulation hooks
-from run_simulation import query_single_record, load_config
+from run_simulation import query_single_record
 
 warnings.filterwarnings("ignore")
 
 sys.path.insert(0, str(Path(__file__).parent))
+from config_loader import cfg
 
 
 # Check local cache availability before calling remote download endpoints to avoid WinError 10060
@@ -95,7 +96,9 @@ def calculate_token_overlap(text_a, text_b):
     return len(intersection) / len(words_a)
 
 
-def repair_single_row_sources(row_dict, chroma_data=None, db_path="db/chroma_db", collection_name="multilingual_docs"):
+def repair_single_row_sources(row_dict, chroma_data=None, db_path=None, collection_name=None):
+    db_path = db_path or cfg("database.path")
+    collection_name = collection_name or cfg("database.collection_name")
     """
     Examines a row's source text layers and extracts matching database keys
     by executing a local token scan over the persistent storage collection.
@@ -266,10 +269,12 @@ def extract_score(text):
     return float(match.group(1)) / 5.0 if match else 0.5
 
 
-def llm_judge_scores(question, answer, context, llm_model="llama3.2:3b-instruct-q4_K_M"):
+def llm_judge_scores(question, answer, context, llm_model=None):
+    llm_model = llm_model or cfg("models.llm.name")
     """Use local Ollama model as judge. Returns normalized 0–1 scores."""
     from llama_index.llms.ollama import Ollama
-    llm = Ollama(model=llm_model, base_url="http://localhost:11434", request_timeout=60.0)
+    from model_api_auth import get_ollama_client
+    llm = get_ollama_client(llm_model, request_timeout=60.0)
     scores = {}
     for metric, prompt_template in LLM_JUDGE_PROMPTS.items():
         try:
@@ -322,10 +327,11 @@ def run_evaluation(
         out_csv="tests/evaluation_results.csv",
         dashboard_out="dashboard/index.html",
         use_llm_judge=True,
-        llm_model="llama3.2:3b-instruct-q4_K_M",
+        llm_model=None,
         sim_mode="local",
         api_url="http://localhost:8000"
 ):
+    llm_model = llm_model or cfg("models.llm.name")
     print(f"[Eval] Verifying ground truth data file from: {test_csv}")
     if not Path(test_csv).exists():
         raise FileNotFoundError(
@@ -361,8 +367,8 @@ def run_evaluation(
     chroma_cached_data = None
     try:
         import chromadb
-        client = chromadb.PersistentClient(path="db/chroma_db")
-        collection = client.get_collection("multilingual_docs")
+        client = chromadb.PersistentClient(path=cfg("database.path"))
+        collection = client.get_collection(cfg("database.collection_name"))
         chroma_cached_data = collection.get(include=["documents"])
     except Exception as e:
         print(f"[Warning] Could not pre-cache database tables: {e}")
@@ -392,8 +398,7 @@ def run_evaluation(
         print(
             f"[Eval] Output tracking database path '{out_csv}' not present. Will be generated dynamically row-by-row.")
 
-    cfg = load_config()
-    cfg_base_model = cfg.get("models", {}).get("llm", {}).get("name", "llama3.2:3b-instruct-q4_K_M")
+    cfg_base_model = cfg("models.llm.name")
 
     print(f"[Eval] Starting verification loop on {len(test_df)} ground truth questions...")
     print("\n" + "=" * 80)
@@ -461,8 +466,9 @@ def run_evaluation(
         if mrr_val == 0.0 and ndcg_val == 0.0:
             print("   ⚠️  Retrieval metrics returned 0.0. Activating embedded local token repair pass...")
             try:
-                fixed_ids = repair_single_row_sources(active_rag_data, chroma_cached_data, "db/chroma_db",
-                                                      "multilingual_docs")
+                fixed_ids = repair_single_row_sources(active_rag_data, chroma_cached_data,
+                                                      cfg("database.path"),
+                                                      cfg("database.collection_name"))
 
                 if fixed_ids:
                     retrieved_ids = fixed_ids
@@ -662,7 +668,7 @@ if __name__ == "__main__":
     parser.add_argument("--out_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--dashboard", default="dashboard/index.html")
     parser.add_argument("--no_llm_judge", action="store_true", help="Skip LLM-as-judge step")
-    parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
+    parser.add_argument("--llm_model", default=None)
     parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
     args = parser.parse_args()
