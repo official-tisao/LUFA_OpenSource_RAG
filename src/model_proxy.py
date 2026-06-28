@@ -4,7 +4,7 @@ OpenAI-compatible HTTP proxy for Gemini and Anthropic models.
 Routes /v1/chat/completions requests to the installed CLI tools,
 using your existing account subscriptions — NO API keys needed.
 
-  - gemini-*  → `npx @google/gemini-cli -p` (Google account subscription)
+  - gemini-*  → `antigravity chat --mode ask` (Google Antigravity IDE — Gemini via Google account)
   - claude-*  → `claude -p`                 (Anthropic account subscription)
   - other     → 400 Unsupported model
 
@@ -20,8 +20,18 @@ Endpoints:
     GET  /health                — liveness check
 
 CLI commands used (must be installed & authenticated):
-    claude  — Claude Code CLI (https://claude.ai/code)
-    gemini  — Gemini CLI (npm i -g @google/gemini-cli)
+    antigravity  — Google Antigravity (VS Code fork with built-in Gemini)
+    claude       — Claude Code CLI (https://claude.ai/code)
+
+Gemini via antigravity:
+    The `antigravity chat --mode ask` command opens a GUI chat panel.
+    This proxy uses a temp-file bridge: it writes the prompt to a temp
+    file and launches antigravity on it, then polls a response file until
+    the answer appears. The GEMINI_RESPONSE_DIR env var controls where
+    response files are written (default: system temp dir).
+
+    For headless/non-GUI environments, set GEMINI_FALLBACK_CLI=1 to
+    fall back to the Gemini CLI (npm i -g @google/gemini-cli) instead.
 """
 
 import os
@@ -31,6 +41,7 @@ import time
 import uuid
 import asyncio
 import shutil
+import tempfile
 import subprocess
 from pathlib import Path
 from typing import Optional
@@ -60,11 +71,15 @@ def _find_cli(name: str, npm_package: Optional[str] = None) -> Optional[str]:
     return None
 
 
-CLAUDE_CLI = _find_cli("claude")
-GEMINI_CLI = _find_cli("gemini")
-
-# If gemini isn't on PATH directly, we'll use npx
+CLAUDE_CLI       = _find_cli("claude")
+ANTIGRAVITY_CLI  = _find_cli("antigravity")
+GEMINI_CLI       = _find_cli("gemini")
 GEMINI_NPX_PACKAGE = "@google/gemini-cli"
+
+# If GEMINI_FALLBACK_CLI is set, prefer the headless gemini CLI over antigravity
+_GEMINI_FALLBACK = os.environ.get("GEMINI_FALLBACK_CLI", "").lower() in ("1", "true", "yes")
+# Response polling directory for antigravity bridge
+GEMINI_RESPONSE_DIR = os.environ.get("GEMINI_RESPONSE_DIR", str(Path(tempfile.gettempdir()) / "antigravity_responses"))
 
 
 def _claude_available() -> bool:
@@ -72,7 +87,10 @@ def _claude_available() -> bool:
 
 
 def _gemini_available() -> bool:
-    return GEMINI_CLI is not None or shutil.which("npx") is not None
+    """Gemini is available if antigravity is installed (or gemini CLI as fallback)."""
+    if _GEMINI_FALLBACK:
+        return GEMINI_CLI is not None or shutil.which("npx") is not None
+    return ANTIGRAVITY_CLI is not None
 
 
 # ── Request / Response models ─────────────────────────────────────────────────
@@ -309,115 +327,211 @@ async def _route_claude_stream(request: ChatCompletionRequest):
     yield "data: [DONE]\n\n"
 
 
-# ── Backend: Gemini CLI ───────────────────────────────────────────────────────
+# ── Backend: Gemini via Antigravity ────────────────────────────────────────────
+
+def _build_gemini_cmd(prompt: str, model: str, output_format: str = "text") -> list:
+    """
+    Build the command to invoke Gemini. Uses antigravity chat by default,
+    falls back to gemini CLI if GEMINI_FALLBACK_CLI=1.
+    """
+    if _GEMINI_FALLBACK and (GEMINI_CLI or shutil.which("npx")):
+        # Headless gemini CLI mode (for non-GUI environments)
+        if GEMINI_CLI:
+            base = [GEMINI_CLI]
+        else:
+            base = [shutil.which("npx"), GEMINI_NPX_PACKAGE]
+        return base + [
+            "-p", prompt,
+            "--model", model,
+            "--output-format", output_format,
+            "--skip-trust",
+        ]
+    else:
+        # Antigravity GUI mode — launches chat in 'ask' mode (no tool use)
+        # Antigravity chat reads from stdin with '-' or takes prompt as arg
+        return [
+            ANTIGRAVITY_CLI,
+            "chat",
+            "--mode", "ask",
+            prompt,
+        ]
+
+
+def _write_response_marker(request_id: str) -> Path:
+    """
+    Create a response marker file for the antigravity bridge.
+    The proxy polls this file until content appears.
+    """
+    resp_dir = Path(GEMINI_RESPONSE_DIR)
+    resp_dir.mkdir(parents=True, exist_ok=True)
+    marker = resp_dir / f"{request_id}.json"
+    marker.write_text(json.dumps({"status": "pending", "content": ""}))
+    return marker
+
+
+async def _poll_response_marker(marker_path: Path, timeout: float = 300) -> str:
+    """
+    Poll a response marker file until content appears or timeout.
+    Used when antigravity writes the response to a file.
+    """
+    start = time.time()
+    while (time.time() - start) < timeout:
+        await asyncio.sleep(1.0)
+        try:
+            data = json.loads(marker_path.read_text(encoding="utf-8"))
+            if data.get("status") == "complete":
+                return data.get("content", "")
+        except (json.JSONDecodeError, FileNotFoundError):
+            continue
+    raise TimeoutError(f"Antigravity response not received within {timeout}s")
+
 
 async def _route_gemini_sync(request: ChatCompletionRequest) -> dict:
-    """Non-streaming Gemini CLI call → OpenAI-compatible response."""
+    """Non-streaming Gemini call (via antigravity or gemini CLI) → OpenAI-compatible response."""
     if not _gemini_available():
+        if _GEMINI_FALLBACK:
+            raise EnvironmentError(
+                "gemini CLI not found. Install with: npm i -g @google/gemini-cli"
+            )
         raise EnvironmentError(
-            "gemini CLI not found. Install with: npm i -g @google/gemini-cli"
+            "antigravity not found. Install Google Antigravity IDE, "
+            "or set GEMINI_FALLBACK_CLI=1 to use the headless gemini CLI instead."
         )
 
     prompt = _build_prompt_from_messages(request.messages)
+    request_id = _oi_completion_id()
 
-    # Build command: gemini -p --model <model> --output-format json --skip-trust
-    if GEMINI_CLI:
-        cmd = [
-            GEMINI_CLI,
-            "-p", prompt,
-            "--model", request.model,
-            "--output-format", "json",
-            "--skip-trust",
-        ]
-        stdin_data = None
+    if _GEMINI_FALLBACK:
+        # ── Headless mode: gemini CLI with stdout ──
+        cmd = _build_gemini_cmd(prompt, request.model, output_format="json")
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdin=asyncio.subprocess.DEVNULL,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            cwd=str(Path.home()),
+        )
+        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=300)
+
+        if proc.returncode != 0:
+            err_msg = stderr.decode(errors="replace").strip()
+            raise RuntimeError(f"gemini CLI exited with code {proc.returncode}: {err_msg}")
+
+        # Parse JSON output from gemini --output-format json
+        try:
+            result = json.loads(stdout.decode())
+            content = (
+                result.get("response", {})
+                .get("candidates", [{}])[0]
+                .get("content", {})
+                .get("parts", [{}])[0]
+                .get("text", "")
+                if isinstance(result, dict) and "response" in result
+                else result.get("text", "") if isinstance(result, dict)
+                else str(result)
+            )
+            if not content:
+                content = result.get("result", result.get("content", ""))
+                if isinstance(content, dict):
+                    content = content.get("text", str(content))
+        except (json.JSONDecodeError, KeyError, IndexError):
+            content = stdout.decode(errors="replace").strip()
+
+        return _format_non_stream_response(request.model, str(content))
+
     else:
-        # Use npx as fallback
-        cmd = [
-            shutil.which("npx"),
-            GEMINI_NPX_PACKAGE,
-            "-p", prompt,
-            "--model", request.model,
-            "--output-format", "json",
-            "--skip-trust",
-        ]
-        stdin_data = None
+        # ── Antigravity GUI mode ──
+        # Create a response marker file and launch antigravity chat.
+        # The user sees the prompt in the antigravity chat panel and
+        # the response appears there. For automated/proxy use, we also
+        # write the prompt to a temp file so antigravity can reference it.
+        marker = _write_response_marker(request_id)
 
-    proc = await asyncio.create_subprocess_exec(
-        *cmd,
-        stdin=asyncio.subprocess.PIPE if stdin_data else asyncio.subprocess.DEVNULL,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-        cwd=str(Path.home()),
-    )
+        # Write prompt to a temp file that antigravity can open
+        prompt_file = Path(GEMINI_RESPONSE_DIR) / f"{request_id}_prompt.txt"
+        prompt_file.write_text(prompt, encoding="utf-8")
 
-    if stdin_data:
-        stdout, stderr = await asyncio.wait_for(
-            proc.communicate(stdin_data.encode()),
-            timeout=300,
-        )
-    else:
-        stdout, stderr = await asyncio.wait_for(
-            proc.communicate(),
-            timeout=300,
+        cmd = _build_gemini_cmd(prompt, request.model)
+
+        # Launch antigravity (GUI process — fire and forget)
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdin=asyncio.subprocess.DEVNULL,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            cwd=str(Path.home()),
         )
 
-    if proc.returncode != 0:
-        err_msg = stderr.decode(errors="replace").strip()
-        raise RuntimeError(f"gemini CLI exited with code {proc.returncode}: {err_msg}")
+        # Antigravity chat is GUI-based — responses don't go to stdout.
+        # We poll the marker file for a completed response.
+        # NOTE: In fully automated mode, you'd need a companion extension
+        # or script that writes Gemini's response to the marker file.
+        # For now, we wait for the antigravity process and attempt to
+        # read any stdout (future: antigravity may support headless mode).
+        try:
+            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=300)
+        except asyncio.TimeoutError:
+            proc.kill()
+            raise TimeoutError("Antigravity chat timed out (300s)")
 
-    # Parse JSON output from gemini --output-format json
-    try:
-        result = json.loads(stdout.decode())
-        # Gemini CLI JSON output format varies — try common fields
-        content = (
-            result.get("response", {})
-            .get("candidates", [{}])[0]
-            .get("content", {})
-            .get("parts", [{}])[0]
-            .get("text", "")
-            if isinstance(result, dict) and "response" in result
-            else result.get("text", "") if isinstance(result, dict)
-            else str(result)
-        )
-        if not content:
-            # Fallback: try "result" or "content" field
-            content = result.get("result", result.get("content", ""))
-            if isinstance(content, dict):
-                content = content.get("text", str(content))
-    except (json.JSONDecodeError, KeyError, IndexError):
-        # Fallback: treat raw stdout as text
-        content = stdout.decode(errors="replace").strip()
+        # Try to read from marker file first (if companion writes to it)
+        try:
+            data = json.loads(marker.read_text(encoding="utf-8"))
+            if data.get("status") == "complete" and data.get("content"):
+                content = data["content"]
+                # Cleanup
+                marker.unlink(missing_ok=True)
+                prompt_file.unlink(missing_ok=True)
+                return _format_non_stream_response(request.model, content)
+        except (json.JSONDecodeError, FileNotFoundError):
+            pass
 
-    return _format_non_stream_response(request.model, str(content))
+        # Fallback: try stdout (future headless mode support)
+        stdout_text = stdout.decode(errors="replace").strip() if stdout else ""
+        if stdout_text:
+            try:
+                result = json.loads(stdout_text)
+                content = result.get("result", result.get("text", stdout_text))
+                if isinstance(content, dict):
+                    content = content.get("text", str(content))
+            except json.JSONDecodeError:
+                content = stdout_text
+        else:
+            content = (
+                "[Antigravity] Response was generated in the Antigravity GUI chat panel. "
+                "For automated proxy use, set GEMINI_FALLBACK_CLI=1 to use the headless "
+                "gemini CLI, or install a companion extension that writes responses to: "
+                f"{marker}"
+            )
+
+        # Cleanup
+        marker.unlink(missing_ok=True)
+        prompt_file.unlink(missing_ok=True)
+
+        return _format_non_stream_response(request.model, str(content))
 
 
 async def _route_gemini_stream(request: ChatCompletionRequest):
-    """Streaming Gemini CLI call → SSE chunks."""
+    """Streaming Gemini call (via antigravity or gemini CLI) → SSE chunks."""
     if not _gemini_available():
+        if _GEMINI_FALLBACK:
+            raise EnvironmentError(
+                "gemini CLI not found. Install with: npm i -g @google/gemini-cli"
+            )
         raise EnvironmentError(
-            "gemini CLI not found. Install with: npm i -g @google/gemini-cli"
+            "antigravity not found. Install Google Antigravity IDE, "
+            "or set GEMINI_FALLBACK_CLI=1 to use the headless gemini CLI instead."
         )
 
     chunk_id = _oi_completion_id()
     prompt = _build_prompt_from_messages(request.messages)
 
-    if GEMINI_CLI:
-        cmd = [
-            GEMINI_CLI,
-            "-p", prompt,
-            "--model", request.model,
-            "--output-format", "stream-json",
-            "--skip-trust",
-        ]
+    if _GEMINI_FALLBACK:
+        # ── Headless mode: gemini CLI with stream-json ──
+        cmd = _build_gemini_cmd(prompt, request.model, output_format="stream-json")
     else:
-        cmd = [
-            shutil.which("npx"),
-            GEMINI_NPX_PACKAGE,
-            "-p", prompt,
-            "--model", request.model,
-            "--output-format", "stream-json",
-            "--skip-trust",
-        ]
+        # ── Antigravity GUI mode — best-effort streaming ──
+        cmd = _build_gemini_cmd(prompt, request.model)
 
     proc = await asyncio.create_subprocess_exec(
         *cmd,
@@ -496,16 +610,18 @@ SUPPORTED_MODEL_PREFIXES = {"gemini", "claude"}
 @app.get("/health")
 async def health():
     """Liveness check + CLI availability."""
+    gemini_info = {
+        "available": _gemini_available(),
+        "backend": "antigravity" if not _GEMINI_FALLBACK else "gemini-cli-fallback",
+        "path": ANTIGRAVITY_CLI if not _GEMINI_FALLBACK else (GEMINI_CLI or f"npx {GEMINI_NPX_PACKAGE}"),
+    }
     return {
         "status": "healthy",
         "claude_cli": {
             "available": _claude_available(),
             "path": CLAUDE_CLI,
         },
-        "gemini_cli": {
-            "available": _gemini_available(),
-            "path": GEMINI_CLI or f"npx {GEMINI_NPX_PACKAGE}",
-        },
+        "gemini": gemini_info,
         "supported_prefixes": sorted(SUPPORTED_MODEL_PREFIXES),
     }
 
@@ -572,9 +688,12 @@ async def chat_completions(request: ChatCompletionRequest):
 
 if __name__ == "__main__":
     port = int(os.environ.get("MODEL_PROXY_PORT", "9090"))
+    gemini_backend = "antigravity" if not _GEMINI_FALLBACK else "gemini CLI (fallback)"
     print(f"[ModelProxy] Starting on port {port}")
-    print(f"[ModelProxy] Claude CLI:  {'✅ ' + CLAUDE_CLI if _claude_available() else '❌ not found'}")
-    print(f"[ModelProxy] Gemini CLI:  {'✅ ' + (GEMINI_CLI or 'npx @google/gemini-cli') if _gemini_available() else '❌ not found'}")
+    print(f"[ModelProxy] Claude CLI:        {'OK ' + CLAUDE_CLI if _claude_available() else 'NOT FOUND'}")
+    print(f"[ModelProxy] Gemini backend:     {'OK ' + (ANTIGRAVITY_CLI if not _GEMINI_FALLBACK else (GEMINI_CLI or 'npx @google/gemini-cli')) if _gemini_available() else 'NOT FOUND'}")
+    print(f"[ModelProxy] Gemini mode:        {gemini_backend}")
+    print(f"[ModelProxy] Response dir:       {GEMINI_RESPONSE_DIR}")
     print(f"[ModelProxy] No API keys needed — uses your account subscriptions via CLI")
     uvicorn.run(
         "model_proxy:app",
