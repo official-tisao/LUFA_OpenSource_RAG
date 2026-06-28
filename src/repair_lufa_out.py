@@ -14,10 +14,13 @@ from pathlib import Path
 import pandas as pd
 import chromadb
 
+sys.path.insert(0, str(Path(__file__).parent))
+from config_loader import cfg
+
 DEFAULT_LUFA_CSV = "tests/lufa_out_data.csv"
 DEFAULT_GROUND_TRUTH_CSV = "tests/combined_test_data_and_ground_truth.csv"
-DEFAULT_DB = "db/chroma_db"
-DEFAULT_COLLECTION = "multilingual_docs"
+DEFAULT_DB = cfg("database.path")
+DEFAULT_COLLECTION = cfg("database.collection_name")
 
 
 def calculate_token_overlap(text_a, text_b):
