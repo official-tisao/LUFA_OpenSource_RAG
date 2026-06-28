@@ -38,3 +38,35 @@ STREAMLIT_LAYOUT = "wide"
 ENABLE_SOURCE_DISPLAY = True
 ENABLE_LANGUAGE_STATS = True
 ENABLE_CHAT_HISTORY = True
+
+# Model API Authentication
+# Per-model (api_key, api_base) entries.  Unknown models fall back to "default".
+# Use env vars MODEL_API_KEY_<NAME> / MODEL_API_BASE_<NAME> to override at runtime.
+MODEL_API_AUTH = {
+    "default":
+        {
+            "api_key": "",
+            "api_base": "http://localhost:11434/api",
+        },
+    "claude-3-opus-20240229":
+        {
+            "api_key": "",
+            "api_base": "https://api.anthropic.com/v1",
+        },
+    "openrouter/owl-alpha":
+        {
+            "api_key": "",
+            "api_base": "https://api.openrouter.ai/v1",
+        },
+    # ── Gemini / Claude via local model proxy (src/model_proxy.py — uses CLI, no API keys) ──
+    "gemini-2.5-pro":
+        {
+            "api_key": "",
+            "api_base": "http://localhost:9090/v1",
+        },
+    "claude-sonnet-4-5":
+        {
+            "api_key": "",
+            "api_base": "http://localhost:9090/v1",
+        },
+}
