@@ -33,7 +33,7 @@ python src/run_simulation.py --mode frontier --model gpt-4o
 
 # Evaluation metrics + dashboard
 python src/evaluate.py
-python src/evaluate.py --no_llm_judge  # skip Ollama judge (faster)
+python src/evaluate.py --judge_llm  # skip Ollama judge (faster)
 
 # Repair source IDs in simulation output
 python src/repair_lufa_out.py
@@ -109,7 +109,7 @@ run_simulation.py  (row-by-row, crash-resumable, appends to lufa_out_data.csv)
         │
         ▼
 evaluate.py
-  ├─ generation metrics: token F1, BLEU, ROUGE-1/2/L, METEOR
+  ├─ generation metrics: token F1, BLEU, ROUGE-1/3/L, METEOR
   ├─ retrieval metrics: MRR, NDCG@5, Recall@1/3/5
   ├─ LLM-as-judge (Ollama): answer_relevance, faithfulness, context_precision
   └─ repair hooks: repair_lufa_out.py fixes missing source IDs inline

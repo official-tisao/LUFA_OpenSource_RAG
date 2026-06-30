@@ -59,7 +59,7 @@ class BilingualRAGEngine:
         self.query_handler    = QueryHandler()
 
         print(f"Initializing LLM: {llm_model}")
-        self.llm = get_ollama_client(llm_model, request_timeout=120.0)
+        self.llm = get_ollama_client(llm_model, request_timeout=240.0)
 
         print(f"Initializing embedding model: {embedding_model}")
         self.embed_model = get_ollama_client(embedding_model, is_embedding=True)

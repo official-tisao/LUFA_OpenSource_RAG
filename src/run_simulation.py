@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simulation script — runs every question in combined_test_data.csv
+Simulation script — runs every question in combined_test_data_and_ground_truth.csv
 through the Agentic RAG pipeline and stores results in lufa_out_data.csv.
 Supports crash-resumption and saves outputs row-by-row incrementally.
 Guarantees strict column alignment matching the evaluation dashboard schema.
@@ -85,9 +85,17 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
                 max_retries=3,
             )
 
+        elif mode == "local-naive":
+            from rag_engine import create_rag_engine
+            engine = create_rag_engine()
+            result = engine.query(
+                query_text=q_text,
+                return_sources=True
+            )
+
         elif mode == "api":
             import httpx
-            with httpx.Client(timeout=300.0) as client:
+            with httpx.Client(timeout=400.0) as client:
                 resp = client.post(
                     f"{api_url}/agentic-query",
                     json={"query": q_text, "return_sources": True, "max_retries": 3},

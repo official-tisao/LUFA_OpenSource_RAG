@@ -389,7 +389,7 @@ python src/find_ground_truth.py
 
 # Generate evaluation + dashboard
 python src/evaluate.py
-python src/evaluate.py --no_llm_judge   # faster, skips Ollama judge
+python src/evaluate.py --judge_llm   # faster, skips Ollama judge
 
 # Health check
 curl http://localhost:8000/health
@@ -421,7 +421,7 @@ python src/find_ground_truth.py
 
 # Generate evaluation + dashboard
 python src/evaluate.py
-python src/evaluate.py --no_llm_judge   # faster, skips Ollama judge
+python src/evaluate.py --judge_llm   # faster, skips Ollama judge
 
 
 

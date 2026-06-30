@@ -1470,7 +1470,7 @@ EVAL_COLUMNS = [
     "source5_id", "source5_score", "source5_text",
     "original_cosine_score", "recency_adjusted_score", "RRF",
     "id", "rag_base_model", "judge_llm", "category", "difficulty",
-    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor",
+    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge3", "rougeL", "meteor",
     "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision"
 ]
@@ -1571,11 +1571,11 @@ def compute_bleu(prediction, reference):
 
 
 def compute_rouge(prediction, reference):
-    scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
+    scorer = rouge_scorer.RougeScorer(["rouge1", "rouge3", "rougeL"], use_stemmer=True)
     scores = scorer.score(str(reference), str(prediction))
     return {
         "rouge1": round(scores["rouge1"].fmeasure, 4),
-        "rouge2": round(scores["rouge2"].fmeasure, 4),
+        "rouge3": round(scores["rouge3"].fmeasure, 4),
         "rougeL": round(scores["rougeL"].fmeasure, 4),
     }
 
@@ -1630,7 +1630,7 @@ def ndcg_at_k(retrieved, ground_truth, k=5):
 # ─────────────────────────────────────────────────────────────────────────────
 #  LLM-AS-JUDGE METRICS
 # ─────────────────────────────────────────────────────────────────────────────
-LLM_JUDGE_PROMPTS = {
+JUDGE_LLM_PROMPTS = {
     "answer_relevance": """Score how relevant the answer is to the question.
 Score 1-5: 1=completely irrelevant, 3=partially relevant, 5=fully relevant.
 Reply with ONLY the integer score.
@@ -1662,12 +1662,12 @@ def extract_score(text):
     return float(match.group(1)) / 5.0 if match else 0.5
 
 
-def llm_judge_scores(question, answer, context, llm_model="llama3.2:3b-instruct-q4_K_M"):
+def judge_llm_scores(question, answer, context, llm_model="llama3.2:3b-instruct-q4_K_M"):
     """Use local Ollama model as judge. Returns normalized 0–1 scores."""
     from llama_index.llms.ollama import Ollama
     llm = Ollama(model=llm_model, base_url="http://localhost:11434", request_timeout=60.0)
     scores = {}
-    for metric, prompt_template in LLM_JUDGE_PROMPTS.items():
+    for metric, prompt_template in JUDGE_LLM_PROMPTS.items():
         try:
             prompt = prompt_template.format(
                 question=question[:500],
@@ -1717,7 +1717,7 @@ def run_evaluation(
         test_csv="tests/combined_test_data_and_ground_truth.csv",
         out_csv="tests/evaluation_results.csv",
         dashboard_out="dashboard/index.html",
-        use_llm_judge=True,
+        use_judge_llm=True,
         llm_model="llama3.2:3b-instruct-q4_K_M",
         sim_mode="local",
         api_url="http://localhost:8000"
@@ -1842,7 +1842,7 @@ def run_evaluation(
 
         rouge_scores = compute_rouge(prediction, reference)
         print(
-            f"      * ROUGE-1: {rouge_scores['rouge1']} | ROUGE-2: {rouge_scores['rouge2']} | ROUGE-L: {rouge_scores['rougeL']}")
+            f"      * ROUGE-1: {rouge_scores['rouge1']} | ROUGE-3: {rouge_scores['rouge3']} | ROUGE-L: {rouge_scores['rougeL']}")
 
         meteor_val = round(compute_meteor(prediction, reference), 4)
         print(f"      * METEOR Score: {meteor_val}")
@@ -1913,7 +1913,7 @@ def run_evaluation(
         rec["token_f1_score"] = f1_val
         rec["sentence_bleu_score"] = bleu_val
         rec["rouge1"] = rouge_scores["rouge1"]
-        rec["rouge2"] = rouge_scores["rouge2"]
+        rec["rouge3"] = rouge_scores["rouge3"]
         rec["rougeL"] = rouge_scores["rougeL"]
         rec["meteor"] = meteor_val
 
@@ -1931,10 +1931,10 @@ def run_evaluation(
         rec["faithfulness"] = 0.0
         rec["context_precision"] = 0.0
 
-        if use_llm_judge and prediction and prediction != "" and prediction != "ERROR":
+        if use_judge_llm and prediction and prediction != "" and prediction != "ERROR":
             print(f"   -> Dispatching prompt topologies to Judge Model ({llm_model})...")
             try:
-                judge = llm_judge_scores(question, prediction, context, llm_model)
+                judge = judge_llm_scores(question, prediction, context, llm_model)
                 rec["answer_relevance"] = judge.get("answer_relevance", 0.0)
                 rec["faithfulness"] = judge.get("faithfulness", 0.0)
                 rec["context_precision"] = judge.get("context_precision", 0.0)
@@ -2003,7 +2003,7 @@ def df_to_js_data(df):
             for k, v in temp_df.groupby(group_col)[metric].mean().items()
         }
 
-    gen_metrics = ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor"]
+    gen_metrics = ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge3", "rougeL", "meteor"]
     ret_metrics = ["mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5"]
     judge_metrics = ["answer_relevance", "faithfulness", "context_precision"]
 
@@ -2199,8 +2199,8 @@ const models = D.models.length ? D.models : ['default'];
 
 // ── Generation Chart ──────────────────────────────────────────────────────────
 {
-  const metrics = ['token_f1_score','sentence_bleu_score','rouge1','rouge2','rougeL','meteor'];
-  const labels = ['F1','BLEU','ROUGE-1','ROUGE-2','ROUGE-L','METEOR'];
+  const metrics = ['token_f1_score','sentence_bleu_score','rouge1','rouge3','rougeL','meteor'];
+  const labels = ['F1','BLEU','ROUGE-1','ROUGE-3','ROUGE-L','METEOR'];
   const datasets = models.map((m,i)=>({
     label: m,
     data: metrics.map(met=>(D.by_model[met]||{})[m]||0),
@@ -2319,7 +2319,7 @@ if __name__ == "__main__":
     parser.add_argument("--test_csv", default="tests/combined_test_data_and_ground_truth.csv")
     parser.add_argument("--out_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--dashboard", default="dashboard/index.html")
-    parser.add_argument("--no_llm_judge", action="store_true", help="Skip LLM-as-judge step")
+    parser.add_argument("--judge_llm", action="store_true", help="Skip LLM-as-judge step")
     parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
     parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
@@ -2330,7 +2330,7 @@ if __name__ == "__main__":
         test_csv=args.test_csv,
         out_csv=args.out_csv,
         dashboard_out=args.dashboard,
-        use_llm_judge=not args.no_llm_judge,
+        use_judge_llm=not args.no_judge_llm,
         llm_model=args.llm_model,
         sim_mode=args.sim_mode,
         api_url=args.api_url
@@ -4839,7 +4839,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from run_simulation import query_single_record, load_config
 from evaluate import (
     token_f1, compute_bleu, compute_rouge, compute_meteor,
-    mrr, ndcg_at_k, recall_at_k, llm_judge_scores,
+    mrr, ndcg_at_k, recall_at_k, judge_llm_scores,
     parse_source_ids, build_retrieved_ids, build_context_from_row,
     safe_float, generate_dashboard, LUFA_COLUMNS, EVAL_COLUMNS
 )
@@ -4997,7 +4997,7 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         if prediction and prediction != "ERROR":
             print(f"   -> Dispatching evaluation prompts to local Judge Model ({llm_model})...")
             try:
-                judge = llm_judge_scores(question, prediction, context, llm_model)
+                judge = judge_llm_scores(question, prediction, context, llm_model)
                 judge_relevance = judge.get("answer_relevance", 0.0)
                 judge_faithfulness = judge.get("faithfulness", 0.0)
                 judge_precision = judge.get("context_precision", 0.0)
@@ -5029,7 +5029,7 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         eval_row_dict["token_f1_score"] = f1_val
         eval_row_dict["sentence_bleu_score"] = bleu_val
         eval_row_dict["rouge1"] = rouge_scores["rouge1"]
-        eval_row_dict["rouge2"] = rouge_scores["rouge2"]
+        eval_row_dict["rouge3"] = rouge_scores["rouge3"]
         eval_row_dict["rougeL"] = rouge_scores["rougeL"]
         eval_row_dict["meteor"] = meteor_val
 

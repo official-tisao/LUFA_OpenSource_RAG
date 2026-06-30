@@ -22,7 +22,7 @@ from run_simulation import query_single_record
 from config_loader import cfg
 from evaluate import (
     token_f1, compute_bleu, compute_rouge, compute_meteor,
-    mrr, ndcg_at_k, recall_at_k, llm_judge_scores,
+    mrr, ndcg_at_k, recall_at_k, judge_llm_scores,
     parse_source_ids, resolve_ground_truth_ids, build_retrieved_ids, build_context_from_row,
     safe_float, generate_dashboard, LUFA_COLUMNS, EVAL_COLUMNS
 )
@@ -178,9 +178,9 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         judge_faithfulness = 0.0
         judge_precision = 0.0
         if prediction and prediction != "ERROR":
-            print(f"   -> Dispatching evaluation prompts to local Judge Model ({llm_model})...")
+            print(f"   -> Dispatching evaluation prompts to local Judge Model ({judge_llm_model})...")
             try:
-                judge = llm_judge_scores(question, prediction, context, llm_model)
+                judge = judge_llm_scores(question, prediction, context, judge_llm_model)
                 judge_relevance = judge.get("answer_relevance", 0.0)
                 judge_faithfulness = judge.get("faithfulness", 0.0)
                 judge_precision = judge.get("context_precision", 0.0)
@@ -212,7 +212,7 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         eval_row_dict["token_f1_score"] = f1_val
         eval_row_dict["sentence_bleu_score"] = bleu_val
         eval_row_dict["rouge1"] = rouge_scores["rouge1"]
-        eval_row_dict["rouge2"] = rouge_scores["rouge2"]
+        eval_row_dict["rouge3"] = rouge_scores["rouge3"]
         eval_row_dict["rougeL"] = rouge_scores["rougeL"]
         eval_row_dict["meteor"] = meteor_val
 
