@@ -37,12 +37,12 @@ import pandas as pd
 # ─────────────────────────────────────────────────────────────────────────────
 # Per-row numeric metric columns that the dashboard knows how to aggregate.
 NUMERIC_METRICS = [
-    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge3", "rougeL",
+    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL",
     "meteor", "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision",
 ]
 
-GEN_METRICS = ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge3", "rougeL", "meteor"]
+GEN_METRICS = ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor"]
 RET_METRICS = ["mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5"]
 JUDGE_METRICS = ["answer_relevance", "faithfulness", "context_precision"]
 
@@ -51,7 +51,7 @@ JUDGE_METRICS = ["answer_relevance", "faithfulness", "context_precision"]
 ROW_COLUMNS = [
     "question_id", "question", "answer", "rag_base_model", "language",
     "category", "difficulty",
-    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge3", "rougeL",
+    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL",
     "meteor", "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision",
     "grounded", "attempts",
@@ -279,7 +279,7 @@ def _build_static_charts_html(data):
     """Pre-rendered, JS-free versions of every chart, using the embedded
     server-side aggregates."""
     GEN_LABELS = [("token_f1_score", "F1"), ("sentence_bleu_score", "BLEU"),
-                  ("rouge1", "ROUGE-1"), ("rouge3", "ROUGE-3"),
+                  ("rouge1", "ROUGE-1"), ("rouge2", "ROUGE-2"),
                   ("rougeL", "ROUGE-L"), ("meteor", "METEOR")]
     RET_LABELS = [("mrr", "MRR"), ("ndcg_at_k", "NDCG"), ("recall_1", "Recall@1"),
                   ("recall_3", "Recall@3"), ("recall_5", "Recall@5")]

@@ -75,7 +75,7 @@ EVAL_COLUMNS = [
     "source5_id", "source5_score", "source5_text",
     "original_cosine_score", "recency_adjusted_score", "RRF",
     "id", "rag_base_model", "judge_llm", "category", "difficulty",
-    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge3", "rougeL", "meteor",
+    "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor",
     "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision"
 ]
@@ -178,11 +178,11 @@ def compute_bleu(prediction, reference):
 
 
 def compute_rouge(prediction, reference):
-    scorer = rouge_scorer.RougeScorer(["rouge1", "rouge", "rougeL"], use_stemmer=True)
+    scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
     scores = scorer.score(str(reference), str(prediction))
     return {
         "rouge1": round(scores["rouge1"].fmeasure, 4),
-        "rouge3": round(scores["rouge3"].fmeasure, 4),
+        "rouge2": round(scores["rouge2"].fmeasure, 4),
         "rougeL": round(scores["rougeL"].fmeasure, 4),
     }
 
@@ -547,7 +547,7 @@ def run_evaluation(
 
         rouge_scores = compute_rouge(prediction, reference)
         print(
-            f"      * ROUGE-1: {rouge_scores['rouge1']} | ROUGE-3: {rouge_scores['rouge3']} | ROUGE-L: {rouge_scores['rougeL']}")
+            f"      * ROUGE-1: {rouge_scores['rouge1']} | ROUGE-2: {rouge_scores['rouge2']} | ROUGE-L: {rouge_scores['rougeL']}")
 
         meteor_val = round(compute_meteor(prediction, reference), 4)
         print(f"      * METEOR Score: {meteor_val}")
@@ -619,7 +619,7 @@ def run_evaluation(
         rec["token_f1_score"] = f1_val
         rec["sentence_bleu_score"] = bleu_val
         rec["rouge1"] = rouge_scores["rouge1"]
-        rec["rouge3"] = rouge_scores["rouge3"]
+        rec["rouge2"] = rouge_scores["rouge2"]
         rec["rougeL"] = rouge_scores["rougeL"]
         rec["meteor"] = meteor_val
 
@@ -640,6 +640,11 @@ def run_evaluation(
         if judge_llm_model and prediction and prediction != "" and prediction != "ERROR":
             print(f"   -> Dispatching prompt topologies to Judge Model ({judge_llm_model})...")
             try:
+                judge = {
+                    "answer_relevance": 0.0,
+                    "faithfulness": 0.0,
+                    "context_precision": 0.0,
+                }
                 judge = judge_llm_scores(question, prediction, context, judge_llm_model)
                 rec["answer_relevance"] = judge.get("answer_relevance", 0.0)
                 rec["faithfulness"] = judge.get("faithfulness", 0.0)
@@ -709,7 +714,7 @@ def df_to_js_data(df):
             for k, v in temp_df.groupby(group_col)[metric].mean().items()
         }
 
-    gen_metrics = ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge3", "rougeL", "meteor"]
+    gen_metrics = ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor"]
     ret_metrics = ["mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5"]
     judge_metrics = ["answer_relevance", "faithfulness", "context_precision"]
 

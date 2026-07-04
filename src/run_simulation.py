@@ -88,7 +88,7 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
         elif mode == "local-naive":
             from rag_engine import create_rag_engine
             engine = create_rag_engine()
-            result = engine.query(
+            result = engine.naive_query(
                 query_text=q_text,
                 return_sources=True
             )

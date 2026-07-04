@@ -64,12 +64,13 @@ def clean_evaluation_file(file_path="tests/evaluation_results.csv", dashboard_pa
     cleaned_df = cleaned_df.drop(columns=["grounded_bool", "is_corrupted_metric"])
 
     # Re-sort chronologically by ID for visual presentation alignment
-    cleaned_df = cleaned_df.sort_values(by=["question_id"])
+    #cleaned_df = cleaned_df.sort_values(by=["question_id"])
 
     cleaned_df.to_csv(path, index=False)
     final_count = len(cleaned_df)
-
+    cleaned_df.to_csv(str(file_path), mode="a", index=False)
     print("Cleanup pass completed successfully.")
+    print(f"Cleanup record saved to {file_path} successfully.")
     print(f"Total duplicate or bad metric records eliminated: {initial_count - final_count}")
     print(f"Final clean unique record count saved to disk: {final_count}")
 

@@ -65,7 +65,7 @@ def check_row_invalidation(row):
     return False, ""
 
 
-def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm_model, sim_mode, api_url):
+def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm_model, sim_mode, api_url, judge_llm_model):
     print("================================================================================")
     print("STAGE 1: Scanning For System Invalidation Gaps Across Scorecards")
     print("================================================================================")
@@ -180,6 +180,11 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         if prediction and prediction != "ERROR":
             print(f"   -> Dispatching evaluation prompts to local Judge Model ({judge_llm_model})...")
             try:
+                judge = {
+                    "answer_relevance": 0.0,
+                    "faithfulness": 0.0,
+                    "context_precision": 0.0,
+                }
                 judge = judge_llm_scores(question, prediction, context, judge_llm_model)
                 judge_relevance = judge.get("answer_relevance", 0.0)
                 judge_faithfulness = judge.get("faithfulness", 0.0)
@@ -212,7 +217,7 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         eval_row_dict["token_f1_score"] = f1_val
         eval_row_dict["sentence_bleu_score"] = bleu_val
         eval_row_dict["rouge1"] = rouge_scores["rouge1"]
-        eval_row_dict["rouge3"] = rouge_scores["rouge3"]
+        eval_row_dict["rouge2"] = rouge_scores["rouge2"]
         eval_row_dict["rougeL"] = rouge_scores["rougeL"]
         eval_row_dict["meteor"] = meteor_val
 
@@ -265,7 +270,8 @@ if __name__ == "__main__":
     parser.add_argument("--db", default=None)
     parser.add_argument("--dashboard", default="dashboard/index.html")
     parser.add_argument("--llm_model", default=None)
-    parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
+    parser.add_argument("--judge_llm", default=None)
+    parser.add_argument("--sim_mode", choices=["local", "local-naive", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
     args = parser.parse_args()
 
@@ -280,5 +286,6 @@ if __name__ == "__main__":
         dash_path=args.dashboard,
         llm_model=args.llm_model,
         sim_mode=args.sim_mode,
-        api_url=args.api_url
+        api_url=args.api_url,
+        judge_llm_model=args.judge_llm,
     )

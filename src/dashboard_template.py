@@ -399,8 +399,8 @@ DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
 
     // Generation by model
     (function(){
-      var keys=['token_f1_score','sentence_bleu_score','rouge1','rouge3','rougeL','meteor'];
-      var labels=['F1','BLEU','ROUGE-1','ROUGE-3','ROUGE-L','METEOR'];
+      var keys=['token_f1_score','sentence_bleu_score','rouge1','rouge2','rougeL','meteor'];
+      var labels=['F1','BLEU','ROUGE-1','ROUGE-2','ROUGE-L','METEOR'];
       var byModel={}; models.forEach(function(m){ byModel[m]={}; });
       keys.forEach(function(k){
         var g=avgByGroup(rows,'rag_base_model',k);
@@ -533,7 +533,7 @@ DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
   // ── Filter UI build ─────────────────────────────────────────────────────────
   function labelFor(col){
     var map={ rag_base_model:'Model', token_f1_score:'F1', sentence_bleu_score:'BLEU',
-      rougeL:'ROUGE-L', rouge1:'ROUGE-1', rouge3:'ROUGE-3', meteor:'METEOR', mrr:'MRR',
+      rougeL:'ROUGE-L', rouge1:'ROUGE-1', rouge2:'ROUGE-2', meteor:'METEOR', mrr:'MRR',
       ndcg_at_k:'NDCG', recall_1:'Recall@1', recall_3:'Recall@3', recall_5:'Recall@5',
       answer_relevance:'Relevance', faithfulness:'Faithful', context_precision:'Precision',
       question_id:'ID', question:'Question', language:'Language', category:'Category',
