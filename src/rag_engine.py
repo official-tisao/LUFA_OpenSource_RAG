@@ -29,6 +29,49 @@ from model_api_auth import get_ollama_client
 from config_loader import cfg
 import chromadb
 
+# Create standalone instances of helper functions for easy import
+try:
+    from src.query_rewriter import rewrite_query as _rewrite_query
+    from src.reflector import reflect as _reflect
+    from src.translator import (
+        detect_full_language as _detect_full_language,
+        needs_translation as _needs_translation,
+        translate_to_english as _translate_to_english,
+        translate_to_target as _translate_to_target,
+        LANGUAGE_NAMES as _LANGUAGE_NAMES,
+    )
+    from src.language_detector import detect_language as _detect_language
+    from src.query_handler import QueryHandler as _QueryHandler
+    from src.translator import get_system_prompt as _get_system_prompt
+except ImportError:
+    # Fallback to basic implementations if imports fail
+    def _rewrite_query(query, lang, llm):
+        return query
+
+    def _reflect(answer, chunks, llm):
+        return False
+
+    def _detect_full_language(query):
+        return "en"
+
+    def _needs_translation(lang):
+        return False
+
+    def _translate_to_english(query, lang, llm):
+        return query
+
+    def _translate_to_target(answer, lang, llm):
+        return answer
+
+    _LANGUAGE_NAMES = {"en": "English", "fr": "French"}
+
+    def _detect_language(query):
+        return "en"
+
+    class _QueryHandler:
+        def get_system_prompt(self, lang):
+            return "You are a helpful assistant."
+
 PREVIEW_LENGTH = 200
 MAX_RETRIES    = 3
 

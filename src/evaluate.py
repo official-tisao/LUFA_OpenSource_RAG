@@ -57,27 +57,26 @@ ensure_nltk_packages()
 #  STRICT MATRIX SCHEMA COLUMN DEFINITIONS
 # ─────────────────────────────────────────────────────────────────────────────
 LUFA_COLUMNS = [
-    "question_id", "question", "answer", "base_model_used", "language", "attempts", "grounded",
-    "source1_id", "source1_score", "source1_text",
-    "source2_id", "source2_score", "source2_text",
-    "source3_id", "source3_score", "source3_text",
-    "source4_id", "source4_score", "source4_text",
-    "source5_id", "source5_score", "source5_text",
-    "original_cosine_score", "recency_adjusted_score", "RRF"
+    "question_id", "question",
+    "source1_id", "source1_cosine_score", "source1_recency_adjusted_cosine_score", "source1_rrf_score", "source1_text",
+    "source2_id", "source2_cosine_score", "source2_recency_adjusted_cosine_score", "source2_rrf_score", "source2_text",
+    "source3_id", "source3_cosine_score", "source3_recency_adjusted_cosine_score", "source3_rrf_score", "source3_text",
+    "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
+    "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
+    "answer", "base_model_used", "language", "attempts", "grounded",
 ]
 
 EVAL_COLUMNS = [
-    "question_id", "question", "answer", "base_model_used", "language", "attempts", "grounded",
-    "source1_id", "source1_score", "source1_text",
-    "source2_id", "source2_score", "source2_text",
-    "source3_id", "source3_score", "source3_text",
-    "source4_id", "source4_score", "source4_text",
-    "source5_id", "source5_score", "source5_text",
-    "original_cosine_score", "recency_adjusted_score", "RRF",
-    "id", "rag_base_model", "judge_llm", "category", "difficulty",
+    "question_id", "id", "question", "answer", "base_model_used", "rag_base_model",
+    "language", "judge_llm", "category", "difficulty", "attempts", "grounded",
+    "source1_id", "source1_cosine_score", "source1_recency_adjusted_cosine_score", "source1_rrf_score", "source1_text",
+    "source2_id", "source2_cosine_score", "source2_recency_adjusted_cosine_score", "source2_rrf_score", "source2_text",
+    "source3_id", "source3_cosine_score", "source3_recency_adjusted_cosine_score", "source3_rrf_score", "source3_text",
+    "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
+    "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
     "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor",
     "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
-    "answer_relevance", "faithfulness", "context_precision"
+    "answer_relevance", "faithfulness", "context_precision",
 ]
 
 
@@ -413,6 +412,32 @@ def safe_float(val, default_val=0.0):
         return float(val)
     except Exception:
         return default_val
+def write_metrics_row_to_csv(row_dict, output_path, mode="a", header=False):
+    """
+    Write a metrics row to CSV with immediate persistence.
+    Used for granular storage of individual metric groups.
+
+    Args:
+        row_dict: Dictionary containing metrics to write
+        output_path: Path to output CSV file
+        mode: Write mode ("a" for append, "w" for write)
+        header: Whether to write header
+
+    Returns:
+        bool: True if successful, False otherwise
+    """
+    try:
+        from csv_utils import write_csv_row
+        # Extract required columns for metrics CSV
+        metrics_columns = list(EVAL_COLUMNS)
+
+        # Filter row_dict to only include metrics columns
+        filtered_row = {k: v for k, v in row_dict.items() if k in metrics_columns}
+
+        return write_csv_row(filtered_row, output_path, mode=mode, header=header)
+    except Exception as e:
+        print(f"      [Metrics Write Error] Failed to write row to {output_path}: {e}")
+        return False
 
 
 def run_evaluation(
@@ -521,8 +546,8 @@ def run_evaluation(
                                                  current_counter)
 
             lufa_records[q_id] = sim_row_output
-            sim_df = pd.DataFrame([sim_row_output], columns=LUFA_COLUMNS)
-            sim_df.to_csv(lufa_csv, mode="a", index=False, header=False)
+            from csv_utils import align_and_append
+            align_and_append(sim_row_output, lufa_csv, LUFA_COLUMNS)
             print(f"   -> Content generated successfully and appended permanently to {lufa_csv}")
 
         active_rag_data = lufa_records[q_id]
@@ -594,12 +619,12 @@ def run_evaluation(
         print(f"      * NDCG@5 Index: {ndcg_val}")
         print(f"      * Recall Distribution -> Recall@1: {rec1} | Recall@3: {rec3} | Recall@5: {rec5}")
 
-        primary_logged_score = safe_float(active_rag_data.get("source1_score", 0.0))
-        orig_cos = safe_float(active_rag_data.get("original_cosine_score", primary_logged_score))
-        rec_adj = safe_float(active_rag_data.get("recency_adjusted_score", primary_logged_score))
-        rrf_val = safe_float(active_rag_data.get("RRF", primary_logged_score))
-        print(
-            f"   -> Tracked Hybrid Vectors -> Cosine: {orig_cos} | Recency-Adjusted: {rec_adj} | Fused RRF: {rrf_val}")
+        for si in range(1, 6):
+            cos_v = safe_float(active_rag_data.get(f"source{si}_cosine_score", 0.0))
+            rec_v = safe_float(active_rag_data.get(f"source{si}_recency_adjusted_cosine_score", 0.0))
+            rrf_v = safe_float(active_rag_data.get(f"source{si}_rrf_score", 0.0))
+            if cos_v > 0 or rrf_v > 0:
+                print(f"   -> Source{si} Scores -> Cosine: {cos_v} | Recency-Adj: {rec_v} | RRF: {rrf_v}")
 
         rec = {}
         for col in LUFA_COLUMNS:
@@ -629,10 +654,6 @@ def run_evaluation(
         rec["recall_3"] = rec3
         rec["recall_5"] = rec5
 
-        rec["original_cosine_score"] = orig_cos
-        rec["recency_adjusted_score"] = rec_adj
-        rec["RRF"] = rrf_val
-
         rec["answer_relevance"] = 0.0
         rec["faithfulness"] = 0.0
         rec["context_precision"] = 0.0
@@ -654,10 +675,8 @@ def run_evaluation(
             except Exception as e:
                 print(f"      [Judge Model Connection Error] Skipping scoring pass on entry {q_id}: {e}")
 
-        single_row_df = pd.DataFrame([rec], columns=EVAL_COLUMNS)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        file_is_new = not out_path.exists() or out_path.stat().st_size == 0
-        single_row_df.to_csv(str(out_path), mode="a", index=False, header=file_is_new)
+        from csv_utils import align_and_append
+        align_and_append(rec, out_path, EVAL_COLUMNS)
         print("   ✅ Row recorded safely to checkpoint score file.")
 
         print("   -> Re-compiling performance HTML dashboard layer with current progress data...")

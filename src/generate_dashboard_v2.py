@@ -36,22 +36,29 @@ CANONICAL_COLUMN_CANDIDATES = {
     "attempts": ["attempts"],
     "source1_id": ["source1_id", "source1id"],
     "source1_text": ["source1_text", "source1text"],
-    "source1_score": ["source1_score", "source1score"],
+    "source1_cosine_score": ["source1_cosine_score", "source1_score"],
+    "source1_recency_adjusted_cosine_score": ["source1_recency_adjusted_cosine_score"],
+    "source1_rrf_score": ["source1_rrf_score"],
     "source2_id": ["source2_id", "source2id"],
     "source2_text": ["source2_text", "source2text"],
-    "source2_score": ["source2_score", "source2score"],
+    "source2_cosine_score": ["source2_cosine_score", "source2_score"],
+    "source2_recency_adjusted_cosine_score": ["source2_recency_adjusted_cosine_score"],
+    "source2_rrf_score": ["source2_rrf_score"],
     "source3_id": ["source3_id", "source3id"],
     "source3_text": ["source3_text", "source3text"],
-    "source3_score": ["source3_score", "source3score"],
+    "source3_cosine_score": ["source3_cosine_score", "source3_score"],
+    "source3_recency_adjusted_cosine_score": ["source3_recency_adjusted_cosine_score"],
+    "source3_rrf_score": ["source3_rrf_score"],
     "source4_id": ["source4_id", "source4id"],
     "source4_text": ["source4_text", "source4text"],
-    "source4_score": ["source4_score", "source4score"],
+    "source4_cosine_score": ["source4_cosine_score", "source4_score"],
+    "source4_recency_adjusted_cosine_score": ["source4_recency_adjusted_cosine_score"],
+    "source4_rrf_score": ["source4_rrf_score"],
     "source5_id": ["source5_id", "source5id"],
     "source5_text": ["source5_text", "source5text"],
-    "source5_score": ["source5_score", "source5score"],
-    "original_cosine_score": ["original_cosine_score"],
-    "recency_adjusted_score": ["recency_adjusted_score"],
-    "RRF": ["RRF"],
+    "source5_cosine_score": ["source5_cosine_score", "source5_score"],
+    "source5_recency_adjusted_cosine_score": ["source5_recency_adjusted_cosine_score"],
+    "source5_rrf_score": ["source5_rrf_score"],
     "judge_llm": ["judge_llm"],
     "ground_source_truth_id": ["ground_source_truth_id", "ground_source_truthid", "ground_truth_source_ids"],
     "ground_source_truth": ["ground_source_truth", "ground_truth_source_text"],
@@ -71,14 +78,11 @@ NUMERIC_COLUMNS = [
     "faithfulness",
     "context_precision",
     "attempts",
-    "source1_score",
-    "source2_score",
-    "source3_score",
-    "source4_score",
-    "source5_score",
-    "original_cosine_score",
-    "recency_adjusted_score",
-    "RRF",
+    "source1_cosine_score", "source1_recency_adjusted_cosine_score", "source1_rrf_score",
+    "source2_cosine_score", "source2_recency_adjusted_cosine_score", "source2_rrf_score",
+    "source3_cosine_score", "source3_recency_adjusted_cosine_score", "source3_rrf_score",
+    "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score",
+    "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score",
 ]
 
 SUMMARY_METRICS = [
@@ -102,12 +106,11 @@ PREFERRED_DETAIL_ORDER = [
     "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision",
     "grounded", "attempts",
-    "source1_id", "source1_score", "source1_text",
-    "source2_id", "source2_score", "source2_text",
-    "source3_id", "source3_score", "source3_text",
-    "source4_id", "source4_score", "source4_text",
-    "source5_id", "source5_score", "source5_text",
-    "original_cosine_score", "recency_adjusted_score", "RRF",
+    "source1_id", "source1_cosine_score", "source1_recency_adjusted_cosine_score", "source1_rrf_score", "source1_text",
+    "source2_id", "source2_cosine_score", "source2_recency_adjusted_cosine_score", "source2_rrf_score", "source2_text",
+    "source3_id", "source3_cosine_score", "source3_recency_adjusted_cosine_score", "source3_rrf_score", "source3_text",
+    "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
+    "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
     "ground_source_truth_id", "ground_source_truth",
 ]
 
@@ -178,7 +181,9 @@ def _prepare_dataframe(
         if "question_id" not in lufa.columns and "id" in lufa.columns:
             lufa["question_id"] = lufa["id"]
         lufa = lufa.drop_duplicates(subset=["question_id", "base_model_used"], keep="last")
-        extra_cols = [c for c in lufa.columns if c not in df.columns or c in {"source1_id", "source1_text", "source1_score", "source2_id", "source2_text", "source2_score", "source3_id", "source3_text", "source3_score", "source4_id", "source4_text", "source4_score", "source5_id", "source5_text", "source5_score", "answer"}]
+        extra_cols = [c for c in lufa.columns if c not in df.columns or c in {
+            *(f"source{i}_{f}" for i in range(1, 6) for f in ["id", "cosine_score", "recency_adjusted_cosine_score", "rrf_score", "text"]),
+            "answer"}]
         df = df.merge(lufa[["question_id"] + [c for c in extra_cols if c != "question_id"]], on="question_id", how="left", suffixes=("", "__lufa"))
         for col in list(df.columns):
             if col.endswith("__lufa"):

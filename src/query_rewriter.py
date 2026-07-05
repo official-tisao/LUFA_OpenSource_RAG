@@ -51,3 +51,17 @@ def rewrite_query(query: str, lang: str, llm: Ollama) -> str:
     except Exception as e:
         print(f"[QueryRewriter] Rewrite failed: {e}")
     return query  # safe fallback
+def rewrite_single_question(query: str, lang: str, llm: Ollama) -> str:
+    """
+    Standalone version of rewrite_query for use with standalone modules.
+    This provides a consistent interface for the modular RAG pipeline.
+
+    Args:
+        query: Original user query
+        lang:  Detected language code ('en' or 'fr')
+        llm:   Shared Ollama LLM instance from BilingualRAGEngine
+
+    Returns:
+        Rewritten query string (falls back to original if rewrite is empty)
+    """
+    return rewrite_query(query, lang, llm)

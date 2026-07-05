@@ -58,8 +58,9 @@ def build(eval_csv, lufa_csv, gt_csv, out_path):
     # ── Enrich with answer + source1_id from the lufa engine log (for Normalize)
     lufa_df = _read(lufa_csv)
     if lufa_df is not None and "question_id" in lufa_df.columns:
-        keep = [c for c in ["question_id", "answer", "source1_id"] if c in lufa_df.columns]
-        lufa_small = lufa_df[keep].drop_duplicates(subset=["question_id", "base_model_used"], keep="last")
+        keep = [c for c in ["question_id", "base_model_used", "answer", "source1_id"] if c in lufa_df.columns]
+        dedup_on = [c for c in ["question_id", "base_model_used"] if c in keep]
+        lufa_small = lufa_df[keep].drop_duplicates(subset=dedup_on, keep="last")
         merged = eval_df.merge(lufa_small, on="question_id", how="left", suffixes=("", "_lufa"))
         for col in ("answer", "source1_id"):
             lufa_col = col + "_lufa"
@@ -79,7 +80,7 @@ def build(eval_csv, lufa_csv, gt_csv, out_path):
         gt_small = gt_df.rename(columns={"id": "question_id"})
         meta_cols = [c for c in ["question_id", "category", "difficulty", "language", "question"]
                      if c in gt_small.columns]
-        gt_small = gt_small[meta_cols].drop_duplicates(subset=["question_id", "rag_base_model"], keep="last")
+        gt_small = gt_small[meta_cols].drop_duplicates(subset=["question_id"], keep="last")
         merged = eval_df.merge(gt_small, on="question_id", how="left", suffixes=("", "_gt"))
         for col in ("category", "difficulty", "language", "question"):
             gt_col = col + "_gt"

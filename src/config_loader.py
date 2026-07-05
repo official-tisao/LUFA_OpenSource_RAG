@@ -39,7 +39,7 @@ _CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
 # ── Default fallback values (used when config.yaml is missing keys) ──────────
 _DEFAULTS = {
     "models.judge_llm.name": "tensortemplar/prometheus2:7b-fp16",
-    "models.llm.name": "mistral:7b",
+    "models.llm.name": "llama3.1:8b",
     "models.llm.base_url": "http://localhost:11434",
     "models.llm.request_timeout": 120.0,
     "models.embedding.name": "nomic-embed-text-v2-moe",

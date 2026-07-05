@@ -231,10 +231,9 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         eval_row_dict["faithfulness"] = judge_faithfulness
         eval_row_dict["context_precision"] = judge_precision
 
-        primary_score = safe_float(sim_output.get("source1_score", 0.0))
-        eval_row_dict["original_cosine_score"] = safe_float(sim_output.get("original_cosine_score", primary_score))
-        eval_row_dict["recency_adjusted_score"] = safe_float(sim_output.get("recency_adjusted_score", primary_score))
-        eval_row_dict["RRF"] = safe_float(sim_output.get("RRF", primary_score))
+        for si in range(1, 6):
+            for sf in ["cosine_score", "recency_adjusted_cosine_score", "rrf_score"]:
+                eval_row_dict[f"source{si}_{sf}"] = safe_float(sim_output.get(f"source{si}_{sf}", 0.0))
 
         eval_df = pd.concat([eval_df, pd.DataFrame([eval_row_dict], columns=EVAL_COLUMNS)], ignore_index=True)
         print("   ✅ Row repaired successfully and updated inside data matrices.")

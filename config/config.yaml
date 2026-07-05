@@ -12,9 +12,9 @@ languages:
 # Model Configuration
 models:
   llm:
-    name: "mistral:7b"
+    name: "llama3.1:8b"
     base_url: "http://localhost:11434"
-    request_timeout: 120.0
+    request_timeout: 240.0
 
   embedding:
     name: "nomic-embed-text-v2-moe"
