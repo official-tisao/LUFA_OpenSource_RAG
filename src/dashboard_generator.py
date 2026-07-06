@@ -389,5 +389,37 @@ def generate_dashboard(df, output_path):
     return output_path
 
 
+def refresh_dashboard(out_path="dashboard/index.html",
+                      eval_csv="tests/evaluation_results.csv",
+                      lufa_csv="tests/lufa_out_data.csv"):
+    """
+    Best-effort regeneration of the HTML dashboard from whatever CSVs exist.
+
+    Prefers evaluation_results.csv (has metrics); falls back to lufa_out_data.csv
+    so the dashboard still refreshes during retrieval/answer-only phases. Never
+    raises — a dashboard hiccup must not interrupt row-by-row processing.
+    """
+    try:
+        from pathlib import Path
+        ev, lf = Path(eval_csv), Path(lufa_csv)
+        if ev.exists() and ev.stat().st_size > 0:
+            df = pd.read_csv(ev, on_bad_lines="skip")
+        elif lf.exists() and lf.stat().st_size > 0:
+            df = pd.read_csv(lf, on_bad_lines="skip")
+        else:
+            return False
+        if df is None or df.empty:
+            return False
+        # Dashboard code keys models off rag_base_model; lufa uses base_model_used.
+        if "rag_base_model" not in df.columns and "base_model_used" in df.columns:
+            df["rag_base_model"] = df["base_model_used"]
+        Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+        generate_dashboard(df, out_path)
+        return True
+    except Exception as e:
+        print(f"      [Dashboard] refresh skipped: {e}")
+        return False
+
+
 # The HTML template lives in dashboard_template.py to keep this file readable.
 from dashboard_template import DASHBOARD_TEMPLATE  # noqa: E402

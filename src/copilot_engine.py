@@ -120,8 +120,10 @@ class CopilotEngine:
             f"Question: {query}\n\nAnswer:"
         )
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
+            from llm_utils import stream_openai_chat
+            return stream_openai_chat(
+                self.client,
+                self.model,
                 messages=[
                     {"role": "system", "content": system},
                     {"role": "user", "content": prompt},
@@ -130,7 +132,6 @@ class CopilotEngine:
                 max_tokens=1024,
                 timeout=120,
             )
-            return response.choices[0].message.content.strip()
         except Exception as e:
             print(f"[CopilotEngine] Generation error: {e}")
             raise

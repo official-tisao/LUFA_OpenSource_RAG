@@ -64,12 +64,12 @@ def clean_evaluation_file(file_path="tests/evaluation_results.csv", dashboard_pa
     cleaned_df = cleaned_df.drop(columns=["grounded_bool", "is_corrupted_metric"])
 
     # Re-sort chronologically by ID for visual presentation alignment
-    cleaned_df = cleaned_df.sort_values(by=["question_id"])
+    #cleaned_df = cleaned_df.sort_values(by=["question_id"])
 
     cleaned_df.to_csv(path, index=False)
     final_count = len(cleaned_df)
-
     print("Cleanup pass completed successfully.")
+    print(f"Cleanup record saved to {file_path} successfully.")
     print(f"Total duplicate or bad metric records eliminated: {initial_count - final_count}")
     print(f"Final clean unique record count saved to disk: {final_count}")
 
@@ -83,5 +83,75 @@ def clean_evaluation_file(file_path="tests/evaluation_results.csv", dashboard_pa
         print(f"Note: Dashboard live UI compile step skipped: {d_err}")
 
 
+def clean_lufa_file(file_path="tests/lufa_out_data.csv"):
+    path = Path(file_path)
+    if not path.exists():
+        print(f"Error: Target lufa_out file not found at {file_path}")
+        return
+
+    print(f"Loading lufa_out file for cleanup processing: {file_path}")
+    df = pd.read_csv(path, on_bad_lines="skip")
+    initial_count = len(df)
+    print(f"Initial total record count: {initial_count}")
+
+    if "question_id" not in df.columns:
+        print("Error: Missing required column 'question_id' inside the file structure.")
+        return
+
+    # Build TEMPORARY sort keys only — never mutate the real data columns.
+    # (Coercing attempts/scores in place previously persisted junk like attempts=99.)
+    sort_cols = []
+    sort_asc = []
+
+    for i in range(1, 6):
+        key = f"_sort_rrf{i}"
+        df[key] = pd.to_numeric(df.get(f"source{i}_rrf_score"), errors="coerce").fillna(0.0)
+        sort_cols.append(key)
+        sort_asc.append(False)
+    for i in range(1, 6):
+        key = f"_sort_rec{i}"
+        df[key] = pd.to_numeric(df.get(f"source{i}_recency_adjusted_cosine_score"), errors="coerce").fillna(0.0)
+        sort_cols.append(key)
+        sort_asc.append(False)
+
+    df["_sort_grounded"] = df["grounded"].astype(str).str.strip().str.lower().map(
+        lambda v: 0 if v in ("true", "1") else 1
+    )
+    df["_sort_has_answer"] = df["answer"].map(
+        lambda v: 0 if str(v).strip().lower() not in ("", "nan", "none", "error") else 1
+    )
+    # Lower attempts is better; blanks/garbage sort last WITHOUT overwriting the value.
+    df["_sort_attempts"] = pd.to_numeric(df["attempts"], errors="coerce").fillna(9999)
+
+    sort_cols += ["_sort_grounded", "_sort_has_answer", "_sort_attempts"]
+    sort_asc += [True, True, True]
+
+    df_sorted = df.sort_values(by=sort_cols, ascending=sort_asc)
+
+    cleaned_df = df_sorted.drop_duplicates(subset=["question_id", "base_model_used"], keep="first")
+
+    cleaned_df = cleaned_df.drop(columns=[c for c in cleaned_df.columns if c.startswith("_sort_")])
+
+    cleaned_df.to_csv(path, index=False)
+    final_count = len(cleaned_df)
+    print("Cleanup pass completed successfully.")
+    print(f"Cleanup record saved to {file_path} successfully.")
+    print(f"Total duplicate or bad records eliminated: {initial_count - final_count}")
+    print(f"Final clean unique record count saved to disk: {final_count}")
+
+
 if __name__ == "__main__":
-    clean_evaluation_file()
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Clean duplicates from evaluation or lufa_out CSVs")
+    parser.add_argument("--target", choices=["eval", "lufa", "both"], default="both",
+                        help="Which file(s) to clean (default: both)")
+    parser.add_argument("--eval_csv", default="tests/evaluation_results.csv")
+    parser.add_argument("--lufa_csv", default="tests/lufa_out_data.csv")
+    parser.add_argument("--dashboard", default="dashboard/index.html")
+    args = parser.parse_args()
+
+    if args.target in ("eval", "both"):
+        clean_evaluation_file(args.eval_csv, args.dashboard)
+    if args.target in ("lufa", "both"):
+        clean_lufa_file(args.lufa_csv)

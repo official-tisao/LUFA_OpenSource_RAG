@@ -285,6 +285,14 @@ def run_pipeline(csv_path, db_path, collection_name, output_path):
 
     df = pd.read_csv(csv_path)
     total_records = len(df)
+    columns = [
+    "id", "question", "expected_answer", "category", "difficulty", 
+    "language", "ground_source_truth_id", "ground_source_truth", 
+    "answer_ground_truth_alignment"
+]
+
+# Create an empty DataFrame with these columns
+    new_df = pd.DataFrame(columns=columns)
     print(f"[Initialization] Total entries detected to process: {total_records}")
 
     df["ground_source_truth_id"] = ""
@@ -343,6 +351,10 @@ def run_pipeline(csv_path, db_path, collection_name, output_path):
 
             # ── Step 2: Multi-chunk expansion (only when overlap < 100%) ──────
             if answer_overlap_pct >= 1.0:
+                print(f"   ✅ Single-chunk overlap is 100% — no multi-chunk expansion needed.")
+                new_df.loc[len(new_df)] = df.iloc[idx]
+                Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+                new_df.to_csv(output_path, index=False)
                 continue
 
             multi_chunk_attempted += 1
@@ -388,6 +400,10 @@ def run_pipeline(csv_path, db_path, collection_name, output_path):
                 df.at[idx, "ground_source_truth_id"] = ids_pipe
                 df.at[idx, "ground_source_truth"] = best_combined_text
                 df.at[idx, "answer_ground_truth_alignment"] = best_score_int
+
+                new_df.loc[len(new_df)] = df.iloc[idx]
+                Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+                new_df.to_csv(output_path, index=False)
             else:
                 print(f"      ❌ Multi-Chunk REJECTED ({best_score_int}% < {MULTI_CHUNK_THRESHOLD}%)")
                 print(f"         Keeping single-chunk assignment: {gt_id}")
@@ -405,8 +421,7 @@ def run_pipeline(csv_path, db_path, collection_name, output_path):
     if multi_chunk_attempted > 0:
         print(f"   Acceptance rate:                  {multi_chunk_accepted / multi_chunk_attempted:.1%}")
 
-    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path, index=False)
+    
     print(f"\n[Export] Integrated data structured table saved cleanly to: {output_path}")
 
 

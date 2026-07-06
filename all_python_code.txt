@@ -1630,7 +1630,7 @@ def ndcg_at_k(retrieved, ground_truth, k=5):
 # ─────────────────────────────────────────────────────────────────────────────
 #  LLM-AS-JUDGE METRICS
 # ─────────────────────────────────────────────────────────────────────────────
-LLM_JUDGE_PROMPTS = {
+JUDGE_LLM_PROMPTS = {
     "answer_relevance": """Score how relevant the answer is to the question.
 Score 1-5: 1=completely irrelevant, 3=partially relevant, 5=fully relevant.
 Reply with ONLY the integer score.
@@ -1662,12 +1662,12 @@ def extract_score(text):
     return float(match.group(1)) / 5.0 if match else 0.5
 
 
-def llm_judge_scores(question, answer, context, llm_model="llama3.2:3b-instruct-q4_K_M"):
+def judge_llm_scores(question, answer, context, llm_model="llama3.2:3b-instruct-q4_K_M"):
     """Use local Ollama model as judge. Returns normalized 0–1 scores."""
     from llama_index.llms.ollama import Ollama
     llm = Ollama(model=llm_model, base_url="http://localhost:11434", request_timeout=60.0)
     scores = {}
-    for metric, prompt_template in LLM_JUDGE_PROMPTS.items():
+    for metric, prompt_template in JUDGE_LLM_PROMPTS.items():
         try:
             prompt = prompt_template.format(
                 question=question[:500],
@@ -1717,7 +1717,7 @@ def run_evaluation(
         test_csv="tests/combined_test_data_and_ground_truth.csv",
         out_csv="tests/evaluation_results.csv",
         dashboard_out="dashboard/index.html",
-        use_llm_judge=True,
+        use_judge_llm=True,
         llm_model="llama3.2:3b-instruct-q4_K_M",
         sim_mode="local",
         api_url="http://localhost:8000"
@@ -1931,10 +1931,10 @@ def run_evaluation(
         rec["faithfulness"] = 0.0
         rec["context_precision"] = 0.0
 
-        if use_llm_judge and prediction and prediction != "" and prediction != "ERROR":
+        if use_judge_llm and prediction and prediction != "" and prediction != "ERROR":
             print(f"   -> Dispatching prompt topologies to Judge Model ({llm_model})...")
             try:
-                judge = llm_judge_scores(question, prediction, context, llm_model)
+                judge = judge_llm_scores(question, prediction, context, llm_model)
                 rec["answer_relevance"] = judge.get("answer_relevance", 0.0)
                 rec["faithfulness"] = judge.get("faithfulness", 0.0)
                 rec["context_precision"] = judge.get("context_precision", 0.0)
@@ -2319,7 +2319,7 @@ if __name__ == "__main__":
     parser.add_argument("--test_csv", default="tests/combined_test_data_and_ground_truth.csv")
     parser.add_argument("--out_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--dashboard", default="dashboard/index.html")
-    parser.add_argument("--no_llm_judge", action="store_true", help="Skip LLM-as-judge step")
+    parser.add_argument("--judge_llm", action="store_true", help="Skip LLM-as-judge step")
     parser.add_argument("--llm_model", default="llama3.2:3b-instruct-q4_K_M")
     parser.add_argument("--sim_mode", choices=["local", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
@@ -2330,7 +2330,7 @@ if __name__ == "__main__":
         test_csv=args.test_csv,
         out_csv=args.out_csv,
         dashboard_out=args.dashboard,
-        use_llm_judge=not args.no_llm_judge,
+        use_judge_llm=not args.no_judge_llm,
         llm_model=args.llm_model,
         sim_mode=args.sim_mode,
         api_url=args.api_url
@@ -4839,7 +4839,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from run_simulation import query_single_record, load_config
 from evaluate import (
     token_f1, compute_bleu, compute_rouge, compute_meteor,
-    mrr, ndcg_at_k, recall_at_k, llm_judge_scores,
+    mrr, ndcg_at_k, recall_at_k, judge_llm_scores,
     parse_source_ids, build_retrieved_ids, build_context_from_row,
     safe_float, generate_dashboard, LUFA_COLUMNS, EVAL_COLUMNS
 )
@@ -4997,7 +4997,7 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
         if prediction and prediction != "ERROR":
             print(f"   -> Dispatching evaluation prompts to local Judge Model ({llm_model})...")
             try:
-                judge = llm_judge_scores(question, prediction, context, llm_model)
+                judge = judge_llm_scores(question, prediction, context, llm_model)
                 judge_relevance = judge.get("answer_relevance", 0.0)
                 judge_faithfulness = judge.get("faithfulness", 0.0)
                 judge_precision = judge.get("context_precision", 0.0)

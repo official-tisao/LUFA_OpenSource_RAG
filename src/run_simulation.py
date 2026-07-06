@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simulation script — runs every question in combined_test_data.csv
+Simulation script — runs every question in combined_test_data_and_ground_truth.csv
 through the Agentic RAG pipeline and stores results in lufa_out_data.csv.
 Supports crash-resumption and saves outputs row-by-row incrementally.
 Guarantees strict column alignment matching the evaluation dashboard schema.
@@ -24,13 +24,13 @@ OUTPUT_CSV = "tests/lufa_out_data.csv"
 CONFIG = "config/config.yaml"
 
 OUTPUT_COLUMNS = [
-    "question_id", "question", "answer", "base_model_used", "language", "attempts", "grounded",
-    "source1_id", "source1_score", "source1_text",
-    "source2_id", "source2_score", "source2_text",
-    "source3_id", "source3_score", "source3_text",
-    "source4_id", "source4_score", "source4_text",
-    "source5_id", "source5_score", "source5_text",
-    "original_cosine_score", "recency_adjusted_score", "RRF"
+    "question_id", "question",
+    "source1_id", "source1_cosine_score", "source1_recency_adjusted_cosine_score", "source1_rrf_score", "source1_text",
+    "source2_id", "source2_cosine_score", "source2_recency_adjusted_cosine_score", "source2_rrf_score", "source2_text",
+    "source3_id", "source3_cosine_score", "source3_recency_adjusted_cosine_score", "source3_rrf_score", "source3_text",
+    "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
+    "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
+    "answer", "base_model_used", "language", "attempts", "grounded",
 ]
 
 
@@ -51,15 +51,20 @@ def extract_sources(sources, max_sources=5):
             row[f"source{i}_id"] = (s.get("node_id") or s.get("chunk_id") or meta.get("node_id") or meta.get("id") or
                                     str(meta.get("source_doc", "")) + f"_chunk{i}")
 
-            if "original_cosine_score" in meta:
-                row[f"source{i}_score"] = round(float(meta["original_cosine_score"]), 4)
-            else:
-                row[f"source{i}_score"] = round(float(s.get("score") or 0), 4)
+            cosine = float(meta.get("original_cosine_score", s.get("score", 0)))
+            recency_weight = float(meta.get("recency_weight", 1.0))
+            rrf = float(s.get("score", 0))
+
+            row[f"source{i}_cosine_score"] = round(cosine, 4)
+            row[f"source{i}_recency_adjusted_cosine_score"] = round(cosine * recency_weight, 4)
+            row[f"source{i}_rrf_score"] = round(rrf, 4)
 
             row[f"source{i}_text"] = str(s.get("text", ""))[:500]
         else:
             row[f"source{i}_id"] = ""
-            row[f"source{i}_score"] = ""
+            row[f"source{i}_cosine_score"] = ""
+            row[f"source{i}_recency_adjusted_cosine_score"] = ""
+            row[f"source{i}_rrf_score"] = ""
             row[f"source{i}_text"] = ""
     return row
 
@@ -85,9 +90,17 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
                 max_retries=3,
             )
 
+        elif mode == "local-naive":
+            from rag_engine import create_rag_engine
+            engine = create_rag_engine()
+            result = engine.naive_query(
+                query_text=q_text,
+                return_sources=True
+            )
+
         elif mode == "api":
             import httpx
-            with httpx.Client(timeout=300.0) as client:
+            with httpx.Client(timeout=400.0) as client:
                 resp = client.post(
                     f"{api_url}/agentic-query",
                     json={"query": q_text, "return_sources": True, "max_retries": 3},
@@ -135,16 +148,6 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
         sources = result.get("sources", [])
         sources_dict = extract_sources(sources)
 
-        orig_cosine = ""
-        recency_adj = ""
-        rrf_val = ""
-        if sources:
-            first_src = sources[0]
-            first_meta = first_src.get("metadata", {})
-            rrf_val = round(float(first_src.get("score") or 0.0), 6)
-            orig_cosine = round(float(first_meta.get("original_cosine_score") or rrf_val), 6)
-            recency_adj = orig_cosine
-
         row = {
             "question_id": q_id,
             "question": q_text,
@@ -155,9 +158,6 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
             "grounded": result.get("grounded", False),
         }
         row.update(sources_dict)
-        row["original_cosine_score"] = orig_cosine
-        row["recency_adjusted_score"] = recency_adj
-        row["RRF"] = rrf_val
 
         print(f"   [Simulation Engine] ✅ Success! Received Answer length: {len(row['answer'])} chars.")
         return row
@@ -180,11 +180,10 @@ def _empty_row(q_id, q_text, model, lang):
     }
     for i in range(1, 6):
         row[f"source{i}_id"] = ""
-        row[f"source{i}_score"] = ""
+        row[f"source{i}_cosine_score"] = ""
+        row[f"source{i}_recency_adjusted_cosine_score"] = ""
+        row[f"source{i}_rrf_score"] = ""
         row[f"source{i}_text"] = ""
-    row["original_cosine_score"] = ""
-    row["recency_adjusted_score"] = ""
-    row["RRF"] = ""
     return row
 
 
@@ -192,9 +191,14 @@ def ensure_ground_truth(csv_path):
     """Auto-run find_ground_truth.py if ground_source_truth_id column is missing."""
     df = pd.read_csv(csv_path)
     if "ground_source_truth_id" not in df.columns or df["ground_source_truth_id"].isnull().all():
-        print("[Sim] ground_source_truth_id missing — running find_ground_truth.py first...")
-        from find_ground_truth import run as find_gt
-        find_gt(csv_path, cfg("database.path"), cfg("database.collection_name"), top_k=5)
+        print("[Sim] ground_source_truth_id missing — running ground truth finder first...")
+        from .ground_truth import find_ground_truth_for_questions_path
+        find_ground_truth_for_questions_path(
+            csv_path,
+            csv_path.replace(".csv", "_and_ground_truth.csv"),
+            cfg("database.path"),
+            cfg("database.collection_name")
+        )
 
 
 if __name__ == "__main__":
@@ -265,12 +269,14 @@ if __name__ == "__main__":
 
         row_res = query_single_record(record, args.mode, base_model, model_name, args.api_url, current_counter)
 
-        single_row_df = pd.DataFrame([row_res], columns=OUTPUT_COLUMNS)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-
-        file_is_new = not out_path.exists() or out_path.stat().st_size == 0
-        single_row_df.to_csv(str(out_path), mode="a", index=False, header=file_is_new)
+        from csv_utils import align_and_append
+        align_and_append(row_res, out_path, OUTPUT_COLUMNS)
         print("   ✅ Row appended cleanly to simulation output log.")
+        try:
+            from dashboard_generator import refresh_dashboard
+            refresh_dashboard(lufa_csv=str(out_path))
+        except Exception as _de:
+            print(f"   [Dashboard] refresh skipped: {_de}")
         time.sleep(0.5)
 
     print("\n" + "=" * 80)

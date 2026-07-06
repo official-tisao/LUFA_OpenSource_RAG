@@ -29,6 +29,49 @@ from model_api_auth import get_ollama_client
 from config_loader import cfg
 import chromadb
 
+# Create standalone instances of helper functions for easy import
+try:
+    from src.query_rewriter import rewrite_query as _rewrite_query
+    from src.reflector import reflect as _reflect
+    from src.translator import (
+        detect_full_language as _detect_full_language,
+        needs_translation as _needs_translation,
+        translate_to_english as _translate_to_english,
+        translate_to_target as _translate_to_target,
+        LANGUAGE_NAMES as _LANGUAGE_NAMES,
+    )
+    from src.language_detector import detect_language as _detect_language
+    from src.query_handler import QueryHandler as _QueryHandler
+    from src.translator import get_system_prompt as _get_system_prompt
+except ImportError:
+    # Fallback to basic implementations if imports fail
+    def _rewrite_query(query, lang, llm):
+        return query
+
+    def _reflect(answer, chunks, llm):
+        return False
+
+    def _detect_full_language(query):
+        return "en"
+
+    def _needs_translation(lang):
+        return False
+
+    def _translate_to_english(query, lang, llm):
+        return query
+
+    def _translate_to_target(answer, lang, llm):
+        return answer
+
+    _LANGUAGE_NAMES = {"en": "English", "fr": "French"}
+
+    def _detect_language(query):
+        return "en"
+
+    class _QueryHandler:
+        def get_system_prompt(self, lang):
+            return "You are a helpful assistant."
+
 PREVIEW_LENGTH = 200
 MAX_RETRIES    = 3
 
@@ -59,7 +102,7 @@ class BilingualRAGEngine:
         self.query_handler    = QueryHandler()
 
         print(f"Initializing LLM: {llm_model}")
-        self.llm = get_ollama_client(llm_model, request_timeout=120.0)
+        self.llm = get_ollama_client(llm_model, request_timeout=240.0)
 
         print(f"Initializing embedding model: {embedding_model}")
         self.embed_model = get_ollama_client(embedding_model, is_embedding=True)
@@ -233,7 +276,8 @@ Context:
 
 Question: {original_query}
 Answer:"""
-        return str(self.llm.complete(prompt)).strip()
+        from llm_utils import stream_complete
+        return stream_complete(self.llm, prompt)
 
     def agentic_query(
         self,
@@ -320,6 +364,87 @@ Answer:"""
             result['sources'] = sources
 
         return result
+
+
+    def naive_query(
+            self,
+            query_text:     str,
+            return_sources: bool = False
+    ) -> dict:
+        """Naive RAG query with cross-lingual support."""
+        max_retries = 1
+        original_lang      = detect_full_language(query_text)
+        translation_applied = needs_translation(original_lang)
+        translated_query   = None
+
+        if translation_applied:
+            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
+            print(f"[NaiveRAG] Non-native language detected: {original_lang} ({lang_name})")
+            print(f"[NaiveRAG] Translating query to English for processing...")
+            translated_query = translate_to_english(query_text, original_lang, self.llm)
+            processing_query = translated_query
+            pipeline_lang    = "en"
+        else:
+            processing_query = query_text
+            pipeline_lang    = original_lang
+
+        print(f"[NaiveRAG] Pipeline language: {pipeline_lang}")
+
+        rewritten_query  = processing_query
+        nodes            = []
+        answer           = ""
+        is_grounded      = False
+
+        #for attempt in range(1, max_retries + 1):
+        top_k = self.similarity_top_k
+        nodes = self._retrieve_nodes(processing_query, top_k=top_k)
+        print(f"[NaiveRAG] Retrieved {len(nodes)} chunks (top_k={top_k})")
+
+        answer = self._generate_from_nodes(processing_query, nodes, pipeline_lang)
+
+            # chunk_texts = [n.node.text for n in nodes]
+            # is_grounded = reflect(answer, chunk_texts, self.llm)
+            # print(f"[NaiveRAG] Grounded: {is_grounded}")
+
+            # if is_grounded:
+            #    break
+
+            #current_query = rewritten_query
+
+        final_answer = answer
+        if translation_applied:
+            lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
+            print(f"[NaiveRAG] Translating answer back to {lang_name}...")
+            final_answer = translate_to_target(answer, original_lang, self.llm)
+
+        result = {
+            'response':            final_answer,
+            'english_response':    answer if translation_applied else None,
+            'detected_language':   pipeline_lang,
+            'original_language':   original_lang,
+            'original_query':      query_text,
+            'translated_query':    translated_query,
+            'rewritten_query':     rewritten_query,
+            'attempts':            1,
+            'grounded':            is_grounded,
+            'translation_applied': translation_applied,
+        }
+
+        if return_sources:
+            sources = []
+            for node in nodes:
+                text    = node.node.text
+                preview = text[:PREVIEW_LENGTH] + ('...' if len(text) > PREVIEW_LENGTH else '')
+                sources.append({
+                    'text':     preview,
+                    'score':    node.score,
+                    'metadata': node.node.metadata,
+                    'node_id':  node.node.node_id
+                })
+            result['sources'] = sources
+
+        return result
+
 
 
 def create_rag_engine(
