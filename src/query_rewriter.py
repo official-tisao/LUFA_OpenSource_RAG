@@ -43,8 +43,8 @@ def rewrite_query(query: str, lang: str, llm: Ollama) -> str:
     """
     prompt = REWRITE_PROMPT.get(lang, REWRITE_PROMPT["en"]).format(query=query)
     try:
-        response = llm.complete(prompt)
-        rewritten = str(response).strip()
+        from llm_utils import stream_complete
+        rewritten = stream_complete(llm, prompt)
         # Reject rewrite if it's empty or suspiciously long (model went off-script)
         if rewritten and len(rewritten) < 400:
             return rewritten

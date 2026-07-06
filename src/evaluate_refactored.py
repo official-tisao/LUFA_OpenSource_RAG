@@ -207,7 +207,8 @@ def calculate_separate_judge_metrics_safe(question, answer, context, judge_llm_m
                     answer=answer[:800],
                     context=context[:3000],
                 )
-                raw = str(llm.complete(prompt)).strip()
+                from llm_utils import stream_complete
+                raw = stream_complete(llm, prompt)
                 scores[metric] = round(extract_score(raw), 4)
             except Exception as e:
                 print(f"      [Judge Warning] {metric} calculation failed: {e}")

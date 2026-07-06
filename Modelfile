@@ -1,0 +1,5 @@
+FROM llama3.1:8b-gpu
+
+# Push as many layers to GPU as possible
+# 33 = all layers for an 8B model, set high to let Ollama cap it naturally
+PARAMETER num_gpu 33

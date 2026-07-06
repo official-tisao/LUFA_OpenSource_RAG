@@ -117,8 +117,8 @@ def clean_lufa_file(file_path="tests/lufa_out_data.csv"):
     df["_sort_grounded"] = df["grounded"].astype(str).str.strip().str.lower().map(
         lambda v: 0 if v in ("true", "1") else 1
     )
-    df["_sort_has_answer"] = df["answer"].astype(str).str.strip().map(
-        lambda v: 0 if v and v.lower() not in ("", "nan", "error") else 1
+    df["_sort_has_answer"] = df["answer"].map(
+        lambda v: 0 if str(v).strip().lower() not in ("", "nan", "none", "error") else 1
     )
     # Lower attempts is better; blanks/garbage sort last WITHOUT overwriting the value.
     df["_sort_attempts"] = pd.to_numeric(df["attempts"], errors="coerce").fillna(9999)

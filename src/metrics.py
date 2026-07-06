@@ -9,6 +9,8 @@ import warnings
 import pandas as pd
 from typing import Dict, List, Tuple
 
+from llm_utils import stream_complete
+
 warnings.filterwarnings("ignore")
 
 # NLP imports (lazy-loaded to avoid startup overhead)
@@ -129,7 +131,7 @@ def judge_llm_scores(question, answer, context, judge_llm_model="None"):
                 answer=answer[:800],
                 context=context[:3000],
             )
-            raw = str(llm.complete(prompt)).strip()
+            raw = stream_complete(llm, prompt)
             scores[metric] = round(extract_score(raw), 4)
         except Exception as e:
             print(f"      [Judge Warning] {metric} calculation failure: {e}")
@@ -174,7 +176,7 @@ def combined_judge_llm_scores(question, answer, context, judge_llm_model="None")
             answer=answer[:800],
             context=context[:3000],
         )
-        raw = str(llm.complete(prompt)).strip()
+        raw = stream_complete(llm, prompt)
         return parse_combined_judge_response(raw)
     except Exception as e:
         print(f"      [Judge Warning] Combined judge calculation failure: {e}")
@@ -370,6 +372,24 @@ if __name__ == "__main__":
     # (e.g. rows without answers, or already-complete rows) is preserved verbatim.
     results = dict(existing_rows)
 
+    # One-time backup of the previous ledger before we begin rewriting it per-row.
+    if out_path.exists() and out_path.stat().st_size > 0:
+        bak = out_path.with_suffix(out_path.suffix + ".metricsbak")
+        pd.read_csv(out_path, on_bad_lines="skip").to_csv(bak, index=False)
+        print(f"[Metrics] Backed up previous evaluation -> {bak}")
+
+    def _persist_and_refresh():
+        """Write the full ledger to disk and regenerate the dashboard (per-row safe)."""
+        df_out = pd.DataFrame([results[k] for k in sorted(results)], columns=EVAL_COLUMNS)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        df_out.to_csv(out_path, index=False)
+        try:
+            from dashboard_generator import refresh_dashboard
+            refresh_dashboard(eval_csv=str(out_path), lufa_csv=str(lufa_path))
+        except Exception as _de:
+            print(f"      [Dashboard] refresh skipped: {_de}")
+        return df_out
+
     total = len(test_df)
     skipped_no_answer = []
     recomputed_det = 0
@@ -500,16 +520,11 @@ if __name__ == "__main__":
             "context_precision": cp,
         })
         results[q_id] = out_row
+        # Persist this row immediately (crash-safe) and refresh the dashboard.
+        _persist_and_refresh()
 
-    # ---- write the full ledger once (backup first) ----
-    if out_path.exists() and out_path.stat().st_size > 0:
-        bak = out_path.with_suffix(out_path.suffix + ".metricsbak")
-        pd.read_csv(out_path, on_bad_lines="skip").to_csv(bak, index=False)
-        print(f"\n[Metrics] Backed up previous evaluation -> {bak}")
-
-    out_df = pd.DataFrame([results[k] for k in sorted(results)], columns=EVAL_COLUMNS)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_df.to_csv(out_path, index=False)
+    # Final consolidated write (also covers the no-rows-processed case).
+    out_df = _persist_and_refresh()
 
     print(f"\n[Metrics] Done. Deterministic recomputed: {recomputed_det} | judged: {judged} "
           f"| already-complete: {unchanged} | total rows: {len(out_df)}.")

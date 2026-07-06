@@ -405,6 +405,11 @@ if __name__ == "__main__":
             align_and_append(result_row, output_path, OUTPUT_COLUMNS)
             processed += 1
             print(f"   Retrieved {len(sources)} chunks — appended to {output_path}")
+            try:
+                from dashboard_generator import refresh_dashboard
+                refresh_dashboard(lufa_csv=str(output_path))
+            except Exception as _de:
+                print(f"   [Dashboard] refresh skipped: {_de}")
         except Exception as e:
             print(f"   Error on {q_id}: {e}")
             traceback.print_exc()

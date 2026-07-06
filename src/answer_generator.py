@@ -23,12 +23,17 @@ def generate_naive_answer(engine,
                          query_text: str,
                          top_k: int = 5,
                          check_grounded: bool = False,
-                         output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None) -> Dict:
+                         output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
+                         cached_nodes=None) -> Dict:
     """Generate answer using naive RAG approach (single retrieval + generation)."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
 
-    nodes = engine._retrieve_nodes(query_text, top_k=top_k)
+    if cached_nodes:
+        nodes = cached_nodes
+        print(f"[AnswerGenerator] Reusing {len(nodes)} cached top-K chunks from lufa_out (no re-retrieval).")
+    else:
+        nodes = engine._retrieve_nodes(query_text, top_k=top_k)
 
     sources = _extract_sources_from_nodes(nodes)
 
@@ -79,7 +84,8 @@ def generate_agentic_answer(engine,
                                query_text: str,
                                max_retries: int = 3,
                                check_grounded: bool = True,
-                               output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None) -> Dict:
+                               output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
+                               cached_nodes=None) -> Dict:
     """Generate answer using agentic RAG approach (retrieval + retry loop with groundedness checking)."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -89,8 +95,8 @@ def generate_agentic_answer(engine,
     from query_rewriter import rewrite_query
     from reflector import reflect
 
-    #original_lang = detect_full_language(query_text)
-    original_lang = check_language(query_text) or "en"  # Assuming English for now
+    #from language_detector import detect_full_language
+    original_lang = (check_language(query_id) if query_id else check_language(query_text)) or "en"
     translation_applied = needs_translation(original_lang)
 
     if translation_applied:
@@ -119,9 +125,15 @@ def generate_agentic_answer(engine,
             rewritten_query = rewrite_query(current_query, pipeline_lang, engine.llm)
             print(f"[AnswerGenerator] Rewritten: {rewritten_query}")
 
-        top_k = engine.similarity_top_k + (attempt - 1)
-        nodes = engine._retrieve_nodes(rewritten_query, top_k=top_k)
-        print(f"[AnswerGenerator] Retrieved {len(nodes)} chunks (top_k={top_k})")
+        # First pass reuses the cached top-K from lufa_out (no re-retrieval).
+        # Retries (attempt > 1) regenerate the top-K by re-retrieving with a wider k.
+        if cached_nodes and attempt == 1:
+            nodes = cached_nodes
+            print(f"[AnswerGenerator] Reusing {len(nodes)} cached top-K chunks from lufa_out (first pass, no re-retrieval).")
+        else:
+            top_k = engine.similarity_top_k + (attempt - 1)
+            nodes = engine._retrieve_nodes(rewritten_query, top_k=top_k)
+            print(f"[AnswerGenerator] Retrieved {len(nodes)} chunks (top_k={top_k})")
 
         answer = engine._generate_from_nodes(processing_query, nodes, pipeline_lang)
 
@@ -278,9 +290,11 @@ def naive_rag(engine, query_text: str, max_sources: int = 5,
 
 def agentic_rag(engine, query_text: str, max_retries: int = 3,
                 check_grounded: bool = True,
-                output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None) -> Dict:
+                output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
+                cached_nodes=None) -> Dict:
     """High-level function for agentic RAG processing."""
-    return generate_agentic_answer(engine, query_text, max_retries, check_grounded, output_path, query_id)
+    return generate_agentic_answer(engine, query_text, max_retries, check_grounded, output_path,
+                                   query_id, cached_nodes=cached_nodes)
 
 
 if __name__ == "__main__":
@@ -315,17 +329,26 @@ if __name__ == "__main__":
     print(f"[AnswerGenerator] {len(questions_df)} questions loaded.")
 
     completed_ids = set()
+    cached_map = {}
     if output_path.exists() and output_path.stat().st_size > 0:
         try:
             existing_df = pd.read_csv(output_path)
-            if "question_id" in existing_df.columns and "answer" in existing_df.columns:
-                successful = existing_df[
-                    existing_df["answer"].notna() &
-                    (existing_df["answer"].astype(str).str.strip() != "") &
-                    (existing_df["answer"].astype(str).str.strip() != "ERROR")
-                ]
-                completed_ids = set(successful["question_id"].dropna().astype(str).tolist())
-            print(f"[AnswerGenerator] Resuming — {len(completed_ids)} questions already answered.")
+            if "question_id" in existing_df.columns:
+                # Cache the top-K already retrieved for each question (e.g. written
+                # by retrieval.py) so generation can reuse it instead of re-retrieving.
+                for _, r in existing_df.iterrows():
+                    qid = str(r.get("question_id", "")).strip()
+                    if qid:
+                        cached_map[qid] = r.to_dict()
+                if "answer" in existing_df.columns:
+                    successful = existing_df[
+                        existing_df["answer"].notna() &
+                        (existing_df["answer"].astype(str).str.strip() != "") &
+                        (existing_df["answer"].astype(str).str.strip() != "ERROR")
+                    ]
+                    completed_ids = set(successful["question_id"].dropna().astype(str).tolist())
+            print(f"[AnswerGenerator] Resuming — {len(completed_ids)} answered, "
+                  f"{len(cached_map)} questions with cached top-K available.")
         except Exception as e:
             print(f"[AnswerGenerator] Warning: could not read existing output: {e}")
 
@@ -346,12 +369,17 @@ if __name__ == "__main__":
 
         print(f"\n{counter} Processing question {q_id}: \"{q_text[:60]}...\"")
         try:
+            cached_nodes = build_cached_nodes(cached_map.get(q_id, {}))
+            if cached_nodes:
+                print(f"   Found {len(cached_nodes)} cached top-K chunks for {q_id} — will reuse for first-pass generation.")
             if args.mode == "local-naive":
                 result = generate_naive_answer(engine, q_text, top_k=5,
-                                               check_grounded=False, output_path=args.output, query_id=q_id)
+                                               check_grounded=False, output_path=args.output,
+                                               query_id=q_id, cached_nodes=cached_nodes)
             else:
                 result = generate_agentic_answer(engine, q_text, max_retries=args.max_retries,
-                                                 check_grounded=True, output_path=args.output, query_id=q_id)
+                                                 check_grounded=True, output_path=args.output,
+                                                 query_id=q_id, cached_nodes=cached_nodes)
 
             sources = result.get("sources", [])
             source_cols = {}
@@ -383,6 +411,11 @@ if __name__ == "__main__":
 
             align_and_append(out_row, output_path, OUTPUT_COLUMNS)
             print(f"   Answer length: {len(out_row['answer'])} chars | Grounded: {out_row['grounded']} — appended.")
+            try:
+                from dashboard_generator import refresh_dashboard
+                refresh_dashboard(lufa_csv=str(output_path))
+            except Exception as _de:
+                print(f"   [Dashboard] refresh skipped: {_de}")
         except Exception as e:
             print(f"   Error on {q_id}: {e}")
             traceback.print_exc()

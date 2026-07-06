@@ -12,7 +12,7 @@ languages:
 # Model Configuration
 models:
   llm:
-    name: "llama3.1:8b"
+    name: "llama3.1:8b-gpu"
     base_url: "http://localhost:11434"
     request_timeout: 240.0
 

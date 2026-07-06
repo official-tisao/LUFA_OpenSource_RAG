@@ -248,8 +248,9 @@ def rewrite_questions_batch(questions_df: pd.DataFrame,
         print(f"      [QuestionRewriter] Sending {len(batch_questions)} questions in single prompt")
 
         try:
-            # Call LLM to rewrite all questions
-            response = llm.complete(batch_prompt)
+            # Call LLM to rewrite all questions (streamed to avoid timeouts)
+            from llm_utils import stream_complete
+            response = stream_complete(llm, batch_prompt)
 
             # Parse the response
             rewritten_questions = parse_batch_rewrite_response(

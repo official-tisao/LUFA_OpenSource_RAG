@@ -43,7 +43,8 @@ def reflect(answer: str, chunks: List[str], llm: Ollama) -> bool:
     prompt = REFLECT_PROMPT.format(answer=answer, chunks=chunks_text)
 
     try:
-        result = str(llm.complete(prompt)).strip().upper()
+        from llm_utils import stream_complete
+        result = stream_complete(llm, prompt).upper()
         tokens = result.split()
         return bool(tokens) and tokens[0] == "GROUNDED"
     except Exception as e:

@@ -78,6 +78,15 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
     gt_df = pd.read_csv(gt_path)
     lufa_df = pd.read_csv(lufa_path) if Path(lufa_path).exists() else pd.DataFrame(columns=LUFA_COLUMNS)
 
+    # Snapshot the top-K already retrieved per question so repair can REUSE it for
+    # generation instead of re-retrieving (agentic retries still regenerate top-K).
+    orig_lufa_sources = {}
+    if "question_id" in lufa_df.columns:
+        for _, r in lufa_df.iterrows():
+            _qid = str(r.get("question_id", "")).strip()
+            if _qid:
+                orig_lufa_sources[_qid] = r.to_dict()
+
     print(f"Loaded evaluation ledger containing {len(eval_df)} calculated records.")
 
     invalidated_qids = {}
@@ -114,6 +123,14 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
     except Exception as dberr:
         print(f"[Warning] Chroma connection failed: {dberr}")
 
+    # For local inference, reuse cached top-K via answer_generator (retries re-retrieve).
+    engine = None
+    if sim_mode in ("local", "local-naive"):
+        from rag_engine import create_rag_engine
+        from answer_generator import build_cached_nodes, generate_answer_record
+        print("   -> Initializing local RAG engine for cached-top-K generation...")
+        engine = create_rag_engine()
+
     counter = 0
     for qid, reason in invalidated_qids.items():
         counter += 1
@@ -127,8 +144,19 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
 
         gt_row = gt_matches.iloc[0]
 
-        print("   -> Dispatched to run_simulation framework for inference pass...")
-        sim_output = query_single_record(gt_row.to_dict(), sim_mode, cfg_base_model, llm_model, api_url, counter)
+        if engine is not None:
+            q_text = str(gt_row.get("question", ""))
+            cached = build_cached_nodes(orig_lufa_sources.get(qid, {}))
+            if cached:
+                print(f"   -> Reusing {len(cached)} cached top-K chunks from lufa_out (retries will re-retrieve)...")
+            else:
+                print("   -> No cached top-K found for this question; retrieving fresh...")
+            gen_mode = "local-naive" if sim_mode == "local-naive" else "local"
+            sim_output = generate_answer_record(engine, qid, q_text, llm_model,
+                                                mode=gen_mode, max_retries=3, cached_nodes=cached)
+        else:
+            print("   -> Dispatched to run_simulation framework for inference pass...")
+            sim_output = query_single_record(gt_row.to_dict(), sim_mode, cfg_base_model, llm_model, api_url, counter)
 
         prediction = str(sim_output.get("answer", ""))
         reference = str(gt_row.get("expected_answer", ""))
@@ -237,6 +265,16 @@ def process_healing_cycle(lufa_path, eval_path, gt_path, db_path, dash_path, llm
 
         eval_df = pd.concat([eval_df, pd.DataFrame([eval_row_dict], columns=EVAL_COLUMNS)], ignore_index=True)
         print("   ✅ Row repaired successfully and updated inside data matrices.")
+
+        # Persist after EVERY healed row so expensive re-generation survives a crash,
+        # and refresh the dashboard so progress is visible live.
+        lufa_df.drop_duplicates(subset=["question_id", "base_model_used"], keep="last").to_csv(lufa_path, index=False)
+        eval_df.drop_duplicates(subset=["question_id", "rag_base_model"], keep="last").to_csv(eval_path, index=False)
+        try:
+            from dashboard_generator import refresh_dashboard
+            refresh_dashboard(out_path=dash_path, eval_csv=str(eval_path), lufa_csv=str(lufa_path))
+        except Exception as _de:
+            print(f"   [Dashboard] refresh skipped: {_de}")
 
     print("\n" + "=" * 80)
     print("STAGE 3: Synchronizing Ledger Checkpoints & Compiling Dashboard UI")

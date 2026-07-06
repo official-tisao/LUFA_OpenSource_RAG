@@ -272,6 +272,11 @@ if __name__ == "__main__":
         from csv_utils import align_and_append
         align_and_append(row_res, out_path, OUTPUT_COLUMNS)
         print("   ✅ Row appended cleanly to simulation output log.")
+        try:
+            from dashboard_generator import refresh_dashboard
+            refresh_dashboard(lufa_csv=str(out_path))
+        except Exception as _de:
+            print(f"   [Dashboard] refresh skipped: {_de}")
         time.sleep(0.5)
 
     print("\n" + "=" * 80)

@@ -276,7 +276,8 @@ Context:
 
 Question: {original_query}
 Answer:"""
-        return str(self.llm.complete(prompt)).strip()
+        from llm_utils import stream_complete
+        return stream_complete(self.llm, prompt)
 
     def agentic_query(
         self,

@@ -91,7 +91,8 @@ def translate_to_english(text: str, source_lang: str, llm: Ollama) -> str:
         text=text
     )
     try:
-        result = str(llm.complete(prompt)).strip()
+        from llm_utils import stream_complete
+        result = stream_complete(llm, prompt)
         if result:
             print(f"[Translator] '{source_lang}' → 'en': {text[:60]}... → {result[:60]}...")
             return result
@@ -121,7 +122,8 @@ def translate_to_target(text: str, target_lang: str, llm: Ollama) -> str:
         text=text
     )
     try:
-        result = str(llm.complete(prompt)).strip()
+        from llm_utils import stream_complete
+        result = stream_complete(llm, prompt)
         if result:
             print(f"[Translator] 'en' → '{target_lang}': {text[:60]}... → {result[:60]}...")
             return result

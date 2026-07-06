@@ -376,7 +376,8 @@ def judge_llm_scores(question, answer, context, judge_llm_model="None"):
                 answer=answer[:800],
                 context=context[:3000],
             )
-            raw = str(llm.complete(prompt)).strip()
+            from llm_utils import stream_complete
+            raw = stream_complete(llm, prompt)
             scores[metric] = round(extract_score(raw), 4)
         except Exception as e:
             print(f"      [Judge Warning] {metric} calculation failure: {e}")
