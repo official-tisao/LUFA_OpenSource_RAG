@@ -35,6 +35,7 @@ Gemini via antigravity:
 """
 
 import os
+import re
 import sys
 import json
 import time
@@ -78,8 +79,20 @@ GEMINI_NPX_PACKAGE = "@google/gemini-cli"
 
 # If GEMINI_FALLBACK_CLI is set, prefer the headless gemini CLI over antigravity
 _GEMINI_FALLBACK = os.environ.get("GEMINI_FALLBACK_CLI", "").lower() in ("1", "true", "yes")
-# Response polling directory for antigravity bridge
-GEMINI_RESPONSE_DIR = os.environ.get("GEMINI_RESPONSE_DIR", str(Path(tempfile.gettempdir()) / "antigravity_responses"))
+
+# Response polling directory for the antigravity file bridge.
+# Defaults to <system temp>/antigravity_responses (on Windows this resolves to
+# %LOCALAPPDATA%\Temp\antigravity_responses — where the companion writes files).
+# Override with the GEMINI_RESPONSE_DIR env var.
+GEMINI_RESPONSE_DIR = os.environ.get(
+    "GEMINI_RESPONSE_DIR",
+    str(Path(tempfile.gettempdir()) / "antigravity_responses"),
+)
+
+# Antigravity file-bridge polling cadence / limits.
+POLL_INTERVAL = float(os.environ.get("GEMINI_POLL_INTERVAL", "2.0"))        # seconds between reads
+RESPONSE_TIMEOUT = float(os.environ.get("GEMINI_RESPONSE_TIMEOUT", "600"))  # give up after N seconds
+STABILITY_CYCLES = int(os.environ.get("GEMINI_STABILITY_CYCLES", "2"))      # plain-text: unchanged N polls = done
 
 
 def _claude_available() -> bool:
@@ -122,6 +135,14 @@ def _oi_completion_id() -> str:
 
 def _oi_timestamp() -> int:
     return int(time.time())
+
+
+def _estimate_tokens(text: str) -> int:
+    """Rough token estimate (~4 chars/token) for usage reporting when the
+    backend does not return real token counts."""
+    if not text:
+        return 0
+    return max(1, len(text) // 4)
 
 
 def _format_non_stream_response(model: str, content: str, prompt_tokens: int = 0,
@@ -357,33 +378,252 @@ def _build_gemini_cmd(prompt: str, model: str, output_format: str = "text") -> l
         ]
 
 
-def _write_response_marker(request_id: str) -> Path:
-    """
-    Create a response marker file for the antigravity bridge.
-    The proxy polls this file until content appears.
-    """
+# Matches a Windows path inside an antigravity_responses folder ending in a
+# response-file extension — used to discover where antigravity wrote the answer.
+_RESPONSE_PATH_RE = re.compile(
+    r'([A-Za-z]:\\[^\s"\'<>|]*antigravity_responses[^\s"\'<>|]*\.(?:json|txt|md|ndjson))',
+    re.IGNORECASE,
+)
+
+
+def _request_files(request_id: str):
+    """Return (response, prompt, request) file paths for a request id."""
     resp_dir = Path(GEMINI_RESPONSE_DIR)
     resp_dir.mkdir(parents=True, exist_ok=True)
-    marker = resp_dir / f"{request_id}.json"
-    marker.write_text(json.dumps({"status": "pending", "content": ""}))
-    return marker
+    return (
+        resp_dir / f"{request_id}.json",
+        resp_dir / f"{request_id}_prompt.txt",
+        resp_dir / f"{request_id}_request.json",
+    )
 
 
-async def _poll_response_marker(marker_path: Path, timeout: float = 300) -> str:
+def _write_request_files(request_id: str, prompt: str, model: str) -> Path:
     """
-    Poll a response marker file until content appears or timeout.
-    Used when antigravity writes the response to a file.
+    Write the prompt + a request descriptor so an antigravity companion knows
+    what to answer and where to write the response, and seed a pending response
+    file the proxy will poll. Returns the response file path.
+
+    Companion contract — write the answer to <request_id>.json as either:
+        {"status": "complete", "content": "<full answer>"}
+      (or stream partials with {"status": "pending", "content": "<so far>"}),
+    OR write plain text / markdown (optionally ending with a <<END>> sentinel).
+    """
+    resp_file, prompt_file, request_file = _request_files(request_id)
+    prompt_file.write_text(prompt, encoding="utf-8")
+    request_file.write_text(json.dumps({
+        "id": request_id,
+        "model": model,
+        "prompt": prompt,
+        "response_path": str(resp_file),
+        "status": "pending",
+    }, ensure_ascii=False), encoding="utf-8")
+    resp_file.write_text(json.dumps({"status": "pending", "content": ""}), encoding="utf-8")
+    return resp_file
+
+
+def _read_response_content(path: Path):
+    """
+    Read a response file in JSON or plain-text form → (content, is_complete).
+      JSON: {"status": "...", "content"/"text"/"response"/"result": "..."}
+      Text: raw content; a trailing <<END>> sentinel marks completion.
+    """
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except (FileNotFoundError, OSError):
+        return "", False
+    if not raw.strip():
+        return "", False
+
+    try:
+        data = json.loads(raw)
+        if isinstance(data, dict):
+            status = str(data.get("status", "")).strip().lower()
+            content = data.get("content")
+            if content in (None, ""):
+                content = data.get("text") or data.get("response") or data.get("result") or ""
+            if isinstance(content, (dict, list)):
+                content = json.dumps(content, ensure_ascii=False)
+            complete = status in ("complete", "done", "finished", "ok", "success")
+            if "status" not in data and content:   # JSON w/ content but no status = final
+                complete = True
+            return str(content), complete
+    except json.JSONDecodeError:
+        pass
+
+    if "<<END>>" in raw:
+        return raw.split("<<END>>")[0].strip(), True
+    return raw.rstrip(), False
+
+
+def _discover_response(request_id: str, since_ts: float, stdout_text: str = ""):
+    """
+    Find the file the answer is (being) written to and read it.
+    Returns (path, content, complete) — or (None, "", False) when nothing
+    usable exists yet.
+
+    IMPORTANT: a file is only accepted if it actually carries content or a
+    complete status. The proxy seeds <request_id>.json itself with a pending
+    stub, so bare existence must NOT count as discovery (that previously made
+    the poller lock onto its own empty stub and wait forever).
+
+    Priority:
+      1. deterministic  <dir>/<request_id>.json  (companion contract)
+      2. a path regex-parsed from antigravity stdout
+      3. response-like files in the dir modified since launch (newest first)
+    """
+    resp_dir = Path(GEMINI_RESPONSE_DIR)
+    candidates = []
+
+    deterministic = resp_dir / f"{request_id}.json"
+    if deterministic.exists():
+        candidates.append(deterministic)
+
+    if stdout_text:
+        m = _RESPONSE_PATH_RE.search(stdout_text)
+        if m:
+            p = Path(m.group(1))
+            if p.exists() and p not in candidates:
+                candidates.append(p)
+
+    if resp_dir.exists():
+        recent = [
+            p for p in resp_dir.glob("*")
+            if p.suffix.lower() in (".json", ".txt", ".md", ".ndjson")
+            and not p.name.endswith("_prompt.txt")
+            and not p.name.endswith("_request.json")
+            and p.stat().st_mtime >= since_ts - 1
+        ]
+        recent.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+        for p in recent:
+            if p not in candidates:
+                candidates.append(p)
+
+    for p in candidates:
+        content, complete = _read_response_content(p)
+        if content or complete:
+            return p, content, complete
+
+    return None, "", False
+
+
+async def _launch_antigravity(prompt: str, model: str):
+    """
+    Launch `antigravity chat` (GUI) fire-and-forget and return (proc, stdout_acc).
+    stdout is drained in the background so a printed response path can be regexed;
+    we never block on the GUI process exiting.
+    """
+    cmd = _build_gemini_cmd(prompt, model)
+    proc = await asyncio.create_subprocess_exec(
+        *cmd,
+        stdin=asyncio.subprocess.DEVNULL,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.STDOUT,
+        cwd=str(Path.home()),
+    )
+    stdout_acc = {"text": ""}
+
+    async def _drain():
+        try:
+            while True:
+                line = await proc.stdout.readline()
+                if not line:
+                    break
+                stdout_acc["text"] += line.decode(errors="replace")
+        except Exception:
+            pass
+
+    asyncio.ensure_future(_drain())
+    return proc, stdout_acc
+
+
+async def _poll_antigravity_file(request_id: str, since_ts: float, stdout_acc: dict) -> str:
+    """
+    Poll the response dir every POLL_INTERVAL until a response with content is
+    complete (JSON status) or stops growing (plain text), or RESPONSE_TIMEOUT.
+    Re-discovers every cycle — never locks onto the proxy's own pending stub.
     """
     start = time.time()
-    while (time.time() - start) < timeout:
-        await asyncio.sleep(1.0)
-        try:
-            data = json.loads(marker_path.read_text(encoding="utf-8"))
-            if data.get("status") == "complete":
-                return data.get("content", "")
-        except (json.JSONDecodeError, FileNotFoundError):
+    last_content = ""
+    stable = 0
+    cycles = 0
+    while (time.time() - start) < RESPONSE_TIMEOUT:
+        await asyncio.sleep(POLL_INTERVAL)
+        cycles += 1
+        resp_path, content, complete = _discover_response(
+            request_id, since_ts, stdout_acc.get("text", ""))
+
+        if resp_path is None:
+            if cycles % 5 == 0:  # ~every 10s at the default 2s interval
+                print(f"[ModelProxy] Waiting for antigravity response "
+                      f"({time.time() - start:.0f}s elapsed) — expecting "
+                      f"{Path(GEMINI_RESPONSE_DIR) / (request_id + '.json')}")
             continue
-    raise TimeoutError(f"Antigravity response not received within {timeout}s")
+
+        if complete and content:
+            print(f"[ModelProxy] Response complete from {resp_path.name} "
+                  f"({len(content)} chars, {time.time() - start:.0f}s)")
+            return content
+        if content and content == last_content:
+            stable += 1
+            if stable >= STABILITY_CYCLES:
+                print(f"[ModelProxy] Response stable from {resp_path.name} "
+                      f"({len(content)} chars, {time.time() - start:.0f}s)")
+                return content
+        else:
+            stable = 0
+            last_content = content
+
+    if last_content:
+        return last_content
+    raise TimeoutError(
+        f"Antigravity response not received within {RESPONSE_TIMEOUT:.0f}s. "
+        f"Nothing wrote content to {GEMINI_RESPONSE_DIR}. Either install a companion "
+        f"that writes answers to <request_id>.json there, or set GEMINI_FALLBACK_CLI=1 "
+        f"to use the headless gemini CLI."
+    )
+
+
+async def _stream_antigravity_file(request_id: str, since_ts: float, stdout_acc: dict,
+                                   model: str, chunk_id: str):
+    """Yield SSE deltas as the response file grows; finish on complete/stable/timeout."""
+    start = time.time()
+    emitted = ""
+    last_content = ""
+    stable = 0
+
+    yield _format_stream_chunk(model, "", chunk_id)  # initial role chunk
+
+    while (time.time() - start) < RESPONSE_TIMEOUT:
+        await asyncio.sleep(POLL_INTERVAL)
+        resp_path, content, complete = _discover_response(
+            request_id, since_ts, stdout_acc.get("text", ""))
+        if resp_path is None:
+            continue
+
+        # Emit only the newly-appended portion (common append-only case);
+        # on a rewrite, emit whatever is beyond what we've already sent.
+        if content and content.startswith(emitted):
+            delta = content[len(emitted):]
+        elif content and len(content) > len(emitted):
+            delta = content[len(emitted):]
+        else:
+            delta = ""
+        if delta:
+            yield _format_stream_chunk(model, delta, chunk_id)
+            emitted += delta
+
+        if complete and content:
+            break
+        if content and content == last_content:
+            stable += 1
+            if stable >= STABILITY_CYCLES:
+                break
+        else:
+            stable = 0
+            last_content = content
+
+    yield _format_stream_chunk(model, "", chunk_id, finish_reason="stop")
+    yield "data: [DONE]\n\n"
 
 
 async def _route_gemini_sync(request: ChatCompletionRequest) -> dict:
@@ -437,78 +677,34 @@ async def _route_gemini_sync(request: ChatCompletionRequest) -> dict:
         except (json.JSONDecodeError, KeyError, IndexError):
             content = stdout.decode(errors="replace").strip()
 
-        return _format_non_stream_response(request.model, str(content))
-
-    else:
-        # ── Antigravity GUI mode ──
-        # Create a response marker file and launch antigravity chat.
-        # The user sees the prompt in the antigravity chat panel and
-        # the response appears there. For automated/proxy use, we also
-        # write the prompt to a temp file so antigravity can reference it.
-        marker = _write_response_marker(request_id)
-
-        # Write prompt to a temp file that antigravity can open
-        prompt_file = Path(GEMINI_RESPONSE_DIR) / f"{request_id}_prompt.txt"
-        prompt_file.write_text(prompt, encoding="utf-8")
-
-        cmd = _build_gemini_cmd(prompt, request.model)
-
-        # Launch antigravity (GUI process — fire and forget)
-        proc = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdin=asyncio.subprocess.DEVNULL,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-            cwd=str(Path.home()),
+        return _format_non_stream_response(
+            request.model, str(content),
+            _estimate_tokens(prompt), _estimate_tokens(str(content)),
         )
 
-        # Antigravity chat is GUI-based — responses don't go to stdout.
-        # We poll the marker file for a completed response.
-        # NOTE: In fully automated mode, you'd need a companion extension
-        # or script that writes Gemini's response to the marker file.
-        # For now, we wait for the antigravity process and attempt to
-        # read any stdout (future: antigravity may support headless mode).
+    else:
+        # ── Antigravity GUI mode (file bridge) ──
+        # Launch antigravity chat fire-and-forget, then poll the response file
+        # every POLL_INTERVAL seconds until the answer is complete. The companion
+        # writes the answer to <request_id>.json (see _write_request_files).
+        since_ts = time.time()
+        _write_request_files(request_id, prompt, request.model)
+        _proc, stdout_acc = await _launch_antigravity(prompt, request.model)
+
         try:
-            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=300)
-        except asyncio.TimeoutError:
-            proc.kill()
-            raise TimeoutError("Antigravity chat timed out (300s)")
+            content = await _poll_antigravity_file(request_id, since_ts, stdout_acc)
+        finally:
+            # Leave the antigravity GUI running; just clean up our bridge files.
+            for f in _request_files(request_id):
+                try:
+                    f.unlink(missing_ok=True)
+                except Exception:
+                    pass
 
-        # Try to read from marker file first (if companion writes to it)
-        try:
-            data = json.loads(marker.read_text(encoding="utf-8"))
-            if data.get("status") == "complete" and data.get("content"):
-                content = data["content"]
-                # Cleanup
-                marker.unlink(missing_ok=True)
-                prompt_file.unlink(missing_ok=True)
-                return _format_non_stream_response(request.model, content)
-        except (json.JSONDecodeError, FileNotFoundError):
-            pass
-
-        # Fallback: try stdout (future headless mode support)
-        stdout_text = stdout.decode(errors="replace").strip() if stdout else ""
-        if stdout_text:
-            try:
-                result = json.loads(stdout_text)
-                content = result.get("result", result.get("text", stdout_text))
-                if isinstance(content, dict):
-                    content = content.get("text", str(content))
-            except json.JSONDecodeError:
-                content = stdout_text
-        else:
-            content = (
-                "[Antigravity] Response was generated in the Antigravity GUI chat panel. "
-                "For automated proxy use, set GEMINI_FALLBACK_CLI=1 to use the headless "
-                "gemini CLI, or install a companion extension that writes responses to: "
-                f"{marker}"
-            )
-
-        # Cleanup
-        marker.unlink(missing_ok=True)
-        prompt_file.unlink(missing_ok=True)
-
-        return _format_non_stream_response(request.model, str(content))
+        return _format_non_stream_response(
+            request.model, str(content),
+            _estimate_tokens(prompt), _estimate_tokens(str(content)),
+        )
 
 
 async def _route_gemini_stream(request: ChatCompletionRequest):
@@ -526,12 +722,26 @@ async def _route_gemini_stream(request: ChatCompletionRequest):
     chunk_id = _oi_completion_id()
     prompt = _build_prompt_from_messages(request.messages)
 
-    if _GEMINI_FALLBACK:
-        # ── Headless mode: gemini CLI with stream-json ──
-        cmd = _build_gemini_cmd(prompt, request.model, output_format="stream-json")
-    else:
-        # ── Antigravity GUI mode — best-effort streaming ──
-        cmd = _build_gemini_cmd(prompt, request.model)
+    if not _GEMINI_FALLBACK:
+        # ── Antigravity GUI mode (file bridge): stream the response file as it grows ──
+        request_id = chunk_id
+        since_ts = time.time()
+        _write_request_files(request_id, prompt, request.model)
+        _proc, stdout_acc = await _launch_antigravity(prompt, request.model)
+        try:
+            async for chunk in _stream_antigravity_file(request_id, since_ts, stdout_acc,
+                                                        request.model, chunk_id):
+                yield chunk
+        finally:
+            for f in _request_files(request_id):
+                try:
+                    f.unlink(missing_ok=True)
+                except Exception:
+                    pass
+        return
+
+    # ── Headless fallback: gemini CLI with stream-json over stdout ──
+    cmd = _build_gemini_cmd(prompt, request.model, output_format="stream-json")
 
     proc = await asyncio.create_subprocess_exec(
         *cmd,
@@ -633,6 +843,8 @@ async def list_models():
         # Gemini models
         ModelInfo(id="gemini-2.5-pro", owned_by="google"),
         ModelInfo(id="gemini-2.5-flash", owned_by="google"),
+        ModelInfo(id="gemini-3.5-flash", owned_by="google"),
+        ModelInfo(id="gemini-3.1-pro", owned_by="google"),
         ModelInfo(id="gemini-2.0-flash", owned_by="google"),
         # Claude models
         ModelInfo(id="claude-sonnet-4-5-20250514", owned_by="anthropic"),
@@ -651,7 +863,7 @@ async def chat_completions(request: ChatCompletionRequest):
     Uses your existing account subscriptions — no API keys needed.
     """
     model_lower = request.model.lower()
-    is_gemini = model_lower.startswith("gemini")
+    is_gemini = model_lower.startswith("gemini") | model_lower.startswith("MODEL_PLACEHOLDER_M20") 
     is_claude = model_lower.startswith("claude")
 
     if not is_gemini and not is_claude:
@@ -694,11 +906,12 @@ if __name__ == "__main__":
     print(f"[ModelProxy] Gemini backend:     {'OK ' + (ANTIGRAVITY_CLI if not _GEMINI_FALLBACK else (GEMINI_CLI or 'npx @google/gemini-cli')) if _gemini_available() else 'NOT FOUND'}")
     print(f"[ModelProxy] Gemini mode:        {gemini_backend}")
     print(f"[ModelProxy] Response dir:       {GEMINI_RESPONSE_DIR}")
+    print(f"[ModelProxy] Poll interval:      {POLL_INTERVAL}s  (timeout {RESPONSE_TIMEOUT:.0f}s)")
     print(f"[ModelProxy] No API keys needed — uses your account subscriptions via CLI")
     uvicorn.run(
         "model_proxy:app",
         host="0.0.0.0",
         port=port,
         reload=False,
-        timeout_keep_alive=300,
+        timeout_keep_alive=600,
     )

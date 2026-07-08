@@ -294,6 +294,68 @@ def migrate_csv_schema(path: Union[str, Path],
     return added
 
 
+def upsert_row(row_dict: Dict,
+               path: Union[str, Path],
+               columns: List[str],
+               key_cols=("question_id",),
+               owned_cols: Optional[List[str]] = None,
+               encoding: str = "utf-8") -> bool:
+    """
+    Update-or-insert a single row by key, rewriting the whole file so progress is
+    visible immediately and no duplicate rows accumulate.
+
+    - If a row whose `key_cols` match already exists, OVERWRITE only `owned_cols`
+      (default: every column the caller actually supplied in `row_dict`), leaving
+      all other existing columns intact. This lets retrieval update source columns
+      while preserving a previously-written answer/grounded, and lets the answer
+      generator update answer/grounded/attempts/sources without wiping metadata.
+    - If no matching row exists, append a new one.
+    - An old single-score schema is migrated to `columns` first (backup + rename).
+
+    Values always land under the correct header regardless of dict order.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    columns = list(columns)
+
+    if path.exists() and path.stat().st_size > 0:
+        existing_header = _read_header(path, encoding)
+        if set(existing_header) != set(columns):
+            migrate_csv_schema(path, columns, encoding=encoding)
+        df = pd.read_csv(path, encoding=encoding, on_bad_lines="skip")
+        for c in columns:
+            if c not in df.columns:
+                df[c] = ""
+        df = df[columns].astype(object)
+        df = df.where(pd.notna(df), "")
+    else:
+        df = pd.DataFrame(columns=columns).astype(object)
+
+    owned = list(owned_cols) if owned_cols is not None else [c for c in columns if c in row_dict]
+
+    # Locate existing row(s) matching the key.
+    if len(df):
+        mask = pd.Series(True, index=df.index)
+        for k in key_cols:
+            kv = str(row_dict.get(k, "")).strip()
+            col = df[k].astype(str).str.strip() if k in df.columns else pd.Series("", index=df.index)
+            mask = mask & (col == kv)
+    else:
+        mask = pd.Series([], dtype=bool)
+
+    if len(df) and mask.any():
+        for idx in df.index[mask]:
+            for c in owned:
+                if c in columns:
+                    df.at[idx, c] = row_dict.get(c, df.at[idx, c])
+    else:
+        new_row = {c: row_dict.get(c, "") for c in columns}
+        df = pd.concat([df, pd.DataFrame([new_row], columns=columns)], ignore_index=True)
+
+    df.to_csv(path, index=False, encoding=encoding)
+    return True
+
+
 def align_and_append(rows: Union[Dict, List[Dict]],
                      path: Union[str, Path],
                      columns: List[str],

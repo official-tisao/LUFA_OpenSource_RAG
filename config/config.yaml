@@ -81,9 +81,9 @@ model_api_auth:
   default:
     api_key: ""
     api_base: "http://localhost:11434/api"
-  claude-3-opus-20240229:
+  openai/gpt-5.4-mini:
     api_key: ""
-    api_base: "https://api.anthropic.com/v1"
+    api_base: "https://openrouter.ai/api"
   openrouter/owl-alpha:
     api_key: ""
     api_base: "https://api.openrouter.ai/v1"

@@ -1,4 +1,4 @@
-id,question,expected_answer,category,difficulty,language
+question_id,question,expected_answer,category,difficulty,language
 test_en_001,What are the rules concerning absence: general?,"In such cases, the University will bear reasonable transportation costs consequent upon any such recall.",Leave,easy,English
 test_en_002,"What does the collective agreement provide regarding pregnancy, parental and adoption?","(i) For the first two (2) weeks, one- hundred percent (100%) of her/his nominal salary; (ii) For up to a maximum of seven (7) additional weeks, an amount equal to the difference between the EI benefits received by the Member and one-hundred percent (100%) of the.",Benefits,hard,English
 test_en_003,What does the agreement say about merit increments?,Those eligible shall meet as often as necessary for the purpose of writing a joint single letter of assessment for the application. A vote on the application shall occur and be recorded.,General Provisions,medium,English

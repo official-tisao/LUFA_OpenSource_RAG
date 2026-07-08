@@ -419,6 +419,7 @@ if __name__ == "__main__":
         # Recompute judge cells only when a judge model is available AND some judge
         # cell is zero/blank; non-zero judge scores are always preserved.
         judge_zero = any(_is_zero_or_blank(prev.get(m)) for m in JUDGE_METRICS)
+        #no_naive_judge = args.mode == "local-naive"
         need_judge = bool(args.judge_llm) and (is_new or judge_zero)
 
         if not need_det and not need_judge:

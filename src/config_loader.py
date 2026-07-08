@@ -32,14 +32,17 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import yaml
+from dotenv import load_dotenv
 
+# Automatically loads the .env file into the system environment
+load_dotenv()
 # ── Path to config.yaml ──────────────────────────────────────────────────────
 _CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
 
 # ── Default fallback values (used when config.yaml is missing keys) ──────────
 _DEFAULTS = {
-    "models.judge_llm.name": "tensortemplar/prometheus2:7b-fp16",
-    "models.llm.name": "llama3.1:8b",
+    "models.judge_llm.name": "tensortemplar/prometheus2:8x7b-Q4_K_S",
+    "models.llm.name": "llama3.1:8b-gpu",
     "models.llm.base_url": "http://localhost:11434",
     "models.llm.request_timeout": 120.0,
     "models.embedding.name": "nomic-embed-text-v2-moe",
@@ -100,7 +103,7 @@ def _env_override(dotted_key: str, value: Any) -> Any:
     Check for an environment variable override.
     Dotted key "models.llm.name" → env var "LUFA_MODELS_LLM_NAME"
     """
-    env_key = "LUFA_" + dotted_key.upper().replace(".", "_")
+    env_key = dotted_key.upper().replace(".", "_")
     env_val = os.environ.get(env_key)
     if env_val is not None:
         # Try to cast to the same type as the original value
