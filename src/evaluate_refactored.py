@@ -38,6 +38,7 @@ OUTPUT_COLUMNS = [
     "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
     "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
     "answer", "base_model_used", "language", "attempts", "grounded",
+    "translation_applied", "translated_question", "untranslated_answer", "translation_pipeline_language",
 ]
 
 LUFA_COLUMNS = list(OUTPUT_COLUMNS)
@@ -53,6 +54,7 @@ EVAL_COLUMNS = [
     "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor",
     "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision",
+    "translation_applied", "translated_question", "untranslated_answer", "translation_pipeline_language",
 ]
 def safe_float(val, default_val=0.0):
     if pd.isna(val) or val == "":

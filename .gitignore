@@ -4,6 +4,12 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+#edited configuration files
+config/config.yaml
+
+#temp python script files
+src/temp.py
+
 # C extensions
 *.so
 

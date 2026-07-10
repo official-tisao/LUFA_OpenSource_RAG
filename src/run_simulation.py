@@ -23,6 +23,16 @@ INPUT_CSV = "tests/combined_test_data_and_ground_truth.csv"
 OUTPUT_CSV = "tests/lufa_out_data.csv"
 CONFIG = "config/config.yaml"
 
+# Cross-lingual translation columns — populated ONLY when the question is neither
+# English nor French (i.e. a translation round-trip occurred). Appended at the end
+# so existing CSVs migrate cleanly (new columns added empty, nothing shifts).
+TRANSLATION_COLUMNS = [
+    "translation_applied",
+    "translated_question",
+    "untranslated_answer",
+    "translation_pipeline_language",
+]
+
 OUTPUT_COLUMNS = [
     "question_id", "question",
     "source1_id", "source1_cosine_score", "source1_recency_adjusted_cosine_score", "source1_rrf_score", "source1_text",
@@ -31,7 +41,35 @@ OUTPUT_COLUMNS = [
     "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
     "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
     "answer", "base_model_used", "language", "attempts", "grounded",
-]
+] + TRANSLATION_COLUMNS
+
+
+def extract_translation_columns(result: dict) -> dict:
+    """
+    Build the 4 translation columns from a generation result dict.
+
+    Handles both key conventions:
+      - answer_generator: 'original_question_translation', 'untranslated_response'
+      - rag_engine:       'translated_query',              'english_response'
+    Columns are left BLANK unless a translation round-trip actually occurred
+    (question was neither English nor French).
+    """
+    applied = bool(result.get("translation_applied"))
+    if not applied:
+        return {c: "" for c in TRANSLATION_COLUMNS}
+
+    untranslated = result.get("untranslated_response")
+    if untranslated is None:
+        untranslated = result.get("english_response")
+    translated_q = result.get("original_question_translation") or result.get("translated_query") or ""
+    pipeline_lang = result.get("detected_language") or result.get("pipeline_language") or ""
+
+    return {
+        "translation_applied": True,
+        "translated_question": translated_q,
+        "untranslated_answer": untranslated if untranslated is not None else "",
+        "translation_pipeline_language": pipeline_lang,
+    }
 
 
 def load_config(path=CONFIG):
@@ -158,6 +196,7 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
             "grounded": result.get("grounded", False),
         }
         row.update(sources_dict)
+        row.update(extract_translation_columns(result))
 
         print(f"   [Simulation Engine] ✅ Success! Received Answer length: {len(row['answer'])} chars.")
         return row
@@ -184,6 +223,8 @@ def _empty_row(q_id, q_text, model, lang):
         row[f"source{i}_recency_adjusted_cosine_score"] = ""
         row[f"source{i}_rrf_score"] = ""
         row[f"source{i}_text"] = ""
+    for c in TRANSLATION_COLUMNS:
+        row[c] = ""
     return row
 
 

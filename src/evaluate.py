@@ -25,7 +25,7 @@ from nltk.translate.meteor_score import meteor_score
 from rouge_score import rouge_scorer
 
 # Dynamic simulation hooks
-from run_simulation import query_single_record
+from run_simulation import query_single_record, TRANSLATION_COLUMNS
 
 warnings.filterwarnings("ignore")
 
@@ -64,7 +64,7 @@ LUFA_COLUMNS = [
     "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
     "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
     "answer", "base_model_used", "language", "attempts", "grounded",
-]
+] + TRANSLATION_COLUMNS
 
 EVAL_COLUMNS = [
     "question_id", "id", "question", "answer", "base_model_used", "rag_base_model",
@@ -77,7 +77,7 @@ EVAL_COLUMNS = [
     "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor",
     "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision",
-]
+] + TRANSLATION_COLUMNS
 
 
 # ─────────────────────────────────────────────────────────────────────────────

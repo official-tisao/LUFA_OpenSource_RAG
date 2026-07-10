@@ -266,6 +266,7 @@ if __name__ == "__main__":
     from retrieval import has_old_schema
     from csv_utils import migrate_csv_schema, resolve_language
     from evaluate import EVAL_COLUMNS
+    from run_simulation import TRANSLATION_COLUMNS
 
     lufa_path = Path(args.lufa_csv)
     test_path = Path(args.test_csv)
@@ -535,6 +536,9 @@ if __name__ == "__main__":
             "faithfulness": faith,
             "context_precision": cp,
         })
+        # Carry cross-lingual translation columns straight from the lufa row.
+        for _tc in TRANSLATION_COLUMNS:
+            out_row[_tc] = _safe(rag.get(_tc))
         results[q_id] = out_row
         # Persist this row immediately (crash-safe) and refresh the dashboard.
         _persist_and_refresh()

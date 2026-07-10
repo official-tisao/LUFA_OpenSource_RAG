@@ -22,7 +22,12 @@ def check_language(input_string):
         return "en"
     elif "_fr" in input_string:
         return "fr"
-    return None
+    elif "_de" in input_string:
+        return "de"
+    elif "_es" in input_string:
+        return "es"
+
+    return input_string[5:7]
 
 def generate_naive_answer(engine,
                          query_text: str,
@@ -31,58 +36,8 @@ def generate_naive_answer(engine,
                          output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
                          cached_nodes=None) -> Dict:
     """Generate answer using naive RAG approach (single retrieval + generation)."""
-    path = Path(output_path)
-    path.parent.mkdir(parents=True, exist_ok=True)
 
-    if cached_nodes:
-        nodes = cached_nodes
-        print(f"[AnswerGenerator] Reusing {len(nodes)} cached top-K chunks from lufa_out (no re-retrieval).")
-    else:
-        nodes = engine._retrieve_nodes(query_text, top_k=top_k)
-
-    sources = _extract_sources_from_nodes(nodes)
-
-    #from language_detector import detect_full_language
-    #original_lang = detect_full_language(query_text)
-    original_lang = check_language(query_id) if query_id else "en"
-    from translator import needs_translation, translate_to_english, translate_to_target, LANGUAGE_NAMES
-
-    translation_applied = needs_translation(original_lang)
-    if translation_applied:
-        print(f"[AnswerGenerator] Translating query to English for processing...")
-        query_for_processing = translate_to_english(query_text, original_lang, engine.llm)
-        pipeline_lang = "en"
-    else:
-        query_for_processing = query_text
-        pipeline_lang = original_lang
-
-    answer = engine._generate_from_nodes(query_for_processing, nodes, pipeline_lang)
-
-    final_answer = answer
-    if translation_applied:
-        lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
-        print(f"[AnswerGenerator] Translating answer back to {lang_name}...")
-        final_answer = translate_to_target(answer, original_lang, engine.llm)
-
-    is_grounded = False
-    if check_grounded:
-        from reflector import reflect
-        chunk_texts = [n.node.text for n in nodes]
-        is_grounded = reflect(final_answer, chunk_texts, engine.llm)
-
-    result = {
-        'response': final_answer,
-        'sources': sources,
-        'detected_language': pipeline_lang,
-        'original_language': original_lang,
-        'translation_applied': translation_applied,
-        'grounded': is_grounded,
-        'attempts': 1,
-    }
-
-    result.update(_sources_to_csv_format(sources, top_k))
-
-    return result
+    return generate_agentic_answer(engine, query_text,1, check_grounded, output_path, query_id, cached_nodes)
 
 
 def generate_agentic_answer(engine,
@@ -103,7 +58,7 @@ def generate_agentic_answer(engine,
     #from language_detector import detect_full_language
     original_lang = (check_language(query_id) if query_id else check_language(query_text)) or "en"
     translation_applied = needs_translation(original_lang)
-
+    translated_query = query_text
     if translation_applied:
         lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
         print(f"[AnswerGenerator] Non-native language detected: {original_lang} ({lang_name})")
@@ -122,7 +77,7 @@ def generate_agentic_answer(engine,
     nodes = []
     answer = ""
     is_grounded = False
-
+    real_attempt = 0;
     for attempt in range(1, max_retries + 1):
         print(f"[AnswerGenerator] Attempt {attempt}/{max_retries}")
 
@@ -148,11 +103,13 @@ def generate_agentic_answer(engine,
             print(f"[AnswerGenerator] Grounded: {is_grounded}")
 
             if is_grounded:
+                real_attempt = attempt
                 break
 
             current_query = rewritten_query
         else:
             is_grounded = False
+            real_attempt = attempt
             break
 
     final_answer = answer
@@ -168,9 +125,14 @@ def generate_agentic_answer(engine,
         'original_language': original_lang,
         'translation_applied': translation_applied,
         'rewritten_query': rewritten_query,
-        'attempts': attempt,
+        'attempts': real_attempt  ,
         'grounded': is_grounded,
+        'original_query_id': query_id,
+        'original_question': query_text,
+        'original_question_translation': translated_query,
+        'untranslated_response': answer
     }
+
 
     if nodes:
         result['sources'] = _extract_sources_from_nodes(nodes)
@@ -281,6 +243,8 @@ def generate_answer_record(engine, q_id, q_text, base_model, mode="local",
     for i in range(1, 6):
         for suf in ["id", "cosine_score", "recency_adjusted_cosine_score", "rrf_score", "text"]:
             row[f"source{i}_{suf}"] = result.get(f"source{i}_{suf}", "")
+    from run_simulation import extract_translation_columns
+    row.update(extract_translation_columns(result))
     return row
 
 
@@ -333,7 +297,7 @@ if __name__ == "__main__":
 
     from rag_engine import create_rag_engine
     from config_loader import cfg
-    from run_simulation import OUTPUT_COLUMNS
+    from run_simulation import OUTPUT_COLUMNS, extract_translation_columns
     from csv_utils import upsert_row
 
     input_path = Path(args.input)
@@ -431,6 +395,7 @@ if __name__ == "__main__":
                 "attempts": result.get("attempts", 1),
                 "grounded": result.get("grounded", False),
                 **source_cols,
+                **extract_translation_columns(result),
             }
 
             # Update the existing row in place (or append if new) so grounded,
