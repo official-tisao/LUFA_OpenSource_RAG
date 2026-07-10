@@ -306,7 +306,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     from rag_engine import create_rag_engine
-    from csv_utils import align_and_append
+    from csv_utils import upsert_row
     from run_simulation import OUTPUT_COLUMNS
 
     input_path = Path(args.input)
@@ -333,7 +333,10 @@ if __name__ == "__main__":
                     score_col = f"source{i}_rrf_score"
                     if score_col in existing_df.columns:
                         completed_ids.update(
-                            existing_df[existing_df[score_col].notna() & (existing_df[score_col] != "")]
+                            existing_df[existing_df[score_col].notna() 
+                            & (existing_df[score_col].astype(str).str.strip() != "")
+                            #& (existing_df[score_col].astype(float).round(5) > 0.0001)
+                            ]
                             ["question_id"].dropna().astype(str).tolist()
                         )
                 print(f"[Retrieval] Resuming — {len(completed_ids)} questions already processed.")
@@ -400,11 +403,12 @@ if __name__ == "__main__":
                 # Repair language from the question_id when old value is missing/corrupt
                 result_row["language"] = resolve_language(old_row.get("language", ""), q_id)
 
-            # Schema-safe append — values always land under the correct header
-            # (canonical lufa_out schema), regardless of dict build order.
-            align_and_append(result_row, output_path, OUTPUT_COLUMNS)
+            # Update the existing row in place (or append if new). result_row only
+            # carries question_id/question/source{n}_* (plus carried fields in
+            # migration mode), so a previously-written answer/grounded is preserved.
+            upsert_row(result_row, output_path, OUTPUT_COLUMNS, key_cols=("question_id",))
             processed += 1
-            print(f"   Retrieved {len(sources)} chunks — appended to {output_path}")
+            print(f"   Retrieved {len(sources)} chunks — source columns updated in {output_path}")
             try:
                 from dashboard_generator import refresh_dashboard
                 refresh_dashboard(lufa_csv=str(output_path))

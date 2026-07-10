@@ -10,8 +10,12 @@ from pathlib import Path
 from typing import Dict, List, Union, Optional, Tuple
 from copy import deepcopy
 
+from openai import max_retries
+
 from csv_utils import read_csv_cached, write_csv_row, get_completed_ids
 from metrics import token_f1
+from dashboard_generator import refresh_dashboard
+
 
 def check_language(input_string):
     if "_en" in input_string:
@@ -19,6 +23,7 @@ def check_language(input_string):
     elif "_fr" in input_string:
         return "fr"
     return None
+
 def generate_naive_answer(engine,
                          query_text: str,
                          top_k: int = 5,
@@ -251,14 +256,14 @@ def build_cached_nodes(source_row: Dict, max_sources: int = 5):
 
 
 def generate_answer_record(engine, q_id, q_text, base_model, mode="local",
-                           max_retries=3, cached_nodes=None) -> Dict:
+                           max_retries=1, cached_nodes=None) -> Dict:
     """
     Produce a run_simulation-style lufa_out row (answer + per-chunk sources).
     When `cached_nodes` are supplied they are reused for the first-pass generation
     (no re-retrieval); agentic retries still regenerate the top-K.
     """
     if mode == "local-naive":
-        result = generate_naive_answer(engine, q_text, check_grounded=False,
+        result = generate_naive_answer(engine, q_text, check_grounded=True,
                                        query_id=q_id, cached_nodes=cached_nodes)
     else:
         result = generate_agentic_answer(engine, q_text, max_retries=max_retries,
@@ -280,7 +285,7 @@ def generate_answer_record(engine, q_id, q_text, base_model, mode="local",
 
 
 def naive_rag(engine, query_text: str, max_sources: int = 5,
-              check_grounded: bool = False,
+              check_grounded: bool = True,
               output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
               cached_nodes=None) -> Dict:
     """High-level function for naive RAG processing."""
@@ -304,7 +309,6 @@ if __name__ == "__main__":
     import traceback
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).parent))
-
     parser = argparse.ArgumentParser(description="Generate RAG answers for LUFA test questions")
     parser.add_argument("--input", default="tests/combined_test_data_and_ground_truth.csv",
                         help="Input CSV with questions (must have 'id' and 'question' columns)")
@@ -314,12 +318,23 @@ if __name__ == "__main__":
                         help="local = agentic query, local-naive = single-pass query")
     parser.add_argument("--max_retries", type=int, default=1,
                         help="Max retry attempts for agentic mode")
+    parser.add_argument("--llm_model", default=None,
+                        help="Supply one of many models to use")
+    def _str2bool(v):
+        if isinstance(v, bool):
+            return v
+        return str(v).strip().lower() in ("1", "true", "yes", "y", "on")
+
+    parser.add_argument("--openai_client", type=_str2bool, nargs="?", const=True, default=False,
+                        help="Use an OpenAI-compatible endpoint for the LLM instead of Ollama "
+                             "(e.g. --openai_client True for cloud models like claude-haiku-4-5)")
+
     args = parser.parse_args()
 
     from rag_engine import create_rag_engine
     from config_loader import cfg
     from run_simulation import OUTPUT_COLUMNS
-    from csv_utils import align_and_append
+    from csv_utils import upsert_row
 
     input_path = Path(args.input)
     output_path = Path(args.output)
@@ -340,22 +355,30 @@ if __name__ == "__main__":
                     qid = str(r.get("question_id", "")).strip()
                     if qid:
                         cached_map[qid] = r.to_dict()
+
                 if "answer" in existing_df.columns:
-                    successful = existing_df[
-                        existing_df["answer"].notna() &
-                        (existing_df["answer"].astype(str).str.strip() != "") &
-                        (existing_df["answer"].astype(str).str.strip() != "ERROR")
-                    ]
-                    completed_ids = set(successful["question_id"].dropna().astype(str).tolist())
+                     clean_ans = existing_df["answer"].astype(str).str.strip()
+                     clean_ground = existing_df["grounded"].astype(str).str.strip().str.lower()
+    
+                     # Apply conditions cleanly
+                     successful = existing_df[(
+                         existing_df["answer"].notna() & (clean_ans != "") & (clean_ans != "ERROR") 
+                         # & ((args.mode == "local") & (clean_ground == "true"))         
+                     )]
+                    
+                     completed_ids = set(successful["question_id"].dropna().astype(str).tolist())
             print(f"[AnswerGenerator] Resuming — {len(completed_ids)} answered, "
                   f"{len(cached_map)} questions with cached top-K available.")
         except Exception as e:
             print(f"[AnswerGenerator] Warning: could not read existing output: {e}")
 
-    base_model = cfg("models.llm.name")
+    if args.llm_model is None:
+        base_model = cfg("models.llm.name")
+    else:
+        base_model = args.llm_model
     print(f"[AnswerGenerator] Mode: {args.mode} | Model: {base_model}")
     print("[AnswerGenerator] Initializing RAG engine...")
-    engine = create_rag_engine()
+    engine = create_rag_engine(None, base_model, None, None, openai_client=args.openai_client)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     for idx, row in questions_df.iterrows():
@@ -383,20 +406,21 @@ if __name__ == "__main__":
 
             sources = result.get("sources", [])
             source_cols = {}
+            is_valid_response = result.get("response", "").strip() not in ("", "ERROR")
             for i in range(1, 6):
-                if i <= len(sources):
+                if i <= len(sources) and is_valid_response:
                     s = sources[i - 1]
                     source_cols[f"source{i}_id"] = s.get("node_id", "")
                     source_cols[f"source{i}_cosine_score"] = round(float(s.get("cosine_score", 0)), 4)
                     source_cols[f"source{i}_recency_adjusted_cosine_score"] = round(float(s.get("recency_adjusted_cosine_score", 0)), 4)
                     source_cols[f"source{i}_rrf_score"] = round(float(s.get("rrf_score", 0)), 4)
-                    source_cols[f"source{i}_text"] = str(s.get("text", ""))[:500]
+                    source_cols[f"source{i}_text"] = str(s.get("text", ""))
                 else:
-                    source_cols[f"source{i}_id"] = ""
-                    source_cols[f"source{i}_cosine_score"] = ""
-                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = ""
-                    source_cols[f"source{i}_rrf_score"] = ""
-                    source_cols[f"source{i}_text"] = ""
+                    source_cols[f"source{i}_id"] = row.get(f"source{i}_id", "")
+                    source_cols[f"source{i}_cosine_score"] = row.get(f"source{i}_cosine_score", "")
+                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = row.get(f"source{i}_recency_adjusted_cosine_score", "")
+                    source_cols[f"source{i}_rrf_score"] = row.get(f"source{i}_rrf_score", "")
+                    source_cols[f"source{i}_text"] = row.get(f"source{i}_text", "")
 
             out_row = {
                 "question_id": q_id,
@@ -409,10 +433,11 @@ if __name__ == "__main__":
                 **source_cols,
             }
 
-            align_and_append(out_row, output_path, OUTPUT_COLUMNS)
-            print(f"   Answer length: {len(out_row['answer'])} chars | Grounded: {out_row['grounded']} — appended.")
+            # Update the existing row in place (or append if new) so grounded,
+            # attempts, answer and all source{n}_* columns are refreshed per row.
+            upsert_row(out_row, output_path, OUTPUT_COLUMNS, key_cols=("question_id",))
+            print(f"   Answer length: {len(out_row['answer'])} chars | Grounded: {out_row['grounded']} — saved.")
             try:
-                from dashboard_generator import refresh_dashboard
                 refresh_dashboard(lufa_csv=str(output_path))
             except Exception as _de:
                 print(f"   [Dashboard] refresh skipped: {_de}")
@@ -428,7 +453,8 @@ if __name__ == "__main__":
                 empty[f"source{i}_recency_adjusted_cosine_score"] = ""
                 empty[f"source{i}_rrf_score"] = ""
                 empty[f"source{i}_text"] = ""
-            align_and_append(empty, output_path, OUTPUT_COLUMNS)
+            upsert_row(empty, output_path, OUTPUT_COLUMNS, key_cols=("question_id",))
         time.sleep(0.5)
-
+    refresh_dashboard(lufa_csv=str(output_path))
+    print(f"   [Dashboard] refreshed.")
     print(f"\n[AnswerGenerator] Done. Results in {output_path}")

@@ -10,6 +10,28 @@ import sys
 from pathlib import Path
 import pandas as pd
 
+sys.path.insert(0, str(Path(__file__).parent))
+
+
+def _num_series(df, col):
+    """Numeric column as a Series, or all-zeros when the column is absent."""
+    if col in df.columns:
+        return pd.to_numeric(df[col], errors="coerce").fillna(0.0)
+    return pd.Series(0.0, index=df.index)
+
+
+def _migrate_if_old(path, df, canonical):
+    """If the frame uses the old single-score schema, migrate the file to the
+    per-chunk canonical schema (backs up, renames source{n}_score, repairs
+    language) and return the reloaded DataFrame."""
+    from retrieval import has_old_schema
+    from csv_utils import migrate_csv_schema
+    if has_old_schema(df):
+        print(f"[Clean] Old schema detected in {path} — migrating to per-chunk schema first...")
+        migrate_csv_schema(str(path), list(canonical))
+        return pd.read_csv(path, on_bad_lines="skip")
+    return df
+
 
 def clean_evaluation_file(file_path="tests/evaluation_results.csv", dashboard_path="dashboard/index.html"):
     path = Path(file_path)
@@ -26,12 +48,16 @@ def clean_evaluation_file(file_path="tests/evaluation_results.csv", dashboard_pa
         print("Error: Missing required column 'question_id' inside the file structure.")
         return
 
+    # Migrate an old single-score schema to the per-chunk evaluation schema first.
+    from evaluate import EVAL_COLUMNS
+    df = _migrate_if_old(path, df, EVAL_COLUMNS)
+
     # Clear string formats to safe numeric types for sorting and matrix filtering
-    df["attempts"] = pd.to_numeric(df["attempts"], errors="coerce").fillna(1).astype(int)
-    df["token_f1_score"] = pd.to_numeric(df["token_f1_score"], errors="coerce").fillna(0.0)
-    df["mrr"] = pd.to_numeric(df["mrr"], errors="coerce").fillna(0.0)
-    df["answer_relevance"] = pd.to_numeric(df["answer_relevance"], errors="coerce").fillna(0.0)
-    df["faithfulness"] = pd.to_numeric(df["faithfulness"], errors="coerce").fillna(0.0)
+    df["attempts"] = _num_series(df, "attempts").fillna(1).astype(int)
+    df["token_f1_score"] = _num_series(df, "token_f1_score")
+    df["mrr"] = _num_series(df, "mrr")
+    df["answer_relevance"] = _num_series(df, "answer_relevance")
+    df["faithfulness"] = _num_series(df, "faithfulness")
 
     # Track true boolean array values for grounding check matching
     df["grounded_bool"] = df["grounded"].astype(str).str.strip().str.lower() == "true"
@@ -98,6 +124,10 @@ def clean_lufa_file(file_path="tests/lufa_out_data.csv"):
         print("Error: Missing required column 'question_id' inside the file structure.")
         return
 
+    # Migrate an old single-score schema to the per-chunk schema before sorting.
+    from run_simulation import OUTPUT_COLUMNS as LUFA_COLUMNS
+    df = _migrate_if_old(path, df, LUFA_COLUMNS)
+
     # Build TEMPORARY sort keys only — never mutate the real data columns.
     # (Coercing attempts/scores in place previously persisted junk like attempts=99.)
     sort_cols = []
@@ -105,23 +135,26 @@ def clean_lufa_file(file_path="tests/lufa_out_data.csv"):
 
     for i in range(1, 6):
         key = f"_sort_rrf{i}"
-        df[key] = pd.to_numeric(df.get(f"source{i}_rrf_score"), errors="coerce").fillna(0.0)
+        df[key] = _num_series(df, f"source{i}_rrf_score")
         sort_cols.append(key)
         sort_asc.append(False)
     for i in range(1, 6):
         key = f"_sort_rec{i}"
-        df[key] = pd.to_numeric(df.get(f"source{i}_recency_adjusted_cosine_score"), errors="coerce").fillna(0.0)
+        df[key] = _num_series(df, f"source{i}_recency_adjusted_cosine_score")
         sort_cols.append(key)
         sort_asc.append(False)
 
-    df["_sort_grounded"] = df["grounded"].astype(str).str.strip().str.lower().map(
+    df["_sort_grounded"] = df.get("grounded", pd.Series("", index=df.index)).astype(str).str.strip().str.lower().map(
         lambda v: 0 if v in ("true", "1") else 1
     )
-    df["_sort_has_answer"] = df["answer"].map(
+    df["_sort_has_answer"] = df.get("answer", pd.Series("", index=df.index)).map(
         lambda v: 0 if str(v).strip().lower() not in ("", "nan", "none", "error") else 1
     )
     # Lower attempts is better; blanks/garbage sort last WITHOUT overwriting the value.
-    df["_sort_attempts"] = pd.to_numeric(df["attempts"], errors="coerce").fillna(9999)
+    if "attempts" in df.columns:
+        df["_sort_attempts"] = pd.to_numeric(df["attempts"], errors="coerce").fillna(9999)
+    else:
+        df["_sort_attempts"] = pd.Series(9999, index=df.index)
 
     sort_cols += ["_sort_grounded", "_sort_has_answer", "_sort_attempts"]
     sort_asc += [True, True, True]

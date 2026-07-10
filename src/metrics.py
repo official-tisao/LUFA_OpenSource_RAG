@@ -7,6 +7,7 @@ Contains all metric calculations used in evaluation and repair.
 import re
 import warnings
 import pandas as pd
+import time
 from typing import Dict, List, Tuple
 
 from llm_utils import stream_complete
@@ -114,9 +115,10 @@ def extract_score(text):
     match = re.search(r'\b([1-5])\b', str(text).strip())
     return float(match.group(1)) / 5.0 if match else 0.5
 def _load_judge_model(judge_llm_model, request_timeout=240.0):
-    """Load judge LLM model (lazy import)."""
-    from model_api_auth import get_ollama_client
-    return get_ollama_client(judge_llm_model, request_timeout=request_timeout)
+    """Load the judge LLM, auto-routing to the OpenAI-compatible client for
+    cloud/OpenRouter endpoints or Ollama for local models (based on api_base)."""
+    from model_api_auth import get_llm_client
+    return get_llm_client(judge_llm_model, request_timeout=request_timeout)
 def judge_llm_scores(question, answer, context, judge_llm_model="None"):
     """Use local Ollama model as judge. Returns normalized 0-1 scores."""
     judge_llm_model = judge_llm_model or "None"
@@ -397,6 +399,10 @@ if __name__ == "__main__":
     unchanged = 0
 
     for idx, row in test_df.iterrows():
+        # if int(idx) > 0:
+        #     time.sleep(2)  # Pauses execution for exactly 3.0 seconds
+        #     print("2 seconds have passed!")
+
         q_id = str(row.get("id", "")).strip()
         counter = f"[{idx + 1}/{total}]"
 
@@ -419,6 +425,7 @@ if __name__ == "__main__":
         # Recompute judge cells only when a judge model is available AND some judge
         # cell is zero/blank; non-zero judge scores are always preserved.
         judge_zero = any(_is_zero_or_blank(prev.get(m)) for m in JUDGE_METRICS)
+        #no_naive_judge = args.mode == "local-naive"
         need_judge = bool(args.judge_llm) and (is_new or judge_zero)
 
         if not need_det and not need_judge:
@@ -481,6 +488,15 @@ if __name__ == "__main__":
             except Exception as je:
                 print(f"   [Judge Warning] {je}")
 
+        # is_grounded = False
+        # check_grounded = False
+        new_grounded ="false"
+        if str(rag.get("grounded")).lower() == "false":
+            new_grounded = "true" if float(cp) > 0.4 else "false"
+
+        #     from reflector import reflect
+        #     chunk_texts = [n.node.text for n in nodes]
+        #     is_grounded = reflect(final_answer, chunk_texts, engine.llm)
         # ---- assemble the full row (carry forward any prior fields) ----
         out_row = dict(prev)
         out_row.update({
@@ -495,7 +511,7 @@ if __name__ == "__main__":
             "category": _safe(row.get("category")) or _safe(prev.get("category")),
             "difficulty": _safe(row.get("difficulty")) or _safe(prev.get("difficulty")),
             "attempts": _safe(rag.get("attempts")),
-            "grounded": _safe(rag.get("grounded")),
+            "grounded": _safe(new_grounded),
         })
         for i in range(1, 6):
             out_row[f"source{i}_id"] = _safe(rag.get(f"source{i}_id"))
