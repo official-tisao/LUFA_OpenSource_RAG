@@ -253,7 +253,7 @@ if __name__ == "__main__":
     sys.path.insert(0, str(Path(__file__).parent))
 
     parser = argparse.ArgumentParser(description="Compute evaluation metrics from LUFA RAG output")
-    parser.add_argument("--lufa_csv", default="tests/lufa_out_data.csv",
+    parser.add_argument("--lufa_csv", default="tests/lufa_out_data - Copy.csv",
                         help="RAG output CSV (answers + retrieved sources)")
     parser.add_argument("--test_csv", default="tests/combined_test_data_and_ground_truth.csv",
                         help="Ground truth CSV (expected_answer, ground_source_truth_id)")
@@ -399,9 +399,9 @@ if __name__ == "__main__":
     unchanged = 0
 
     for idx, row in test_df.iterrows():
-        # if int(idx) > 0:
-        #     time.sleep(2)  # Pauses execution for exactly 3.0 seconds
-        #     print("2 seconds have passed!")
+        if int(idx) > 0:
+            time.sleep(10)  # Pauses execution for exactly 3.0 seconds
+            print("10sec have passed!")
 
         q_id = str(row.get("id", "")).strip()
         counter = f"[{idx + 1}/{total}]"

@@ -88,7 +88,8 @@ class BilingualRAGEngine:
         collection_name: str = None,
         llm_model: str = None,
         embedding_model: str = None,
-        similarity_top_k: int = None
+        similarity_top_k: int = None,
+        openai_client: bool = False
     ):
         # Defaults from config/config.yaml
         db_path          = db_path          or cfg("database.path")
@@ -102,7 +103,18 @@ class BilingualRAGEngine:
         self.query_handler    = QueryHandler()
 
         print(f"Initializing LLM: {llm_model}")
-        self.llm = get_ollama_client(llm_model, request_timeout=240.0)
+        # if "gpt-" in llm_model.lower() or "codex" in llm_model.lower() or openai_client:
+        #     # OpenAI-compatible endpoint (cloud model via MODEL_API_AUTH). Use the
+        #     # LlamaIndex-compatible wrapper so .metadata/.complete/.stream_complete
+        #     # all work (a raw openai.OpenAI client has none of these).
+        #     from model_api_auth import get_openai_client
+        #     self.llm = get_openai_client(llm_model)
+        # el
+        # Auto-route by the resolved api_base: OpenAI-compatible endpoints
+        # (OpenRouter / '/v1' / cloud hosts) use the LlamaIndex OpenAI wrapper;
+        # local '/api' endpoints use Ollama. --openai_client forces the OpenAI path.
+        from model_api_auth import get_llm_client
+        self.llm = get_llm_client(llm_model, force_openai=openai_client, request_timeout=240.0)
 
         print(f"Initializing embedding model: {embedding_model}")
         self.embed_model = get_ollama_client(embedding_model, is_embedding=True)
@@ -450,10 +462,14 @@ Answer:"""
 def create_rag_engine(
     db_path:         str = None,
     llm_model:       str = None,
-    embedding_model: str = None
+    embedding_model: str = None,
+    similarity_top_k: int = None,
+    openai_client:   bool = False
 ) -> BilingualRAGEngine:
     return BilingualRAGEngine(
         db_path=db_path,
         llm_model=llm_model,
         embedding_model=embedding_model,
+        similarity_top_k=similarity_top_k,
+        openai_client=openai_client
     )

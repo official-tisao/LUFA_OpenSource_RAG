@@ -80,16 +80,16 @@ copilot:
 model_api_auth:
   default:
     api_key: ""
-    api_base: "http://localhost:11434/api"
-  openai/gpt-5.4-mini:
+    api_base: "http://localhost:11434/api" #run via ollama server
+  gpt-5.4-mini:
+    api_key: "dummy"
+    api_base: "http://127.0.0.1:8317/v1" #run via https://github.com/AmazingAng/auth2api
+  tencent/hy3:free:
+    api_key: "dummy"
+    api_base: "https://openrouter.ai/api/v1"
+  gemini-3.1-flash-lite:
+    api_key: "dummy"
+    api_base: "http://127.0.0.1:4000" #run via https://github.com/badrisnarayanan/antigravity-claude-proxy
+  claude-haiku-4-5:
     api_key: ""
-    api_base: "https://openrouter.ai/api"
-  openrouter/owl-alpha:
-    api_key: ""
-    api_base: "https://api.openrouter.ai/v1"
-  gemini-2.5-pro:
-    api_key: ""
-    api_base: "http://localhost:9090/v1"
-  claude-sonnet-4-5:
-    api_key: ""
-    api_base: "http://localhost:9090/v1"
+    api_base: "http://127.0.0.1:3456/v1" #run via https://github.com/wende/claude-max-api-proxy

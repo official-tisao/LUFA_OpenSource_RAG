@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Dict, List, Union, Optional, Tuple
 from copy import deepcopy
 
+from openai import max_retries
+
 from csv_utils import read_csv_cached, write_csv_row, get_completed_ids
 from metrics import token_f1
 from dashboard_generator import refresh_dashboard
@@ -25,7 +27,7 @@ def check_language(input_string):
 def generate_naive_answer(engine,
                          query_text: str,
                          top_k: int = 5,
-                         check_grounded: bool = True,
+                         check_grounded: bool = False,
                          output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
                          cached_nodes=None) -> Dict:
     """Generate answer using naive RAG approach (single retrieval + generation)."""
@@ -307,7 +309,6 @@ if __name__ == "__main__":
     import traceback
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).parent))
-
     parser = argparse.ArgumentParser(description="Generate RAG answers for LUFA test questions")
     parser.add_argument("--input", default="tests/combined_test_data_and_ground_truth.csv",
                         help="Input CSV with questions (must have 'id' and 'question' columns)")
@@ -315,8 +316,19 @@ if __name__ == "__main__":
                         help="Output CSV path (same schema as run_simulation.py)")
     parser.add_argument("--mode", choices=["local", "local-naive"], default="local",
                         help="local = agentic query, local-naive = single-pass query")
-    parser.add_argument("--max_retries", type=int, default=5,
+    parser.add_argument("--max_retries", type=int, default=1,
                         help="Max retry attempts for agentic mode")
+    parser.add_argument("--llm_model", default=None,
+                        help="Supply one of many models to use")
+    def _str2bool(v):
+        if isinstance(v, bool):
+            return v
+        return str(v).strip().lower() in ("1", "true", "yes", "y", "on")
+
+    parser.add_argument("--openai_client", type=_str2bool, nargs="?", const=True, default=False,
+                        help="Use an OpenAI-compatible endpoint for the LLM instead of Ollama "
+                             "(e.g. --openai_client True for cloud models like claude-haiku-4-5)")
+
     args = parser.parse_args()
 
     from rag_engine import create_rag_engine
@@ -351,8 +363,7 @@ if __name__ == "__main__":
                      # Apply conditions cleanly
                      successful = existing_df[(
                          existing_df["answer"].notna() & (clean_ans != "") & (clean_ans != "ERROR") 
-                          & ((args.mode == "local") & (clean_ground == "true"))
-                             
+                         # & ((args.mode == "local") & (clean_ground == "true"))         
                      )]
                     
                      completed_ids = set(successful["question_id"].dropna().astype(str).tolist())
@@ -361,10 +372,13 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"[AnswerGenerator] Warning: could not read existing output: {e}")
 
-    base_model = cfg("models.llm.name")
+    if args.llm_model is None:
+        base_model = cfg("models.llm.name")
+    else:
+        base_model = args.llm_model
     print(f"[AnswerGenerator] Mode: {args.mode} | Model: {base_model}")
     print("[AnswerGenerator] Initializing RAG engine...")
-    engine = create_rag_engine()
+    engine = create_rag_engine(None, base_model, None, None, openai_client=args.openai_client)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     for idx, row in questions_df.iterrows():
@@ -383,7 +397,7 @@ if __name__ == "__main__":
                 print(f"   Found {len(cached_nodes)} cached top-K chunks for {q_id} — will reuse for first-pass generation.")
             if args.mode == "local-naive":
                 result = generate_naive_answer(engine, q_text, top_k=5,
-                                               check_grounded=True, output_path=args.output,
+                                               check_grounded=False, output_path=args.output,
                                                query_id=q_id, cached_nodes=cached_nodes)
             else:
                 result = generate_agentic_answer(engine, q_text, max_retries=args.max_retries,
@@ -392,20 +406,21 @@ if __name__ == "__main__":
 
             sources = result.get("sources", [])
             source_cols = {}
+            is_valid_response = result.get("response", "").strip() not in ("", "ERROR")
             for i in range(1, 6):
-                if i <= len(sources):
+                if i <= len(sources) and is_valid_response:
                     s = sources[i - 1]
                     source_cols[f"source{i}_id"] = s.get("node_id", "")
                     source_cols[f"source{i}_cosine_score"] = round(float(s.get("cosine_score", 0)), 4)
                     source_cols[f"source{i}_recency_adjusted_cosine_score"] = round(float(s.get("recency_adjusted_cosine_score", 0)), 4)
                     source_cols[f"source{i}_rrf_score"] = round(float(s.get("rrf_score", 0)), 4)
-                    source_cols[f"source{i}_text"] = str(s.get("text", ""))[:500]
+                    source_cols[f"source{i}_text"] = str(s.get("text", ""))
                 else:
-                    source_cols[f"source{i}_id"] = ""
-                    source_cols[f"source{i}_cosine_score"] = ""
-                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = ""
-                    source_cols[f"source{i}_rrf_score"] = ""
-                    source_cols[f"source{i}_text"] = ""
+                    source_cols[f"source{i}_id"] = row.get(f"source{i}_id", "")
+                    source_cols[f"source{i}_cosine_score"] = row.get(f"source{i}_cosine_score", "")
+                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = row.get(f"source{i}_recency_adjusted_cosine_score", "")
+                    source_cols[f"source{i}_rrf_score"] = row.get(f"source{i}_rrf_score", "")
+                    source_cols[f"source{i}_text"] = row.get(f"source{i}_text", "")
 
             out_row = {
                 "question_id": q_id,
