@@ -439,6 +439,10 @@ if __name__ == "__main__":
         retrieved_ids = _get_retrieved_ids(rag)
         ground_truth_ids = _get_ground_truth_ids(row)
 
+        if str(row.get("translation_applied")).strip().lower() == "true":
+            prediction = str(row.get("untranslated_answer", prediction))
+            question = str(row.get("translated_question", question))
+
         print(f"\n{counter} {q_id}: \"{question[:55]}...\" (deterministic={need_det}, judge={need_judge})")
 
         # ---- deterministic metrics ----

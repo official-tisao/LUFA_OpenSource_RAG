@@ -29,33 +29,34 @@ def check_language(input_string):
 
     return input_string[5:7]
 
+
 def generate_naive_answer(engine,
-                         query_text: str,
-                         top_k: int = 5,
-                         check_grounded: bool = False,
-                         output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
-                         cached_nodes=None) -> Dict:
+                          query_text: str,
+                          top_k: int = 5,
+                          check_grounded: bool = False,
+                          output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
+                          cached_nodes=None) -> Dict:
     """Generate answer using naive RAG approach (single retrieval + generation)."""
 
-    return generate_agentic_answer(engine, query_text,1, check_grounded, output_path, query_id, cached_nodes)
+    return generate_agentic_answer(engine, query_text, 1, check_grounded, output_path, query_id, cached_nodes)
 
 
 def generate_agentic_answer(engine,
-                               query_text: str,
-                               max_retries: int = 3,
-                               check_grounded: bool = True,
-                               output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
-                               cached_nodes=None) -> Dict:
+                            query_text: str,
+                            max_retries: int = 3,
+                            check_grounded: bool = True,
+                            output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
+                            cached_nodes=None) -> Dict:
     """Generate answer using agentic RAG approach (retrieval + retry loop with groundedness checking)."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
 
-    #from language_detector import detect_full_language
+    # from language_detector import detect_full_language
     from translator import needs_translation, translate_to_english, translate_to_target, LANGUAGE_NAMES
     from query_rewriter import rewrite_query
     from reflector import reflect
 
-    #from language_detector import detect_full_language
+    # from language_detector import detect_full_language
     original_lang = (check_language(query_id) if query_id else check_language(query_text)) or "en"
     translation_applied = needs_translation(original_lang)
     translated_query = query_text
@@ -89,7 +90,8 @@ def generate_agentic_answer(engine,
         # Retries (attempt > 1) regenerate the top-K by re-retrieving with a wider k.
         if cached_nodes and attempt == 1:
             nodes = cached_nodes
-            print(f"[AnswerGenerator] Reusing {len(nodes)} cached top-K chunks from lufa_out (first pass, no re-retrieval).")
+            print(
+                f"[AnswerGenerator] Reusing {len(nodes)} cached top-K chunks from lufa_out (first pass, no re-retrieval).")
         else:
             top_k = engine.similarity_top_k + (attempt - 1)
             nodes = engine._retrieve_nodes(rewritten_query, top_k=top_k)
@@ -125,14 +127,13 @@ def generate_agentic_answer(engine,
         'original_language': original_lang,
         'translation_applied': translation_applied,
         'rewritten_query': rewritten_query,
-        'attempts': real_attempt  ,
+        'attempts': real_attempt,
         'grounded': is_grounded,
         'original_query_id': query_id,
         'original_question': query_text,
         'original_question_translation': translated_query,
         'untranslated_response': answer
     }
-
 
     if nodes:
         result['sources'] = _extract_sources_from_nodes(nodes)
@@ -272,6 +273,7 @@ if __name__ == "__main__":
     import time
     import traceback
     from pathlib import Path
+
     sys.path.insert(0, str(Path(__file__).parent))
     parser = argparse.ArgumentParser(description="Generate RAG answers for LUFA test questions")
     parser.add_argument("--input", default="tests/combined_test_data_and_ground_truth.csv",
@@ -284,10 +286,13 @@ if __name__ == "__main__":
                         help="Max retry attempts for agentic mode")
     parser.add_argument("--llm_model", default=None,
                         help="Supply one of many models to use")
+
+
     def _str2bool(v):
         if isinstance(v, bool):
             return v
         return str(v).strip().lower() in ("1", "true", "yes", "y", "on")
+
 
     parser.add_argument("--openai_client", type=_str2bool, nargs="?", const=True, default=False,
                         help="Use an OpenAI-compatible endpoint for the LLM instead of Ollama "
@@ -321,16 +326,16 @@ if __name__ == "__main__":
                         cached_map[qid] = r.to_dict()
 
                 if "answer" in existing_df.columns:
-                     clean_ans = existing_df["answer"].astype(str).str.strip()
-                     clean_ground = existing_df["grounded"].astype(str).str.strip().str.lower()
-    
-                     # Apply conditions cleanly
-                     successful = existing_df[(
-                         existing_df["answer"].notna() & (clean_ans != "") & (clean_ans != "ERROR") 
-                         # & ((args.mode == "local") & (clean_ground == "true"))         
-                     )]
-                    
-                     completed_ids = set(successful["question_id"].dropna().astype(str).tolist())
+                    clean_ans = existing_df["answer"].astype(str).str.strip()
+                    clean_ground = existing_df["grounded"].astype(str).str.strip().str.lower()
+
+                    # Apply conditions cleanly
+                    successful = existing_df[(
+                            existing_df["answer"].notna() & (clean_ans != "") & (clean_ans != "ERROR")
+                         & ((args.mode != "local") | (int(args.max_retries) < 2) | (clean_ground == "true"))
+                    )]
+
+                    completed_ids = set(successful["question_id"].dropna().astype(str).tolist())
             print(f"[AnswerGenerator] Resuming — {len(completed_ids)} answered, "
                   f"{len(cached_map)} questions with cached top-K available.")
         except Exception as e:
@@ -358,7 +363,8 @@ if __name__ == "__main__":
         try:
             cached_nodes = build_cached_nodes(cached_map.get(q_id, {}))
             if cached_nodes:
-                print(f"   Found {len(cached_nodes)} cached top-K chunks for {q_id} — will reuse for first-pass generation.")
+                print(
+                    f"   Found {len(cached_nodes)} cached top-K chunks for {q_id} — will reuse for first-pass generation.")
             if args.mode == "local-naive":
                 result = generate_naive_answer(engine, q_text, top_k=5,
                                                check_grounded=False, output_path=args.output,
@@ -376,13 +382,15 @@ if __name__ == "__main__":
                     s = sources[i - 1]
                     source_cols[f"source{i}_id"] = s.get("node_id", "")
                     source_cols[f"source{i}_cosine_score"] = round(float(s.get("cosine_score", 0)), 4)
-                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = round(float(s.get("recency_adjusted_cosine_score", 0)), 4)
+                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = round(
+                        float(s.get("recency_adjusted_cosine_score", 0)), 4)
                     source_cols[f"source{i}_rrf_score"] = round(float(s.get("rrf_score", 0)), 4)
                     source_cols[f"source{i}_text"] = str(s.get("text", ""))
                 else:
                     source_cols[f"source{i}_id"] = row.get(f"source{i}_id", "")
                     source_cols[f"source{i}_cosine_score"] = row.get(f"source{i}_cosine_score", "")
-                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = row.get(f"source{i}_recency_adjusted_cosine_score", "")
+                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = row.get(
+                        f"source{i}_recency_adjusted_cosine_score", "")
                     source_cols[f"source{i}_rrf_score"] = row.get(f"source{i}_rrf_score", "")
                     source_cols[f"source{i}_text"] = row.get(f"source{i}_text", "")
 
