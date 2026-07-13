@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LUFA RAG Evaluation Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --border:#334155; --muted:#94a3b8;
+    --accent:#93c5fd; --accent2:#3b82f6;
+  }
+  *{box-sizing:border-box;}
+  body{ background:var(--bg); color:#ffffff; font-family:'Segoe UI',system-ui,sans-serif;
+        margin:0; padding:24px; font-weight:700; }
+  /* Requirement 6: all supervisor-facing text white + bold for readability */
+  body, .card, td, th, p, span, div, label, button, h1, h2, h3 { color:#ffffff; }
+  a{ color:var(--accent); }
+
+  .topbar{ display:flex; align-items:flex-start; justify-content:space-between;
+           gap:16px; flex-wrap:wrap; margin-bottom:24px; }
+  .topbar h1{ font-size:1.9rem; font-weight:800; margin:0 0 4px; color:#ffffff; }
+  .topbar .sub{ color:#cbd5e1; font-size:.85rem; font-weight:600; }
+
+  .norm-wrap{ display:flex; align-items:center; gap:10px; background:var(--card);
+              border:1px solid var(--border); border-radius:10px; padding:10px 14px; }
+  .norm-wrap label{ font-weight:800; cursor:pointer; user-select:none; }
+  .gear{ font-size:1.1rem; }
+  /* native checkbox shown in no-JS; styled toggle shown with JS */
+  .norm-cb{ width:18px; height:18px; accent-color:var(--accent2); cursor:pointer; }
+  .norm-note{ color:#cbd5e1; font-size:.72rem; font-weight:600; max-width:230px; }
+
+  .card{ background:var(--card); border-radius:12px; padding:20px;
+         border:1px solid var(--border); }
+  .section-title{ font-size:1.05rem; font-weight:800; color:var(--accent);
+                  margin:0 0 14px; text-transform:uppercase; letter-spacing:.05em; }
+
+  .kpi-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:26px; }
+  @media(min-width:640px){ .kpi-grid{ grid-template-columns:repeat(4,1fr);} }
+  @media(min-width:1100px){ .kpi-grid{ grid-template-columns:repeat(7,1fr);} }
+  .metric-card{ background:linear-gradient(135deg,#1e3a5f,#1e293b); border-radius:10px;
+                padding:14px; border:1px solid #2563eb55; text-align:center; }
+  .kpi-value{ font-size:1.5rem; font-weight:800; color:#ffffff; line-height:1.1; }
+  .kpi-label{ font-size:.72rem; color:#cbd5e1; margin-top:6px; font-weight:700;
+              text-transform:uppercase; letter-spacing:.03em; }
+
+  .grid2{ display:grid; grid-template-columns:1fr; gap:22px; margin-bottom:22px; }
+  @media(min-width:1024px){ .grid2{ grid-template-columns:1fr 1fr; } }
+
+  canvas{ max-height:300px; }
+
+  /* static (no-JS) bar charts */
+  .sbar-group{ display:flex; flex-direction:column; gap:9px; }
+  .sbar-row{ display:flex; align-items:center; gap:10px; font-size:.8rem; }
+  .sbar-label{ width:92px; flex:none; color:#ffffff; font-weight:700;
+               white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sbar-track{ flex:1; height:16px; background:#0f172a; border-radius:6px;
+               border:1px solid var(--border); overflow:hidden; }
+  .sbar-fill{ display:block; height:100%; border-radius:6px; }
+  .sbar-val{ width:48px; flex:none; text-align:right; color:#ffffff; font-weight:800; }
+  .sbar-subhead{ margin:6px 0 2px; font-weight:800; color:var(--accent); font-size:.82rem; }
+  .sbar-empty{ color:#cbd5e1; font-weight:700; }
+
+  /* filter bar */
+  .filter-bar{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+  .filter-bar input, .filter-bar select{
+      background:#0f172a; color:#ffffff; font-weight:700;
+      border:1px solid var(--border); border-radius:8px; padding:7px 10px; font-size:.8rem; }
+  .filter-bar input::placeholder{ color:#94a3b8; font-weight:600; }
+  .chip{ background:#0f172a; border:1px solid var(--border); border-radius:8px;
+         padding:6px 10px; font-size:.74rem; font-weight:800; color:#cbd5e1; }
+  .clear-btn{ background:var(--accent2); border:none; color:#fff; font-weight:800;
+              border-radius:8px; padding:7px 12px; cursor:pointer; font-size:.78rem; }
+  .clear-btn:hover{ filter:brightness(1.1); }
+
+  table{ width:100%; border-collapse:collapse; font-size:.78rem; }
+  th{ background:#0f172a; color:#ffffff; padding:8px 10px; text-align:left;
+      position:sticky; top:0; font-weight:800; border-bottom:2px solid var(--border);
+      white-space:nowrap; }
+  th.sortable{ cursor:pointer; }
+  th.sortable:hover{ color:var(--accent); }
+  td{ padding:7px 10px; border-bottom:1px solid #0f172a; color:#ffffff; font-weight:700; }
+  tr:hover td{ background:#1e3a5f55; }
+  .qcell{ max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .muted{ color:#cbd5e1; }
+  .center{ text-align:center; }
+  .model{ color:var(--accent); font-size:.72rem; }
+  .badge{ display:inline-block; padding:2px 9px; border-radius:9999px;
+          font-size:.7rem; font-weight:800; }
+  .badge-en{ background:#1d4ed8; color:#ffffff; }
+  .badge-fr{ background:#7c3aed; color:#ffffff; }
+  .badge-other{ background:#374151; color:#ffffff; }
+  .score-high{ color:#4ade80; }
+  .score-mid { color:#facc15; }
+  .score-low { color:#f87171; }
+  .ok{ color:#4ade80; font-weight:800; }
+  .no{ color:#f87171; font-weight:800; }
+
+  .table-wrap{ max-height:520px; overflow:auto; border-radius:10px; }
+  .footer{ text-align:center; color:#cbd5e1; font-size:.75rem; padding:18px 0;
+           font-weight:600; }
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-track{ background:#0f172a; }
+  ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:4px; }
+
+  /* progressive enhancement visibility:
+     default = static visible / JS chrome hidden.
+     <html class="js"> (set by inline script) reveals JS chrome (filters, gear note).
+     Charts are gated separately on <html class="charts">, only added once
+     Chart.js is confirmed loaded — so if the CDN is unreachable the static
+     SVG/CSS bars stay visible instead of leaving blank boxes. */
+  .js-only{ display:none; }
+  html.js .js-only{ display:block; }
+  /* canvases hidden until charts confirmed available */
+  canvas.js-only{ display:none; }
+  html.charts canvas.js-only{ display:block; }
+  /* static bars stay until charts confirmed available */
+  html.charts .chart-static{ display:none; }
+</style>
+<script>
+  /* Set as early as possible so the static fallback never flashes when JS is on. */
+  document.documentElement.className += " js";
+</script>
+</head>
+<body>
+
+<script id="dash-data" type="application/json">{"models": ["llama3.1:8b"], "overall": {"token_f1_score": 0.1885, "sentence_bleu_score": 0.0159, "rouge1": 0.1743, "rouge2": 0.0315, "rougeL": 0.1186, "meteor": 0.1925, "mrr": 0.1267, "ndcg_at_k": 0.1443, "recall_1": 0.1, "recall_3": 0.15, "recall_5": 0.2, "answer_relevance": 0.79, "faithfulness": 0.67, "context_precision": 0.56}, "by_model": {"token_f1_score": {"llama3.1:8b": 0.1885}, "sentence_bleu_score": {"llama3.1:8b": 0.0159}, "rouge1": {"llama3.1:8b": 0.1743}, "rouge2": {"llama3.1:8b": 0.0315}, "rougeL": {"llama3.1:8b": 0.1186}, "meteor": {"llama3.1:8b": 0.1925}, "mrr": {"llama3.1:8b": 0.1267}, "ndcg_at_k": {"llama3.1:8b": 0.1443}, "recall_1": {"llama3.1:8b": 0.1}, "recall_3": {"llama3.1:8b": 0.15}, "recall_5": {"llama3.1:8b": 0.2}, "answer_relevance": {"llama3.1:8b": 0.79}, "faithfulness": {"llama3.1:8b": 0.67}, "context_precision": {"llama3.1:8b": 0.56}}, "by_language": {"token_f1_score": {"German": 0.1885}, "sentence_bleu_score": {"German": 0.0159}, "rouge1": {"German": 0.1743}, "rouge2": {"German": 0.0315}, "rougeL": {"German": 0.1186}, "meteor": {"German": 0.1925}, "answer_relevance": {"German": 0.79}, "faithfulness": {"German": 0.67}, "context_precision": {"German": 0.56}}, "by_difficulty": {"token_f1_score": {"easy": 0.108, "hard": 0.2397, "medium": 0.1699}, "sentence_bleu_score": {"easy": 0.0098, "hard": 0.0256, "medium": 0.0094}, "rouge1": {"easy": 0.091, "hard": 0.2429, "medium": 0.141}, "rouge2": {"easy": 0.0239, "hard": 0.0476, "medium": 0.0198}, "rougeL": {"easy": 0.0598, "hard": 0.148, "medium": 0.1121}, "meteor": {"easy": 0.1462, "hard": 0.1981, "medium": 0.203}, "mrr": {"easy": 0.4, "hard": 0.125, "medium": 0.037}, "ndcg_at_k": {"easy": 0.4623, "hard": 0.125, "medium": 0.0556}, "recall_1": {"easy": 0.3333, "hard": 0.125, "medium": 0.0}, "recall_3": {"easy": 0.3333, "hard": 0.125, "medium": 0.1111}, "recall_5": {"easy": 0.6667, "hard": 0.125, "medium": 0.1111}}, "by_category": {"token_f1_score": {"Appointments": 0.2169, "Bargaining Unit": 0.2061, "Benefits": 0.2736, "General Provisions": 0.1507, "Governance": 0.3373, "Leave": 0.1517, "Professional Development": 0.101, "Promotion": 0.0789, "Salary": 0.1939, "Termination": 0.1772, "Workload": 0.1373}, "sentence_bleu_score": {"Appointments": 0.0074, "Bargaining Unit": 0.0131, "Benefits": 0.0267, "General Provisions": 0.0152, "Governance": 0.0719, "Leave": 0.0088, "Professional Development": 0.0041, "Promotion": 0.005, "Salary": 0.0112, "Termination": 0.0092, "Workload": 0.0087}, "rouge1": {"Appointments": 0.2018, "Bargaining Unit": 0.2113, "Benefits": 0.2728, "General Provisions": 0.0903, "Governance": 0.3168, "Leave": 0.1468, "Professional Development": 0.0779, "Promotion": 0.069, "Salary": 0.1862, "Termination": 0.1475, "Workload": 0.1611}, "rouge2": {"Appointments": 0.0, "Bargaining Unit": 0.043, "Benefits": 0.055, "General Provisions": 0.0391, "Governance": 0.101, "Leave": 0.0137, "Professional Development": 0.0, "Promotion": 0.0, "Salary": 0.0252, "Termination": 0.0167, "Workload": 0.0272}, "rougeL": {"Appointments": 0.1284, "Bargaining Unit": 0.1263, "Benefits": 0.175, "General Provisions": 0.077, "Governance": 0.2574, "Leave": 0.0943, "Professional Development": 0.0649, "Promotion": 0.069, "Salary": 0.1195, "Termination": 0.082, "Workload": 0.1208}, "meteor": {"Appointments": 0.1952, "Bargaining Unit": 0.2138, "Benefits": 0.296, "General Provisions": 0.205, "Governance": 0.2635, "Leave": 0.1607, "Professional Development": 0.0955, "Promotion": 0.0752, "Salary": 0.1442, "Termination": 0.18, "Workload": 0.1961}, "answer_relevance": {"Appointments": 0.6, "Bargaining Unit": 0.9, "Benefits": 0.7333, "General Provisions": 0.7333, "Governance": 0.6, "Leave": 0.7333, "Professional Development": 1.0, "Promotion": 1.0, "Salary": 0.8667, "Termination": 0.6, "Workload": 1.0}, "faithfulness": {"Appointments": 1.0, "Bargaining Unit": 0.8, "Benefits": 0.7333, "General Provisions": 0.4667, "Governance": 0.6, "Leave": 0.6, "Professional Development": 1.0, "Promotion": 1.0, "Salary": 0.6667, "Termination": 0.6, "Workload": 0.2}, "context_precision": {"Appointments": 0.6, "Bargaining Unit": 0.4, "Benefits": 0.4667, "General Provisions": 0.4667, "Governance": 0.6, "Leave": 0.6, "Professional Development": 0.6, "Promotion": 0.6, "Salary": 0.7333, "Termination": 0.6, "Workload": 0.6}}, "grounded_rate": 0.8, "avg_attempts": 1.55, "total_questions": 20, "generated_at": "2026-07-13 13:17 UTC", "rows": [{"question_id": "test_de_001", "question": "What rules apply to general absences?", "answer": "Gemäß Artikel 7.20 des Kollektivvertrags gelten folgende Regeln für allgemeine Abwesenheiten:\n\n* Die Universität erwartet, dass ihre Mitglieder regelmäßig und dauerhaft verfügbar sind, um sicherzustellen, dass die universitären Aktivitäten in geordneter Weise durchgeführt werden können (7.20.1).\n* Jede Abwesenheit sollte normalerweise nicht mit den zugewiesenen und/oder geplanten Aktivitäten sowie", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Leave", "difficulty": "easy", "token_f1_score": 0.0879, "sentence_bleu_score": 0.0071, "rouge1": 0.0606, "rouge2": 0.0154, "rougeL": 0.0455, "meteor": 0.0992, "mrr": 0.2, "ndcg_at_k": 0.3869, "recall_1": 0, "recall_3": 0, "recall_5": 1, "answer_relevance": 1.0, "faithfulness": 0.8, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_002", "question": "What does the collective agreement have to say about pregnancy?", "answer": "Gemäß Artikel 14.04 der Kollektivvereinbarung (Seite nicht angegeben) enthält die Vereinbarung Bestimmungen zum Mutterschutz und zur Vergütung für Mitglieder der Laurentian University Faculty Association.\n\nHier sind einige wichtige Punkte:\n\n* Der Arbeitgeber gewährt eine Aufstockung der Arbeitslosenversicherungsleistungen für Mutterunterhalt, bis zu 100 % des Bruttogehalts des Mitarbeiters während", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Benefits", "difficulty": "hard", "token_f1_score": 0.2963, "sentence_bleu_score": 0.0309, "rouge1": 0.3, "rouge2": 0.0759, "rougeL": 0.175, "meteor": 0.2806, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 1.0, "faithfulness": 1.0, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_004", "question": "What conditions apply to salary grades for additional qualifications?", "answer": "Laut Artikel 8.30, Zusätzliche Qualifikationsfortzahlungen, gelten folgende Bedingungen für die Gehaltsstufen bei zusätzlichen Qualifikationen:\n\n* Die Höhe der Fortzahlung beträgt 2.900 $.\n* Die Fortzahlung wird gemäß Artikel 8.30 vergeben.\n\nQuelle: Kollektiver Vertrag, Seitennummer nicht angegeben (Artikel 8.30)", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Salary", "difficulty": "hard", "token_f1_score": 0.1795, "sentence_bleu_score": 0.0134, "rouge1": 0.2414, "rouge2": 0.0351, "rougeL": 0.1379, "meteor": 0.1123, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 1.0, "faithfulness": 1.0, "context_precision": 0.6, "grounded": true, "attempts": 3, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_005", "question": "What is agreed for further education in a profession?", "answer": "Laut Artikel 30 des LUFA-H-Kollektivvertrags 2016-2020, Seite 47, sind Sessionale Mitglieder für die Bezahlung von Weiterbildungsmitteln in Höhe von 250 $ pro jede drei Kreditstunden lehrender Kurs bis zu einer Obergrenze von 2.000 $ berechtigt. Doch wie bereits in Artikel 30.01 angesprochen, sind Vollzeitmitglieder für jedes Vertragsjahr zum Bezug eines Berufszulages berechtigt, das für Ausgaben ", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Professional Development", "difficulty": "medium", "token_f1_score": 0.101, "sentence_bleu_score": 0.0041, "rouge1": 0.0779, "rouge2": 0.0, "rougeL": 0.0649, "meteor": 0.0955, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 1.0, "faithfulness": 1.0, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_012", "question": "What does the collective agreement say about the right to recall?", "answer": "Laut dem Kollektivvertrag haben Personen, die gemäß diesem Artikel wieder eingezogen werden sollen, höchstens dreißig (30) Tage Zeit, eine solche Rückrufangebote anzunehmen und ihre alternative Beschäftigung zu beenden und die angebotene Position aufzunehmen, sobald sie dazu vertraglich in der Lage sind, aber spätestens sechs (6) Monate nachdem sie das Rückrufangebot angenommen haben. Dies wird in", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Salary", "difficulty": "hard", "token_f1_score": 0.229, "sentence_bleu_score": 0.0148, "rouge1": 0.1767, "rouge2": 0.0405, "rougeL": 0.1124, "meteor": 0.1823, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 1.0, "faithfulness": 0.6, "context_precision": 1.0, "grounded": true, "attempts": 2, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_014", "question": "What does the collective agreement foresee regarding promotion procedures?", "answer": "Gemäß dem Kollektivvertrag sollen Beförderungen zum 1. Juli des folgenden akademischen Jahres wirksam werden, in dem die Bewerbung eingereicht und genehmigt wurde (Quellendokument: \"Accord intégral\" Seite 16.05).\n\nDarüber hinaus soll ein Dozent, der einen Doktortitel erworben hat, eine genehmigte Beförderung zum Assistenzprofessor erhalten. Die Beförderung soll am ersten Tag des Monats wirksam wer", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Promotion", "difficulty": "medium", "token_f1_score": 0.0789, "sentence_bleu_score": 0.005, "rouge1": 0.069, "rouge2": 0.0, "rougeL": 0.069, "meteor": 0.0752, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 1.0, "faithfulness": 1.0, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_018", "question": "What regulations apply to withdrawal/termination?", "answer": "Laut Artikel 11.10.16 der Kollektivvereinbarung darf ein Arbeitgeber unter folgenden Umständen einen Beamten entlassen:\n\n* Die Beendigung eines Programms ist eine Voraussetzung für eine Entlassung.\n* Alle Übertragungsvorschriften müssen vor einer Entlassung ausgeschöpft werden.\n* Der Arbeitgeber hat das Recht, einen Beamten mit Befristeter Anstellung zu entlassen, wenn die oben genannten Bedingung", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Termination", "difficulty": "easy", "token_f1_score": 0.1772, "sentence_bleu_score": 0.0092, "rouge1": 0.1475, "rouge2": 0.0167, "rougeL": 0.082, "meteor": 0.18, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 0.6, "faithfulness": 0.6, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_019", "question": "What applies according to agreement for hufac?", "answer": "Gemäß der Kollektivvereinbarung gelten folgende Bestimmungen für das HUFAC (Huntington University Faculty Affairs Committee):\n\n* Der Vorsitzende des HUFAC wird vom Präsidenten der Universität bestimmt und ist kein Mitglied der Laurentian University Faculty Association. (Quelle: LUFA-H-Kollektivvereinbarung 2016-2020, Seite 24)\n* Die Kommission besteht aus fünf (5) beauftragten Huntington-Mitgliede", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Bargaining Unit", "difficulty": "medium", "token_f1_score": 0.1849, "sentence_bleu_score": 0.0079, "rouge1": 0.156, "rouge2": 0.0278, "rougeL": 0.1193, "meteor": 0.2057, "mrr": 0.3333, "ndcg_at_k": 0.5, "recall_1": 0, "recall_3": 1, "recall_5": 1, "answer_relevance": 0.8, "faithfulness": 0.6, "context_precision": 0.6, "grounded": true, "attempts": 2, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_020", "question": "What does the agreement say about tariff unity?", "answer": "Es wird in dem bereitgestellten kollektiven Arbeitsvertrag keine Erwähnung von \"Tarif Einheit\" finden. Der Text beschäftigt sich ausschließlich mit Artikeln, die sich auf akademische Freiheiten, Belastungsniveaus, Urlaubsbestimmungen und andere Beschäftigungsangelegenheiten beziehen. Wenn Sie mehr über einen bestimmten Artikel oder ein Thema erfahren möchten, stehe ich Ihnen gerne zur Verfügung.", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Bargaining Unit", "difficulty": "hard", "token_f1_score": 0.2273, "sentence_bleu_score": 0.0182, "rouge1": 0.2667, "rouge2": 0.0583, "rougeL": 0.1333, "meteor": 0.222, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 1.0, "faithfulness": 1.0, "context_precision": 0.2, "grounded": false, "attempts": 2, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_022", "question": "What does the agreement generally describe or define as absence?", "answer": "Gemäß Artikel 7.20 – ABWENDE – ALLGEMEIN (Seite 76 der Kollektivvereinbarung von Thorneloe-LUFA 2014-2017) beschreibt die Vereinbarung allgemein \"Abwesenheit\" als:\n\n\"...jedes Abwesenheit vom Campus, das Lehre/berufliche Bibliotheksdienste beeinträchtigt, wird in Übereinstimmung mit Artikel 7.21 wieder aufgenommen...\" (Artikel 7.20.3)\n\nAllerdings kann eine allgemeinere Definition in Artikel 7.20.1 ", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Leave", "difficulty": "medium", "token_f1_score": 0.1636, "sentence_bleu_score": 0.0084, "rouge1": 0.1905, "rouge2": 0.012, "rougeL": 0.1429, "meteor": 0.2253, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 0.6, "faithfulness": 0.4, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_024", "question": "What does the agreement say about rights?", "answer": "Der Kollektivvertrag erwähnt mehrere Aspekte, die mit den \"Rechten\" der Mitglieder zusammenhängen. Hier sind einige wichtige Punkte:\n\n1. **Recht auf Vorteile**: Fakultätsmitglieder mit freiwilliger reduzierter Arbeitszeit haben das Recht auf Vorteile, einschließlich Krankengeld, Langzeitinvaliditätspension, Beiträge zur Pensionsanlage, Lebensversicherung und Sabbatical-Urlaub (Artikel 7.35.3).\n2. ", "rag_base_model": "llama3.1:8b", "language": "German", "category": "General Provisions", "difficulty": "medium", "token_f1_score": 0.1497, "sentence_bleu_score": 0.0027, "rouge1": 0.093, "rouge2": 0.0067, "rougeL": 0.0731, "meteor": 0.142, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 0.6, "faithfulness": 0.2, "context_precision": 0.2, "grounded": false, "attempts": 3, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_026", "question": "What are the regulations for the number of conditions?", "answer": "Gemäß Artikel 5.20.8 des Kollektivvertrags soll ein Brief über die Einstellung \"keine Bedingungen enthalten, die nicht mit diesem Zwangsvertrag vereinbar sind.\" (Quellendokumentname und Seitennummer: Kollektivvertrag 2017-2020, S. 3)\n\nDarüber hinaus ist festgelegt, dass kein Brief über die Einstellung Bedingungen enthalten soll, die nicht mit dem Zwangsvertrag vereinbar sind.", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Benefits", "difficulty": "hard", "token_f1_score": 0.2716, "sentence_bleu_score": 0.0391, "rouge1": 0.3119, "rouge2": 0.0561, "rougeL": 0.1651, "meteor": 0.2288, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 0.2, "faithfulness": 0.2, "context_precision": 0.2, "grounded": false, "attempts": 2, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_027", "question": "What is said about the holiday?", "answer": "Gemäß Artikel 7.10 des Kollektivvertrags werden den Mitgliedern bezahlte Freistunden auf folgenden Tagen und allen anderen allgemein von Bundeseinrichtungen oder Provinzeinrichtungen anerkannten Feiertagen gewährt:\n\n(a) Family Day\n(b) Karfreitag\n(c) Ostersonntag\n(d) Victoria-Day\n(e) Kanada-Tag\n(f) August-Heldentag\n(g) Arbeitertag\n(h) Danke-Gottes-Tag\n(i) Weihnachtsfeiertag\n(j) Schießabend\n(k) Neuj", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Leave", "difficulty": "hard", "token_f1_score": 0.2037, "sentence_bleu_score": 0.0109, "rouge1": 0.1892, "rouge2": 0.0137, "rougeL": 0.0946, "meteor": 0.1575, "mrr": 1.0, "ndcg_at_k": 1.0, "recall_1": 1, "recall_3": 1, "recall_5": 1, "answer_relevance": 0.6, "faithfulness": 0.6, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_028", "question": "What does the collective agreement provide for regarding the academic workload?", "answer": "Das Kollektivvertrag sieht vor, dass die akademische Arbeitsbelastung fair und gerecht verteilt wird (Artikel 5.40.1). Der Präsident muss sicherstellen, dass die jährliche akademische Arbeitsbelastung bestimmt, verteilt und geplant wird, soweit möglich gerecht (10.07 Jährliche Akademische Arbeitsbelastung).\n\nDie normale Richtlinie für die Verteilung der Arbeitsbelastung unter den drei Hauptkompone", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Workload", "difficulty": "medium", "token_f1_score": 0.1373, "sentence_bleu_score": 0.0087, "rouge1": 0.1611, "rouge2": 0.0272, "rougeL": 0.1208, "meteor": 0.1961, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 1.0, "faithfulness": 0.2, "context_precision": 0.6, "grounded": true, "attempts": 2, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_029", "question": "Was wird über das Verbot von Diskriminierung\\", "answer": "Gemäß der Kollektivvereinbarung (Quelldokumentname: ARTIKEL 3 - KEINE DISKRIMINIERUNG) besteht keine Diskriminierung oder Belästigung gegenüber irgendeinem Mitglied unter Berücksichtigung des Gehalts, des Ranges, der Ernennung, der Beförderung, der Tenure, der Wiedereinsetzung, der Entlassung, der Urlaube, der Vorteile oder jedes anderen Anliegens, das sich aus dieser Kollektivvereinbarung ergibt.", "rag_base_model": "llama3.1:8b", "language": "German", "category": "General Provisions", "difficulty": "easy", "token_f1_score": 0.0588, "sentence_bleu_score": 0.0131, "rouge1": 0.0649, "rouge2": 0.0395, "rougeL": 0.0519, "meteor": 0.1593, "mrr": 1.0, "ndcg_at_k": 1.0, "recall_1": 1, "recall_3": 1, "recall_5": 1, "answer_relevance": 1.0, "faithfulness": 1.0, "context_precision": 0.6, "grounded": false, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_030", "question": "What is said about the remuneration rates for limited-term lecturers?", "answer": "Laut Artikel a) Lehrende ohne Befristung oder Gründung beträgt der Grundlohn für Lehrende ohne Befristung oder Gründung 6941 $ (Seite 20). Zusätzlich erhalten sie anstelle von Urlaub und Leistungen jeweils einen Aufschlag von 4 %, insgesamt einen zusätzlichen 278 $ pro Tag, was ihren Gesamtlohn auf 7497 $ bringt.\n\nLaut Artikel b) Lehrende mit Befristung, Gründung und Pensionisten beträgt der Grund", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Salary", "difficulty": "hard", "token_f1_score": 0.1731, "sentence_bleu_score": 0.0054, "rouge1": 0.1405, "rouge2": 0.0, "rougeL": 0.1081, "meteor": 0.1379, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 0.6, "faithfulness": 0.4, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_031", "question": "What is said about statutory holidays?", "answer": "Gemäß Artikel 5.10 - RECOGNISIERTE UND ANDERE FEIERTAGE im Tarifvertrag (Seite nicht angegeben), \"Die folgenden Tage und alle Tagese, die allgemein von Bund oder Provinzbehörden als Feiertage erklärten (gesetzliche Feiertage) sind anerkannte Feiertage und deshalb erhalten Mitglieder auf: a. Gründonnerstag, Karfreitag, Ostersonntag, Königin-Victoria-Tag, Kanada-Tag, August-Civic-Holiday, Arbeiterfe", "rag_base_model": "llama3.1:8b", "language": "German", "category": "General Provisions", "difficulty": "medium", "token_f1_score": 0.2435, "sentence_bleu_score": 0.0299, "rouge1": 0.1131, "rouge2": 0.0712, "rougeL": 0.106, "meteor": 0.3138, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 0.6, "faithfulness": 0.2, "context_precision": 0.6, "grounded": true, "attempts": 3, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_035", "question": "What is said about appointments and extensions?", "answer": "Laut dem Kollektivvertrag gibt es spezielle Regeln für Einstellungen und Verlängerungen.\n\nFür Personen mit einer befristeten Arbeitsverbindung (Art. 5.20.14) ist eine Beförderungsvorlage während ihres letzten Jahres der befristeten Einstellung nicht möglich, es sei denn sie wurden im Vorjahr daran gehindert.\n\nWenn die befristete Arbeitsverbindung verlängert wird oder wenn eine Person mit einer Pro", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Appointments", "difficulty": "medium", "token_f1_score": 0.2169, "sentence_bleu_score": 0.0074, "rouge1": 0.2018, "rouge2": 0.0, "rougeL": 0.1284, "meteor": 0.1952, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 0.6, "faithfulness": 1.0, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_038", "question": "How does the agreement define or describe the selection of chairs/directors?", "answer": "Laut Artikel 9.15.13 können der Vizepräsident, akademische und provostsche Funktionen sowie der Dekan/Universitätsbibliothekar im Falle außergewöhnlicher Umstände, nach Rücksprache mit einem Department/School, einen Beauftragten für die Zeit von bis zu vier Monaten ernennen.", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Governance", "difficulty": "hard", "token_f1_score": 0.3373, "sentence_bleu_score": 0.0719, "rouge1": 0.3168, "rouge2": 0.101, "rougeL": 0.2574, "meteor": 0.2635, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 0.6, "faithfulness": 0.6, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}, {"question_id": "test_de_044", "question": "What does the agreement say about the remuneration rates for temporary lecturers?", "answer": "Gemäß dem Kollektivvertrag Thorneloe-LUFA von 2014-2017:\n\n* Lehrende mit Saisonbelegschaft ohne Befristete Anstellung oder Alterstufe erhalten einen Grundlohn von 6941 $ (Seite 20) und zusätzlich vier Prozent für Urlaub (278 $) und vier Prozent für Sozialleistungen (278 $), was ihren Gesamtnettoeinkommen von 7497 $ entspricht (Seite 20).\n* Lehrende mit Befristeter Anstellung, Alterstufe und Pensio", "rag_base_model": "llama3.1:8b", "language": "German", "category": "Benefits", "difficulty": "medium", "token_f1_score": 0.2529, "sentence_bleu_score": 0.0102, "rouge1": 0.2065, "rouge2": 0.033, "rougeL": 0.1848, "meteor": 0.3786, "mrr": 0.0, "ndcg_at_k": 0.0, "recall_1": 0, "recall_3": 0, "recall_5": 0, "answer_relevance": 1.0, "faithfulness": 1.0, "context_precision": 0.6, "grounded": true, "attempts": 1, "_has_answer": true, "_has_retrieval": true}], "metric_meta": {"numeric": ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor", "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5", "answer_relevance", "faithfulness", "context_precision"], "gen": ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor"], "ret": ["mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5"], "judge": ["answer_relevance", "faithfulness", "context_precision"], "kpis": [["__count__", "Questions", "count"], ["token_f1_score", "Avg F1", "score"], ["sentence_bleu_score", "Avg BLEU", "score"], ["rougeL", "Avg ROUGE-L", "score"], ["meteor", "Avg METEOR", "score"], ["mrr", "Avg MRR", "score"], ["recall_1", "Recall@1", "score"], ["recall_3", "Recall@3", "score"], ["recall_5", "Recall@5", "score"], ["answer_relevance", "Relevance", "score"], ["faithfulness", "Faithful", "score"], ["context_precision", "Precision", "score"], ["__grounded__", "Grounded", "pct"], ["attempts", "Avg Attempts", "num"]], "row_columns": ["question_id", "question", "answer", "rag_base_model", "language", "category", "difficulty", "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor", "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5", "answer_relevance", "faithfulness", "context_precision", "grounded", "attempts"]}}</script>
+
+<!-- ── Top banner + Normalize control ─────────────────────────────────────── -->
+<div class="topbar">
+  <div>
+    <h1>&#127891; LUFA RAG Evaluation Dashboard</h1>
+    <div class="sub">Agentic RAG for Cross-Lingual Retrieval of University Collective Agreements
+      &nbsp;&middot;&nbsp; Generated 2026-07-13 13:17 UTC</div>
+  </div>
+
+  <!-- No-JS: a real checkbox (req. 3). JS: a styled gear toggle. -->
+  <div class="norm-wrap">
+    <span class="gear">&#9881;&#65039;</span>
+    <input class="norm-cb" type="checkbox" id="normalize-cb"/>
+    <label for="normalize-cb">Normalize Data</label>
+    <span class="norm-note js-only">Excludes rows with no generated answer
+      (and no top-1 retrieval). Recomputes all stats.</span>
+    <noscript><span class="norm-note" style="display:inline">
+      Enable JavaScript to normalize interactively.</span></noscript>
+  </div>
+</div>
+
+<!-- ── KPI cards (static + live share the same container) ─────────────────── -->
+<div class="kpi-grid" id="kpi-row"><div class="metric-card"><div class="kpi-value">20</div><div class="kpi-label">Questions</div></div>
+<div class="metric-card"><div class="kpi-value">0.189</div><div class="kpi-label">Avg F1</div></div>
+<div class="metric-card"><div class="kpi-value">0.016</div><div class="kpi-label">Avg BLEU</div></div>
+<div class="metric-card"><div class="kpi-value">0.119</div><div class="kpi-label">Avg ROUGE-L</div></div>
+<div class="metric-card"><div class="kpi-value">0.193</div><div class="kpi-label">Avg METEOR</div></div>
+<div class="metric-card"><div class="kpi-value">0.127</div><div class="kpi-label">Avg MRR</div></div>
+<div class="metric-card"><div class="kpi-value">0.100</div><div class="kpi-label">Recall@1</div></div>
+<div class="metric-card"><div class="kpi-value">0.150</div><div class="kpi-label">Recall@3</div></div>
+<div class="metric-card"><div class="kpi-value">0.200</div><div class="kpi-label">Recall@5</div></div>
+<div class="metric-card"><div class="kpi-value">0.790</div><div class="kpi-label">Relevance</div></div>
+<div class="metric-card"><div class="kpi-value">0.670</div><div class="kpi-label">Faithful</div></div>
+<div class="metric-card"><div class="kpi-value">0.560</div><div class="kpi-label">Precision</div></div>
+<div class="metric-card"><div class="kpi-value">80.0%</div><div class="kpi-label">Grounded</div></div>
+<div class="metric-card"><div class="kpi-value">1.55</div><div class="kpi-label">Avg Attempts</div></div></div>
+
+<!-- ── Charts ─────────────────────────────────────────────────────────────── -->
+<div class="grid2">
+  <div class="card">
+    <div class="section-title">Generation Metrics by Model</div>
+    <div class="chart-static"><div class="sbar-group"><div class="sbar-row"><span class="sbar-label">F1</span><span class="sbar-track"><span class="sbar-fill" style="width:18.9%;background:#3b82f6"></span></span><span class="sbar-val">0.189</span></div><div class="sbar-row"><span class="sbar-label">BLEU</span><span class="sbar-track"><span class="sbar-fill" style="width:1.6%;background:#3b82f6"></span></span><span class="sbar-val">0.016</span></div><div class="sbar-row"><span class="sbar-label">ROUGE-1</span><span class="sbar-track"><span class="sbar-fill" style="width:17.4%;background:#3b82f6"></span></span><span class="sbar-val">0.174</span></div><div class="sbar-row"><span class="sbar-label">ROUGE-2</span><span class="sbar-track"><span class="sbar-fill" style="width:3.1%;background:#3b82f6"></span></span><span class="sbar-val">0.032</span></div><div class="sbar-row"><span class="sbar-label">ROUGE-L</span><span class="sbar-track"><span class="sbar-fill" style="width:11.9%;background:#3b82f6"></span></span><span class="sbar-val">0.119</span></div><div class="sbar-row"><span class="sbar-label">METEOR</span><span class="sbar-track"><span class="sbar-fill" style="width:19.2%;background:#3b82f6"></span></span><span class="sbar-val">0.193</span></div></div></div>
+    <canvas class="js-only" id="genChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">Retrieval Metrics by Model</div>
+    <div class="chart-static"><div class="sbar-group"><div class="sbar-row"><span class="sbar-label">MRR</span><span class="sbar-track"><span class="sbar-fill" style="width:12.7%;background:#93c5fd"></span></span><span class="sbar-val">0.127</span></div><div class="sbar-row"><span class="sbar-label">NDCG</span><span class="sbar-track"><span class="sbar-fill" style="width:14.4%;background:#93c5fd"></span></span><span class="sbar-val">0.144</span></div><div class="sbar-row"><span class="sbar-label">Recall@1</span><span class="sbar-track"><span class="sbar-fill" style="width:10.0%;background:#93c5fd"></span></span><span class="sbar-val">0.100</span></div><div class="sbar-row"><span class="sbar-label">Recall@3</span><span class="sbar-track"><span class="sbar-fill" style="width:15.0%;background:#93c5fd"></span></span><span class="sbar-val">0.150</span></div><div class="sbar-row"><span class="sbar-label">Recall@5</span><span class="sbar-track"><span class="sbar-fill" style="width:20.0%;background:#93c5fd"></span></span><span class="sbar-val">0.200</span></div></div></div>
+    <canvas class="js-only" id="retChart"></canvas>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="section-title">LLM-as-Judge Metrics (Radar)</div>
+    <div class="chart-static"><div class="sbar-group"><div class="sbar-row"><span class="sbar-label">Answer Relevance</span><span class="sbar-track"><span class="sbar-fill" style="width:79.0%;background:#3b82f6"></span></span><span class="sbar-val">0.790</span></div><div class="sbar-row"><span class="sbar-label">Faithfulness</span><span class="sbar-track"><span class="sbar-fill" style="width:67.0%;background:#10b981"></span></span><span class="sbar-val">0.670</span></div><div class="sbar-row"><span class="sbar-label">Context Precision</span><span class="sbar-track"><span class="sbar-fill" style="width:56.0%;background:#f59e0b"></span></span><span class="sbar-val">0.560</span></div></div></div>
+    <canvas class="js-only" id="radarChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">Performance by Language</div>
+    <div class="chart-static"><div class="sbar-subhead">German</div><div class="sbar-group"><div class="sbar-row"><span class="sbar-label">F1</span><span class="sbar-track"><span class="sbar-fill" style="width:18.9%;background:#3b82f6"></span></span><span class="sbar-val">0.189</span></div><div class="sbar-row"><span class="sbar-label">ROUGE-L</span><span class="sbar-track"><span class="sbar-fill" style="width:11.9%;background:#10b981"></span></span><span class="sbar-val">0.119</span></div><div class="sbar-row"><span class="sbar-label">METEOR</span><span class="sbar-track"><span class="sbar-fill" style="width:19.2%;background:#f59e0b"></span></span><span class="sbar-val">0.193</span></div></div></div>
+    <canvas class="js-only" id="langChart"></canvas>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="section-title">F1 Score by Difficulty</div>
+    <div class="chart-static"><div class="sbar-group"><div class="sbar-row"><span class="sbar-label">easy</span><span class="sbar-track"><span class="sbar-fill" style="width:10.8%;background:#3b82f6"></span></span><span class="sbar-val">0.108</span></div><div class="sbar-row"><span class="sbar-label">hard</span><span class="sbar-track"><span class="sbar-fill" style="width:24.0%;background:#10b981"></span></span><span class="sbar-val">0.240</span></div><div class="sbar-row"><span class="sbar-label">medium</span><span class="sbar-track"><span class="sbar-fill" style="width:17.0%;background:#f59e0b"></span></span><span class="sbar-val">0.170</span></div></div></div>
+    <canvas class="js-only" id="diffChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="section-title">ROUGE-L by Category</div>
+    <div class="chart-static"><div class="sbar-group"><div class="sbar-row"><span class="sbar-label">Appointments</span><span class="sbar-track"><span class="sbar-fill" style="width:12.8%;background:#3b82f6"></span></span><span class="sbar-val">0.128</span></div><div class="sbar-row"><span class="sbar-label">Bargaining Unit</span><span class="sbar-track"><span class="sbar-fill" style="width:12.6%;background:#10b981"></span></span><span class="sbar-val">0.126</span></div><div class="sbar-row"><span class="sbar-label">Benefits</span><span class="sbar-track"><span class="sbar-fill" style="width:17.5%;background:#f59e0b"></span></span><span class="sbar-val">0.175</span></div><div class="sbar-row"><span class="sbar-label">General Provisions</span><span class="sbar-track"><span class="sbar-fill" style="width:7.7%;background:#ef4444"></span></span><span class="sbar-val">0.077</span></div><div class="sbar-row"><span class="sbar-label">Governance</span><span class="sbar-track"><span class="sbar-fill" style="width:25.7%;background:#8b5cf6"></span></span><span class="sbar-val">0.257</span></div><div class="sbar-row"><span class="sbar-label">Leave</span><span class="sbar-track"><span class="sbar-fill" style="width:9.4%;background:#ec4899"></span></span><span class="sbar-val">0.094</span></div><div class="sbar-row"><span class="sbar-label">Professional Development</span><span class="sbar-track"><span class="sbar-fill" style="width:6.5%;background:#06b6d4"></span></span><span class="sbar-val">0.065</span></div><div class="sbar-row"><span class="sbar-label">Promotion</span><span class="sbar-track"><span class="sbar-fill" style="width:6.9%;background:#3b82f6"></span></span><span class="sbar-val">0.069</span></div><div class="sbar-row"><span class="sbar-label">Salary</span><span class="sbar-track"><span class="sbar-fill" style="width:11.9%;background:#10b981"></span></span><span class="sbar-val">0.119</span></div><div class="sbar-row"><span class="sbar-label">Termination</span><span class="sbar-track"><span class="sbar-fill" style="width:8.2%;background:#f59e0b"></span></span><span class="sbar-val">0.082</span></div><div class="sbar-row"><span class="sbar-label">Workload</span><span class="sbar-track"><span class="sbar-fill" style="width:12.1%;background:#ef4444"></span></span><span class="sbar-val">0.121</span></div></div></div>
+    <canvas class="js-only" id="catChart"></canvas>
+  </div>
+</div>
+
+<!-- ── Detailed results ───────────────────────────────────────────────────── -->
+<div class="card" style="margin-bottom:26px;">
+  <div class="section-title">Detailed Results</div>
+
+  <!-- Filter UI: only meaningful with JS -->
+  <div class="filter-bar js-only" id="filter-bar"></div>
+  <div class="js-only" style="margin-bottom:10px;">
+    <span class="chip" id="row-count"></span>
+    <button class="clear-btn" id="clear-filters">Clear filters</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="results-table">
+      <thead>
+        <tr id="results-head">
+          <th>#</th>
+          <th class="sortable" data-col="question">Question</th>
+          <th class="sortable" data-col="rag_base_model">Model</th>
+          <th class="sortable" data-col="language">Lang</th>
+          <th class="sortable" data-col="category">Category</th>
+          <th class="sortable" data-col="difficulty">Difficulty</th>
+          <th class="sortable" data-col="token_f1_score">F1</th>
+          <th class="sortable" data-col="sentence_bleu_score">BLEU</th>
+          <th class="sortable" data-col="rougeL">ROUGE-L</th>
+          <th class="sortable" data-col="meteor">METEOR</th>
+          <th class="sortable" data-col="mrr">MRR</th>
+          <th class="sortable" data-col="recall_1">Recall@1</th>
+          <th class="sortable" data-col="recall_3">Recall@3</th>
+          <th class="sortable" data-col="recall_5">Recall@5</th>
+          <th class="sortable" data-col="answer_relevance">Relevance</th>
+          <th class="sortable" data-col="faithfulness">Faithful</th>
+          <th class="sortable" data-col="context_precision">Precision</th>
+          <th class="sortable" data-col="grounded">Grounded</th>
+          <th class="sortable" data-col="attempts">Attempts</th>
+        </tr>
+      </thead>
+      <!-- Static rows for no-JS; JS replaces tbody contents on first render. -->
+      <tbody id="results-tbody"><tr><td class="muted">1</td><td class="qcell" title="What rules apply to general absences?">What rules apply to general absences?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Leave</td><td>easy</td><td class="score-low">0.088</td><td class="score-low">0.007</td><td class="score-low">0.045</td><td class="score-low">0.099</td><td class="score-low">0.200</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-high">0.800</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">2</td><td class="qcell" title="What does the collective agreement have to say about pregnancy?">What does the collective agreement have to say about pregnancy?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Benefits</td><td>hard</td><td class="score-low">0.296</td><td class="score-low">0.031</td><td class="score-low">0.175</td><td class="score-low">0.281</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">3</td><td class="qcell" title="What conditions apply to salary grades for additional qualifications?">What conditions apply to salary grades for additional qualifications?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Salary</td><td>hard</td><td class="score-low">0.179</td><td class="score-low">0.013</td><td class="score-low">0.138</td><td class="score-low">0.112</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">3</td></tr>
+<tr><td class="muted">4</td><td class="qcell" title="What is agreed for further education in a profession?">What is agreed for further education in a profession?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Professional Development</td><td>medium</td><td class="score-low">0.101</td><td class="score-low">0.004</td><td class="score-low">0.065</td><td class="score-low">0.096</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">5</td><td class="qcell" title="What does the collective agreement say about the right to recall?">What does the collective agreement say about the right to recall?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Salary</td><td>hard</td><td class="score-low">0.229</td><td class="score-low">0.015</td><td class="score-low">0.112</td><td class="score-low">0.182</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="score-high">1.000</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">2</td></tr>
+<tr><td class="muted">6</td><td class="qcell" title="What does the collective agreement foresee regarding promotion procedures?">What does the collective agreement foresee regarding promotion procedures?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Promotion</td><td>medium</td><td class="score-low">0.079</td><td class="score-low">0.005</td><td class="score-low">0.069</td><td class="score-low">0.075</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">7</td><td class="qcell" title="What regulations apply to withdrawal/termination?">What regulations apply to withdrawal/termination?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Termination</td><td>easy</td><td class="score-low">0.177</td><td class="score-low">0.009</td><td class="score-low">0.082</td><td class="score-low">0.180</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-mid">0.600</td><td class="score-mid">0.600</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">8</td><td class="qcell" title="What applies according to agreement for hufac?">What applies according to agreement for hufac?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Bargaining Unit</td><td>medium</td><td class="score-low">0.185</td><td class="score-low">0.008</td><td class="score-low">0.119</td><td class="score-low">0.206</td><td class="score-low">0.333</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-high">0.800</td><td class="score-mid">0.600</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">2</td></tr>
+<tr><td class="muted">9</td><td class="qcell" title="What does the agreement say about tariff unity?">What does the agreement say about tariff unity?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Bargaining Unit</td><td>hard</td><td class="score-low">0.227</td><td class="score-low">0.018</td><td class="score-low">0.133</td><td class="score-low">0.222</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-low">0.200</td><td class="center"><span class="no">&#10007;</span></td><td class="center muted">2</td></tr>
+<tr><td class="muted">10</td><td class="qcell" title="What does the agreement generally describe or define as absence?">What does the agreement generally describe or define as absence?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Leave</td><td>medium</td><td class="score-low">0.164</td><td class="score-low">0.008</td><td class="score-low">0.143</td><td class="score-low">0.225</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-mid">0.600</td><td class="score-mid">0.400</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">11</td><td class="qcell" title="What does the agreement say about rights?">What does the agreement say about rights?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>General Provisions</td><td>medium</td><td class="score-low">0.150</td><td class="score-low">0.003</td><td class="score-low">0.073</td><td class="score-low">0.142</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-mid">0.600</td><td class="score-low">0.200</td><td class="score-low">0.200</td><td class="center"><span class="no">&#10007;</span></td><td class="center muted">3</td></tr>
+<tr><td class="muted">12</td><td class="qcell" title="What are the regulations for the number of conditions?">What are the regulations for the number of conditions?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Benefits</td><td>hard</td><td class="score-low">0.272</td><td class="score-low">0.039</td><td class="score-low">0.165</td><td class="score-low">0.229</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.200</td><td class="score-low">0.200</td><td class="score-low">0.200</td><td class="center"><span class="no">&#10007;</span></td><td class="center muted">2</td></tr>
+<tr><td class="muted">13</td><td class="qcell" title="What is said about the holiday?">What is said about the holiday?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Leave</td><td>hard</td><td class="score-low">0.204</td><td class="score-low">0.011</td><td class="score-low">0.095</td><td class="score-low">0.158</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="score-mid">0.600</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">14</td><td class="qcell" title="What does the collective agreement provide for regarding the academic workload?">What does the collective agreement provide for regarding the academic workload?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Workload</td><td>medium</td><td class="score-low">0.137</td><td class="score-low">0.009</td><td class="score-low">0.121</td><td class="score-low">0.196</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-low">0.200</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">2</td></tr>
+<tr><td class="muted">15</td><td class="qcell" title="Was wird über das Verbot von Diskriminierung\">Was wird über das Verbot von Diskriminierung\</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>General Provisions</td><td>easy</td><td class="score-low">0.059</td><td class="score-low">0.013</td><td class="score-low">0.052</td><td class="score-low">0.159</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="center"><span class="no">&#10007;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">16</td><td class="qcell" title="What is said about the remuneration rates for limited-term lecturers?">What is said about the remuneration rates for limited-term lecturers?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Salary</td><td>hard</td><td class="score-low">0.173</td><td class="score-low">0.005</td><td class="score-low">0.108</td><td class="score-low">0.138</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-mid">0.600</td><td class="score-mid">0.400</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">17</td><td class="qcell" title="What is said about statutory holidays?">What is said about statutory holidays?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>General Provisions</td><td>medium</td><td class="score-low">0.243</td><td class="score-low">0.030</td><td class="score-low">0.106</td><td class="score-low">0.314</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-mid">0.600</td><td class="score-low">0.200</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">3</td></tr>
+<tr><td class="muted">18</td><td class="qcell" title="What is said about appointments and extensions?">What is said about appointments and extensions?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Appointments</td><td>medium</td><td class="score-low">0.217</td><td class="score-low">0.007</td><td class="score-low">0.128</td><td class="score-low">0.195</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-mid">0.600</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">19</td><td class="qcell" title="How does the agreement define or describe the selection of chairs/directors?">How does the agreement define or describe the selection of chairs/directors?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Governance</td><td>hard</td><td class="score-low">0.337</td><td class="score-low">0.072</td><td class="score-low">0.257</td><td class="score-low">0.264</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-mid">0.600</td><td class="score-mid">0.600</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr>
+<tr><td class="muted">20</td><td class="qcell" title="What does the agreement say about the remuneration rates for temporary lecturers?">What does the agreement say about the remuneration rates for temporary lecturers?</td><td class="model">llama3.1:8b</td><td><span class="badge badge-other">German</span></td><td>Benefits</td><td>medium</td><td class="score-low">0.253</td><td class="score-low">0.010</td><td class="score-low">0.185</td><td class="score-low">0.379</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-low">0.000</td><td class="score-high">1.000</td><td class="score-high">1.000</td><td class="score-mid">0.600</td><td class="center"><span class="ok">&#10003;</span></td><td class="center muted">1</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  LUFA Agentic RAG Thesis &nbsp;&middot;&nbsp; Laurentian University
+  &nbsp;&middot;&nbsp; Computational Sciences &nbsp;&middot;&nbsp; Generated 2026-07-13 13:17 UTC
+</div>
+
+<!-- ───────────────────────────── INTERACTIVE LAYER ───────────────────────── -->
+<script>
+(function(){
+  "use strict";
+  var D;
+  try { D = JSON.parse(document.getElementById('dash-data').textContent); }
+  catch(e){ console.error('Dashboard data parse failed', e); return; }
+
+  var META = D.metric_meta || {};
+  var NUMERIC = META.numeric || [];
+  var GEN = META.gen || [], RET = META.ret || [], JUDGE = META.judge || [];
+  var KPIS = META.kpis || [];
+  var ROW_COLS = META.row_columns || [];
+  var ALL_ROWS = D.rows || [];
+
+  var COLORS = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4'];
+  var LIGHT  = ['#93c5fd','#6ee7b7','#fcd34d','#fca5a5','#c4b5fd','#f9a8d4','#67e8f9'];
+
+  function num(v){ var n=parseFloat(v); return isNaN(n)?0:n; }
+  function fmt(v){ var n=parseFloat(v); return isNaN(n)?(v||''):n.toFixed(3); }
+  function scoreClass(v){ v=num(v); return v>=0.7?'score-high':v>=0.4?'score-mid':'score-low'; }
+  function esc(s){ s=(s==null?'':String(s));
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function isGrounded(v){ return ['true','1','1.0','yes'].indexOf(String(v).trim().toLowerCase())>=0; }
+  function mean(arr){ if(!arr.length) return 0; var s=0; for(var i=0;i<arr.length;i++) s+=arr[i]; return s/arr.length; }
+
+  // ── Filter state ──────────────────────────────────────────────────────────
+  // Per-column text/select filters + the normalize toggle.  Both compose.
+  var colFilters = {};                 // {col: "substring"}
+  var normalize  = false;
+  var sortCol = null, sortDir = 1;
+
+  // Columns offered as filters (every detail column the user can see, req. 2/5).
+  var FILTERABLE = ROW_COLS.filter(function(c){ return c!=='answer'; });
+  // Choose dropdowns for low-cardinality categorical columns; text for the rest.
+  var CATEGORICAL = ['rag_base_model','language','category','difficulty','grounded'];
+
+  function distinctValues(col){
+    var seen = {}, out = [];
+    for(var i=0;i<ALL_ROWS.length;i++){
+      var v = ALL_ROWS[i][col];
+      if(col==='grounded') v = isGrounded(v) ? 'true' : 'false';
+      v = (v==null?'':String(v)).trim();
+      if(v!=='' && !seen[v]){ seen[v]=1; out.push(v); }
+    }
+    out.sort();
+    return out;
+  }
+
+  function passesFilters(r){
+    if(normalize){
+      if(!r._has_answer) return false;      // drop unanswered questions
+      // also drop rows with no top-1 retrieval (req. 3)
+      if(r._has_retrieval === false) return false;
+    }
+    for(var col in colFilters){
+      var want = colFilters[col];
+      if(want==null || want==='') continue;
+      var have = r[col];
+      if(col==='grounded') have = isGrounded(have) ? 'true' : 'false';
+      have = (have==null?'':String(have)).toLowerCase();
+      if(CATEGORICAL.indexOf(col)>=0){
+        if(have !== String(want).toLowerCase()) return false;   // exact match
+      }else{
+        if(have.indexOf(String(want).toLowerCase()) < 0) return false; // substring
+      }
+    }
+    return true;
+  }
+
+  function currentRows(){
+    var out = ALL_ROWS.filter(passesFilters);
+    if(sortCol){
+      out = out.slice().sort(function(a,b){
+        var x=a[sortCol], y=b[sortCol];
+        var nx=parseFloat(x), ny=parseFloat(y);
+        if(!isNaN(nx) && !isNaN(ny)){ return (nx-ny)*sortDir; }
+        x=(x==null?'':String(x)).toLowerCase(); y=(y==null?'':String(y)).toLowerCase();
+        return (x<y?-1:x>y?1:0)*sortDir;
+      });
+    }
+    return out;
+  }
+
+  // ── Aggregation (recomputed from filtered rows) ─────────────────────────────
+  function overall(rows){
+    var o = {};
+    NUMERIC.forEach(function(m){ o[m] = rows.length ? mean(rows.map(function(r){return num(r[m]);})) : 0; });
+    return o;
+  }
+  function groundedRate(rows){
+    if(!rows.length) return 0;
+    return mean(rows.map(function(r){ return isGrounded(r.grounded)?1:0; }));
+  }
+  function avgAttempts(rows){
+    if(!rows.length) return 0;
+    return mean(rows.map(function(r){ return num(r.attempts); }));
+  }
+  function avgByGroup(rows, groupCol, metric){
+    var buckets = {};
+    rows.forEach(function(r){
+      var k = (r[groupCol]==null?'':String(r[groupCol])).trim();
+      if(k==='' || k.toLowerCase()==='nan') return;
+      (buckets[k] = buckets[k] || []).push(num(r[metric]));
+    });
+    var out = {};
+    Object.keys(buckets).forEach(function(k){ out[k] = mean(buckets[k]); });
+    return out;
+  }
+
+  // ── KPI render ──────────────────────────────────────────────────────────────
+  function renderKPIs(rows){
+    var ov = overall(rows);
+    var html = '';
+    KPIS.forEach(function(def){
+      var key=def[0], label=def[1], kind=def[2], value;
+      if(kind==='count') value = rows.length;
+      else if(kind==='pct') value = (groundedRate(rows)*100).toFixed(1)+'%';
+      else if(kind==='num') value = avgAttempts(rows).toFixed(2);
+      else value = (ov[key]||0).toFixed(3);
+      html += '<div class="metric-card"><div class="kpi-value">'+value+
+              '</div><div class="kpi-label">'+esc(label)+'</div></div>';
+    });
+    document.getElementById('kpi-row').innerHTML = html;
+  }
+
+  // ── Charts ──────────────────────────────────────────────────────────────────
+  var charts = {};
+  function destroy(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
+
+  function barOpts(){
+    return { responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{ labels:{ color:'#ffffff', font:{ size:11, weight:'bold' } } } },
+      scales:{
+        x:{ ticks:{ color:'#e2e8f0', font:{weight:'bold'} }, grid:{ color:'#1e293b' } },
+        y:{ ticks:{ color:'#e2e8f0', font:{weight:'bold'} }, grid:{ color:'#334155' },
+            beginAtZero:true, max:1 } } };
+  }
+
+  function renderCharts(rows){
+    var models = D.models && D.models.length ? D.models : ['default'];
+
+    // Generation by model
+    (function(){
+      var keys=['token_f1_score','sentence_bleu_score','rouge1','rouge2','rougeL','meteor'];
+      var labels=['F1','BLEU','ROUGE-1','ROUGE-2','ROUGE-L','METEOR'];
+      var byModel={}; models.forEach(function(m){ byModel[m]={}; });
+      keys.forEach(function(k){
+        var g=avgByGroup(rows,'rag_base_model',k);
+        models.forEach(function(m){ byModel[m][k]= g[m]||0; });
+      });
+      var ds=models.map(function(m,i){ return { label:m,
+        data:keys.map(function(k){return byModel[m][k]||0;}),
+        backgroundColor:COLORS[i%COLORS.length]+'99', borderColor:COLORS[i%COLORS.length], borderWidth:1 };});
+      destroy('genChart');
+      charts.genChart=new Chart(document.getElementById('genChart'),{type:'bar',data:{labels:labels,datasets:ds},options:barOpts()});
+    })();
+
+    // Retrieval by model
+    (function(){
+      var keys=['mrr','ndcg_at_k','recall_1','recall_3','recall_5'];
+      var labels=['MRR','NDCG','Recall@1','Recall@3','Recall@5'];
+      var byModel={}; models.forEach(function(m){ byModel[m]={}; });
+      keys.forEach(function(k){
+        var g=avgByGroup(rows,'rag_base_model',k);
+        models.forEach(function(m){ byModel[m][k]= g[m]||0; });
+      });
+      var ds=models.map(function(m,i){ return { label:m,
+        data:keys.map(function(k){return byModel[m][k]||0;}),
+        backgroundColor:LIGHT[i%LIGHT.length]+'88', borderColor:LIGHT[i%LIGHT.length], borderWidth:1 };});
+      destroy('retChart');
+      charts.retChart=new Chart(document.getElementById('retChart'),{type:'bar',data:{labels:labels,datasets:ds},options:barOpts()});
+    })();
+
+    // Radar judge
+    (function(){
+      var keys=['answer_relevance','faithfulness','context_precision'];
+      var labels=['Answer Relevance','Faithfulness','Context Precision'];
+      var ds=models.map(function(m,i){
+        var g={}; keys.forEach(function(k){ g[k]=avgByGroup(rows,'rag_base_model',k)[m]||0; });
+        return { label:m, data:keys.map(function(k){return g[k];}),
+          borderColor:COLORS[i%COLORS.length], backgroundColor:COLORS[i%COLORS.length]+'33',
+          pointBackgroundColor:COLORS[i%COLORS.length], borderWidth:2 };
+      });
+      destroy('radarChart');
+      charts.radarChart=new Chart(document.getElementById('radarChart'),{type:'radar',
+        data:{labels:labels,datasets:ds},
+        options:{ responsive:true, maintainAspectRatio:true,
+          scales:{ r:{ min:0, max:1, ticks:{ stepSize:.2, color:'#cbd5e1', backdropColor:'transparent' },
+            grid:{ color:'#334155' }, pointLabels:{ color:'#ffffff', font:{ size:11, weight:'bold' } },
+            angleLines:{ color:'#334155' } } },
+          plugins:{ legend:{ labels:{ color:'#ffffff', font:{weight:'bold'} } } } } });
+    })();
+
+    // Language: F1 / ROUGE-L / METEOR
+    (function(){
+      var f1=avgByGroup(rows,'language','token_f1_score');
+      var rl=avgByGroup(rows,'language','rougeL');
+      var mt=avgByGroup(rows,'language','meteor');
+      var langs=Object.keys(f1);
+      var ds=[
+        {label:'F1',data:langs.map(function(l){return f1[l]||0;}),backgroundColor:COLORS[0]+'99',borderColor:COLORS[0],borderWidth:1},
+        {label:'ROUGE-L',data:langs.map(function(l){return rl[l]||0;}),backgroundColor:COLORS[1]+'99',borderColor:COLORS[1],borderWidth:1},
+        {label:'METEOR',data:langs.map(function(l){return mt[l]||0;}),backgroundColor:COLORS[2]+'99',borderColor:COLORS[2],borderWidth:1}
+      ];
+      destroy('langChart');
+      charts.langChart=new Chart(document.getElementById('langChart'),{type:'bar',data:{labels:langs,datasets:ds},options:barOpts()});
+    })();
+
+    // Difficulty F1
+    (function(){
+      var g=avgByGroup(rows,'difficulty','token_f1_score');
+      var diffs=Object.keys(g);
+      destroy('diffChart');
+      charts.diffChart=new Chart(document.getElementById('diffChart'),{type:'bar',
+        data:{labels:diffs,datasets:[{label:'F1 by Difficulty',
+          data:diffs.map(function(d){return g[d]||0;}),
+          backgroundColor:diffs.map(function(_,i){return COLORS[i%COLORS.length]+'bb';}),
+          borderColor:diffs.map(function(_,i){return COLORS[i%COLORS.length];}), borderWidth:1}]},
+        options:barOpts()});
+    })();
+
+    // Category ROUGE-L
+    (function(){
+      var g=avgByGroup(rows,'category','rougeL');
+      var cats=Object.keys(g);
+      var labels=cats.map(function(c){return c.length>18?c.slice(0,16)+'\u2026':c;});
+      destroy('catChart');
+      charts.catChart=new Chart(document.getElementById('catChart'),{type:'bar',
+        data:{labels:labels,datasets:[{label:'ROUGE-L by Category',
+          data:cats.map(function(c){return g[c]||0;}),
+          backgroundColor:cats.map(function(_,i){return LIGHT[i%LIGHT.length]+'99';}),
+          borderColor:cats.map(function(_,i){return LIGHT[i%LIGHT.length];}), borderWidth:1}]},
+        options:barOpts()});
+    })();
+  }
+
+  // ── Table ─────────────────────────────────────────────────────────────────
+  function renderTable(rows){
+    var tbody=document.getElementById('results-tbody');
+    var html=[];
+    for(var i=0;i<rows.length;i++){
+      var r=rows[i];
+      var lang=String(r.language||'');
+      var badge = lang.toLowerCase().indexOf('en')===0?'badge-en'
+                : lang.toLowerCase().indexOf('fr')===0?'badge-fr':'badge-other';
+      var grounded=isGrounded(r.grounded);
+      html.push('<tr>'+
+        '<td class="muted">'+(i+1)+'</td>'+
+        '<td class="qcell" title="'+esc(r.question)+'">'+esc((r.question||'').slice(0,90))+'</td>'+
+        '<td class="model">'+esc(r.rag_base_model)+'</td>'+
+        '<td><span class="badge '+badge+'">'+esc(lang)+'</span></td>'+
+        '<td>'+esc(r.category)+'</td>'+
+        '<td>'+esc(r.difficulty)+'</td>'+
+        '<td class="'+scoreClass(r.token_f1_score)+'">'+fmt(r.token_f1_score)+'</td>'+
+        '<td class="'+scoreClass(r.sentence_bleu_score)+'">'+fmt(r.sentence_bleu_score)+'</td>'+
+        '<td class="'+scoreClass(r.rougeL)+'">'+fmt(r.rougeL)+'</td>'+
+        '<td class="'+scoreClass(r.meteor)+'">'+fmt(r.meteor)+'</td>'+
+        '<td class="'+scoreClass(r.mrr)+'">'+fmt(r.mrr)+'</td>'+
+        '<td class="'+scoreClass(r.recall_1)+'">'+fmt(r.recall_1)+'</td>'+
+        '<td class="'+scoreClass(r.recall_3)+'">'+fmt(r.recall_3)+'</td>'+
+        '<td class="'+scoreClass(r.recall_5)+'">'+fmt(r.recall_5)+'</td>'+
+        '<td class="'+scoreClass(r.answer_relevance)+'">'+fmt(r.answer_relevance)+'</td>'+
+        '<td class="'+scoreClass(r.faithfulness)+'">'+fmt(r.faithfulness)+'</td>'+
+        '<td class="'+scoreClass(r.context_precision)+'">'+fmt(r.context_precision)+'</td>'+
+        '<td class="center">'+(grounded?'<span class="ok">\u2713</span>':'<span class="no">\u2717</span>')+'</td>'+
+        '<td class="center muted">'+esc(r.attempts)+'</td>'+
+      '</tr>');
+    }
+    tbody.innerHTML = html.join('') ||
+      '<tr><td colspan="19" class="center muted" style="padding:24px;">No rows match the current filters.</td></tr>';
+    document.getElementById('row-count').textContent =
+      rows.length + ' / ' + ALL_ROWS.length + ' rows' + (normalize?' (normalized)':'');
+  }
+
+  // ── Filter UI build ─────────────────────────────────────────────────────────
+  function labelFor(col){
+    var map={ rag_base_model:'Model', token_f1_score:'F1', sentence_bleu_score:'BLEU',
+      rougeL:'ROUGE-L', rouge1:'ROUGE-1', rouge2:'ROUGE-2', meteor:'METEOR', mrr:'MRR',
+      ndcg_at_k:'NDCG', recall_1:'Recall@1', recall_3:'Recall@3', recall_5:'Recall@5',
+      answer_relevance:'Relevance', faithfulness:'Faithful', context_precision:'Precision',
+      question_id:'ID', question:'Question', language:'Language', category:'Category',
+      difficulty:'Difficulty', grounded:'Grounded', attempts:'Attempts' };
+    return map[col]||col;
+  }
+
+  function buildFilterBar(){
+    var bar=document.getElementById('filter-bar');
+    bar.innerHTML='';
+    FILTERABLE.forEach(function(col){
+      if(CATEGORICAL.indexOf(col)>=0){
+        var sel=document.createElement('select');
+        sel.setAttribute('data-col',col);
+        var opt0=document.createElement('option'); opt0.value=''; opt0.textContent=labelFor(col)+': all';
+        sel.appendChild(opt0);
+        distinctValues(col).forEach(function(v){
+          var o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o);
+        });
+        sel.addEventListener('change',function(){ colFilters[col]=this.value; render(); });
+        bar.appendChild(sel);
+      }else{
+        var inp=document.createElement('input');
+        inp.setAttribute('data-col',col);
+        inp.placeholder=labelFor(col)+'\u2026';
+        inp.addEventListener('input',function(){ colFilters[col]=this.value; render(); });
+        bar.appendChild(inp);
+      }
+    });
+  }
+
+  function bindHead(){
+    var ths=document.querySelectorAll('#results-head th.sortable');
+    ths.forEach(function(th){
+      th.addEventListener('click',function(){
+        var col=th.getAttribute('data-col');
+        if(sortCol===col){ sortDir=-sortDir; } else { sortCol=col; sortDir=1; }
+        render();
+      });
+    });
+  }
+
+  // Chart.js may fail to load (e.g. offline / blocked CDN). Detect it once so
+  // we can keep the static SVG/CSS bars visible instead of blank canvases.
+  var CHARTS_OK = (typeof Chart !== 'undefined');
+  if(CHARTS_OK){ document.documentElement.className += ' charts'; }
+
+  // ── Master render ───────────────────────────────────────────────────────────
+  function render(){
+    var rows=currentRows();
+    renderKPIs(rows);
+    if(CHARTS_OK){ try { renderCharts(rows); } catch(e){ console.error('chart render', e); } }
+    renderTable(rows);
+  }
+
+  // ── Wire up controls ─────────────────────────────────────────────────────────
+  var cb=document.getElementById('normalize-cb');
+  if(cb){ cb.addEventListener('change',function(){ normalize=this.checked; render(); }); }
+  var clearBtn=document.getElementById('clear-filters');
+  if(clearBtn){ clearBtn.addEventListener('click',function(){
+    colFilters={}; sortCol=null; sortDir=1;
+    document.querySelectorAll('#filter-bar input').forEach(function(i){ i.value=''; });
+    document.querySelectorAll('#filter-bar select').forEach(function(s){ s.value=''; });
+    render();
+  }); }
+
+  buildFilterBar();
+  bindHead();
+  render();   // first JS render replaces all static content with live content
+})();
+</script>
+</body>
+</html>
