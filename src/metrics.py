@@ -439,9 +439,9 @@ if __name__ == "__main__":
         retrieved_ids = _get_retrieved_ids(rag)
         ground_truth_ids = _get_ground_truth_ids(row)
 
-        if str(row.get("translation_applied")).strip().lower() == "true":
-            prediction = str(row.get("untranslated_answer", prediction))
-            question = str(row.get("translated_question", question))
+        if str(prev.get("translation_applied")).strip().lower() == "true":
+            prediction = str(prev.get("untranslated_answer", prediction))
+            question = str(prev.get("translated_question", question))
 
         print(f"\n{counter} {q_id}: \"{question[:55]}...\" (deterministic={need_det}, judge={need_judge})")
 
@@ -478,6 +478,17 @@ if __name__ == "__main__":
         ar = _safe_float(prev.get("answer_relevance")) or 0.0
         faith = _safe_float(prev.get("faithfulness")) or 0.0
         cp = _safe_float(prev.get("context_precision")) or 0.0
+
+        # is_grounded = False
+        # check_grounded = False
+        new_grounded ="false"
+        if str(prev.get("grounded")).lower() == "false":
+            new_grounded = "true" if float(cp) > 0.4 else "false"
+
+        real_attempts = int(prev.get("attempts"))
+        if real_attempts < 1 and (prediction != ""):
+            real_attempts = 1
+
         if need_judge:
             print(f"   Running LLM judge ({args.judge_llm}) on zero cells...")
             try:
@@ -492,12 +503,6 @@ if __name__ == "__main__":
                 print(f"   relevance={ar} faithfulness={faith} context_precision={cp}")
             except Exception as je:
                 print(f"   [Judge Warning] {je}")
-
-        # is_grounded = False
-        # check_grounded = False
-        new_grounded ="false"
-        if str(rag.get("grounded")).lower() == "false":
-            new_grounded = "true" if float(cp) > 0.4 else "false"
 
         #     from reflector import reflect
         #     chunk_texts = [n.node.text for n in nodes]
@@ -515,7 +520,7 @@ if __name__ == "__main__":
             "judge_llm": args.judge_llm or _safe(prev.get("judge_llm")),
             "category": _safe(row.get("category")) or _safe(prev.get("category")),
             "difficulty": _safe(row.get("difficulty")) or _safe(prev.get("difficulty")),
-            "attempts": _safe(rag.get("attempts")),
+            "attempts": _safe(real_attempts),
             "grounded": _safe(new_grounded),
         })
         for i in range(1, 6):
@@ -524,6 +529,7 @@ if __name__ == "__main__":
             out_row[f"source{i}_recency_adjusted_cosine_score"] = _safe_float(rag.get(f"source{i}_recency_adjusted_cosine_score"))
             out_row[f"source{i}_rrf_score"] = _safe_float(rag.get(f"source{i}_rrf_score"))
             out_row[f"source{i}_text"] = _safe(rag.get(f"source{i}_text"))
+
         out_row.update({
             "token_f1_score": f1_val,
             "sentence_bleu_score": bleu_val,
