@@ -481,12 +481,17 @@ if __name__ == "__main__":
 
         # is_grounded = False
         # check_grounded = False
-        new_grounded ="false"
+        new_grounded =prev.get("grounded")
         if str(prev.get("grounded")).lower() == "false":
             new_grounded = "true" if float(cp) > 0.4 else "false"
 
-        real_attempts = int(prev.get("attempts"))
-        if real_attempts < 1 and (prediction != ""):
+        real_attempts = prev.get("attempts")
+        try:
+            real_attempts = int(real_attempts)
+            if real_attempts < 1 and (prediction != ""):
+                real_attempts = 1
+        except (TypeError,ValueError):
+            print(f"   [Warning] attempts is not a number: {real_attempts} replaced with 1")
             real_attempts = 1
 
         if need_judge:
@@ -520,8 +525,8 @@ if __name__ == "__main__":
             "judge_llm": args.judge_llm or _safe(prev.get("judge_llm")),
             "category": _safe(row.get("category")) or _safe(prev.get("category")),
             "difficulty": _safe(row.get("difficulty")) or _safe(prev.get("difficulty")),
-            "attempts": _safe(real_attempts),
-            "grounded": _safe(new_grounded),
+            "attempts": real_attempts,
+            "grounded": new_grounded,
         })
         for i in range(1, 6):
             out_row[f"source{i}_id"] = _safe(rag.get(f"source{i}_id"))
