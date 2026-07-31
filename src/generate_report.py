@@ -25,7 +25,7 @@ Outputs land in ./reports/ :
   naive_*                 / naive_*                       / naive.html
   crosslingual_*          / crosslingual_*                / crosslingual.html
   lufa_out_data.csv       / evaluation_results.csv        / agentic.html   (agentic: no prefix)
-  general_lufa_out_data.csv / general_evaluation_results.csv / general.html
+  general_lufa_out_data.csv / general_evaluation_results.csv / general_report.html
 
 Usage:
   python src/generate_report.py
@@ -207,7 +207,7 @@ def main():
     gen_eval = _combine(all_eval_frames, EVAL_COLUMNS)
     gen_lufa_out = out_dir / "general_lufa_out_data.csv"
     gen_eval_out = out_dir / "general_evaluation_results.csv"
-    gen_html = out_dir / "general.html"
+    gen_html = out_dir / "general_report.html"
     gen_lufa.to_csv(gen_lufa_out, index=False)
     gen_eval.to_csv(gen_eval_out, index=False)
     print(f"   -> {gen_lufa_out.name} ({len(gen_lufa)} rows) | {gen_eval_out.name} ({len(gen_eval)} rows)")

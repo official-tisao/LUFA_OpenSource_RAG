@@ -208,6 +208,9 @@ DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
   </div>
 </div>
 
+<!-- ── Performance & Citation (Chapter-4 metrics; always visible, JS-free) ──── -->
+<div id="perf-section">__STATIC_PERF__</div>
+
 <!-- ── Detailed results ───────────────────────────────────────────────────── -->
 <div class="card" style="margin-bottom:26px;">
   <div class="section-title">Detailed Results</div>

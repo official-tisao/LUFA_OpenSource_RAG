@@ -248,6 +248,19 @@ def get_ollama_client(model_name: str, is_embedding: bool = False, **kwargs):
             base_url=base_url,
             **kwargs,
         )
+
+    # Pin the context window. LlamaIndex defaults context_window to -1, which makes it
+    # send num_ctx = the model's FULL trained context (131 072 for Llama 3.x). On a 6 GB
+    # GPU that inflates the KV cache to ~18 GB, so Ollama silently offloads most layers
+    # to the CPU (observed: 77%/23% CPU/GPU) and every latency measurement becomes a
+    # CPU measurement. A pinned window keeps the model resident entirely on the GPU.
+    if "context_window" not in kwargs:
+        try:
+            from config_loader import cfg
+            kwargs["context_window"] = int(cfg("models.llm.context_window", 8192))
+        except Exception:
+            kwargs["context_window"] = 8192
+
     return Ollama(
         model=model_name,
         base_url=base_url,

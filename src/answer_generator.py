@@ -35,10 +35,14 @@ def generate_naive_answer(engine,
                           top_k: int = 5,
                           check_grounded: bool = False,
                           output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
-                          cached_nodes=None) -> Dict:
+                          cached_nodes=None,
+                          no_translate: bool = False,
+                          metrics_language: str = "en") -> Dict:
     """Generate answer using naive RAG approach (single retrieval + generation)."""
 
-    return generate_agentic_answer(engine, query_text, 1, check_grounded, output_path, query_id, cached_nodes)
+    return generate_agentic_answer(engine, query_text, 1, check_grounded, output_path, query_id,
+                                   cached_nodes, no_translate=no_translate,
+                                   metrics_language=metrics_language)
 
 
 def generate_agentic_answer(engine,
@@ -46,8 +50,18 @@ def generate_agentic_answer(engine,
                             max_retries: int = 3,
                             check_grounded: bool = True,
                             output_path: Union[str, Path] = "tests/lufa_out_data.csv", query_id: str = None,
-                            cached_nodes=None) -> Dict:
-    """Generate answer using agentic RAG approach (retrieval + retry loop with groundedness checking)."""
+                            cached_nodes=None,
+                            no_translate: bool = False,
+                            metrics_language: str = "en") -> Dict:
+    """Generate answer using agentic RAG approach (retrieval + retry loop with groundedness checking).
+
+    no_translate=True runs the TRUE cross-lingual pipeline: the query is NOT translated,
+    retrieval runs on the raw foreign-language query against the multilingual index, and
+    the answer is generated in the question's own language. A post-hoc translation of the
+    answer into `metrics_language` (the benchmark's ground-truth language) is produced
+    separately, purely so lexical metrics compare like with like — it never enters the
+    pipeline and is never shown to the judge.
+    """
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -58,8 +72,13 @@ def generate_agentic_answer(engine,
 
     # from language_detector import detect_full_language
     original_lang = (check_language(query_id) if query_id else check_language(query_text)) or "en"
-    translation_applied = needs_translation(original_lang)
+    # In no-translate mode the pipeline never bridges through English: the raw query is
+    # retrieved with and answered in its own language.
+    translation_applied = (not no_translate) and needs_translation(original_lang)
     translated_query = query_text
+    if no_translate and needs_translation(original_lang):
+        print(f"[AnswerGenerator] NO-TRANSLATION cross-lingual mode: retrieving and answering "
+              f"directly in '{original_lang}' (no English bridge).")
     if translation_applied:
         lang_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
         print(f"[AnswerGenerator] Non-native language detected: {original_lang} ({lang_name})")
@@ -73,12 +92,23 @@ def generate_agentic_answer(engine,
 
     print(f"[AnswerGenerator] Pipeline language: {pipeline_lang}")
 
+    import time as _time
+    from system_metrics import ResourceSampler
+
     current_query = processing_query
     rewritten_query = processing_query
     nodes = []
     answer = ""
     is_grounded = False
     real_attempt = 0;
+    # Ch4 §4.6.4 timing: first-pass retrieval latency + TTFT, and end-to-end.
+    first_retrieval_s = ""
+    first_ttft_s = ""
+    ctx_used = ptok_used = otok_pred = ""
+    # Sample CPU / GPU utilisation for the WHOLE query (all attempts + any
+    # translation), not just an instant after it finished.
+    _sampler = ResourceSampler(interval=2.0, enabled=True).start()
+    _e2e_start = _time.perf_counter()
     for attempt in range(1, max_retries + 1):
         print(f"[AnswerGenerator] Attempt {attempt}/{max_retries}")
 
@@ -95,9 +125,23 @@ def generate_agentic_answer(engine,
         else:
             top_k = engine.similarity_top_k + (attempt - 1)
             nodes = engine._retrieve_nodes(rewritten_query, top_k=top_k)
+            if attempt == 1:
+                first_retrieval_s = getattr(engine, "_last_retrieval_seconds", "")
             print(f"[AnswerGenerator] Retrieved {len(nodes)} chunks (top_k={top_k})")
 
         answer = engine._generate_from_nodes(processing_query, nodes, pipeline_lang)
+        if attempt == 1:
+            first_ttft_s = getattr(engine, "_last_ttft_seconds", "")
+        # Context budget chosen for the LAST generation call — on a retry this is the
+        # widest one (top_k grows to 7 chunks), which is the figure worth recording.
+        ctx_used = getattr(engine.llm, "_last_context_window", "")
+        ptok_used = getattr(engine.llm, "_last_prompt_tokens", "")
+        otok_pred = getattr(engine.llm, "_last_predicted_output_tokens", "")
+
+        # Record the attempt count on EVERY iteration, not only when the loop breaks
+        # on a grounded answer — otherwise a run that exhausts all retries reports
+        # attempts=0 and understates the true cost of the agentic loop.
+        real_attempt = attempt
 
         if check_grounded:
             chunk_texts = [n.node.text for n in nodes]
@@ -105,7 +149,6 @@ def generate_agentic_answer(engine,
             print(f"[AnswerGenerator] Grounded: {is_grounded}")
 
             if is_grounded:
-                real_attempt = attempt
                 break
 
             current_query = rewritten_query
@@ -120,6 +163,28 @@ def generate_agentic_answer(engine,
         print(f"[AnswerGenerator] Translating answer back to {lang_name}...")
         final_answer = translate_to_target(answer, original_lang, engine.llm)
 
+    # ── Post-hoc rendering of the answer in the ground-truth language ───────────
+    # Only for the no-translation cross-lingual run, and only when the answer is not
+    # already in the benchmark's language. Used SOLELY by the lexical metrics; the
+    # judge and every pipeline stage keep using the native-language answer.
+    answer_metrics_translation = ""
+    if no_translate and original_lang != metrics_language and final_answer.strip():
+        tgt = LANGUAGE_NAMES.get(metrics_language, metrics_language.upper())
+        print(f"[AnswerGenerator] Rendering answer in {tgt} for lexical metrics only "
+              f"(not used by the judge)...")
+        try:
+            from translator import TRANSLATE_TO_EN_PROMPT, TRANSLATE_TO_TARGET_PROMPT
+            from llm_utils import stream_complete
+            src_name = LANGUAGE_NAMES.get(original_lang, original_lang.upper())
+            if metrics_language == "en":
+                prompt = TRANSLATE_TO_EN_PROMPT.format(source_language=src_name, text=final_answer)
+            else:
+                prompt = TRANSLATE_TO_TARGET_PROMPT.format(target_language=tgt, text=final_answer)
+            answer_metrics_translation = stream_complete(engine.llm, prompt) or ""
+        except Exception as _te:
+            print(f"[AnswerGenerator] metrics translation failed: {_te}")
+            answer_metrics_translation = ""
+
     result = {
         'response': final_answer,
         'sources': [],
@@ -132,8 +197,22 @@ def generate_agentic_answer(engine,
         'original_query_id': query_id,
         'original_question': query_text,
         'original_question_translation': translated_query,
-        'untranslated_response': answer
+        'untranslated_response': answer,
+        'retrieval_latency_s': first_retrieval_s,
+        'ttft_s': first_ttft_s,
+        'end_to_end_latency_s': round(_time.perf_counter() - _e2e_start, 4),
+        'context_window_used': ctx_used,
+        'prompt_tokens_est': ptok_used,
+        'predicted_output_tokens': otok_pred,
+        'answer_metrics_translation': answer_metrics_translation,
+        'metrics_language': metrics_language if answer_metrics_translation else "",
+        'pipeline_translation_mode': "none" if no_translate else "bridge",
     }
+    # Hardware utilisation across the whole query (§4.6.4). Blank if unavailable.
+    _sysm = _sampler.stop()
+    for _k in ("gpu_vram_mb", "gpu_vram_dedicated_mb", "gpu_vram_shared_mb",
+               "system_ram_mb", "cpu_percent", "gpu_util_percent"):
+        result[_k] = _sysm.get(_k, "")
 
     if nodes:
         result['sources'] = _extract_sources_from_nodes(nodes)
@@ -244,8 +323,15 @@ def generate_answer_record(engine, q_id, q_text, base_model, mode="local",
     for i in range(1, 6):
         for suf in ["id", "cosine_score", "recency_adjusted_cosine_score", "rrf_score", "text"]:
             row[f"source{i}_{suf}"] = result.get(f"source{i}_{suf}", "")
-    from run_simulation import extract_translation_columns
+    from run_simulation import extract_translation_columns, extract_system_metric_columns
     row.update(extract_translation_columns(result))
+    row.update(extract_system_metric_columns(
+        result, "local",
+        e2e_latency=result.get("end_to_end_latency_s", ""),
+        warmup_applied="",
+        sysm={k: result.get(k, "") for k in
+              ("gpu_vram_mb", "gpu_vram_dedicated_mb", "gpu_vram_shared_mb",
+               "system_ram_mb", "cpu_percent", "gpu_util_percent")}))
     return row
 
 
@@ -286,6 +372,22 @@ if __name__ == "__main__":
                         help="Max retry attempts for agentic mode")
     parser.add_argument("--llm_model", default=None,
                         help="Supply one of many models to use")
+    parser.add_argument("--resume_regen", action="store_true",
+                        help="Resume an interrupted --force regeneration: rows that already carry "
+                             "generation telemetry (ttft_s) are skipped, everything else is "
+                             "regenerated. Use this instead of --force after a crash.")
+    parser.add_argument("--force", action="store_true",
+                        help="Regenerate answers for EVERY question, including ones that already "
+                             "have an answer (needed to capture ttft/latency/VRAM on a complete CSV).")
+    parser.add_argument("--no_dashboard", action="store_true",
+                        help="Skip the per-row dashboard refresh (much faster on long runs).")
+    parser.add_argument("--no_translate", action="store_true",
+                        help="TRUE cross-lingual mode: never bridge through English. Retrieve with "
+                             "the raw query and answer in the question's own language. A post-hoc "
+                             "translation into --metrics_language is stored for lexical metrics only.")
+    parser.add_argument("--metrics_language", default="en",
+                        help="Language of the benchmark's expected_answer / ground_source_truth, "
+                             "used only to render the answer for lexical metrics (default: en).")
 
 
     def _str2bool(v):
@@ -302,7 +404,9 @@ if __name__ == "__main__":
 
     from rag_engine import create_rag_engine
     from config_loader import cfg
-    from run_simulation import OUTPUT_COLUMNS, extract_translation_columns
+    from run_simulation import (OUTPUT_COLUMNS, extract_translation_columns,
+                                extract_system_metric_columns, SYSTEM_METRIC_COLUMNS,
+                                CROSSLINGUAL_COLUMNS)
     from csv_utils import upsert_row
 
     input_path = Path(args.input)
@@ -336,6 +440,27 @@ if __name__ == "__main__":
                     )]
 
                     completed_ids = set(successful["question_id"].dropna().astype(str).tolist())
+            if args.resume_regen:
+                # Correct resume semantics for an interrupted --force run. After a crash,
+                # every row still holds an answer (the pre-existing one for rows not yet
+                # reached), so plain resume would skip everything while --force would
+                # restart all 426. A row counts as done only when THIS run measured it —
+                # i.e. it has generation telemetry (ttft_s) and a usable answer.
+                tel = (existing_df["ttft_s"].astype(str).str.strip()
+                       if "ttft_s" in existing_df.columns else pd.Series("", index=existing_df.index))
+                measured = existing_df[
+                    tel.ne("") & ~tel.str.lower().isin(["nan", "none"])
+                    & existing_df["answer"].notna()
+                    & existing_df["answer"].astype(str).str.strip().ne("")
+                    & existing_df["answer"].astype(str).str.strip().ne("ERROR")
+                ]
+                completed_ids = set(measured["question_id"].dropna().astype(str).tolist())
+                print(f"[AnswerGenerator] --resume_regen: {len(completed_ids)} rows already "
+                      f"regenerated (have ttft_s); the rest WILL be regenerated.")
+            elif args.force:
+                print(f"[AnswerGenerator] --force set: ignoring {len(completed_ids)} existing answers "
+                      f"— ALL questions will be regenerated (answers WILL be overwritten).")
+                completed_ids = set()
             print(f"[AnswerGenerator] Resuming — {len(completed_ids)} answered, "
                   f"{len(cached_map)} questions with cached top-K available.")
         except Exception as e:
@@ -350,6 +475,10 @@ if __name__ == "__main__":
     engine = create_rag_engine(None, base_model, None, None, openai_client=args.openai_client)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # Warm-up protocol (Ch4 §4.6.4): warm the retrieval path once on the first
+    # question actually processed; that row is tagged warmup_applied=1.
+    warmed_up = False
+
     for idx, row in questions_df.iterrows():
         q_id = str(row.get("id", idx)).strip()
         q_text = str(row.get("question", "")).strip()
@@ -358,6 +487,16 @@ if __name__ == "__main__":
         if q_id in completed_ids:
             print(f"{counter} Skipping {q_id} (already answered)")
             continue
+
+        warmup_flag = ""
+        if not warmed_up:
+            print(f"{counter} [Warmup] Priming retrieval on first question (timing discarded)...")
+            try:
+                engine.warmup_retrieve(q_text)
+                warmup_flag = 1
+            except Exception as _we:
+                print(f"   [Warmup] skipped: {_we}")
+            warmed_up = True
 
         print(f"\n{counter} Processing question {q_id}: \"{q_text[:60]}...\"")
         try:
@@ -368,15 +507,23 @@ if __name__ == "__main__":
             if args.mode == "local-naive":
                 result = generate_naive_answer(engine, q_text, top_k=5,
                                                check_grounded=False, output_path=args.output,
-                                               query_id=q_id, cached_nodes=cached_nodes)
+                                               query_id=q_id, cached_nodes=cached_nodes,
+                                               no_translate=args.no_translate,
+                                               metrics_language=args.metrics_language)
             else:
                 result = generate_agentic_answer(engine, q_text, max_retries=args.max_retries,
                                                  check_grounded=True, output_path=args.output,
-                                                 query_id=q_id, cached_nodes=cached_nodes)
+                                                 query_id=q_id, cached_nodes=cached_nodes,
+                                                 no_translate=args.no_translate,
+                                                 metrics_language=args.metrics_language)
 
             sources = result.get("sources", [])
             source_cols = {}
             is_valid_response = result.get("response", "").strip() not in ("", "ERROR")
+            # Fallback source MUST be the previously-stored lufa row (written by
+            # retrieval.py), NOT the input questions row — the input CSV has no
+            # source* columns, so using it would blank out good retrieval data.
+            prev_lufa = cached_map.get(q_id, {})
             for i in range(1, 6):
                 if i <= len(sources) and is_valid_response:
                     s = sources[i - 1]
@@ -387,12 +534,11 @@ if __name__ == "__main__":
                     source_cols[f"source{i}_rrf_score"] = round(float(s.get("rrf_score", 0)), 4)
                     source_cols[f"source{i}_text"] = str(s.get("text", ""))
                 else:
-                    source_cols[f"source{i}_id"] = row.get(f"source{i}_id", "")
-                    source_cols[f"source{i}_cosine_score"] = row.get(f"source{i}_cosine_score", "")
-                    source_cols[f"source{i}_recency_adjusted_cosine_score"] = row.get(
-                        f"source{i}_recency_adjusted_cosine_score", "")
-                    source_cols[f"source{i}_rrf_score"] = row.get(f"source{i}_rrf_score", "")
-                    source_cols[f"source{i}_text"] = row.get(f"source{i}_text", "")
+                    for suf in ("id", "cosine_score", "recency_adjusted_cosine_score",
+                                "rrf_score", "text"):
+                        v = prev_lufa.get(f"source{i}_{suf}", "")
+                        source_cols[f"source{i}_{suf}"] = "" if (
+                            v is None or (not isinstance(v, (list, dict)) and pd.isna(v))) else v
 
             out_row = {
                 "question_id": q_id,
@@ -404,30 +550,46 @@ if __name__ == "__main__":
                 "grounded": result.get("grounded", False),
                 **source_cols,
                 **extract_translation_columns(result),
+                **extract_system_metric_columns(
+                    result, "local",
+                    e2e_latency=result.get("end_to_end_latency_s", ""),
+                    warmup_applied=warmup_flag,
+                    sysm={k: result.get(k, "") for k in
+                          ("gpu_vram_mb", "gpu_vram_dedicated_mb", "gpu_vram_shared_mb",
+                           "system_ram_mb", "cpu_percent", "gpu_util_percent")}),
+                **{c: result.get(c, "") for c in CROSSLINGUAL_COLUMNS},
             }
+
+            # Never clobber a telemetry value measured by an earlier batch with a blank.
+            # The first pass reuses retrieval.py's cached top-K, so no retrieval happens
+            # here and retrieval_latency_s/warmup_applied come back empty — dropping the
+            # blank keys makes upsert_row preserve what batch 1 recorded.
+            for _tk in SYSTEM_METRIC_COLUMNS:
+                if str(out_row.get(_tk, "")).strip() == "":
+                    out_row.pop(_tk, None)
 
             # Update the existing row in place (or append if new) so grounded,
             # attempts, answer and all source{n}_* columns are refreshed per row.
             upsert_row(out_row, output_path, OUTPUT_COLUMNS, key_cols=("question_id",))
             print(f"   Answer length: {len(out_row['answer'])} chars | Grounded: {out_row['grounded']} — saved.")
-            try:
-                refresh_dashboard(lufa_csv=str(output_path))
-            except Exception as _de:
-                print(f"   [Dashboard] refresh skipped: {_de}")
+            if not args.no_dashboard:
+                try:
+                    refresh_dashboard(lufa_csv=str(output_path))
+                except Exception as _de:
+                    print(f"   [Dashboard] refresh skipped: {_de}")
         except Exception as e:
             print(f"   Error on {q_id}: {e}")
             traceback.print_exc()
+            # Record the failure WITHOUT destroying retrieval or telemetry already on
+            # this row: only the generation-owned fields are supplied to upsert_row.
             empty = {"question_id": q_id, "question": q_text, "answer": "ERROR",
                      "base_model_used": base_model, "language": row.get("language", "en"),
                      "attempts": 0, "grounded": False}
-            for i in range(1, 6):
-                empty[f"source{i}_id"] = ""
-                empty[f"source{i}_cosine_score"] = ""
-                empty[f"source{i}_recency_adjusted_cosine_score"] = ""
-                empty[f"source{i}_rrf_score"] = ""
-                empty[f"source{i}_text"] = ""
             upsert_row(empty, output_path, OUTPUT_COLUMNS, key_cols=("question_id",))
         time.sleep(0.5)
-    refresh_dashboard(lufa_csv=str(output_path))
-    print(f"   [Dashboard] refreshed.")
+    try:
+        refresh_dashboard(lufa_csv=str(output_path))
+        print(f"   [Dashboard] refreshed.")
+    except Exception as _de:
+        print(f"   [Dashboard] final refresh skipped: {_de}")
     print(f"\n[AnswerGenerator] Done. Results in {output_path}")

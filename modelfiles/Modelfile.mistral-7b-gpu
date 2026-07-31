@@ -1,0 +1,8 @@
+FROM mistral:7b
+
+# Mistral 7B has 32 transformer layers; 33 forces full GPU offload. Without this
+# Ollama under-commits and leaves ~17% of the model on the CPU.
+PARAMETER num_gpu 33
+
+# Cap the context window so the KV cache stays inside 6 GB of VRAM.
+PARAMETER num_ctx 8192

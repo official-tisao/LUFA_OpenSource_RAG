@@ -33,6 +33,94 @@ TRANSLATION_COLUMNS = [
     "translation_pipeline_language",
 ]
 
+# ── Chapter-4 instrumentation column groups (single source of truth) ──────────
+# SYSTEM_METRIC_COLUMNS are captured at SIMULATION time (they can only be
+# measured while the query actually runs). They live in lufa_out_data.csv and are
+# carried into evaluation_results.csv (exactly like TRANSLATION_COLUMNS). Every
+# value is BLANK when unavailable — old rows that predate instrumentation, and
+# GPU VRAM / RAM on cloud/api runs (Ch4 §4.6.4: hardware metrics apply only to
+# the local systems A/B/C). Appended at the very end so existing CSVs migrate
+# cleanly (new columns added empty, nothing shifts).
+#   retrieval_latency_s  — wall-clock of the first-pass hybrid retrieval (§4.6.4)
+#   ttft_s               — time-to-first-token of first-pass generation (§4.6.4)
+#   end_to_end_latency_s — total query wall-clock, submission→answer (§4.6.4)
+#   gpu_vram_mb          — PEAK GPU memory during the query (nvidia-smi), local only
+#   system_ram_mb        — peak process RSS (psutil), local only (§4.6.4)
+#   cpu_percent          — mean system CPU utilisation during the query, local only
+#   gpu_util_percent     — mean GPU utilisation during the query, local only
+#   warmup_applied       — 1 on the one warm-up (cold-start-discarded) question
+# cpu_percent / gpu_util_percent exist because Ollama silently splits a model across
+# CPU and GPU when it does not fit in VRAM; recording both makes the actual execution
+# device visible in the data rather than silently distorting the latency figures.
+#   gpu_vram_dedicated_mb / gpu_vram_shared_mb — Windows adapter-memory split. When a
+#     model exceeds the 6 GB card, WDDM spills into shared system memory (24 GB is
+#     dedicated to this here). nvidia-smi cannot see that spill, so it is recorded
+#     separately and its performance cost stays visible instead of hidden.
+#   context_window_used / prompt_tokens_est / predicted_output_tokens — the per-query
+#     context budget chosen at request time by src/llm_utils.compute_context_window.
+SYSTEM_METRIC_COLUMNS = [
+    "retrieval_latency_s",
+    "ttft_s",
+    "end_to_end_latency_s",
+    "gpu_vram_mb",
+    "gpu_vram_dedicated_mb",
+    "gpu_vram_shared_mb",
+    "system_ram_mb",
+    "cpu_percent",
+    "gpu_util_percent",
+    "context_window_used",
+    "prompt_tokens_est",
+    "predicted_output_tokens",
+    "warmup_applied",
+]
+
+# EVAL_ONLY_METRIC_COLUMNS are computed at EVALUATION time (they need the gold
+# labels), so they live only in evaluation_results.csv.
+#   precision_1/3/5           — P@k, P@3 is the primary retrieval metric (§4.6.1)
+#   citation_accuracy_regex   — deterministic article/clause match vs gold (§4.8.4)
+#   citation_accuracy_judge   — LLM-judge citation score, own prompt (§4.6.3)
+EVAL_ONLY_METRIC_COLUMNS = [
+    "precision_1",
+    "precision_3",
+    "precision_5",
+    "citation_accuracy_regex",
+    "citation_accuracy_judge",
+]
+
+# HUMAN_MANUAL_COLUMNS are filled in by the researcher (Ch4 §4.4.6 IAA + §4.8.3
+# human adjudication on the 30-output sample). They default BLANK so an unfilled
+# cell is never mistaken for a real score, and are always the LAST columns.
+#   in_human_sample         — mark the row as part of the stratified 30-output set
+#   human_annot{1,2}_citation  — each annotator's citation-accuracy score (1/0.5/0)
+#   human_annot{1,2}_relevance — each annotator's binary relevance judgment (for Kappa)
+#   human_citation_accuracy — adjudicated citation-accuracy score
+#   human_appropriateness   — adjudicated binary "fit for real use" score (§4.8.3)
+HUMAN_MANUAL_COLUMNS = [
+    "in_human_sample",
+    "human_annot1_citation",
+    "human_annot2_citation",
+    "human_annot1_relevance",
+    "human_annot2_relevance",
+    "human_citation_accuracy",
+    "human_appropriateness",
+]
+
+# Cross-lingual "no-translation" columns. In the no-translation pipeline the query is
+# NOT translated: retrieval runs on the raw foreign-language query (the real test of
+# cross-lingual retrieval) and the answer is generated in the QUESTION's language.
+# The benchmark's expected_answer / ground_source_truth are in English, though, so a
+# post-hoc translation of the answer is kept purely so the lexical metrics (Token-F1,
+# BLEU, ROUGE, METEOR) compare like with like. It is NOT part of the RAG pipeline and
+# is never shown to the judge — the judge sees the native-language answer.
+#   answer_metrics_translation — answer rendered in the ground-truth language
+#   metrics_language           — language of that rendering (e.g. 'en')
+#   pipeline_translation_mode  — 'none' (no-translation run) or 'bridge' (translate to EN)
+CROSSLINGUAL_COLUMNS = [
+    "answer_metrics_translation",
+    "metrics_language",
+    "pipeline_translation_mode",
+]
+
 OUTPUT_COLUMNS = [
     "question_id", "question",
     "source1_id", "source1_cosine_score", "source1_recency_adjusted_cosine_score", "source1_rrf_score", "source1_text",
@@ -41,7 +129,7 @@ OUTPUT_COLUMNS = [
     "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
     "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
     "answer", "base_model_used", "language", "attempts", "grounded",
-] + TRANSLATION_COLUMNS
+] + TRANSLATION_COLUMNS + SYSTEM_METRIC_COLUMNS + CROSSLINGUAL_COLUMNS
 
 
 def extract_translation_columns(result: dict) -> dict:
@@ -69,6 +157,36 @@ def extract_translation_columns(result: dict) -> dict:
         "translated_question": translated_q,
         "untranslated_answer": untranslated if untranslated is not None else "",
         "translation_pipeline_language": pipeline_lang,
+    }
+
+
+def extract_system_metric_columns(result: dict, mode: str,
+                                  e2e_latency="", warmup_applied="", sysm: dict = None) -> dict:
+    """
+    Assemble the 6 sim-time performance columns for a lufa_out row.
+
+    - retrieval_latency_s / ttft_s come from the engine result dict (blank when the
+      backend did not report them, e.g. `api` mode where retrieval runs server-side).
+    - end_to_end_latency_s is the caller-measured wall-clock for the whole query.
+    - gpu_vram_mb / system_ram_mb come from `sysm` (blank for cloud/api — see
+      system_metrics.sample_system_metrics, which blanks non-local modes).
+    - warmup_applied is 1 only on the single warm-up (cold-start-discarded) question.
+    """
+    sysm = sysm or {}
+    return {
+        "retrieval_latency_s": result.get("retrieval_latency_s", "") if result else "",
+        "ttft_s": result.get("ttft_s", "") if result else "",
+        "end_to_end_latency_s": e2e_latency,
+        "gpu_vram_mb": sysm.get("gpu_vram_mb", ""),
+        "gpu_vram_dedicated_mb": sysm.get("gpu_vram_dedicated_mb", ""),
+        "gpu_vram_shared_mb": sysm.get("gpu_vram_shared_mb", ""),
+        "system_ram_mb": sysm.get("system_ram_mb", ""),
+        "cpu_percent": sysm.get("cpu_percent", ""),
+        "gpu_util_percent": sysm.get("gpu_util_percent", ""),
+        "context_window_used": (result.get("context_window_used", "") if result else ""),
+        "prompt_tokens_est": (result.get("prompt_tokens_est", "") if result else ""),
+        "predicted_output_tokens": (result.get("predicted_output_tokens", "") if result else ""),
+        "warmup_applied": warmup_applied,
     }
 
 
@@ -107,37 +225,62 @@ def extract_sources(sources, max_sources=5):
     return row
 
 
-def query_single_record(record, mode, base_model, model_name, api_url, idx):
+def query_single_record(record, mode, base_model, model_name, api_url, idx, do_warmup=False):
     """
     Core atomic method to prompt the backend RAG layout for a single row.
     Provides deep verbose terminal feedback for interactive visibility.
+
+    When `do_warmup` is True (the very first question of a local batch), retrieval
+    is run once as a discarded warm-up before the timed pass, so cold-start cost
+    (index load, BM25 corpus build, first embedding) does not distort the recorded
+    retrieval latency (Ch4 §4.6.4 warm-up protocol).
     """
+    import time as _time
+    from system_metrics import sample_system_metrics
+
     q_text = str(record["question"])
     q_id = str(record["id"])
     print(f"   [Simulation Engine] Initializing query transaction for ID: {q_id}")
     print(f"   [Simulation Engine] Query String: \"{q_text[:65]}...\"")
     print(f"   [Simulation Engine] Mode: '{mode}' | Target Model: '{model_name}'")
 
+    warmup_flag = ""
+    e2e_latency = ""
+    sysm = {"gpu_vram_mb": "", "system_ram_mb": ""}
+
     try:
         if mode == "local":
             from rag_engine import create_rag_engine
             engine = create_rag_engine()
+            if do_warmup:
+                print("   [Warmup] Running first-question retrieval warm-up (timing discarded)...")
+                engine.warmup_retrieve(q_text)
+                warmup_flag = 1
+            _t0 = _time.perf_counter()
             result = engine.agentic_query(
                 query_text=q_text,
                 return_sources=True,
                 max_retries=3,
             )
+            e2e_latency = round(_time.perf_counter() - _t0, 4)
 
         elif mode == "local-naive":
             from rag_engine import create_rag_engine
             engine = create_rag_engine()
+            if do_warmup:
+                print("   [Warmup] Running first-question retrieval warm-up (timing discarded)...")
+                engine.warmup_retrieve(q_text)
+                warmup_flag = 1
+            _t0 = _time.perf_counter()
             result = engine.naive_query(
                 query_text=q_text,
                 return_sources=True
             )
+            e2e_latency = round(_time.perf_counter() - _t0, 4)
 
         elif mode == "api":
             import httpx
+            _t0 = _time.perf_counter()
             with httpx.Client(timeout=400.0) as client:
                 resp = client.post(
                     f"{api_url}/agentic-query",
@@ -145,6 +288,7 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
                 )
                 resp.raise_for_status()
                 result = resp.json()
+            e2e_latency = round(_time.perf_counter() - _t0, 4)
 
         elif mode == "frontier":
             from rag_engine import create_rag_engine
@@ -152,9 +296,17 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
             rag_engine = create_rag_engine()
             copilot = CopilotEngine(model=model_name)
 
+            if do_warmup:
+                print("   [Warmup] Running first-question retrieval warm-up (timing discarded)...")
+                rag_engine.warmup_retrieve(q_text)
+                warmup_flag = 1
+
+            _t0 = _time.perf_counter()
             lang = rag_engine.detect_query_language(q_text)
             nodes = rag_engine._retrieve_nodes(q_text, top_k=5)
+            frontier_retrieval_s = getattr(rag_engine, "_last_retrieval_seconds", "")
             answer = copilot.generate_from_nodes(q_text, nodes, lang)
+            e2e_latency = round(_time.perf_counter() - _t0, 4)
 
             sources_list = []
             for n in nodes:
@@ -180,7 +332,9 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
                 "rewritten_query": "",
                 "attempts": 1,
                 "grounded": True,
-                "sources": sources_list
+                "sources": sources_list,
+                "retrieval_latency_s": frontier_retrieval_s,
+                "ttft_s": "",
             }
 
         sources = result.get("sources", [])
@@ -197,6 +351,8 @@ def query_single_record(record, mode, base_model, model_name, api_url, idx):
         }
         row.update(sources_dict)
         row.update(extract_translation_columns(result))
+        sysm = sample_system_metrics(mode)
+        row.update(extract_system_metric_columns(result, mode, e2e_latency, warmup_flag, sysm))
 
         print(f"   [Simulation Engine] ✅ Success! Received Answer length: {len(row['answer'])} chars.")
         return row
@@ -224,6 +380,8 @@ def _empty_row(q_id, q_text, model, lang):
         row[f"source{i}_rrf_score"] = ""
         row[f"source{i}_text"] = ""
     for c in TRANSLATION_COLUMNS:
+        row[c] = ""
+    for c in SYSTEM_METRIC_COLUMNS:
         row[c] = ""
     return row
 
@@ -294,6 +452,11 @@ if __name__ == "__main__":
     print("STARTING UNIFIED SIMULATION PASS (REPAIRING ERRORS + ADDING NEW QUESTIONS)")
     print("=" * 80)
 
+    # Warm-up protocol (Ch4 §4.6.4): the FIRST question actually processed in this
+    # batch runs retrieval twice — once discarded (cold start), then the recorded
+    # pass. Every subsequent question is recorded on its single first run.
+    warmed_up = False
+
     for idx, record in df.iterrows():
         current_counter = idx + 1
         q_id = str(record["id"])
@@ -308,7 +471,10 @@ if __name__ == "__main__":
         else:
             print(f"\n[{current_counter}/{len(df)}] 🚀 Processing unvisited record -> Question ID: {q_id}")
 
-        row_res = query_single_record(record, args.mode, base_model, model_name, args.api_url, current_counter)
+        do_warmup = not warmed_up
+        row_res = query_single_record(record, args.mode, base_model, model_name, args.api_url,
+                                      current_counter, do_warmup=do_warmup)
+        warmed_up = True
 
         from csv_utils import align_and_append
         align_and_append(row_res, out_path, OUTPUT_COLUMNS)

@@ -114,7 +114,12 @@ class BilingualRAGEngine:
         # (OpenRouter / '/v1' / cloud hosts) use the LlamaIndex OpenAI wrapper;
         # local '/api' endpoints use Ollama. --openai_client forces the OpenAI path.
         from model_api_auth import get_llm_client
-        self.llm = get_llm_client(llm_model, force_openai=openai_client, request_timeout=240.0)
+        # Timeout comes from config so it can be raised for repair passes without a code
+        # edit (env override: LUFA_MODELS_LLM_REQUEST_TIMEOUT). A handful of very long
+        # generations exceeded the 240 s default and were recorded as ERROR rows.
+        _req_timeout = float(cfg("models.llm.request_timeout", 240.0) or 240.0)
+        self.llm = get_llm_client(llm_model, force_openai=openai_client,
+                                  request_timeout=_req_timeout)
 
         print(f"Initializing embedding model: {embedding_model}")
         self.embed_model = get_ollama_client(embedding_model, is_embedding=True)
@@ -191,7 +196,27 @@ class BilingualRAGEngine:
     def chat(self, query_text: str) -> str:
         return self.query(query_text, return_sources=False)['response']
 
+    def warmup_retrieve(self, query: str, top_k: int = None) -> None:
+        """Run one throwaway retrieval to absorb cold-start cost (index load, BM25
+        corpus build, first embedding). Timing is intentionally discarded — used on
+        the first question of a batch (Ch4 §4.6.4 warm-up protocol)."""
+        try:
+            self._retrieve_nodes(query, top_k=top_k or self.similarity_top_k)
+        except Exception as e:
+            print(f"[Warmup] retrieval warm-up skipped: {e}")
+
     def _retrieve_nodes(self, query: str, top_k: int = 5) -> list:
+        """Timing wrapper around the hybrid retriever. Records the wall-clock of the
+        retrieval into `self._last_retrieval_seconds` (Ch4 §4.6.4 retrieval latency)
+        via time.perf_counter, then delegates to `_retrieve_nodes_impl`."""
+        import time as _t
+        _start = _t.perf_counter()
+        try:
+            return self._retrieve_nodes_impl(query, top_k=top_k)
+        finally:
+            self._last_retrieval_seconds = round(_t.perf_counter() - _start, 4)
+
+    def _retrieve_nodes_impl(self, query: str, top_k: int = 5) -> list:
         """
         Executes advanced hybrid retrieval. Sorts dense vector nodes by recency weights
         during similarity ties, then merges them with sparse BM25 tokens via RRF.
@@ -277,7 +302,19 @@ class BilingualRAGEngine:
 
         context     = "\n\n---\n\n".join([n.node.text for n in nodes])
         system      = self.query_handler.get_system_prompt(lang)
-        instruction = "Réponds en français." if lang == "fr" else "Respond in English."
+        # Answer in the QUESTION's language. EN/FR keep their native instructions; any
+        # other language (e.g. German in the no-translation cross-lingual run) gets an
+        # explicit instruction naming that language, so the model does not silently
+        # default to English while the retrieved context is EN/FR.
+        if lang == "fr":
+            instruction = "Réponds en français."
+        elif lang == "en":
+            instruction = "Respond in English."
+        else:
+            lang_name = LANGUAGE_NAMES.get(lang, lang.upper())
+            instruction = (f"Respond in {lang_name}. The context below may be in English or "
+                           f"French; translate the relevant provisions into {lang_name} in your "
+                           f"answer, but keep article and clause numbers exactly as written.")
 
         prompt = f"""{system}
 {instruction}
@@ -288,8 +325,10 @@ Context:
 
 Question: {original_query}
 Answer:"""
-        from llm_utils import stream_complete
-        return stream_complete(self.llm, prompt)
+        from llm_utils import stream_complete_timed
+        text, ttft = stream_complete_timed(self.llm, prompt)
+        self._last_ttft_seconds = ttft
+        return text
 
     def agentic_query(
         self,
@@ -320,6 +359,9 @@ Answer:"""
         nodes            = []
         answer           = ""
         is_grounded      = False
+        # Ch4 §4.6.4 timing: record the FIRST-pass retrieval latency + TTFT only.
+        first_retrieval_s = ""
+        first_ttft_s      = ""
 
         for attempt in range(1, max_retries + 1):
             print(f"[AgenticRAG] Attempt {attempt}/{max_retries}")
@@ -330,9 +372,13 @@ Answer:"""
 
             top_k = self.similarity_top_k + (attempt-1)
             nodes = self._retrieve_nodes(rewritten_query, top_k=top_k)
+            if attempt == 1:
+                first_retrieval_s = getattr(self, "_last_retrieval_seconds", "")
             print(f"[AgenticRAG] Retrieved {len(nodes)} chunks (top_k={top_k})")
 
             answer = self._generate_from_nodes(processing_query, nodes, pipeline_lang)
+            if attempt == 1:
+                first_ttft_s = getattr(self, "_last_ttft_seconds", "")
 
             chunk_texts = [n.node.text for n in nodes]
             is_grounded = reflect(answer, chunk_texts, self.llm)
@@ -360,6 +406,8 @@ Answer:"""
             'attempts':            attempt,
             'grounded':            is_grounded,
             'translation_applied': translation_applied,
+            'retrieval_latency_s': first_retrieval_s,
+            'ttft_s':              first_ttft_s,
         }
 
         if return_sources:
@@ -410,9 +458,11 @@ Answer:"""
         #for attempt in range(1, max_retries + 1):
         top_k = self.similarity_top_k
         nodes = self._retrieve_nodes(processing_query, top_k=top_k)
+        first_retrieval_s = getattr(self, "_last_retrieval_seconds", "")
         print(f"[NaiveRAG] Retrieved {len(nodes)} chunks (top_k={top_k})")
 
         answer = self._generate_from_nodes(processing_query, nodes, pipeline_lang)
+        first_ttft_s = getattr(self, "_last_ttft_seconds", "")
 
             # chunk_texts = [n.node.text for n in nodes]
             # is_grounded = reflect(answer, chunk_texts, self.llm)
@@ -440,6 +490,8 @@ Answer:"""
             'attempts':            1,
             'grounded':            is_grounded,
             'translation_applied': translation_applied,
+            'retrieval_latency_s': first_retrieval_s,
+            'ttft_s':              first_ttft_s,
         }
 
         if return_sources:
