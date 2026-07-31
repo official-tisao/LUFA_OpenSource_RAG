@@ -14,8 +14,40 @@ A production-grade **Bilingual (English/French) Agentic RAG System** for queryin
 - [Running the System](#running-the-system)
 - [API Reference](#api-reference)
 - [Evaluation & Testing](#evaluation--testing)
+- [**Performance & Measurement Gotchas**](#-performance--measurement-gotchas-read-before-benchmarking)
 - [Contributing](#contributing)
 - [License](#license)
+
+---
+
+## ⚠️ Performance & Measurement Gotchas (read before benchmarking)
+
+Several non-obvious behaviours will silently corrupt benchmark results. Full detail,
+with measurements and fixes, is in **[docs/ENGINEERING_FINDINGS.md](docs/ENGINEERING_FINDINGS.md)**.
+The short version:
+
+1. **Ollama may run your model on the CPU without telling you.** Llama 3.x advertises a
+   131 072-token context and LlamaIndex requests the model maximum by default, producing an
+   ~18 GB KV cache that cannot fit a 6 GB card — so Ollama offloads most layers to the CPU.
+   Measured **77%/23% CPU/GPU** and an **~8× slowdown** (82.3 s → ~10 s per query once fixed).
+   Always check:
+   ```sh
+   ollama ps        # look at the PROCESSOR column
+   ```
+   Fix: pin `models.llm.context_window` in `config/config.yaml` **and** use the GPU
+   Modelfiles in `modelfiles/` (`num_gpu` above the layer count + `num_ctx`). Layer counts:
+   Llama 3.2 3B = 28, Llama 3.1 8B = 32, Mistral 7B = 32.
+2. **`num_gpu` alone is not enough, and neither is `num_ctx` alone** — you need both.
+   `mistral:7b` sat at 17%/83% CPU/GPU purely for want of an explicit `num_gpu`.
+3. **Ollama's reported model SIZE overstates real VRAM.** Trust `nvidia-smi`.
+4. **Per-process GPU metrics are unavailable** on consumer GTX cards under Windows WDDM
+   (`[Insufficient Permissions]`, `pmon` unsupported). GPU figures are card-wide; CPU/RAM
+   can be scoped to Ollama — and the inference process is `llama-server.exe`, not `ollama.exe`.
+5. **Shared ("secondary") VRAM is invisible to `nvidia-smi`** — read it from the Windows
+   `\GPU Adapter Memory(*)\Shared Usage` counter.
+6. **Warm up before timing.** Cold retrieval is 7.92 s vs 2.74 s warm (2.9×).
+7. **Each query's KV cache is already isolated** (the client sends no conversation state) —
+   never unload the model to "clear" it.
 
 ---
 

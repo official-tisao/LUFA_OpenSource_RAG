@@ -221,3 +221,64 @@ db/
 
 # User configuration
 config.py
+/logs/naive_input_llama-3.1-8b.csv
+/logs/naive_input_llama-3.2-3b.csv
+/logs/naive_input_mistral-7b.csv
+/logs/naive_missing_llama-3.1-8b.txt
+/logs/naive_missing_llama-3.2-3b.txt
+/logs/naive_missing_mistral-7b.txt
+/logs/repair_input_llama31.csv
+/logs/run_cloud_judge.sh
+/logs/run_judge_phase.sh
+/logs/run_naive_phase.sh
+/logs/thesis_stats.json
+/thesis/figures/fig3_1_architecture.pdf
+/thesis/figures/fig3_1_architecture.png
+/thesis/figures/fig3_2_query_flow.pdf
+/thesis/figures/fig3_2_query_flow.png
+/thesis/figures/fig5_1_answer_quality.pdf
+/thesis/figures/fig5_1_answer_quality.png
+/thesis/figures/fig5_2_retrieval.pdf
+/thesis/figures/fig5_2_retrieval.png
+/thesis/figures/fig5_3_agentic_vs_naive.pdf
+/thesis/figures/fig5_3_agentic_vs_naive.png
+/thesis/figures/fig5_4_language.pdf
+/thesis/figures/fig5_4_language.png
+/thesis/figures/fig5_5_crosslingual.pdf
+/thesis/figures/fig5_5_crosslingual.png
+/thesis/chapter1(3).pdf
+/thesis/chapter2(3).pdf
+/thesis/Chapter3(4).pdf
+/thesis/chapter4(2).pdf
+/thesis/chapter5(1).pdf
+/thesis/Chapter6_Discussion.md
+/thesis/References.pdf
+/thesis/sample_THESIS_CORRECTIONS.md
+/backfill_backup/20260725_201131/cross-lingual-german/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/combined_test_data.csv
+/backfill_backup/20260725_201131/cross-lingual-german/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/combined_test_data_and_ground_truth.csv
+/backfill_backup/20260725_201131/cross-lingual-german/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv
+/backfill_backup/20260725_201131/cross-lingual-german/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/evaluation_results - Copy.csv
+/backfill_backup/20260725_201131/cross-lingual-german/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/index.html
+/backfill_backup/20260725_201131/cross-lingual-german/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/lufa_out_data.csv
+/backfill_backup/20260725_201131/cross-lingual-german/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/lufa_out_data - Copy.csv
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/combined_test_data.csv
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/combined_test_data_and_ground_truth.csv
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv.metricsbak
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv.syncbak
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/index.html
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/lufa_out_data.csv
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/lufa_out_data.csv.syncbak
+/backfill_backup/20260725_201131/llama-3.1-8b/Judge-Prometheus-8x7b-v2.0/lufa_out_data - Copy.csv
+/backfill_backup/20260725_201131/llama-3.2-3b/Judge-Prometheus-8x7b-v2.0/combined_test_data.csv
+/backfill_backup/20260725_201131/llama-3.2-3b/Judge-Prometheus-8x7b-v2.0/combined_test_data_and_ground_truth.csv
+/backfill_backup/20260725_201131/llama-3.2-3b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv
+/backfill_backup/20260725_201131/llama-3.2-3b/Judge-Prometheus-8x7b-v2.0/evaluation_results - Copy.csv
+/backfill_backup/20260725_201131/llama-3.2-3b/Judge-Prometheus-8x7b-v2.0/index.html
+/backfill_backup/20260725_201131/llama-3.2-3b/Judge-Prometheus-8x7b-v2.0/lufa_out_data.csv
+/backfill_backup/20260725_201131/llama-3.2-3b/Judge-Prometheus-8x7b-v2.0/lufa_out_data - Copy.csv
+/backfill_backup/20260725_201131/mistral-7b/Judge-Prometheus-8x7b-v2.0/combined_test_data_and_ground_truth.csv
+/backfill_backup/20260725_201131/mistral-7b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv
+/backfill_backup/20260725_201131/mistral-7b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv.metricsbak
+/backfill_backup/20260725_201131/mistral-7b/Judge-Prometheus-8x7b-v2.0/index.html
+/backfill_backup/20260725_201131/mistral-7b/Judge-Prometheus-8x7b-v2.0/lufa_out_data.csv
