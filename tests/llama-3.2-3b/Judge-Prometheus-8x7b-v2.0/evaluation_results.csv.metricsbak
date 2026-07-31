@@ -40,7 +40,7 @@ of the Department/School.
 118 of 243
 <<>>
 Collective Agreement 2011-14
-7.20.3 Any absence from campus affecti",0.0943,0.0063,0.0641,0.013,0.0385,0.1087,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.9348,5.4064,11.0372,4298.0,4305.1,1073.3,1890.8,6.3,52.2,12288.0,896.0,768.0,1.0,,,bridge,0.0,0.0,0.2,0.0,,,,,,,,
+7.20.3 Any absence from campus affecti",0.0943,0.0063,0.0641,0.013,0.0385,0.1087,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.9348,5.4064,11.0372,4298.0,4305.1,1073.3,1890.8,6.3,52.2,12288.0,896.0,768.0,1.0,,,bridge,0.0,0.0,0.2,1.0,,,,,,,,
 test_en_002,test_en_002,"What does the collective agreement provide regarding pregnancy, parental and adoption?","The Collective Agreement 2017-2020 provides the following information regarding pregnancy, parental, and adoption leaves:
 
 1. For pregnant full-time Members or pregnant Master Lecturer Members, they are entitled to 17 weeks of pregnancy leave (Article 7.60.1(a)).
@@ -229,7 +229,7 @@ test_en_018,test_en_018,What are the rules concerning resignation?,"The Collecti
 * Article 10.15.24 states that a Member accepting a permanent position at Laurentian University will no longer receive severance pay.
 * There is also a provision in Article 3.2 regarding leave and termination of appointments, which may be relevant to resignation.
 
-To provide more specific information, I would need to know the exact context or article where you would like me to search for the rules concerning resignation.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Termination,easy,3,False,3819b4da-d98a-46b3-afab-1056ff0d26ba,0.4325,0.4217,0.0164,"ARTICLE 11.10 – GRIEVANCE PROCEDURE
+To provide more specific information, I would need to know the exact context or article where you would like me to search for the rules concerning resignation.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Termination,easy,3,True,3819b4da-d98a-46b3-afab-1056ff0d26ba,0.4325,0.4217,0.0164,"ARTICLE 11.10 – GRIEVANCE PROCEDURE
 11.10.1 There shall be no discrimination, harassment or coercion, of any kind, practised
 against any persons involved in these procedures.
 11.10.2 The Union and the Employer agree to make every reasonable effort to settle
@@ -396,7 +396,7 @@ c) Consider strategies for marketing inventions, improvements or discoveries.
 d) Recommend to the Committee Chair any proposals for modifications or changes in
 the patents and copyright articles of this Collective Agreement.
 LUFA-H Collective Agreement 2016-2020 61
-<<>>",0.1964,0.0088,0.1818,0.0204,0.1111,0.2021,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,2.4066,4.0134,53.265,4345.0,4350.6,1081.7,8729.1,7.9,94.2,12288.0,836.0,768.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
+<<>>",0.1964,0.0088,0.1818,0.0204,0.1111,0.2021,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,2.4066,4.0134,53.265,4345.0,4350.6,1081.7,8729.1,7.9,94.2,12288.0,836.0,768.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
 test_en_024,test_en_024,"What does the agreement say about rights, responsibilities and?","Based on the context provided, I will answer your question according to Article 3.10 of the Collective Agreement:
 
 Article 3.10 – Academic Freedom states that Members have the right to academic freedom, which includes:
@@ -412,7 +412,7 @@ In addition, Academic Freedom entails:
 * The fulfillment of responsibilities to other members of the teaching and learning community
 * The acknowledgement of the work of others and the acceptance of responsibility for one's own beliefs and utterances.
 
-It also states that Academic Freedom does not confer legal immunity.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,False,d55567e9-7145-4527-8933-c352f4183d9e,0.4244,0.4138,0.0164,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
+It also states that Academic Freedom does not confer legal immunity.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,True,d55567e9-7145-4527-8933-c352f4183d9e,0.4244,0.4138,0.0164,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
 Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illness for
 Sessional Members, Article 4.50—Family Responsibility for Sessional Members, Article 4.65- Exemption for
 101
@@ -864,7 +864,7 @@ July 1,
 July 1,
 2012 $6,112 $244 $244 $6,600
 July 1,
-2013 $6,235 $249 $249 $6,733",0.1846,0.0117,0.1852,0.0377,0.1296,0.1993,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,2.515,7.4153,54.7332,3709.0,3713.4,607.2,9001.1,7.9,95.6,12288.0,901.0,768.0,,,,bridge,1.0,0.3333,0.2,0.0,,,,,,,,
+2013 $6,235 $249 $249 $6,733",0.1846,0.0117,0.1852,0.0377,0.1296,0.1993,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,2.515,7.4153,54.7332,3709.0,3713.4,607.2,9001.1,7.9,95.6,12288.0,901.0,768.0,,,,bridge,1.0,0.3333,0.2,1.0,,,,,,,,
 test_en_047,test_en_047,What are the rules concerning moving expenses?,"The rules concerning moving expenses under the 2014-2017 Thorneloe-LUFA Collective Agreement (ARTICLE 6.50) and other subsequent collective agreements are as follows:
 
 * All claims for moving expenses must be substantiated by official receipts or reasonable facsimiles.
@@ -1428,7 +1428,7 @@ test_en_069,test_en_069,What are the rules concerning copyright?,"According to A
 * The University shall provide a copy of the work at no cost or reasonable administrative costs if requested by the member.
 * If the University wishes to erase or destroy part or all of a work, the authors shall be given notice and have one month to make known their wish to receive a copy of the section(s) to be erased.
 
-Additionally, the Collective Agreement provides for the creation of a Committee on Patents and Copyright, which shall meet at least twice annually to conduct business, consider strategies for marketing inventions, improvements or discoveries, and recommend proposals for modifications or changes in the patents and copyright articles.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Intellectual Property,medium,3,False,9fcb8eac-84ce-4eff-bc5b-9da940fef7af,0.4213,0.3581,0.0312,"Third Party use:
+Additionally, the Collective Agreement provides for the creation of a Committee on Patents and Copyright, which shall meet at least twice annually to conduct business, consider strategies for marketing inventions, improvements or discoveries, and recommend proposals for modifications or changes in the patents and copyright articles.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Intellectual Property,medium,3,True,9fcb8eac-84ce-4eff-bc5b-9da940fef7af,0.4213,0.3581,0.0312,"Third Party use:
 6.35.14 ""Net proceeds"" of any fees or royalties that the University receives for the use by another
 Party of a work to which the University has copyright under the terms of this Article shall be distributed in accordance with
 Article
@@ -1535,7 +1535,7 @@ any paid activity before making any such commitment.
 <<>>
 ARTICLE 7.35 – VOLUNTARY REDUCED WORKLOAD
 7.35.1 The Employer and the Union endorse the principle of voluntary reduced workload as being mutually
-beneficial to the Members ",0.1197,0.01,0.1356,0.0343,0.0904,0.1559,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,3.3592,5.7681,49.873,4434.0,4439.7,1041.1,9350.7,7.8,94.5,12288.0,904.0,768.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
+beneficial to the Members ",0.1197,0.01,0.1356,0.0343,0.0904,0.1559,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,3.3592,5.7681,49.873,4434.0,4439.7,1041.1,9350.7,7.8,94.5,12288.0,904.0,768.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
 test_en_079,test_en_079,"According to the agreement, what applies to promotion procedures?","According to the Laurentian University Faculty Association collective agreement, promotion procedures are as follows:
 
 * A Member is eligible to apply for promotion while on leave (Article 16.02).
@@ -1731,7 +1731,7 @@ and shall ",2fe65dda-2600-4b6c-a531-f3b262532623,0.4848,0.3394,0.0302,"The work 
 manner to give better access to funding and research collaboration at the national and international level, while promoting
 research activities and creativity at Laurentian University.
 6.15.2 For internally or externally-funded grant applications requesting a pre-selection or an evaluation, the
-Employer shall communicate the composition of the selection committee on the RCD Office website. The participation of Faculty Members in the sele",0.3511,0.1063,0.2952,0.2115,0.2476,0.6024,1.0,1.0,1.0,1.0,1.0,1.0,0.4,0.8,,,,,2.7429,5.0039,300.2524,4469.0,4474.2,1118.9,9362.1,8.1,95.3,12288.0,7152.0,2503.0,,,,bridge,1.0,0.3333,0.2,1.0,,,,,,,,
+Employer shall communicate the composition of the selection committee on the RCD Office website. The participation of Faculty Members in the sele",0.3511,0.1063,0.2952,0.2115,0.2476,0.6024,1.0,1.0,1.0,1.0,1.0,1.0,0.4,0.8,,,,,2.7429,5.0039,300.2524,4469.0,4474.2,1118.9,9362.1,8.1,95.3,12288.0,7152.0,2503.0,,,,bridge,1.0,0.3333,0.2,0.5,,,,,,,,
 test_en_087,test_en_087,What conditions apply to personnel files?,"According to Article 5.70 - PERSONNEL FILES in the Collective Agreement 2008-11:
 
 1. Official personnel files shall be kept by the appropriate Dean/University Librarian, with a copy in the office of the Vice-President, Academic and Provost.
@@ -1754,7 +1754,7 @@ test_en_087,test_en_087,What conditions apply to personnel files?,"According to 
 6. Members have the right to have all of their files supplemented or corrected in the event of error, or inadequacy.
    * In the event of alleged distortion, Members shall have the right to provide additional material for inclusion in their personnel files.
 
-7. If the Member dies after commencing to receive pension benefits, the form of pension that was selected by the Member will determine if further benefits are payable to the Beneficiary (Article 8.85 - SALARY TO BENEFICIARY IN THE EVENT OF DEATH OF FACULTY MEMBER).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,hard,3,False,8d1d21eb-fb69-45a7-b991-20290cd53291,0.4549,0.4435,0.0313,"The Employer agrees not to use any unofficial personnel information that is not
+7. If the Member dies after commencing to receive pension benefits, the form of pension that was selected by the Member will determine if further benefits are payable to the Beneficiary (Article 8.85 - SALARY TO BENEFICIARY IN THE EVENT OF DEATH OF FACULTY MEMBER).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,hard,3,True,8d1d21eb-fb69-45a7-b991-20290cd53291,0.4549,0.4435,0.0313,"The Employer agrees not to use any unofficial personnel information that is not
 maintained in accordance with this Article for any official purposes including disciplinary measures. There
 shall be two (2) types of files for Members, active files and archival files. Active files shall contain only
 information allowed under this Article. Archival files shall contain material which has been banned for use
@@ -1866,7 +1866,7 @@ Additionally, according to Article 11.10.13, members who are on a three (3) year
 
 For tenured members who accept a transfer to another academic area in whole or in part, Article 11.10.14 states that they shall retain their rank as well as all pre-existing employment rights, and if such a transfer requires retraining, they shall be granted leave to a maximum of one (1) year at one hundred percent (100%) salary plus benefits.
 
-Lastly, for tenured members who accept a transfer to an administrative position in accordance with Article 11.10.11 (c), they cease to be Members of the Bargaining Unit on the date that the transfer becomes effective.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Academic Freedom,medium,3,False,241e86eb-ff3a-4410-ac8d-a3c7141d4b2a,0.4558,0.3191,0.0293,"If the offer is to transfer one
+Lastly, for tenured members who accept a transfer to an administrative position in accordance with Article 11.10.11 (c), they cease to be Members of the Bargaining Unit on the date that the transfer becomes effective.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Academic Freedom,medium,3,True,241e86eb-ff3a-4410-ac8d-a3c7141d4b2a,0.4558,0.3191,0.0293,"If the offer is to transfer one
 (1) component of the Member's workload (this component restricted to either teaching or research) to another academic
 area, such offer shall include a statement of the duties of that Member and a method of weighing the Member's evaluation
 for merit based on these special arrangements. If the Employer cannot offer at least one (1) of paragraphs 10.10.11 (b) or (c) above, it shall offer to keep the Members in
@@ -1915,7 +1915,7 @@ test_en_095,test_en_095,What conditions apply to joint consultative committee fo
 
 ""The Committee shall meet once in November and once in February and at other times when deemed useful or necessary by mutual agreement of the Parties.""
 
-Additionally, it also states that a quorum consists of at least two (2) representatives of each Party (Section 2.60.8).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Governance,hard,3,False,a2321d2b-12da-4fef-850d-029aaaf061d6,0.3636,0.2272,0.0276,"The Parties may from time to time authorise other representatives, in addition to the
+Additionally, it also states that a quorum consists of at least two (2) representatives of each Party (Section 2.60.8).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Governance,hard,3,True,a2321d2b-12da-4fef-850d-029aaaf061d6,0.3636,0.2272,0.0276,"The Parties may from time to time authorise other representatives, in addition to the
 Vice-President, Academic and the President of the Union, to sign these Memoranda of Agreement.
 2.60.4 The Parties agree to form a Joint Consultative
 Committee for the Administration of the Collective
@@ -1941,7 +1941,7 @@ Labour Relations Act, 1995, except where otherwise expressly provided in this Co
 Agreement, notices required to be given under the provisions of this Collective Agreement shall be in writing and shall be
 sufficient either if addressed to the appropriate recipient and sent by campus mail or Canada Post, or if delivered to the
 appropriate recipient personally with a signed receipt required.
-2.55.2 Notices to",0.2703,0.0339,0.3393,0.1091,0.2143,0.2989,1.0,1.0,1.0,1.0,1.0,1.0,0.6,0.8,,,,,3.1565,3.0369,181.958,4471.0,4476.4,1014.4,9403.9,8.0,93.9,12288.0,5454.0,1909.0,,,,bridge,1.0,0.3333,0.2,1.0,,,,,,,,
+2.55.2 Notices to",0.2703,0.0339,0.3393,0.1091,0.2143,0.2989,1.0,1.0,1.0,1.0,1.0,1.0,0.6,0.8,,,,,3.1565,3.0369,181.958,4471.0,4476.4,1014.4,9403.9,8.0,93.9,12288.0,5454.0,1909.0,,,,bridge,1.0,0.3333,0.2,0.5,,,,,,,,
 test_en_096,test_en_096,What are the rules concerning vacation?,"According to the Collective Agreement, there are two main rules concerning vacation:
 
 1. Members are required to take their vacation entitlement, and it cannot be accumulated from year to year (17.03).
@@ -2014,7 +2014,7 @@ of the University. The office floor area shall be no less than the current space
 July 1st, 2017). The Employer agrees to provide the Union with access to the University Club for use by Members and
 their guests. The Employer agrees to provide to the Union a common room for use by Members and their guests,
 spe",0.2342,0.01,0.1739,0.039,0.1256,0.2763,0.3333,0.5,0.0,1.0,1.0,1.0,1.0,0.8,,,,,3.2983,3.2079,31.6274,4471.0,4476.5,1002.8,9337.3,7.7,91.0,12288.0,900.0,768.0,,,,bridge,0.0,0.3333,0.2,1.0,,,,,,,,
-test_en_101,test_en_101,"According to the agreement, what applies to academic freedom, shall not impose specific?","According to the agreement, what applies to academic freedom shall not impose specific ""doctrine"" (Article 3.10.2).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Academic Freedom,medium,3,False,aac5ed3c-011d-4c64-839f-48bab0f03320,0.4419,0.2099,0.0299,"Academic freedom is the right to search for truth,
+test_en_101,test_en_101,"According to the agreement, what applies to academic freedom, shall not impose specific?","According to the agreement, what applies to academic freedom shall not impose specific ""doctrine"" (Article 3.10.2).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Academic Freedom,medium,3,True,aac5ed3c-011d-4c64-839f-48bab0f03320,0.4419,0.2099,0.0299,"Academic freedom is the right to search for truth,
 knowledge and understanding and to express freely what one believes. The
 University as an institution and the community of its scholars have a duty to
 protect and defend the search for knowledge and truth by all that enquire,
@@ -2138,7 +2138,7 @@ test_en_107,test_en_107,What is stated about workplace environment?,"According t
 
 Additionally, Article 3.20.2 states that the Employer shall establish a budget of $40,000 per year during the life of this Collective Agreement for the provision of such furniture, work stations and equipment according to the recommendations of the Working Space Committee.
 
-Furthermore, Article 3.20.2 mentions that all Members, including retirees, upon request, will be supplied with a photo identification card at no cost to them except if they require a replacement for a lost card.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Teaching,medium,3,False,ee3e3c1d-0aab-4eaf-a2ee-e1fb9a6f80b1,0.4083,0.3471,0.0304,"THE WORKER MUST:
+Furthermore, Article 3.20.2 mentions that all Members, including retirees, upon request, will be supplied with a photo identification card at no cost to them except if they require a replacement for a lost card.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Teaching,medium,3,True,ee3e3c1d-0aab-4eaf-a2ee-e1fb9a6f80b1,0.4083,0.3471,0.0304,"THE WORKER MUST:
 + work in compliance of the Act and regulations;
 + report any hazards or contravention of this Act to the supervisor,
 * wear any equipment, protective devices, or clothing that the employer
@@ -2239,7 +2239,7 @@ test_en_114,test_en_114,What is stated about selection of chairs/directors?,"Bas
 2. If at least two Members object to the abbreviated selection process, the Committee must follow the full procedure.
 3. The term of office for Chairs/Directors is normally three years, renewable by Department/School selection per Article 9.15 – Selection of Chairs/Directors (Article 9.20.1).
 4. If a Chair/Director cannot carry out their duties for four months or less, they must make provision for the takeover of their duties in consultation with the Department/School and Dean/University Librarian (Article 9.20.2).
-5. If an absence exceeds four months, the Chair/Director shall relinquish their title, and a new Chair/Director shall be selected according to the procedures set out in Article 9.15 – Selection of Chairs/Directors (Article 9.20.3).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,easy,3,False,4dc8114f-cd0f-4492-880c-3c3d323cb405,0.5091,0.4964,0.0313,"Any outside appointment shall be
+5. If an absence exceeds four months, the Chair/Director shall relinquish their title, and a new Chair/Director shall be selected according to the procedures set out in Article 9.15 – Selection of Chairs/Directors (Article 9.20.3).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,easy,3,True,4dc8114f-cd0f-4492-880c-3c3d323cb405,0.5091,0.4964,0.0313,"Any outside appointment shall be
 made in accordance with Article 5.20 – Appointment and Renewal.
 9.15.13 In exceptional circumstances the Vice-President, Academic and Provost and the Dean/University Librarian,
 after consultation with a Department/School, may appoint an acting Chair/Director for a period of up to four
@@ -2380,7 +2380,7 @@ test_en_121,test_en_121,"According to the agreement, what applies to grievance p
 Additionally, the agreement states that:
 
 * The parties must make every reasonable effort to settle all grievances in a just, prompt, and equitable manner according to the procedure outlined.
-* Any Member who fails to reply within thirty working days or refuses a permanent position offered under this Article shall lose all rights of recall.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Grievance,easy,3,False,b94ea71b-a27b-4c10-9bde-c179667f4b1e,0.5302,0.3711,0.0299,"However, this does not preclude making the Vice-President, Academic and Provost aware of such a grievance,
+* Any Member who fails to reply within thirty working days or refuses a permanent position offered under this Article shall lose all rights of recall.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Grievance,easy,3,True,b94ea71b-a27b-4c10-9bde-c179667f4b1e,0.5302,0.3711,0.0299,"However, this does not preclude making the Vice-President, Academic and Provost aware of such a grievance,
 nor does it preclude a grievance
 191 of 243
 <<>>
@@ -2508,7 +2508,7 @@ Members can also request one copy of their personnel file (excluding confidentia
 
 There shall be no anonymous material concerning any Member kept by the Employer for inclusion in the Member's personnel file. Statistical summaries of student evaluations or written summaries of student comments unrelated to Senate-sanctioned course evaluations are not considered confidential and will remain available.
 
-Members have the right to have their files supplemented or corrected if there is an error or inadequacy, and can request the removal of false, irrelevant, or unsubstantiated material.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Union Recognition,medium,3,False,8d1d21eb-fb69-45a7-b991-20290cd53291,0.4296,0.4188,0.0311,"The Employer agrees not to use any unofficial personnel information that is not
+Members have the right to have their files supplemented or corrected if there is an error or inadequacy, and can request the removal of false, irrelevant, or unsubstantiated material.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Union Recognition,medium,3,True,8d1d21eb-fb69-45a7-b991-20290cd53291,0.4296,0.4188,0.0311,"The Employer agrees not to use any unofficial personnel information that is not
 maintained in accordance with this Article for any official purposes including disciplinary measures. There
 shall be two (2) types of files for Members, active files and archival files. Active files shall contain only
 information allowed under this Article. Archival files shall contain material which has been banned for use
@@ -3037,7 +3037,7 @@ test_en_153,test_en_153,How is purpose of the collective addressed in the collec
 
 ""It is the purpose of this Collective Agreement to set forth the terms and conditions of employment and other specific contractual provisions, to promote and maintain harmonious relationships between the Parties, to facilitate the Parties in working together to encourage the development of research and teaching necessary for the provision of high quality education to students, and to provide a means for settling such disputes as may arise from time to time.""
 
-( Article 1 – PURPOSE AND DEFINITIONS, Section 1.01)",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,3,False,59f3b2ef-4618-47cf-b8da-8868a244b760,0.4198,0.3358,0.0298,"ARTICLE 1 – PURPOSE AND DEFINITIONS
+( Article 1 – PURPOSE AND DEFINITIONS, Section 1.01)",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,3,True,59f3b2ef-4618-47cf-b8da-8868a244b760,0.4198,0.3358,0.0298,"ARTICLE 1 – PURPOSE AND DEFINITIONS
 1.01 It is the purpose of this Collective Agreement to set forth the terms and conditions of employment and other specific
 contractual provisions, to promote and maintain harmonious relationships between the Parties, to facilitate the Parties in
 working together to encourage the development of research and teaching necessary for the provision of high quality
@@ -3249,7 +3249,7 @@ It's also mentioned that:
 
 * A sabbatical leave includes the accumulation of vacation entitlement proportional to the length of the leave (Section 12.12).
 * Members on sabbatical leave continue to be covered by the University's group benefit plans, with the Employer continuing normal contributions toward premium costs (Section 12.13).
-* The Employer and member shall maintain normal percentage contributions toward the member's pension plans based on regular salary (Section 12.14).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,hard,3,False,ae9c1c14-2232-47c4-8646-7a83264fbcd5,0.483,0.4105,0.0164,"22.09 Compensation for sabbatical leaves coincides with the Collective Agreement in place. Salary,
+* The Employer and member shall maintain normal percentage contributions toward the member's pension plans based on regular salary (Section 12.14).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,hard,3,True,ae9c1c14-2232-47c4-8646-7a83264fbcd5,0.483,0.4105,0.0164,"22.09 Compensation for sabbatical leaves coincides with the Collective Agreement in place. Salary,
 benefits and other provisions will be adjusted according to any new agreement between the
 Board and the Association
 LUFA-H Collective Agreement 2016-2020 33
@@ -3505,7 +3505,7 @@ g. Professional/academic development or upgrading.
 h. Hiring part-time assistants in support of research and teaching, excluding marking.
 i. Tuition fees.
 
-Additionally, there is a provision related to outside paid professional activities (Article 10.06), which states that Faculty members have the right to engage in outside paid professional activities, subject to certain conditions.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Professional Development,hard,3,False,7f298efc-6548-4911-9036-ee38bae2f30c,0.4087,0.3474,0.0328,"30.02 The amount of the allowance for full-time Faculty shall be paid in accordance with the rates
+Additionally, there is a provision related to outside paid professional activities (Article 10.06), which states that Faculty members have the right to engage in outside paid professional activities, subject to certain conditions.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Professional Development,hard,3,True,7f298efc-6548-4911-9036-ee38bae2f30c,0.4087,0.3474,0.0328,"30.02 The amount of the allowance for full-time Faculty shall be paid in accordance with the rates
 set in the Laurentian Collective Agreement.
 30.03 Professional development expenditures allowable under this Article include the following:
 a. Membership fees for professional and/or learned societies related to the Member's
@@ -3651,7 +3651,7 @@ When an assessment of a Member’s performance is undertaken, all committee memb
 Collective Agreement 2015-2018 the standards listed below, as applicable.
 (i) Evaluations of applications shall be based upon an assessment of the member’s performance in teaching, scholarly
 activity, and university, professional and community service as set out in Article 10, Academic
-Activity and, in additio",0.2857,0.0981,0.2941,0.194,0.2647,0.5135,0.0,0.0,0.0,0.0,0.0,0.4,0.6,0.6,,,,,2.9451,2.3664,44.9914,4385.0,4390.0,785.8,9390.8,7.5,84.1,12288.0,2499.0,875.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
+Activity and, in additio",0.2857,0.0981,0.2941,0.194,0.2647,0.5135,0.0,0.0,0.0,0.0,0.0,0.4,0.6,0.6,,,,,2.9451,2.3664,44.9914,4385.0,4390.0,785.8,9390.8,7.5,84.1,12288.0,2499.0,875.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
 test_en_193,test_en_193,How does the agreement define or describe rights?,"The agreement defines and describes rights in several sections. Here are some key points:
 
 * Section 6.30.9 states that without mutual agreement, the University's name shall not be used in connection with inventions where the Employer has no interest.
@@ -3908,7 +3908,7 @@ test_en_200,test_en_200,"According to the agreement, what applies to return leav
 
 Additionally, members granted sabbatical leave under article 7.25 are required to return to the university to resume responsibilities as a full-time member of faculty for at least six (6) months. Failure to return may require repayment of salary and benefits received during the leave, except as such obligations may be waived by the University.
 
-Furthermore, if a member is planning to retire in the academic year immediately following the Member’s sabbatical leave, the Employer may waive the requirement to return to her/his responsibilities, with the Employer's agreement.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,3,False,919be283-5862-421a-bcdf-7be8ba6abac8,0.3825,0.3729,0.0164,"The maximum length of leaves to
+Furthermore, if a member is planning to retire in the academic year immediately following the Member’s sabbatical leave, the Employer may waive the requirement to return to her/his responsibilities, with the Employer's agreement.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,3,True,919be283-5862-421a-bcdf-7be8ba6abac8,0.3825,0.3729,0.0164,"The maximum length of leaves to
 be granted during a Member's academic career shall normally not exceed two (2) years.
 7.30.1 Eligibility
 A study leave may be granted to a tenured, probationary or Master Lecturer Member after two (2) years of
@@ -4196,7 +4196,7 @@ test_en_226,test_en_226,What is stated about redundancy?,"According to the colle
 
 Redundancy is only justified for bona fide academic reasons and/or on the grounds of insufficient student demand. When insufficient student demand is used as a justification, such lack of demand must be demonstrable over a period of at least three (3) years and projections into the future must not indicate any appreciable increase in this student demand.
 
-Source: Article 11.10.4",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,False,3f2793e6-bab0-4227-bce9-12a9c50164e9,0.4218,0.4113,0.0164,"The Employer
+Source: Article 11.10.4",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,True,3f2793e6-bab0-4227-bce9-12a9c50164e9,0.4218,0.4113,0.0164,"The Employer
 agrees that no procedures other than those specified in this Article will be used to deal with redundancies
 as defined in Article 11.10.3 below. It is understood that the term redundancy does not apply to limited term
 appointments that carry no implication of renewal or continuation beyond the stated term in accordance with
@@ -4341,7 +4341,7 @@ test_en_231,test_en_231,"According to the agreement, what applies to purpose of 
 
 ""It is the purpose of this Collective Agreement to set forth the terms and conditions of employment and other specific contractual provisions, to promote and maintain harmonious relationships between the Parties, to facilitate the Parties in working together to encourage the development of research and teaching necessary for the provision of high quality education to students, and to provide a means for settling such disputes as may arise from time to time.""
 
-In other words, the purpose of the collective agreement is to establish terms and conditions of employment, promote harmonious relationships between the union and the employer, facilitate collaboration in research and teaching, and provide a mechanism for resolving disputes that may arise.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,3,False,d55567e9-7145-4527-8933-c352f4183d9e,0.3,0.2925,0.0164,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
+In other words, the purpose of the collective agreement is to establish terms and conditions of employment, promote harmonious relationships between the union and the employer, facilitate collaboration in research and teaching, and provide a mechanism for resolving disputes that may arise.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,3,True,d55567e9-7145-4527-8933-c352f4183d9e,0.3,0.2925,0.0164,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
 Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illness for
 Sessional Members, Article 4.50—Family Responsibility for Sessional Members, Article 4.65- Exemption for
 101
@@ -4696,7 +4696,7 @@ test_en_246,test_en_246,How does the agreement define or describe starting cours
 
 Additionally, for distance education courses, the parties agree that hours will be calculated at the rate of 8 hours/student for 6 credit courses to the maximum listed above.
 
-It's also mentioned in Section 11.24 (c) (iii) that this agreement is strictly for Employment Insurance purposes only and does not affect the interpretation, application, and administration of the Collective Agreement provisions or University policies and practices.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Teaching,medium,3,False,a1de5d52-019c-44ac-b5b0-f91482eb0f4e,0.4421,0.3868,0.0164,"11.25 Contract Cancellations
+It's also mentioned in Section 11.24 (c) (iii) that this agreement is strictly for Employment Insurance purposes only and does not affect the interpretation, application, and administration of the Collective Agreement provisions or University policies and practices.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Teaching,medium,3,True,a1de5d52-019c-44ac-b5b0-f91482eb0f4e,0.4421,0.3868,0.0164,"11.25 Contract Cancellations
 (a) The President may cancel a course for which a sessional appointment has been made after consultation with the
 Department Chair. Before cancelling any course, the President shall take into account the needs ofthe Department
 offering the course. The President shall provide a written explanation to the affected department for the cancellation ofany
@@ -4848,7 +4848,7 @@ their responsibilities as a full-time Member for the period of at least one (1) 
 12.13 A member on sabbatical leave shall continue, subject to the terms of such policies, to be covered by the
 University’s group benefit plans, and the Employer shall continue its normal contributions toward the premium costs for
 such plans.",0.1895,0.0081,0.137,0.0139,0.1233,0.1825,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,2.6965,2.197,17.5884,4465.0,4470.0,830.6,6763.8,7.5,87.7,12288.0,692.0,768.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
-test_en_255,test_en_255,How is faculty affairs committee (fac) addressed in the collective agreement?,"The Faculty Affairs Committee (FAC) is referred to as ""the committee"" throughout the Collective Agreement. There is no specific title or designation given to the FAC, such as ""Faculty Affairs Committee"".",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Tenure,easy,3,False,31c75c8a-bb49-40f0-8681-20ada3afcd5e,0.5404,0.4323,0.0305,"8.06 Procedures
+test_en_255,test_en_255,How is faculty affairs committee (fac) addressed in the collective agreement?,"The Faculty Affairs Committee (FAC) is referred to as ""the committee"" throughout the Collective Agreement. There is no specific title or designation given to the FAC, such as ""Faculty Affairs Committee"".",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Tenure,easy,3,True,31c75c8a-bb49-40f0-8681-20ada3afcd5e,0.5404,0.4323,0.0305,"8.06 Procedures
 (a) Quorum shall consist of the chair and the five elected faculty members. Where an elected faculty member is unable to
 attend the alternate shall be appointed.
 The faculty member must contact the Chair to advise of his/her non-attendance so appropriate documentation can be
@@ -5204,7 +5204,7 @@ test_en_275,test_en_275,What conditions apply to new hires?,"For new hires (tenu
 
 4. Article 3.20.4: Spousal Hires - When a candidate has been recommended by a Thorneloe Academic Unit for tenure-track (or probationary) or tenured position and has a spouse or partner who may be qualified for an academic position, a Thorneloe Academic Unit appropriate to the discipline of the spouse or partner may recommend a 1-3 year term appointment without advertising under certain conditions.
 
-Let me know if you'd like more information.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Tenure,hard,3,False,d55567e9-7145-4527-8933-c352f4183d9e,0.3766,0.3672,0.0164,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
+Let me know if you'd like more information.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Tenure,hard,3,True,d55567e9-7145-4527-8933-c352f4183d9e,0.3766,0.3672,0.0164,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
 Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illness for
 Sessional Members, Article 4.50—Family Responsibility for Sessional Members, Article 4.65- Exemption for
 101
@@ -5235,7 +5235,7 @@ ARTICLE 3.20 – NEW HIRES
 terminer son autre emploi et entrer dans ses fonctions dès qu'il lui est possible de se libérer de son autre contrat, mais
 jamais plus de six (6) mois après avoir accepté l'offre de réembauche.
 (c) Des efforts raisonnables de la part de l’Employeur pour aider un Membre mis à pied à trouver un autre emploi
-convenable, y compris l'usage d'aide professionnelle ainsi que l'accès",0.4895,0.2048,0.3478,0.3426,0.3478,0.5739,0.25,0.4307,0.0,0.0,1.0,0.8,0.2,1.0,,,,,2.791,3.2063,112.9456,4465.0,4470.1,799.3,9940.5,7.9,89.9,12288.0,4738.0,1658.0,,,,bridge,0.0,0.0,0.2,1.0,,,,,,,,
+convenable, y compris l'usage d'aide professionnelle ainsi que l'accès",0.4895,0.2048,0.3478,0.3426,0.3478,0.5739,0.25,0.4307,0.0,0.0,1.0,0.8,0.2,1.0,,,,,2.791,3.2063,112.9456,4465.0,4470.1,799.3,9940.5,7.9,89.9,12288.0,4738.0,1658.0,,,,bridge,0.0,0.0,0.2,0.5,,,,,,,,
 test_en_276,test_en_276,What are the rules concerning recognized and other holidays?,"According to the collective agreement, the rules concerning recognized and other holidays are as follows:
 
 * The following days and all days generally declared to be recognised holidays by Federal or Provincial authorities are recognised holidays:
@@ -5511,7 +5511,7 @@ test_en_286,test_en_286,"What does the agreement say about pregnancy, parental a
      - An amount equal to the difference between the EI benefits received by the Member and one-hundred percent (100%) of the Member's nominal salary for up to a maximum of fifteen (15) additional weeks, subject to Article 25.06 (c).
    - If the Member is disentitled or disqualified from receiving EI benefits or should EI cease to provide coverage for parental benefits or adjust the amount of benefits that were received, the Employer shall maintain the Member at one-hundred percent (100%) of her/his nominal earnings for the period of her/his leave.
 
-Source: Collective Agreement 2018-2021.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,medium,3,False,2543906a-d5f1-4863-a4ca-4bc110275129,0.3264,0.3183,0.0323,"In the case where the newborn child is hospitalized, a
+Source: Collective Agreement 2018-2021.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,medium,3,True,2543906a-d5f1-4863-a4ca-4bc110275129,0.3264,0.3183,0.0323,"In the case where the newborn child is hospitalized, a
 Member may postpone or interrupt her pregnancy leave by the number of weeks the newborn child
 is hospitalized but it must be taken within the fifty-two (52) weeks from the date of the birth of the
 child.
@@ -5599,7 +5599,7 @@ Additionally, the Employer shall not release any individually identifiable infor
 
 Members also have the right to request access to their personnel files, and the Employer shall provide one (1) copy of their personnel file, excluding confidential material according to the provisions of this Collective Agreement but including the inventory thereof, within five (5) working days at no charge to the Member (Article 5.70.3).
 
-It's worth noting that there are two types of files for Members: active files and archival files. Active files shall contain only information allowed under this Article, while archival files shall contain material which has been banned for use in subsequent proceedings but is required for matters other than those related to the Collective Agreement (Article 5.70.14).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,False,2117177b-e17a-4664-8379-2fc5a487a575,0.4075,0.3464,0.0309,"The Member shall be notified that this has been done.
+It's worth noting that there are two types of files for Members: active files and archival files. Active files shall contain only information allowed under this Article, while archival files shall contain material which has been banned for use in subsequent proceedings but is required for matters other than those related to the Collective Agreement (Article 5.70.14).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,True,2117177b-e17a-4664-8379-2fc5a487a575,0.4075,0.3464,0.0309,"The Member shall be notified that this has been done.
 5.70.8 All letters or assessments solicited by the
 Faculty Personnel Committee and any summaries thereof shall be kept confidential and used only for the purposes for
 which they were solicited in any subsequent proceedings against that Member.
@@ -6551,7 +6551,7 @@ test_en_331,test_en_331,What is stated about ofthe arbitrator?,"According to Art
 
 Additionally, according to Article 24.02, no person may be appointed as an arbitrator who has been involved in an attempt to negotiate or settle the grievance.
 
-And finally, regarding the appointment of an arbitrator, it is stated that both parties must appoint a nominee within 15 working days of receiving each other's proposals for an arbitrator. If one party fails to do so, the Minister of Labour for Ontario has the power to make such an appointment upon application from the invoking party.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Grievance,easy,3,False,8e6c540c-cd71-4c5f-bad4-c5eb7f85cc96,0.4082,0.3265,0.0292,"24.07 Where a grievance is referred to arbitration, neither Party may introduce any offers made during the course of the
+And finally, regarding the appointment of an arbitrator, it is stated that both parties must appoint a nominee within 15 working days of receiving each other's proposals for an arbitrator. If one party fails to do so, the Minister of Labour for Ontario has the power to make such an appointment upon application from the invoking party.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Grievance,easy,3,True,8e6c540c-cd71-4c5f-bad4-c5eb7f85cc96,0.4082,0.3265,0.0292,"24.07 Where a grievance is referred to arbitration, neither Party may introduce any offers made during the course of the
 grievance procedure in efforts toward settlement.
 24.08 Single Arbitrator
 By mutual agreement the parties may elect to have a single arbitrator hear the matter in dispute instead of a three- person
@@ -6920,7 +6920,7 @@ b) A Progress-Through-The-Ranks increment for the evaluation carried out for the
 c) Additional qualification increments awarded pursuant to Article 8.30 – Additional Qualifications Increments.
 d) Promotion and Merit increments awarded according to Articles 8.15 and 8.25 – Merit Increments.
 
-These rules outline how the salary structure is composed and updated annually for full-time Members.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Salary,easy,3,False,84f27fa0-0a6b-4230-a1d9-c5bdd8be7540,0.4041,0.3233,0.032,"27.03 If notice of amendment or termination is given by either party, the other party agrees to meet for the purpose of
+These rules outline how the salary structure is composed and updated annually for full-time Members.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Salary,easy,3,True,84f27fa0-0a6b-4230-a1d9-c5bdd8be7540,0.4041,0.3233,0.032,"27.03 If notice of amendment or termination is given by either party, the other party agrees to meet for the purpose of
 negotiation within thirty days after the giving of notice, if requested to do so.
 49 of 59
 <<>>
@@ -7555,7 +7555,7 @@ test_en_391,test_en_391,What does the agreement say about parking?,"According to
 * Members with temporary or long-term disability or pregnant members are entitled to a reserved parking space close to their office upon request (Article 8.70.2).
 * The University will reimburse parking costs for authorized business expenses, up to a maximum of $4.00 per day, based on economical parking costs.
 
-Let me know if you have any further questions!",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,False,f088c956-8a22-4048-8712-f84f7f28e424,0.371,0.2597,0.0325,"Any legal representation to which
+Let me know if you have any further questions!",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,True,f088c956-8a22-4048-8712-f84f7f28e424,0.371,0.2597,0.0325,"Any legal representation to which
 Members are entitled under this policy shall be provided in a fair and equitable manner. The Union is entitled to receive a
 copy of the insurance policy upon request. Any changes in this current policy shall be made with the agreement of the
 Parties. ARTICLE 8.70 – PARKING
@@ -7583,7 +7583,7 @@ pocket expenses incurred while on authorized business for the University, where 
 business is requested by the president and has received prior approval, such as parking fees,
 transportation costs, meal allowances, equipment for field trips, accommodation costs, and
 incidental expenses. Receipts for such expenses will be provided. The claim for
-reimbursement including receip",0.3894,0.136,0.3684,0.24,0.2632,0.6476,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,2.2821,2.4945,85.2193,4467.0,4472.1,844.0,9996.1,7.7,87.9,12288.0,4461.0,1561.0,,,,bridge,1.0,0.3333,0.2,1.0,,,,,,,,
+reimbursement including receip",0.3894,0.136,0.3684,0.24,0.2632,0.6476,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,2.2821,2.4945,85.2193,4467.0,4472.1,844.0,9996.1,7.7,87.9,12288.0,4461.0,1561.0,,,,bridge,1.0,0.3333,0.2,0.5,,,,,,,,
 test_en_392,test_en_392,What are the rules concerning copyright?,"According to Article 15 of the collective agreement, the rules concerning copyright are as follows:
 
 * The member retains the copyright to all original written, artistic, and recorded works, except for those commissioned or produced by the Employer for specific purposes (6.35.3).
@@ -7702,7 +7702,7 @@ test_en_403,test_en_403,What does the collective agreement provide regarding app
 * Sessional Members shall accrue seniority credit each time they teach a course, including one (1) term courses and extra sessions of an academic year.
 * Sessional Members with Establishment and with highest seniority shall have first right of reappointment, subject to notice. Seniority entitlement shall be limited to one section per term for each course in which a Member holds seniority.
 
-Note that the Collective Agreement also outlines specific procedures for appointment and renewal, including the requirement for formal consultation with the Chair/Director and eligible Members of the cross-appointed Departments/Schools during the renewal, tenure, and promotion process (Article 5.20.34).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Appointments,hard,3,False,8672b8bb-fbf1-483b-8a28-af28cb93f3bb,0.4691,0.4574,0.0164,"Each month at Senate, the Vice-President, Academic and Provost shall table as a
+Note that the Collective Agreement also outlines specific procedures for appointment and renewal, including the requirement for formal consultation with the Chair/Director and eligible Members of the cross-appointed Departments/Schools during the renewal, tenure, and promotion process (Article 5.20.34).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Appointments,hard,3,True,8672b8bb-fbf1-483b-8a28-af28cb93f3bb,0.4691,0.4574,0.0164,"Each month at Senate, the Vice-President, Academic and Provost shall table as a
 separate Information item a list of any newly appointed Adjunct faculty Members including their names,
 Department/School affiliations, periods of appointment along with a justification for each appointment,
 highest degree held, year obtained, current institution and rank (position), at that institution.
@@ -8082,7 +8082,7 @@ And for the Joint Consultative Committee for the Administration of the Collectiv
 1 officer of LUFA
 1 Dean appointed by the Vice-President, Academic and Provost
 
-No specific quorum rules are mentioned in this section.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Governance,medium,3,False,57585c3b-746d-49e4-b765-2c53994382e7,0.4195,0.409,0.0164,"B) Scholarly Activity
+No specific quorum rules are mentioned in this section.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Governance,medium,3,True,57585c3b-746d-49e4-b765-2c53994382e7,0.4195,0.409,0.0164,"B) Scholarly Activity
 5.15.20 Members shall have the right and responsibility to devote a reasonable proportion of their time to scholarly
 activity.
 5.15.21 It is understood that for the purposes of this Collective Agreement the term ""scholarly activity"" means:
@@ -8592,7 +8592,7 @@ reasonable, based on the principle of progressive discipline, except in serious 
 37.02 Discipline shall be imposed only in compliance with principles of natural justice and due
 process. Accordingly, the Member has a fundamental right to know, in a timely manner, the
 nature of the allegations against him/her, and the right to respond to such allegations. This
-does no",0.4082,0.1472,0.3497,0.227,0.2378,0.4736,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,2.2333,2.3257,13.0772,4467.0,4472.1,844.6,9984.0,7.1,82.1,12288.0,818.0,768.0,,,,bridge,1.0,0.3333,0.2,0.5,,,,,,,,
+does no",0.4082,0.1472,0.3497,0.227,0.2378,0.4736,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,2.2333,2.3257,13.0772,4467.0,4472.1,844.6,9984.0,7.1,82.1,12288.0,818.0,768.0,,,,bridge,1.0,0.3333,0.2,1.0,,,,,,,,
 test_en_457,test_en_457,What does the collective agreement provide regarding permission reasonable?,"According to Article 2.50.7 of the Collective Agreement, one individual shall be chosen by each Party to coordinate the exchange of information and act as a liaison between the two Parties.",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Teaching,medium,2,True,5ff025e6-9a4e-400a-b173-bb97b9dea749,0.3404,0.2383,0.0278,"Except when required by law, the Employer agrees not to release any
 individually identifiable statistical data in aggregate form concerning Members to any person, body, agency, and institution
 without the written consent of the Union.
@@ -8650,7 +8650,7 @@ of the Department/School.
 118 of 243
 <<>>
 Collective Agreement 2011-14
-7.20.3 Any absence from campus affecti",0.2136,0.0055,0.2148,0.0,0.1074,0.2058,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.3173,2.807,17.5768,4467.0,4472.1,844.6,10029.0,7.4,84.1,12288.0,898.0,768.0,,,,bridge,0.0,0.0,0.2,0.0,,,,,,,,
+7.20.3 Any absence from campus affecti",0.2136,0.0055,0.2148,0.0,0.1074,0.2058,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.3173,2.807,17.5768,4467.0,4472.1,844.6,10029.0,7.4,84.1,12288.0,898.0,768.0,,,,bridge,0.0,0.0,0.2,1.0,,,,,,,,
 test_en_462,test_en_462,How does the agreement define or describe teaching department?,"According to Article 5.15 – Rights, Responsibilities and Duties of Academics, the Collective Agreement defines the term ""teaching"" in relation to a member of a Department/School as:
 
 ""Teaching includes all academic instruction and supervision of students.""
@@ -8803,7 +8803,7 @@ Employer's seniority obligation to the
 Sessional Member be revoked or that the
 Member be placed on probation for the duration of one (1) course and that a further determination be made at the
 conclusion of that course.
-4.40.6 The Dean/University Librarian may accept the rec",0.3373,0.0828,0.2229,0.1603,0.1911,0.3588,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,0.4,,,,,2.5409,2.8146,72.556,4467.0,4472.1,846.2,10019.6,7.9,92.1,12288.0,5714.0,2000.0,,,,bridge,0.0,0.0,0.2,0.5,,,,,,,,
+4.40.6 The Dean/University Librarian may accept the rec",0.3373,0.0828,0.2229,0.1603,0.1911,0.3588,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,0.4,,,,,2.5409,2.8146,72.556,4467.0,4472.1,846.2,10019.6,7.9,92.1,12288.0,5714.0,2000.0,,,,bridge,0.0,0.0,0.2,1.0,,,,,,,,
 test_en_466,test_en_466,"According to the agreement, what applies to selection of chairs/directors?","According to the Collective Agreement 2011-14, the following apply to the selection of Chairs/Directors:
 
 * The Chair of the Selection Committee shall report the results of the selection process and its recommendation to the Dean/University Librarian (9.15.9).
@@ -8989,7 +8989,7 @@ test_en_479,test_en_479,How does the agreement define or describe parking?,"The 
 * All Members who teach on-campus are eligible, on a first-come, first-serve basis, for free parking at the University during the duration of their contract (Article 32.04).
 * The parking fees shall be determined following consultation with the Advisory Committee on Security Services on which the Union maintains its current representation of one (1) Member (Article 8.70.1).
 
-It is also mentioned that Members with a temporary or Long-Term Disability or pregnant Members are entitled upon request to their Dean/University Librarian to a reserved parking space close to their office (Article 8.70.2).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,False,f088c956-8a22-4048-8712-f84f7f28e424,0.3474,0.2432,0.0303,"Any legal representation to which
+It is also mentioned that Members with a temporary or Long-Term Disability or pregnant Members are entitled upon request to their Dean/University Librarian to a reserved parking space close to their office (Article 8.70.2).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,3,True,f088c956-8a22-4048-8712-f84f7f28e424,0.3474,0.2432,0.0303,"Any legal representation to which
 Members are entitled under this policy shall be provided in a fair and equitable manner. The Union is entitled to receive a
 copy of the insurance policy upon request. Any changes in this current policy shall be made with the agreement of the
 Parties. ARTICLE 8.70 – PARKING
@@ -9014,7 +9014,7 @@ All Members who teach on-campus shall be eligible, on a first-come first-serve b
 parking at the University during the duration of their contract. Members shall receive
 reimbursement for parking to a maximum of $4.00 per day (based on the actual and most
 economical parking costs) of scheduled teaching at partner institutions excluding the
-Laurentian campus.",0.4404,0.1975,0.3727,0.3396,0.3478,0.7478,1.0,1.0,1.0,1.0,1.0,1.0,0.8,1.0,,,,,3.1403,2.6306,95.6864,4467.0,4472.1,844.6,10012.9,7.8,89.4,12288.0,4836.0,1693.0,,,,bridge,1.0,0.3333,0.2,1.0,,,,,,,,
+Laurentian campus.",0.4404,0.1975,0.3727,0.3396,0.3478,0.7478,1.0,1.0,1.0,1.0,1.0,1.0,0.8,1.0,,,,,3.1403,2.6306,95.6864,4467.0,4472.1,844.6,10012.9,7.8,89.4,12288.0,4836.0,1693.0,,,,bridge,1.0,0.3333,0.2,0.5,,,,,,,,
 test_en_483,test_en_483,"According to the agreement, what applies to benefits?","According to the context, the following information applies to benefits:
 
 * The Agreement on the Benefits and Funding Policy shall be reached by April 30, 2021.
@@ -9069,7 +9069,7 @@ Dependent Group Plan
 Extended Medical Plan
 Dental Plan
 Long Term Disability Plan
-Retirement Plan",0.1102,0.0053,0.078,0.0197,0.0488,0.2067,0.3333,0.5,0.0,1.0,1.0,1.0,0.6,0.8,,,,,2.5112,2.8288,23.4887,4467.0,4472.1,844.0,9965.0,7.5,87.1,12288.0,857.0,768.0,,,,bridge,0.0,0.3333,0.2,1.0,,,,,,,,
+Retirement Plan",0.1102,0.0053,0.078,0.0197,0.0488,0.2067,0.3333,0.5,0.0,1.0,1.0,1.0,0.6,0.8,,,,,2.5112,2.8288,23.4887,4467.0,4472.1,844.0,9965.0,7.5,87.1,12288.0,857.0,768.0,,,,bridge,0.0,0.3333,0.2,0.0,,,,,,,,
 test_en_484,test_en_484,"How is, non addressed in the collective agreement?","According to the provided text, there is no specific provision addressing ""non"" (it seems you meant to ask about something else).
 
 However, if I had to infer, one possible answer could be ""the use of student evaluations as evidence for tenure or promotion decisions"". The Collective Agreement states that student evaluations in numerical or written form shall not be admissible as evidence in any process involving a Member's tenure, promotion, or dismissal if they are more than 5 years old (Article 5.70.9).",llama3.2:3b-gpu,llama3.2:3b-gpu,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Bargaining Unit,medium,3,True,2f81de19-03be-478d-b0d3-d50d12ad6064,0.3805,0.3234,0.0298,"Student evaluations, in numerical or written form, shall not be admissible as evidence
@@ -9275,7 +9275,7 @@ test_fr_009,test_fr_009,"Selon la convention, qu’est-ce qui s’applique à é
 * Un dossier de contributions à la gouvernance de l’Université et de responsabilités administratives
 * Le candidat a atteint les exigences éducationnelles/professionnelles/linguistiques du rang de bibliothécaire adjoint ou d’archiviste adjoint et les exigences en matière de bilinguisme
 
-Les critères sont présentés dans l'article 5.50 – Évaluation des services rendus, notamment à la clause 5.50.2 pour le personnel enseignant.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,hard,3,False,7e7703da-812e-4bae-afa7-665541b215c0,0.4248,0.4142,0.0164,"Ce titre sera cité ci-dessous sous la forme de « la Convention collective ». ARTICLE 1.15 – LANGUES OFFICIELLES
+Les critères sont présentés dans l'article 5.50 – Évaluation des services rendus, notamment à la clause 5.50.2 pour le personnel enseignant.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,hard,3,True,7e7703da-812e-4bae-afa7-665541b215c0,0.4248,0.4142,0.0164,"Ce titre sera cité ci-dessous sous la forme de « la Convention collective ». ARTICLE 1.15 – LANGUES OFFICIELLES
 1.15.1 Les versions anglaise et française de la Convention collective sont toutes deux officielles et définitives. Les
 deux Parties peuvent utiliser la version anglaise ou la version française lorsqu'elles prennent des mesures en
 rapport avec la Convention collective, et elles appliquent la version de la Convention collective dans laquelle
@@ -9434,7 +9434,7 @@ ne peut pas refuser son autorisation sans raison valable.
 Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit
 envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur
 ne peut pas refuser son autorisation sans raison valable.
-7.40.2 Habituellement, la demande d'un congé non rémunéré, contenant un exposé de l'objet, est soumise par écrit a",0.1571,0.0392,0.08,0.0733,0.08,0.2964,0.5,0.6309,0.0,1.0,1.0,1.0,0.4,1.0,,,,,2.2766,3.7685,153.1376,4467.0,4472.1,846.2,10017.7,8.0,92.6,12288.0,6319.0,2212.0,,,,bridge,0.0,0.3333,0.2,0.5,,,,,,,,
+7.40.2 Habituellement, la demande d'un congé non rémunéré, contenant un exposé de l'objet, est soumise par écrit a",0.1571,0.0392,0.08,0.0733,0.08,0.2964,0.5,0.6309,0.0,1.0,1.0,1.0,0.4,1.0,,,,,2.2766,3.7685,153.1376,4467.0,4472.1,846.2,10017.7,8.0,92.6,12288.0,6319.0,2212.0,,,,bridge,0.0,0.3333,0.2,1.0,,,,,,,,
 test_fr_017,test_fr_017,Qu’est-il indiqué au sujet de jours fériés statutaires et autres?,"Selon l'article 16.02 de la Convention collective 2017-2020, les jours suivants peuvent être désignés jours fériés par l’Employeur :
 
 * Après-midi du Jeudi saint
@@ -9670,7 +9670,7 @@ Augmentation pour qualifications supplémentaires. Au",91a4e9b6-20f3-430a-81b1-5
 deux Parties peuvent utiliser la version anglaise ou la version française lorsqu'elles prennent des mesures se rapportant à
 la convention collective, et elles appliquent la version de la convention collective dans laquelle est engagé le processus
 officiel de griefou d’arbitrage.",0.2029,0.0191,0.1441,0.0367,0.0721,0.1732,0.0,0.0,0.0,0.0,0.0,0.2,1.0,0.6,,,,,2.8894,2.7255,14.2521,4467.0,4472.1,845.3,10017.4,7.1,82.3,12288.0,737.0,768.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
-test_fr_041,test_fr_041,Que dit la convention collective au sujet de exempts droits?,"La convention collective n'indique pas explicitement les ""exempts droits"". Cependant, l'article 4.45 mentionne des « maladies physiques ou mentales » pour les membres à temps partiel (sessionnels), et article 4.50 mentionne la responsabilité familiale pour les mêmes membres. L’article 11.10 parle de la protection contre la discrimination, le harcèlement ou la coercition lors des procédures.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,hard,3,False,d55567e9-7145-4527-8933-c352f4183d9e,0.3744,0.3651,0.0164,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
+test_fr_041,test_fr_041,Que dit la convention collective au sujet de exempts droits?,"La convention collective n'indique pas explicitement les ""exempts droits"". Cependant, l'article 4.45 mentionne des « maladies physiques ou mentales » pour les membres à temps partiel (sessionnels), et article 4.50 mentionne la responsabilité familiale pour les mêmes membres. L’article 11.10 parle de la protection contre la discrimination, le harcèlement ou la coercition lors des procédures.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,hard,3,True,d55567e9-7145-4527-8933-c352f4183d9e,0.3744,0.3651,0.0164,"Article 1 – Introduction, Article 2 – Relations Between the Union and the Employer, Article 3 – Working
 Conditions, with the exception of 3.10 – Academic Freedom; Article 4.45-Physical and Mental Illness for
 Sessional Members, Article 4.50—Family Responsibility for Sessional Members, Article 4.65- Exemption for
 101
@@ -9808,7 +9808,7 @@ test_fr_050,test_fr_050,Quelles conditions s’appliquent à droits d'auteur?,"L
 * L'Université détient des droits d'auteur pour toute création intellectuelle du genre imprimé, programme d'ordinateur, matériel pédagogique en ligne, tableau, film, diapositive, bande magnétique, ou autre réalisée par un Membre au cours de son travail quotidien à l'Université pour utilisation dans les cours de formation à distance (Article 6.35.2).
 * Si l'Université commande à un Membre une œuvre intellectuelle, elle est la principale propriétaire des droits d'auteur, sauf disposition contraire (Article 6.35.3).
 
-Il faut également noter que les dispositions de l’Article 6.40 – COMITÉ DES BREVETS ET DROITS D'AUTEUR peuvent s'appliquer en cas de griefs et arbitrage liés aux droits d'auteur.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,False,a40b4a6e-9437-4e62-bcf3-dcf2e2910578,0.5026,0.3141,0.029,"ARTICLE 6.35 – DROITS D'AUTEUR
+Il faut également noter que les dispositions de l’Article 6.40 – COMITÉ DES BREVETS ET DROITS D'AUTEUR peuvent s'appliquer en cas de griefs et arbitrage liés aux droits d'auteur.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,True,a40b4a6e-9437-4e62-bcf3-dcf2e2910578,0.5026,0.3141,0.029,"ARTICLE 6.35 – DROITS D'AUTEUR
 Droits d'auteur revenant aux Membres :
 6.35.1 Sauf stipulation contraire dans le présent article, le
 Membre, créateur d'une œuvre intellectuelle du genre imprimé, programme d'ordinateur, matériel pédagogique en ligne,
@@ -10116,7 +10116,7 @@ test_fr_073,test_fr_073,Que dit la convention collective au sujet de surcharges 
 * Les bibliothécaires et les archivistes peuvent se voir attribuer des surcharges et des demi-surcharges conformément à la formule décrite dans le présent article (Article 8.35.4).
 * Les membres estimant avoir droit à une allocation de surcharge doivent en faire la demande selon les dispositions de l'article 5.40 – Charge de travail universitaire (Article 8.35.5).
 * Les membres à temps plein du Département de musique qui donnent des cours d'interprétation musicale en surcharge sont rémunérés au tarif horaire de base de cinquante-cinq dollars (55 $) par heure, haussé de deux et demi pour cent (2,5 %) en 2008-09, 2009-10 et 2010-11 (Article 8.35.6).
-* La convention précise également les conditions de détermination de la charge de travail d'enseignement, de bibliothécaire ou d'archiviste professionnel, notamment les limites des surcharges d'enseignement et les règles de rémunération (Articles 5.40.6 et 8.35-).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,easy,3,False,05f4a5f0-a919-4888-ab44-18e777002af9,0.3824,0.325,0.0309,"ARTICLE 8.35 – SURCHARGES DE TRAVAIL
+* La convention précise également les conditions de détermination de la charge de travail d'enseignement, de bibliothécaire ou d'archiviste professionnel, notamment les limites des surcharges d'enseignement et les règles de rémunération (Articles 5.40.6 et 8.35-).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,easy,3,True,05f4a5f0-a919-4888-ab44-18e777002af9,0.3824,0.325,0.0309,"ARTICLE 8.35 – SURCHARGES DE TRAVAIL
 8.35.1 Tous les Membres à temps plein, peu importe le rang, qui donnent un cours en surcharge et rémunéré, reçoivent
 l’allocation indiquée ci- dessous pour les cours commençant après les dates précisées:
 Cours entier Demi-cours
@@ -10300,7 +10300,7 @@ test_fr_084,test_fr_084,Que prévoit la convention collective concernant sélect
 6. Si deux Membres, au moins, font des objections au processus abrégé de sélection, le comité le suivra en entier.
 7. Le Directeur est nommé par le Vice-recteur aux études et Provost en conformité avec les modalités énoncées dans l'article 9.15 – Sélection des Directeurs.
 
-Il convient de noter que la convention collective prévoit également des règles pour la nomination d'un Directeur intérimaire, en cas de vacance ou de démission, ainsi qu'une durée normale du mandat des Directeurs qui est de trois ans.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,False,861e4641-a260-4f2d-9fce-4892cf977a6f,0.408,0.3468,0.0317,"Les
+Il convient de noter que la convention collective prévoit également des règles pour la nomination d'un Directeur intérimaire, en cas de vacance ou de démission, ainsi qu'une durée normale du mandat des Directeurs qui est de trois ans.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,True,861e4641-a260-4f2d-9fce-4892cf977a6f,0.408,0.3468,0.0317,"Les
 bulletins de vote sont dépouillés en présence du Comité de sélection.
 9.15.9 Le président du Comité de sélection doit informer le Doyen/Directeur de la bibliothèque des résultats du processus
 de sélection et de la recommandation du Comité.
@@ -10384,7 +10384,7 @@ test_fr_088,test_fr_088,Quelles conditions s’appliquent à transfert comité?,
 * Un Membre ayant la permanence qui accepte de se faire transférer partiellement ou intégralement à un autre secteur pédagogique retient son rang et tous ses droits actuels (Article 10.10.14).
 * Les frais éventuels de scolarité se rapportant au recyclage sont la responsabilité de l'Université (Article 10.10.14).
 
-Si vous pouvez fournir plus d'informations sur les ""conditions s'appliquant à transfert comité"", je serai heureux de tenter de vous aider davantage.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,hard,3,False,2fc92e85-f462-43ae-8283-164354bb84eb,0.3882,0.33,0.0299,"L'avis doit également offrir
+Si vous pouvez fournir plus d'informations sur les ""conditions s'appliquant à transfert comité"", je serai heureux de tenter de vous aider davantage.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,hard,3,True,2fc92e85-f462-43ae-8283-164354bb84eb,0.3882,0.33,0.0299,"L'avis doit également offrir
 au
 Membre ayant la permanence les options suivantes :
 (a) Préretraite volontaire dans le cas d'un
@@ -10438,7 +10438,7 @@ test_fr_090,test_fr_090,Comment la convention collective traite-t-elle de droits
 * L'Université détient des droits d'auteur pour certaines créations intellectuelles réalisées par les membres au cours de leur travail quotidien à l'Université (article 6.35.2).
 * Les contrats spéciaux relatifs aux cours de formation à distance doivent contenir une clause qui permet au collaborateur l'utilisation (pour sa propre classe) des portions de cours créés par lui, à condition que, pendant la période durant laquelle l'Université possède les droits d'auteur pour ces matériaux, il ne les utilise pas dans un autre cours de formation à distance sans l'autorisation écrite de l'Université (article 6.35.4).
 * Les membres qui sont auteurs de propriété intellectuelle pour laquelle l'Université détient les droits d'auteur doivent signer une attestation que l'œuvre est originale et que, à sa connaissance, il ne transgresse aucun droit d'auteur déjà existant (article 6.35.7).
-* Les droits d'auteurs s'appliquent à toutes les œuvres originales, qu'elles soient écrites, artistiques ou enregistrées, notamment des supports visuels, bandes et cassettes audio et vidéo, programmes informatiques, émissions audio et vidéo en direct, matériel pédagogique informatisé, dessins, photographies et autres œuvres d'art (article 15.01).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,medium,3,False,b6c12012-41b2-488b-8738-5d244741be64,0.3869,0.2708,0.0296,"Copie du Membre :
+* Les droits d'auteurs s'appliquent à toutes les œuvres originales, qu'elles soient écrites, artistiques ou enregistrées, notamment des supports visuels, bandes et cassettes audio et vidéo, programmes informatiques, émissions audio et vidéo en direct, matériel pédagogique informatisé, dessins, photographies et autres œuvres d'art (article 15.01).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,medium,3,True,b6c12012-41b2-488b-8738-5d244741be64,0.3869,0.2708,0.0296,"Copie du Membre :
 6.35.16 Si possible après en avoir fait la demande, le
 Membre doit recevoir une copie dont le coût ne dépasse pas le prix de ruban, film, enregistrement ou autre moyen utilisé,
 de toute propriété intellectuelle qu'il a produite pour l'Université et pour laquelle celle- ci détient les droits d'auteur selon
@@ -10730,7 +10730,7 @@ régulière et continue pour que toutes les activités universitaires, qu'elles 
 poursuivre de façon bien ordonnée.
 7.20.2 Les absences ne doivent normalement porter atteinte ni aux fonctions attribuées ni aux activités prévues dans
 l'horaire ni au fonctionnement harmonieux du
-Département/de l’Écol",0.1026,0.0054,0.0627,0.0189,0.0564,0.1193,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,2.9002,3.9305,97.5069,4465.0,4470.0,792.0,9715.4,8.0,93.4,12288.0,6061.0,2121.0,,,,bridge,1.0,0.3333,0.2,0.5,,,,,,,,
+Département/de l’Écol",0.1026,0.0054,0.0627,0.0189,0.0564,0.1193,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,2.9002,3.9305,97.5069,4465.0,4470.0,792.0,9715.4,8.0,93.4,12288.0,6061.0,2121.0,,,,bridge,1.0,0.3333,0.2,1.0,,,,,,,,
 test_fr_116,test_fr_116,Quelles conditions s’appliquent à dépenses de développement?,"Selon l'article 20 du Collectif d'accord de la Ligue universitaire des femmes du Canada-Haut-Etats-Unis (LUFA-H), les conditions suivantes s'appliquent aux dépenses de développement professionnel :
 
 1. Vous recevrez XXX dollars pour vos dépenses de développement et perfectionnement professionnel pendant la première année.
@@ -10903,7 +10903,7 @@ Cependant, il n'est pas explicitement mentionné dans la convention quelle est l
 
 Il est également mentionné à l'article 25 que les membres qui sont rappelés en vertu du présent article ont jusqu'à trente (30) jours pour accepter l'offre de rappel, et doivent terminer leur autre emploi et entrer dans leurs fonctions dès qu'il leur est possible de se libérer de leur autre contrat, mais jamais plus de six (6) mois après avoir accepté l'offre de réembauche (Article 25 - NI GRÈVE NI LOCK-OUT, page 54).
 
-Il convient de noter que la convention collective précise également à l'article 11 que les nominations des professeurs sont effectuées conformément aux dispositions de l'article 10.10 et 10.15.22 (b), qui définissent les critères pour la nomination d'ancienneté (Article 11 - NOMINATION DES PROFESSEURS, page 24).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Nominations,medium,3,False,1988caac-859c-4cc7-9e9e-abc97373fb22,0.4064,0.3556,0.0164,"ARTICLE 0 - PREAMBULE
+Il convient de noter que la convention collective précise également à l'article 11 que les nominations des professeurs sont effectuées conformément aux dispositions de l'article 10.10 et 10.15.22 (b), qui définissent les critères pour la nomination d'ancienneté (Article 11 - NOMINATION DES PROFESSEURS, page 24).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Nominations,medium,3,True,1988caac-859c-4cc7-9e9e-abc97373fb22,0.4064,0.3556,0.0164,"ARTICLE 0 - PREAMBULE
 ARTICLE 1 - OBJECTIFS ET DEFINITIONS w
 ARTICLE 2 - LANGUES + k
 ARTICLE 3 — ENVIRONNEMENT DE TRAVAIL a
@@ -10988,7 +10988,7 @@ poursuivre de façon bien ordonnée.
 l'horaire ni au fonctionnement harmonieux du
 118 de 243
 <<>>
-Conve",0.2162,0.0133,0.2013,0.0382,0.1132,0.1509,0.0,0.0,0.0,0.0,0.0,1.0,0.6,1.0,,,,,2.3585,4.0422,73.9219,4465.0,4470.1,806.6,9933.5,7.8,89.9,12288.0,5218.0,1826.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
+Conve",0.2162,0.0133,0.2013,0.0382,0.1132,0.1509,0.0,0.0,0.0,0.0,0.0,1.0,0.6,1.0,,,,,2.3585,4.0422,73.9219,4465.0,4470.1,806.6,9933.5,7.8,89.9,12288.0,5218.0,1826.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
 test_fr_135,test_fr_135,Quelles sont les règles concernant objectifs de la convention?,"Je suis désolé, mais il semble que vous avez oublié de fournir le contexte complet. Cependant, je peux essayer de répondre à votre question en fonction du texte fourni.
 
 Il n'y a pas d'information sur les objectifs de la Convention collective dans le texte fourni. Le texte se concentre uniquement sur les langues officielles et la procédure de grievance.
@@ -11020,7 +11020,7 @@ Convention collective ». ARTICLE 1.15 – LANGUES OFFICIELLES
 1.15.1 Les versions anglaise et française de la Convention collective sont toutes deux officielles et définitives. Les deux Parties peuvent utiliser la version anglaise ou la version française lorsqu'elles prennent des mesures en rapport
 avec la Convention collective, et elles appliquent la version de la Convention collective dans laquelle est amorcée la
 procédure officielle de grief o",0.186,0.0128,0.1951,0.0331,0.1138,0.1529,0.3333,0.5,0.0,1.0,1.0,0.2,0.4,0.2,,,,,2.7928,3.3112,13.8986,4465.0,4470.1,806.6,9854.8,7.1,83.0,12288.0,909.0,768.0,,,,bridge,0.0,0.3333,0.2,0.0,,,,,,,,
-test_fr_137,test_fr_137,"Quelles conditions s’appliquent à cours de formation à distance, l?","Selon l'article 8.40 – Cours de formation à distance et les stipulations de la Convention collective 2008-11, les Membres dont les conditions d'embauche incluent spécifiquement l'élaboration de cours de formation à distance comme partie intégrante de leur charge normale de travail peuvent devoir accomplir ces tâches pour la durée de leur(s) contrat(s).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,hard,3,False,f422f3c5-f12f-4762-b24a-7c1d62062ecf,0.4103,0.2564,0.0301,"Les tâches d’enseignement dans le cadre de la charge de
+test_fr_137,test_fr_137,"Quelles conditions s’appliquent à cours de formation à distance, l?","Selon l'article 8.40 – Cours de formation à distance et les stipulations de la Convention collective 2008-11, les Membres dont les conditions d'embauche incluent spécifiquement l'élaboration de cours de formation à distance comme partie intégrante de leur charge normale de travail peuvent devoir accomplir ces tâches pour la durée de leur(s) contrat(s).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,hard,3,True,f422f3c5-f12f-4762-b24a-7c1d62062ecf,0.4103,0.2564,0.0301,"Les tâches d’enseignement dans le cadre de la charge de
 travail normale du Membre seront habituellement lors des sessions d’automne et d’hiver de l’année universitaire.
 (b) Dans le cas de cours donnés par correspondance ou à l’extérieur du campus, on prévoit des heures de consultation
 dans le lieu de l’enseignement de manière à répondre aux exigences de la matière à l’étude. Le Directeur établit les
@@ -11155,7 +11155,7 @@ test_fr_145,test_fr_145,Quelles sont les règles concernant surcharges de travai
 5. Les membres estimant avoir droit à une allocation de surcharge doivent en faire la demande selon les dispositions de l'article 5.40 - Charge de travail universitaire.
 6. Les membres à temps plein du Département de musique qui donnent des cours d'interprétation musicale en surcharge sont rémunérés au tarif horaire de base de cinquante-cinq dollars (55 $) par heure, haussé de deux et demi pour cent (2,5 %) en 2008-09, 2009-10 et 2010-11.
 
-Il est important de noter que ces règles peuvent être modifiées ou complétées en fonction des besoins et des circonstances de l'Université Laurentienne.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,False,05f4a5f0-a919-4888-ab44-18e777002af9,0.4253,0.3615,0.0309,"ARTICLE 8.35 – SURCHARGES DE TRAVAIL
+Il est important de noter que ces règles peuvent être modifiées ou complétées en fonction des besoins et des circonstances de l'Université Laurentienne.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,True,05f4a5f0-a919-4888-ab44-18e777002af9,0.4253,0.3615,0.0309,"ARTICLE 8.35 – SURCHARGES DE TRAVAIL
 8.35.1 Tous les Membres à temps plein, peu importe le rang, qui donnent un cours en surcharge et rémunéré, reçoivent
 l’allocation indiquée ci- dessous pour les cours commençant après les dates précisées:
 Cours entier Demi-cours
@@ -11363,7 +11363,7 @@ test_fr_161,test_fr_161,"Que dit la convention collective au sujet de congés de
 * Si le membre est inadmissible ou exclu des prestations de l'AE, ou si l'AE cessait de fournir les prestations de congé de maternité, l'employeur maintient le membre à 100% de son traitement normal pendant la période de congé (Article 7.60.1).
 * Le préavis requis pour le congé de maternité est de deux semaines, mais cela peut être modifié par consentement mutuel (Article 7.60.2).
 * Le congé de maternité se termine soit le dernier jour de la 17e semaine après le début du congé, ou le dernier jour de la 6e semaine après la naissance, la naissance d'un enfant mort-né ou une fausse couche (Article 7.60.3).
-* Un membre qui ne prend pas de congé de maternité ou de congé parental a droit à un congé de cinq jours ouvrables comportant 100% de son traitement et de ses avantages sociaux (Article 7.60.4).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,hard,3,False,387c7f44-4953-4128-bcd6-cf2372a6b9ce,0.4454,0.3786,0.0284,"ARTICLE 7.60 – CONGÉS DE MATERNITÉ, CONGÉS
+* Un membre qui ne prend pas de congé de maternité ou de congé parental a droit à un congé de cinq jours ouvrables comportant 100% de son traitement et de ses avantages sociaux (Article 7.60.4).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,hard,3,True,387c7f44-4953-4128-bcd6-cf2372a6b9ce,0.4454,0.3786,0.0284,"ARTICLE 7.60 – CONGÉS DE MATERNITÉ, CONGÉS
 PARENTAUX ET CONGÉS D’ADOPTION
 7.60.1 Congé de maternité
 (a) Un Membre à temps plein ou un
@@ -11490,7 +11490,7 @@ test_fr_166,test_fr_166,Quelles sont les règles concernant congé sabbatique?,"
 5. Le congé sabbatique peut être accordé à un membre qui a resté en fonction à temps plein à l'Université pendant six ans de suite en tant que Professeur ou Bibliothécaire, au rang de titulaire, agrégé ou adjoint.
 6. L'admissibilité au congé sabbatique est calculée à compter de l'entrée en fonction à temps plein à l'Université ou de la date du dernier congé sabbatique obtenu, si celle-ci est plus récente.
 
-Ces règles sont établies dans la Convention collective 2011-14.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,False,656a415b-f65f-4de7-8a24-0fb963618867,0.4256,0.2979,0.0295,"Ces
+Ces règles sont établies dans la Convention collective 2011-14.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,True,656a415b-f65f-4de7-8a24-0fb963618867,0.4256,0.2979,0.0295,"Ces
 123 de 243
 <<>>
 Convention collective 2011-14
@@ -11617,7 +11617,7 @@ d’intérêts.
 6.15.3 Les Membres de l’administration ne sont pas impliqués à titre de chercheurs dans le cas de demandes de
 subventions de recherche à l’interne et s’ils sont chercheurs dans le cas de demandes de subventions à l’externe qui font
 l’objet d’une présélection à l’interne, ils ne siègent pas au comité de sélection, en confo",0.2987,0.026,0.2718,0.0772,0.1533,0.3235,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,3.6874,4.4553,30.2331,4465.0,4470.1,873.3,9965.7,7.7,91.3,12288.0,922.0,768.0,,,,bridge,1.0,0.3333,0.2,0.5,,,,,,,,
-test_fr_173,test_fr_173,"Selon la convention, qu’est-ce qui s’applique à fonds de recherche de l’université laurentienne (frul)?","Selon la Convention collective 2017-2020, le soutien à la recherche (FRUL) est attribué par la Faculté/Bibliothèque, en proportion du nombre de chargé dans chaque Faculté/Bibliothèque. Le montant total des fonds du FRUL ne peut dépasser cinq mille dollars (5 000 $) par application.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Recherche,medium,3,False,90465ece-93fd-49bb-bdac-12f0847851c0,0.5303,0.4507,0.0328,"ARTICLE 6.25 – FONDS DE RECHERCHE DE
+test_fr_173,test_fr_173,"Selon la convention, qu’est-ce qui s’applique à fonds de recherche de l’université laurentienne (frul)?","Selon la Convention collective 2017-2020, le soutien à la recherche (FRUL) est attribué par la Faculté/Bibliothèque, en proportion du nombre de chargé dans chaque Faculté/Bibliothèque. Le montant total des fonds du FRUL ne peut dépasser cinq mille dollars (5 000 $) par application.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Recherche,medium,3,True,90465ece-93fd-49bb-bdac-12f0847851c0,0.5303,0.4507,0.0328,"ARTICLE 6.25 – FONDS DE RECHERCHE DE
 L’UNIVERSITÉ LAURENTIENNE (FRUL)
 6.25.1 Pour chacune des années de la Convention collective, l’Employeur fournit au vice-recteur à la recherche un certain
 financement dans le
@@ -11665,7 +11665,7 @@ test_fr_180,test_fr_180,Quelles sont les règles concernant enseignement satisfa
 2. Le candidat ou la candidate a posé des gestes pour s'améliorer en tant qu'enseignant.
 3. Le candidat ou la candidate a apporté certaines améliorations dans son enseignement.
 
-Ces règles sont mentionnées à l'article 5.10.2 (c) (ii), 5.70.9 et 5.60.3 (c) (i).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,medium,3,False,c1734171-3d86-4d41-bc2f-4b562bb87e0d,0.3685,0.3132,0.0323,"Lors de l’évaluation du rendement du Membre en vue d’atteindre les exigences de la permanence aux Articles
+Ces règles sont mentionnées à l'article 5.10.2 (c) (ii), 5.70.9 et 5.60.3 (c) (i).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,medium,3,True,c1734171-3d86-4d41-bc2f-4b562bb87e0d,0.3685,0.3132,0.0323,"Lors de l’évaluation du rendement du Membre en vue d’atteindre les exigences de la permanence aux Articles
 5.60.3 (d) et (e) de l’Article 5.60 – Mécanismes d’évaluation en vue de la permanence, le comité commente chaque
 aspect des critères indiqués.
 (Article 5.20.22 (d))
@@ -11693,8 +11693,8 @@ qualifications des membres dans l’attribution des rangs universitaires. I] est
 appliquées de manière rigide. Chaque cas de nomination ou de promotion est évalué selon ses mérites particuliers.
 (a) Chargé de cours : le candidat détient au moins une maîtrise ou un diplôme équivalent, ou un
 24 de 66
-<<>",0.3373,0.0225,0.2992,0.064,0.1417,0.3262,0.0,0.0,0.0,0.0,0.0,1.0,0.2,0.6,,,,,3.6415,3.9485,158.2497,4465.0,4470.1,830.6,9980.4,8.0,94.5,12288.0,6473.0,2266.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
-test_fr_181,test_fr_181,Que prévoit la convention collective concernant congé non rémunéré?,"La convention collective prévoit que un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable (Article 7.40.1).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,hard,3,False,89e7a441-8f86-447c-bd61-bef479329e1c,0.4466,0.3796,0.0309,"ARTICLE 7.40 – CONGÉ NON RÉMUNÉRÉ
+<<>",0.3373,0.0225,0.2992,0.064,0.1417,0.3262,0.0,0.0,0.0,0.0,0.0,1.0,0.2,0.6,,,,,3.6415,3.9485,158.2497,4465.0,4470.1,830.6,9980.4,8.0,94.5,12288.0,6473.0,2266.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
+test_fr_181,test_fr_181,Que prévoit la convention collective concernant congé non rémunéré?,"La convention collective prévoit que un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable (Article 7.40.1).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,hard,3,True,89e7a441-8f86-447c-bd61-bef479329e1c,0.4466,0.3796,0.0309,"ARTICLE 7.40 – CONGÉ NON RÉMUNÉRÉ
 7.40.1 Un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et
 qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les
 arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable.
@@ -11718,7 +11718,7 @@ MEMBRES CHARGÉS DE COURS
 aux responsabilités familiales. Les dispositions de cette loi s'appliquent aux Chargés de cours. ARTICLE 4.55 – TAUX DE RÉMUNÉRATION POUR LES
 MEMBRES CHARGÉS DE COURS
 4.55.1 Les Chargés de cours sont rémunérés au taux ci- dessous pour chaque cours de trois (3) crédits qui commence
-après la date indiquée",0.1978,0.0188,0.1864,0.0345,0.1186,0.1335,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,2.4867,3.9188,152.8841,4465.0,4470.1,833.9,9958.1,8.0,93.2,12288.0,6016.0,2106.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
+après la date indiquée",0.1978,0.0188,0.1864,0.0345,0.1186,0.1335,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,2.4867,3.9188,152.8841,4465.0,4470.1,833.9,9958.1,8.0,93.2,12288.0,6016.0,2106.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
 test_fr_184,test_fr_184,Quelles sont les règles concernant définitions?,"Je n'ai trouvé aucune information sur les définitions dans le texte fourni. Les articles mentionnés ne contiennent pas de sections dédiées à la définition de termes spécifiques tels que ""conseiller"", ""crédits universitaires"", ""directeur"" et ""doyen"". Il est possible qu'il s'agisse d'une question qui nécessite une recherche supplémentaire ou une éclaircation plus précise sur les règles générales de l'université.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,hard,1,True,1a6da860-3c54-4b70-a882-c46d1769ecd7,0.2932,0.2858,0.0164,"The Chair/Director
 shall outline the norms in consultation with the Department/School.
 (c) In the case of evening courses, the Dean shall not assign another course scheduled to begin within
@@ -11745,7 +11745,7 @@ test_fr_188,test_fr_188,Quelles conditions s’appliquent à évaluation recomma
 
 - Les Membres admissibles se réunissent souvent pour rédiger une lettre d’évaluation unique et collective.
 - La demande fait l’objet d’un vote inscrit.
-- Le processus d'évaluation est mené avec un préavis suffisant.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,False,9fa83b8c-8f93-4949-9c1d-37ea16b30bfa,0.3494,0.3407,0.0164,"Les Membres qui sont en congé sabbatique ou un autre type de congé, sauf
+- Le processus d'évaluation est mené avec un préavis suffisant.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,True,9fa83b8c-8f93-4949-9c1d-37ea16b30bfa,0.3494,0.3407,0.0164,"Les Membres qui sont en congé sabbatique ou un autre type de congé, sauf
 les congés sans solde ou d’invalidité de longue durée, ont aussi le droit de participer au procédé et
 de voter.
 (c) Au moment opportun et avec un préavis suffisant, le Directeur du Département/École ou son
@@ -11808,7 +11808,7 @@ a) Founder's Day, Good Friday, Easter Monday, Victoria Day,
 Canada Day, August Civic Holiday, Labour Day, Thanksgiving Day,
 Christmas Day, Boxing Day, New Year's Day.
 b) And on such other holidays as declared by the Board, including
-the customary Christmas",0.0833,0.0043,0.0511,0.0086,0.0426,0.0987,0.0,0.0,0.0,0.0,0.0,1.0,0.2,0.6,,,,,3.2396,3.0072,76.8316,4465.0,4470.1,832.8,9733.9,7.8,91.5,12288.0,5606.0,1962.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
+the customary Christmas",0.0833,0.0043,0.0511,0.0086,0.0426,0.0987,0.0,0.0,0.0,0.0,0.0,1.0,0.2,0.6,,,,,3.2396,3.0072,76.8316,4465.0,4470.1,832.8,9733.9,7.8,91.5,12288.0,5606.0,1962.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
 test_fr_193,test_fr_193,Comment la convention collective traite-t-elle de reconnaissance?,"La Convention collective 2018-2021 traite de la reconnaissance dans l'article 4, qui désigne le Syndicat comme l'agent négociateur accrédité de tout le personnel universitaire à temps plein et à temps partiel, y compris les bibliothécaires professionnels à l'emploi de l’Université de Sudbury/University of Sudbury dans la ville du Grand Sudbury, à l'exception du Bibliothécaire en chefde l’Université et des administrateurs supérieurs chargés des affaires professorales de rang équivalent ou supérieur à celui du Doyen (article 4.01).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Unité de négociation,medium,2,True,234308dd-c49e-4e12-b01d-8364db8d6496,0.3442,0.3012,0.0305,"ARTICLE 4 - RECONNAISSANCE
 4.01 Composition de l’Unité de négociation
 L’Employeurreconnaît le Syndicat comme l’agent négociateur accrédité de tout le personnel universitaire à temps plein et
@@ -11988,7 +11988,7 @@ pendant lesquelles le nouveau-né est hospitalisé, mais le congé se prend obli
 des cinquante-deux (52) semaines à partir de la date de la naissance de l’enfant.
 (b) Le congé de maternité d’un Membre qui n’a pas droit à un congé parental se termine soit le dernier
 jour de la dix-septième (17) semaine à partir du commencement du congé de maternit",0.2167,0.0141,0.1767,0.0563,0.1116,0.2003,1.0,0.8503,0.5,0.5,1.0,1.0,0.8,1.0,,,,,2.8733,3.692,23.1983,4465.0,4470.1,833.5,9946.6,7.6,89.2,12288.0,909.0,768.0,,,,bridge,1.0,0.3333,0.4,0.5,,,,,,,,
-test_fr_205,test_fr_205,Que dit la convention collective au sujet de droits d'auteur?,"Selon l'article 6.35 – Droits d'Auteur, les Membres conservent les droits d'auteur pour leur œuvre intellectuelle du genre imprimé, programme d'ordinateur, matériel pédagogique en ligne, tableau, sculpture, film, diapositive, bande magnétique, ou autre, sauf stipulation contraire. Les droits d'auteur revenant à l'Université sont pour toute création intellectuelle du genre imprimé, programme d'ordinateur, matériel pédagogique en ligne, tableau, film, diapositive, bande magnétique, ou autre, réalisée par un Membre au cours de son travail quotidien à l'Université pour utilisation dans les cours de formation à distance. (Article 6.35.2)",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,False,c91bf7cd-b77f-46b4-b1b9-4e7b8efcc840,0.4071,0.346,0.0309,"Copie du Membre :
+test_fr_205,test_fr_205,Que dit la convention collective au sujet de droits d'auteur?,"Selon l'article 6.35 – Droits d'Auteur, les Membres conservent les droits d'auteur pour leur œuvre intellectuelle du genre imprimé, programme d'ordinateur, matériel pédagogique en ligne, tableau, sculpture, film, diapositive, bande magnétique, ou autre, sauf stipulation contraire. Les droits d'auteur revenant à l'Université sont pour toute création intellectuelle du genre imprimé, programme d'ordinateur, matériel pédagogique en ligne, tableau, film, diapositive, bande magnétique, ou autre, réalisée par un Membre au cours de son travail quotidien à l'Université pour utilisation dans les cours de formation à distance. (Article 6.35.2)",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,True,c91bf7cd-b77f-46b4-b1b9-4e7b8efcc840,0.4071,0.346,0.0309,"Copie du Membre :
 6.35.16 Si possible après en avoir fait la demande, le
 Membre doit recevoir une copie dont le coût ne dépasse pas le prix de ruban, film, enregistrement ou autre moyen utilisé,
 de toute propriété intellectuelle qu'il a produite pour l'Université et pour laquelle celle-ci détient les droits d'auteur selon les
@@ -12013,8 +12013,8 @@ Droits d'auteur revenant aux Membres :
 6.35.1 Sauf stipulation contraire dans le présent Article, le Membre, créateur d'une œuvre intellectuelle du genre
 imprimé, programme d'ordinateur, matériel pédagogique en ligne, tableau, sculpture, film, diapositive, bande
 magnétique, ou autre, conserve les droits d'auteur. Droits d'auteur revenant à l'Université :
-6.35.2 Les Parties conviennent que l'Université détient des droits d'auteur pour toute création intellectuelle d",0.0938,0.0079,0.0721,0.0183,0.0721,0.1879,0.25,0.4307,0.0,0.0,1.0,1.0,0.8,1.0,,,,,3.2246,3.977,147.0793,4465.0,4470.1,833.5,10009.5,8.0,93.0,12288.0,7039.0,2464.0,,,,bridge,0.0,0.0,0.2,0.5,,,,,,,,
-test_fr_206,test_fr_206,"Selon la convention, qu’est-ce qui s’applique à politique et procédure en cas de décès?","Selon l'article 8.80, les politiques et les pratiques actuellement en vigueur sont largement déterminées par des organismes externes. Il est cependant convenu que les modifications nécessitées par ces organismes ne nécessitent pas d'approbation préalable. De plus, l'article 8.80.1 précise que le bénéficiaire doit se mettre en rapport avec le pension et benefits officer dans le bureau des ressources humaines pour informer l'université du décès, et que l'université fera tout son possible pour entrer en rapport avec le bénéficiaire si la university n'a pas été contactée dans les sept jours.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,False,822efe1b-f92d-4621-933e-cb6d3a6f172b,0.4193,0.3564,0.0164,"Amounts reimbursed will be according to the schedule of amounts in the Employer’s
+6.35.2 Les Parties conviennent que l'Université détient des droits d'auteur pour toute création intellectuelle d",0.0938,0.0079,0.0721,0.0183,0.0721,0.1879,0.25,0.4307,0.0,0.0,1.0,1.0,0.8,1.0,,,,,3.2246,3.977,147.0793,4465.0,4470.1,833.5,10009.5,8.0,93.0,12288.0,7039.0,2464.0,,,,bridge,0.0,0.0,0.2,1.0,,,,,,,,
+test_fr_206,test_fr_206,"Selon la convention, qu’est-ce qui s’applique à politique et procédure en cas de décès?","Selon l'article 8.80, les politiques et les pratiques actuellement en vigueur sont largement déterminées par des organismes externes. Il est cependant convenu que les modifications nécessitées par ces organismes ne nécessitent pas d'approbation préalable. De plus, l'article 8.80.1 précise que le bénéficiaire doit se mettre en rapport avec le pension et benefits officer dans le bureau des ressources humaines pour informer l'université du décès, et que l'université fera tout son possible pour entrer en rapport avec le bénéficiaire si la university n'a pas été contactée dans les sept jours.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,True,822efe1b-f92d-4621-933e-cb6d3a6f172b,0.4193,0.3564,0.0164,"Amounts reimbursed will be according to the schedule of amounts in the Employer’s
 ‘Policies and Procedures Concerning Travel and Related Expenses’ as updated annually
 1
 <<>>
@@ -12112,7 +12112,7 @@ test_fr_208,test_fr_208,Quelles conditions s’appliquent à nomination et renou
 * Dans les cas où il s'agit du remplacement d'un administrateur universitaire, la durée de la nomination peut être d'un maximum de cinq (5) ans.
 * Le terme initial peut être de moins d'une année universitaire, mais les renouvellements sont normalement d'une année complète de douze (12) mois.
 * Les limites (de trois (3) et cinq (5) ans) s'appliquent, qu'il s'agisse ou non de nominations qui se succèdent avec ou sans interruption.
-* Le non-renouvellement d'une nomination à durée limitée ne peut pas faire l'objet d'un grief.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Nominations,easy,3,False,9bd48af0-b3f3-4963-a840-5b8dedfce987,0.4677,0.2923,0.0278,"XXX selon les qualifications et l’expérience en vertu de l’article 5.10 – Ligne directrices touchant les titres
+* Le non-renouvellement d'une nomination à durée limitée ne peut pas faire l'objet d'un grief.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Nominations,easy,3,True,9bd48af0-b3f3-4963-a840-5b8dedfce987,0.4677,0.2923,0.0278,"XXX selon les qualifications et l’expérience en vertu de l’article 5.10 – Ligne directrices touchant les titres
 universitaires.
 5. RÉMUNÉRATION. Traitement initial de XXX par an, basé sur l’équivalent de XXX années d’expérience universitaire,
 de XXX années d’autre expérience pertinente à votre discipline, ainsi que d’autres facteurs affectant le recrutement dans
@@ -12628,7 +12628,7 @@ renouvellement de contrat (Article 5.20 – Nomination et renouvellement de cont
 (Article 5.60 – Mécanisme d’évaluation en vue de la per",0.2188,0.0187,0.175,0.0256,0.125,0.1779,0.0,0.0,0.0,0.0,0.0,0.8,1.0,1.0,,,,,3.0923,4.078,10.9709,4465.0,4470.1,833.5,9936.6,7.2,80.8,12288.0,914.0,768.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
 test_fr_235,test_fr_235,Comment la convention définit-elle ou décrit-elle administrateurs universitaires?,"La Convention collective n'apporte pas de définition spécifique des administrateurs universitaires, mais elle les considère comme des membres de plein droit des Départements/Écoles où ils exercent comme enseignant ou bibliothécaire professionnel, sous réserve qu'ils ne peuvent pas participer aux décisions du Département/de l’École sur les questions de personnel.
 
-Concrètement, la Convention collective les définit en soulignant que lorsqu'ils exercent dans leurDépartement/École, ils sont considérés comme Membres enseignants.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,medium,3,False,d41c6009-d050-45eb-9a93-00d30ae08463,0.4187,0.2931,0.0294,"S'il n'y a pas de poste vacant dans
+Concrètement, la Convention collective les définit en soulignant que lorsqu'ils exercent dans leurDépartement/École, ils sont considérés comme Membres enseignants.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,medium,3,True,d41c6009-d050-45eb-9a93-00d30ae08463,0.4187,0.2931,0.0294,"S'il n'y a pas de poste vacant dans
 le Département/l’École en question, un poste supplémentaire ne peut pas être créé aux dépens d'un autre
 Département/École.
 (c) Les Membres provisoirement exclus de l'unité de négociation pendant qu'ils sont administrateurs universitaires
@@ -12660,7 +12660,7 @@ engagent, dans des proportions raisonnables, variant selon les personnes :
 (a) _ ils effect",0.1205,0.0068,0.1849,0.0,0.1176,0.1045,0.0,0.0,0.0,0.0,0.0,1.0,0.6,0.2,,,,,2.7048,2.8126,127.9509,4465.0,4470.1,855.2,10206.6,7.9,91.3,12288.0,5870.0,2054.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
 test_fr_236,test_fr_236,Comment la convention définit-elle ou décrit-elle admissibles évaluations?,"Je n'ai pas trouvé d'indication dans le texte fourni sur la façon dont la convention collective définit ou décrit les évaluations admissibles. Cependant, je peux vous dire que l'article 6.35.12 de la convention collective mentionne que ""L'Université est tenue de négocier les honoraires pour chaque révision faite à sa demande"". Ceci suggère que l'université devrait négocier avec l'auteur pour déterminer les honoraires qui seront payés pour la révision, mais ce n'est pas une définition précise des évaluations admissibles.
 
-Il est possible que vous deviez consulter d'autres articles ou sections de la convention collective pour obtenir plus d'informations sur les évaluations admissibles.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,medium,3,False,ad8f64ba-cd7f-439e-a349-7b54d032647a,0.2902,0.2539,0.0164,"15.04 Where a member carries out original research for the purposes ofdeveloping materials commissioned by the
+Il est possible que vous deviez consulter d'autres articles ou sections de la convention collective pour obtenir plus d'informations sur les évaluations admissibles.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,medium,3,True,ad8f64ba-cd7f-439e-a349-7b54d032647a,0.2902,0.2539,0.0164,"15.04 Where a member carries out original research for the purposes ofdeveloping materials commissioned by the
 Employer,the member may use the research to produce other scholarly material provided that credit is given to the
 Employer for the original commission and an acknowledgement that the copyright for the commissioned material remains
 with the Employer.",63e3c87c-0bc7-4c7f-b899-08a0cc6ec40e,0.0164,0.0139,0.0164,"Si vous les trouvez acceptables, veuillez signer le formulaire et
@@ -12706,7 +12706,7 @@ test_fr_240,test_fr_240,Quelles conditions s’appliquent à discipline?,"D'apr�
 * Fournir leurs services à l’Université ;
 * Fournir leurs services à la profession et à la communauté.
 
-Ces activités ont des implications diverses pour la charge de travail des membres et peuvent varier selon la discipline du membre, du membre à l'autre et d'une année à l'autre pour chaque membre.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Discipline,medium,3,False,2722ba9a-2f56-4f46-aa50-8d201abbe577,0.4438,0.3883,0.0164,"ARTICLE 10 - ACTIVITES UNIVERSITAIRES
+Ces activités ont des implications diverses pour la charge de travail des membres et peuvent varier selon la discipline du membre, du membre à l'autre et d'une année à l'autre pour chaque membre.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Discipline,medium,3,True,2722ba9a-2f56-4f46-aa50-8d201abbe577,0.4438,0.3883,0.0164,"ARTICLE 10 - ACTIVITES UNIVERSITAIRES
 10.01 En tant qu’universitaires, les membres de l’unité de négociation se consacrent à la transmission et à l’expression
 créatrice du savoir, à son éclaircissement et à l'élargissement de ses frontières, à l’administration universitaire et au
 service à la profession et à la communauté, Ils ont le droit d’exercer les activités suivantes et l’on s’attend à ce qu’ils s’y
@@ -12759,7 +12759,7 @@ considérer de façon indépendante les questions concernant la santé et la sé
 Comité sera composé de deux
 (2) Membres représentant tous les groupes syndiqués de l'Université dont l'APPUL, un
 Membre représentant le Comité de sécurité des Sciences, du Génie et d’Architecture un représentant de l’Employeur, et il
-sera autorisé à coopter d'aut",0.119,0.0047,0.0746,0.0,0.0746,0.1106,0.25,0.4307,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.5765,3.7477,16.2594,4465.0,4470.1,833.5,9984.8,7.2,85.1,12288.0,907.0,768.0,,,,bridge,0.0,0.0,0.2,0.5,,,,,,,,
+sera autorisé à coopter d'aut",0.119,0.0047,0.0746,0.0,0.0746,0.1106,0.25,0.4307,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.5765,3.7477,16.2594,4465.0,4470.1,833.5,9984.8,7.2,85.1,12288.0,907.0,768.0,,,,bridge,0.0,0.0,0.2,1.0,,,,,,,,
 test_fr_244,test_fr_244,Comment la convention définit-elle ou décrit-elle congé d?,"Selon l'article 12.01 de la Convention collective 2018-2021, le but d'un congé sabbatique est de favoriser la poursuite de la connaissance et d'aider l'Université à atteindre ses objectifs de recherche en accordant aux membres de manière régulière une occasion de consacrer toute leur énergie à la recherche et à l'étude.
 
 En d'autres termes, le congé sabbatique est conçu pour permettre aux membres de consacrer un temps défini à la recherche et à l'étude, en bénéficiant d'une rémunération régulière.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,easy,1,True,2f6ffef8-8ffa-4cd7-a427-a4eb734b383c,0.3859,0.3377,0.0164,"ARTICLE 12.- CONGES SABBATIOUES
@@ -12795,7 +12795,7 @@ l’élection.
 35 de 59
 <<>>
 Convention collective 2015-2018",0.129,0.0053,0.0762,0.0,0.0762,0.107,0.0,0.0,0.0,0.0,0.0,0.8,1.0,0.8,,,,,3.2839,3.1567,15.7482,4465.0,4470.1,833.5,10001.9,7.4,82.6,12288.0,850.0,768.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
-test_fr_245,test_fr_245,"Selon la convention, qu’est-ce qui s’applique à fonds de recherche de?","Selon la convention collective 2017-2020, le soutien à la recherche (FRUL) est alloué par l'Université Laurentienne à tous les Membres du corps professoral, y compris les professeurs des universités fédérés ou affiliées, pour encourager leur productivité en travaux d'érudition. Le montant de l'allouement varie selon la Convention collective et est alloué chaque année.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Recherche,hard,3,False,90465ece-93fd-49bb-bdac-12f0847851c0,0.4319,0.3672,0.0318,"ARTICLE 6.25 – FONDS DE RECHERCHE DE
+test_fr_245,test_fr_245,"Selon la convention, qu’est-ce qui s’applique à fonds de recherche de?","Selon la convention collective 2017-2020, le soutien à la recherche (FRUL) est alloué par l'Université Laurentienne à tous les Membres du corps professoral, y compris les professeurs des universités fédérés ou affiliées, pour encourager leur productivité en travaux d'érudition. Le montant de l'allouement varie selon la Convention collective et est alloué chaque année.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Recherche,hard,3,True,90465ece-93fd-49bb-bdac-12f0847851c0,0.4319,0.3672,0.0318,"ARTICLE 6.25 – FONDS DE RECHERCHE DE
 L’UNIVERSITÉ LAURENTIENNE (FRUL)
 6.25.1 Pour chacune des années de la Convention collective, l’Employeur fournit au vice-recteur à la recherche un certain
 financement dans le
@@ -12868,7 +12868,7 @@ Cette section mentionne deux étapes principales dans la procédure de résoluti
 1. Stade de la plainte
 2. Grief par écrit
 
-Au cours du processus, il est convenu que ""aucun grief n'est déposé avant que l'administrateur concerné ait eu l'occasion de corriger la situation dont se plaint le Syndicat.""",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,False,97c13570-73d3-4522-993b-e0ab451203d5,0.2233,0.1898,0.0164,"Les candidats que le FRUL ne subventionne pas reçoivent du comité du
+Au cours du processus, il est convenu que ""aucun grief n'est déposé avant que l'administrateur concerné ait eu l'occasion de corriger la situation dont se plaint le Syndicat.""",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,True,97c13570-73d3-4522-993b-e0ab451203d5,0.2233,0.1898,0.0164,"Les candidats que le FRUL ne subventionne pas reçoivent du comité du
 FRUL une explication des raisons du refus.
 6.25.7 Les candidats dont la demande est rejetée par le comité du FRUL ont recours à la procédure d’appel seulement
 dans les cas où il y a allégation d’atteinte à la liberté universitaire, de vices de procédure importants ou de discrimination. L’avis d’appel est soumis au
@@ -13386,7 +13386,7 @@ chaque fois qu’ils enseignent ce cours. Ceci inclut les cours d’un (1) semes
 printemps ou d’autres sessions de la même année universitaire.
 4.15.17 Les Membres de Chargés de cours ayant le statut prioritaire et le plus d'ancienneté ont la priorité pour le
 renouvellement de leur nomination, sous réserve de notification de ce droit pour ",0.1875,0.012,0.1899,0.0385,0.1139,0.2083,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,2.2561,1.6994,14.064,4467.0,4472.1,832.8,9964.5,7.1,84.0,12288.0,902.0,768.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
-test_fr_301,test_fr_301,Quelles conditions s’appliquent à équité en matière d?,"D'emploi pour chaque discipline, les Parties tiennent compte, entre autres facteurs, du nombre de candidats au doctorat dans les universités canadiennes conformément aux données publiées par Statistique Canada.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Promotion,medium,3,False,163a9936-67d2-4650-afd1-cc76e3c36513,0.4202,0.3572,0.0298,"À compter du 1er juillet 2017, tous les Maîtres de conférences titulaires d’un doctorat recevront une augmentation
+test_fr_301,test_fr_301,Quelles conditions s’appliquent à équité en matière d?,"D'emploi pour chaque discipline, les Parties tiennent compte, entre autres facteurs, du nombre de candidats au doctorat dans les universités canadiennes conformément aux données publiées par Statistique Canada.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Promotion,medium,3,True,163a9936-67d2-4650-afd1-cc76e3c36513,0.4202,0.3572,0.0298,"À compter du 1er juillet 2017, tous les Maîtres de conférences titulaires d’un doctorat recevront une augmentation
 correspondant à un (1) échelon.
 5.20.49 Les postes de Maître de conférences déclarés en excédent sont régis par les mêmes dispositions de l’Article 10
 qui s’appliquent aux Membres du corps professoral à temps plein.
@@ -13424,7 +13424,7 @@ Selon l'article 8.01 de la convention collective, le Comité des affaires profes
 * Congé sabbatique
 * Tout autre affaire dont le Comité peut être saisi.
 
-Le Comité est également responsable de la transmission des documents du Comité aux parties prenantes, notamment au Recteur et au Syndicat.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Gouvernance,medium,3,False,6969be9d-0715-4f7e-9a89-573ec7b4586d,0.452,0.3616,0.0313,"ARTICLE 8 – COMITÉ DES AFFAIRES PROFESSORALES
+Le Comité est également responsable de la transmission des documents du Comité aux parties prenantes, notamment au Recteur et au Syndicat.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Gouvernance,medium,3,True,6969be9d-0715-4f7e-9a89-573ec7b4586d,0.452,0.3616,0.0313,"ARTICLE 8 – COMITÉ DES AFFAIRES PROFESSORALES
 8.01 Objet
 Compte tenu du fait que l’évaluation des demandes de congés sabbatiques, de renouvellement, de promotion et de
 permanence exige une évaluation par les pairs, un Comité des affaires professorales est chargé de faire des
@@ -13502,7 +13502,7 @@ test_fr_308,test_fr_308,"Quelles sont les règles concernant congés de maternit
 * Congés d'adoption :
  + Il n'y a pas d'information spécifique sur les congés d'adoption dans le texte fourni.
 
-Il est important de noter que ces règles peuvent être sujettes à modification ou aux exceptions énoncées dans le texte, telles que la participation volontaire à des émeutes, des guerres, des manifestations tumultueuses (7.55.9).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,False,3fce9282-b716-4c09-91d6-0b5b87d0974b,0.4826,0.3016,0.0318,"Lorsque le rapport est demandé à la suite d’une préoccupation réelle pour la sécurité du Membre ou des autres
+Il est important de noter que ces règles peuvent être sujettes à modification ou aux exceptions énoncées dans le texte, telles que la participation volontaire à des émeutes, des guerres, des manifestations tumultueuses (7.55.9).",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,True,3fce9282-b716-4c09-91d6-0b5b87d0974b,0.4826,0.3016,0.0318,"Lorsque le rapport est demandé à la suite d’une préoccupation réelle pour la sécurité du Membre ou des autres
 Membres de la communauté universitaire, le rapport en question, outre l’information en vertu de l’alinéa 7.55.6 (d) ci-
 dessus atteste si oui ou non le comportement du
 Membre est un danger pour la sécurité du Membre ou des autres Membres de la communauté universitaire.
@@ -13675,7 +13675,7 @@ De plus, si dans les sept (7) jours, l'Université n'a pas été informée, l'Un
 
 Il convient de noter que l'exécuteur testamentaire ou le plus proche parent a accès aux fichiers du Membre décédé pour une période d'au moins un (1) an, et que la propriété des fichiers informatiques et des contenus du bureau qui appartient au Membre est déterminée par le testament du Membre.
 
-Ces règles sont précisées à l'article 8.85 de la Convention collective de l'Association des professeurs de l'Université Laurentienne.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,medium,3,False,4d557eaa-f6a7-4116-94e8-61a8d72a8dfd,0.4043,0.3437,0.0325,"En l’absence d’une
+Ces règles sont précisées à l'article 8.85 de la Convention collective de l'Association des professeurs de l'Université Laurentienne.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,medium,3,True,4d557eaa-f6a7-4116-94e8-61a8d72a8dfd,0.4043,0.3437,0.0325,"En l’absence d’une
 déclaration signée autorisant l’accès, l’exécuteur testamentaire a accès en cas de mortalité et le plus proche parent a
 accès en cas d’incapacité. L’exécuteur testamentaire ou le plus proche parent a accès aux fichiers du Membre décédé
 pour une période d’au moins un (1) an. La propriété des fichiers informatiques et des contenus du bureau qui appartient
@@ -13871,7 +13871,7 @@ test_fr_322,test_fr_322,Comment la convention définit-elle ou décrit-elle réd
  + La demande soit normalement soumise au Département/à l’École et au Doyen/Directeur de bibliothèque trois (3) mois à l'avance ;
  + Le Doyen/Directeur de bibliothécaire approuve la demande, cette approbation ne pouvant pas être refusée sans raison valable.
 
-En outre, l'article 7.35 définit également les règles pour les réductions volontaires de la charge de travail pour des périodes de plus de douze (12) mois, ainsi que le renouvellement d'une période de douze (12) mois, sous réserve de l'approbation du Doyen/Bibliothécaire en chef.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Unité de négociation,hard,3,False,64d5f865-c09e-48f9-b265-ee726ff5755f,0.4715,0.4007,0.0164,"Si un Membre retourne à l'Université pour une période moindre que celle du congé d'études,
+En outre, l'article 7.35 définit également les règles pour les réductions volontaires de la charge de travail pour des périodes de plus de douze (12) mois, ainsi que le renouvellement d'une période de douze (12) mois, sous réserve de l'approbation du Doyen/Bibliothécaire en chef.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Unité de négociation,hard,3,True,64d5f865-c09e-48f9-b265-ee726ff5755f,0.4715,0.4007,0.0164,"Si un Membre retourne à l'Université pour une période moindre que celle du congé d'études,
 l'Université exige du Membre le remboursement de tout ou partie de la rémunération reçue pendant le congé.
 (b) Le Membre fait parvenir à son
 Doyen/Directeur de bibliothèque et à son Directeur de Département/d’École, dans un délai maximum d'une (1) semaine, à
@@ -14027,7 +14027,7 @@ conformité avec la politique du Sénat. A) Deuxième partie – Exercice de la 
 5.15.15 Les Membres bibliothécaires sont tenus de développer et de maintenir compétence et efficacité dans leur
 spécialité.
 5.15.16 Même si les deux parties reconnaissent qu’une consultation suffisante est essentielle dans la mesure du
-possible entre le Membre et le bibliothécaire en chef au sujet de l'attribu",0.1351,0.0107,0.1308,0.0381,0.1121,0.1675,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4,,,,,2.8215,3.7373,16.7241,4467.0,4472.1,831.7,9799.4,7.4,87.7,12288.0,908.0,768.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
+possible entre le Membre et le bibliothécaire en chef au sujet de l'attribu",0.1351,0.0107,0.1308,0.0381,0.1121,0.1675,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.4,,,,,2.8215,3.7373,16.7241,4467.0,4472.1,831.7,9799.4,7.4,87.7,12288.0,908.0,768.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
 test_fr_334,test_fr_334,Que prévoit la convention collective concernant équité en matière d?,"La convention collective prévoit l'équité en matière d'emploi, plus précisément :
 
 * Les Parties s'engagent à travailler afin d'augmenter la proportion de membres du corps professoral qui appartiennent aux quatre (4) groupes désignés aux fins de l'équité en matière d'emploi : femmes, autochtones, personnes handicapées et membres des minorités visibles.
@@ -14151,11 +14151,11 @@ suivantes :
 (a) Un membre a le droit de passer un (1) trimestre sans charge d’enseignement parmi les
 70 de 243
 <<>>
-Convention collective 2011-14 trimestres d’automn",0.1882,0.0085,0.2031,0.0,0.1406,0.1318,1.0,1.0,1.0,1.0,1.0,0.6,0.6,0.2,,,,,2.2533,3.6644,16.0843,4467.0,4472.1,830.6,10005.4,7.2,82.1,12288.0,904.0,768.0,,,,bridge,1.0,0.3333,0.2,0.5,,,,,,,,
+Convention collective 2011-14 trimestres d’automn",0.1882,0.0085,0.2031,0.0,0.1406,0.1318,1.0,1.0,1.0,1.0,1.0,0.6,0.6,0.2,,,,,2.2533,3.6644,16.0843,4467.0,4472.1,830.6,10005.4,7.2,82.1,12288.0,904.0,768.0,,,,bridge,1.0,0.3333,0.2,1.0,,,,,,,,
 test_fr_344,test_fr_344,Comment la convention collective traite-t-elle de financière situation?,"Selon l'article 10.15 de la convention collective, une ""situation financière critique"" est définie comme des déficits substantiels et répétés qui menacent la solvabilité à long terme de l'Université dans son ensemble. Cette situation nécessite des mesures spécifiques pour être gérée, notamment :
 
 - Les réductions de personnel enseignant ne se font que dans des conditions extraordinaires et après avoir été épuisés tous les autres moyens d'améliorer la situation financière.
-- La procédure d'adoption des décisions concernant la gestion de cette situation est spécifiquement définie, notamment la création d'un Comité financier qui étudiera et décidera sur la situation financière critique invoquée.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,False,21513ae1-d874-4d32-b608-41846b00c29d,0.3736,0.3175,0.0164,"ARTICLE 10.15 – SITUATION FINANCIÈRE CRITIQUE
+- La procédure d'adoption des décisions concernant la gestion de cette situation est spécifiquement définie, notamment la création d'un Comité financier qui étudiera et décidera sur la situation financière critique invoquée.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,True,21513ae1-d874-4d32-b608-41846b00c29d,0.3736,0.3175,0.0164,"ARTICLE 10.15 – SITUATION FINANCIÈRE CRITIQUE
 10.15.1 Il est convenu par l’Employeur et le Syndicat que le devoir essentiel de l'Université est d'assurer que ses priorités
 universitaires demeurent d'importance primordiale, en particulier en ce qui concerne la qualité de l'enseignement, de la
 recherche et des services de bibliothèque ainsi que la protection de la liberté universitaire.
@@ -14247,7 +14247,7 @@ Département et l’Employeur peuvent chercher des candidats extérieurs une foi
 <<>>
 Convention collective 2018-2021
 Processus de nomination",0.2151,0.017,0.1583,0.0146,0.1007,0.2342,0.5,0.6309,0.0,1.0,1.0,0.8,1.0,0.2,,,,,2.2515,2.814,13.5232,4467.0,4472.1,830.0,9563.7,7.2,82.4,12288.0,710.0,768.0,,,,bridge,0.0,0.3333,0.2,,,,,,,,,
-test_fr_348,test_fr_348,Qu’est-il indiqué au sujet de ci- dessus?,Je ne trouve pas d'information spécifique sur le sujet demandé. Pourriez-vous fournir plus de contexte ou préciser la question que vous souhaitez répondre ?,llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Salaire,easy,3,False,a5a3c439-cb1d-430c-b593-d88b7dca5edc,0.3939,0.3349,0.0164,"Le
+test_fr_348,test_fr_348,Qu’est-il indiqué au sujet de ci- dessus?,Je ne trouve pas d'information spécifique sur le sujet demandé. Pourriez-vous fournir plus de contexte ou préciser la question que vous souhaitez répondre ?,llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Salaire,easy,3,True,a5a3c439-cb1d-430c-b593-d88b7dca5edc,0.3939,0.3349,0.0164,"Le
 Syndicat tient l’Université indemne et prend le fait et cause de l’Université dans les éventuelles actions en justice qui
 pourraient être intentées contre l’Université à la suite d’autorisation fautive de précompte et du refus de la part du
 Syndicat de rembourser l’employé dans les soixante (60) jours suivant la plainte.
@@ -14325,7 +14325,7 @@ test_fr_355,test_fr_355,Quelles sont les règles concernant liberté universitai
 9. La liberté d’exprimer ses opinions sur l’Université, l’administration et le système au sein duquel on travaille.
 10. La reconnaissance des travaux des autres et une prise de responsabilité pour ses propres croyances et propos.
 
-Il est important de noter que la liberté universitaire ne confère pas l'immunité juridique et qu'elle exige respect de la vie privée des membres.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Liberté académique,medium,3,False,9704f595-2abb-4f60-9b54-aced36aaef27,0.5611,0.4489,0.0323,"0.02 Liberté universitaire
+Il est important de noter que la liberté universitaire ne confère pas l'immunité juridique et qu'elle exige respect de la vie privée des membres.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Liberté académique,medium,3,True,9704f595-2abb-4f60-9b54-aced36aaef27,0.5611,0.4489,0.0323,"0.02 Liberté universitaire
 (a) L’Université ayant pour objectif fondamental la recherche de nouvelles connaissances et la libre dissémination du
 savoir, la liberté universitaire est essentielle à ses activités d’enseignement et de recherche. Les Parties reconnaissent
 leur engagement en faveur de la poursuite de la vérité, du progrès des connaissances et de la création, de l’interprétation,
@@ -14394,7 +14394,7 @@ communiqué par écrit au Membre par le
 Doyen/Bibliothécaire en chef avant le 15 juillet, après consultation du secrétaire général. Pendant la durée de la présente Convention collective, le secrétaire",0.25,0.0171,0.2123,0.0565,0.1676,0.2576,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,2.9353,3.8713,19.4598,4467.0,4472.1,830.0,9981.8,7.5,87.5,12288.0,911.0,768.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
 test_fr_367,test_fr_367,Quelles sont les règles concernant situation financière critique?,"Selon l'article 39.04 de la Convention collective, les membres qui sont sélectionnés pour une réduction d'effectifs doivent être sélectionnés uniquement dans le cadre d'un état de nécessité financière déclaré et confirmé, conformément aux procédures contenues dans cet article.
 
-En d'autres termes, il faut que le Syndicat déclaire qu'il y a un problème financier grave pour pouvoir effectuer une réduction d'effectifs. Cela doit être confirmé par les procédures prévues dans la convention collective.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,hard,3,False,39d14a7b-6bad-4fa7-a084-a0485a119c43,0.3295,0.2801,0.0164,"39.19 Members who are selected for lay-off under this Article shall be provided with written notice
+En d'autres termes, il faut que le Syndicat déclaire qu'il y a un problème financier grave pour pouvoir effectuer une réduction d'effectifs. Cela doit être confirmé par les procédures prévues dans la convention collective.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,hard,3,True,39d14a7b-6bad-4fa7-a084-a0485a119c43,0.3295,0.2801,0.0164,"39.19 Members who are selected for lay-off under this Article shall be provided with written notice
 of the reasons for their selection. Lay-offs under this Article shall not be treated or recorded
 as dismissals for cause.",63e3c87c-0bc7-4c7f-b899-08a0cc6ec40e,0.0164,0.0139,0.0164,"Si vous les trouvez acceptables, veuillez signer le formulaire et
 nous en retourner un exemplaire. Un exemplaire de la convention collective avec l’Association des professeures et des professeurs de l’Université
@@ -14509,7 +14509,7 @@ de la nomination à durée limitée, à moins qu’elles n’aient été empêch
 à durée limitée est renouvelée, ou si la personne obtient une nomination à l’essai, elle sera nommée de nouveau au rang
 qu’elle occupait pendant sa nomination antérieure. Après sa nouvelle nomination, ce
 M",0.288,0.0116,0.2574,0.02,0.1386,0.2281,0.0,0.0,0.0,0.0,0.0,1.0,0.4,0.6,,,,,2.9791,3.8117,20.0539,4467.0,4472.1,830.6,9931.5,7.5,87.3,12288.0,915.0,768.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
-test_fr_376,test_fr_376,Qu’est-il indiqué au sujet de congé non rémunéré?,"Un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable. (Article 7.40.1)",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,hard,3,False,89e7a441-8f86-447c-bd61-bef479329e1c,0.4379,0.3722,0.0328,"ARTICLE 7.40 – CONGÉ NON RÉMUNÉRÉ
+test_fr_376,test_fr_376,Qu’est-il indiqué au sujet de congé non rémunéré?,"Un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable. (Article 7.40.1)",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,hard,3,True,89e7a441-8f86-447c-bd61-bef479329e1c,0.4379,0.3722,0.0328,"ARTICLE 7.40 – CONGÉ NON RÉMUNÉRÉ
 7.40.1 Un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et
 qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les
 arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable.
@@ -14532,12 +14532,12 @@ ne peut pas refuser son autorisation sans raison valable.
 Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit
 envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur
 ne peut pas refuser son autorisation sans raison valable.
-7.40.2 Habituellement, la demande d'un congé non rémunéré, contenant un exposé de l'objet, est soumise par écrit a",0.2444,0.0184,0.2689,0.0342,0.2017,0.1468,0.25,0.4307,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.2575,3.7928,111.3962,4467.0,4472.1,830.6,9991.9,7.9,90.6,12288.0,6357.0,2225.0,,,,bridge,0.0,0.0,0.2,0.5,,,,,,,,
+7.40.2 Habituellement, la demande d'un congé non rémunéré, contenant un exposé de l'objet, est soumise par écrit a",0.2444,0.0184,0.2689,0.0342,0.2017,0.1468,0.25,0.4307,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.2575,3.7928,111.3962,4467.0,4472.1,830.6,9991.9,7.9,90.6,12288.0,6357.0,2225.0,,,,bridge,0.0,0.0,0.2,1.0,,,,,,,,
 test_fr_380,test_fr_380,Comment la convention collective traite-t-elle de vacances?,"Selon l'article 17.03 de la Convention collective 2015-2018, les membres sont tenus de prendre les jours de vacances aux dates qui leur conviennent, pourvu qu'elles ne soient pas en conflit avec la période pendant laquelle ils doivent exécuter les tâches qui leur sont assignées.
 
 De plus, l'article 7.15.5 précise que si un membre décède, la valeur de tout crédit de vacances inutilisé est payée à son bénéficiaire.
 
-Enfin, l'article 7.15.6 traite des cas de retraite, démission ou fin de contrat à durée limitée, où les membres qui sont dans l'impossibilité de prendre en totalité les congés annuels auxquels ils ont droit reçoivent un paiement de congé annuel correspondant à la différence entre le nombre de jours de congé annuel auquel ils ont droit et le nombre de journées de travail qui tombent après l’échéance de remise des notes finales.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,hard,3,False,e7f8952f-aeef-42d7-827f-4dd98948aae6,0.4975,0.398,0.0164,"17.03 Les membres sont tenus de prendre les jours de vacances
+Enfin, l'article 7.15.6 traite des cas de retraite, démission ou fin de contrat à durée limitée, où les membres qui sont dans l'impossibilité de prendre en totalité les congés annuels auxquels ils ont droit reçoivent un paiement de congé annuel correspondant à la différence entre le nombre de jours de congé annuel auquel ils ont droit et le nombre de journées de travail qui tombent après l’échéance de remise des notes finales.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,hard,3,True,e7f8952f-aeef-42d7-827f-4dd98948aae6,0.4975,0.398,0.0164,"17.03 Les membres sont tenus de prendre les jours de vacances
 39 de 59
 <<>>
 Convention collective 2015-2018 auxquels ils ont droit. Les vacances ne peuvent s’accumuler d’une année à l’autre.",8e0f4ad0-8500-435b-897c-db2aa5f2d77c,0.0164,0.0139,0.0164,"Avant le 1er juillet, chaque partie
@@ -14570,7 +14570,7 @@ test_fr_381,test_fr_381,Que dit la convention collective au sujet de surcharges 
 * Les bibliothécaires et les archivistes peuvent se voir attribuer des surcharges et des demi-surcharges conformément à la formule décrite dans le présent article (article 8.35.4).
 * Les membres estimant avoir droit à une allocation de surcharge doivent en faire la demande selon les dispositions de l'article 5.40 – Charge de travail universitaire (article 8.35.5).
 
-En outre, l'article 8.40 – Courses de Formation à Distance indique que l'élaboration et la supervision des cours de formation à distance ou en ligne font partie intégrante des fonctions normales du personnel universitaire et peuvent être également considérées comme une partie intégrante d'une charge de travail normale, ou attribuées comme une surcharge.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Charge de travail,hard,3,False,1de954fd-3601-4778-b451-c34c2ad217bd,0.4086,0.2554,0.032,"ARTICLE 8.35 – SURCHARGES DE TRAVAIL
+En outre, l'article 8.40 – Courses de Formation à Distance indique que l'élaboration et la supervision des cours de formation à distance ou en ligne font partie intégrante des fonctions normales du personnel universitaire et peuvent être également considérées comme une partie intégrante d'une charge de travail normale, ou attribuées comme une surcharge.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Charge de travail,hard,3,True,1de954fd-3601-4778-b451-c34c2ad217bd,0.4086,0.2554,0.032,"ARTICLE 8.35 – SURCHARGES DE TRAVAIL
 8.35.1 Tous les professeurs de quelque rang que ce soit et à temps plein, qui enseignent un cours en surcharge et
 rémunéré, reçoivent le paiement indiqué ci- dessous pour les cours commençant après les dates indiquées :
 Cours entier Demi-cours
@@ -14643,7 +14643,7 @@ arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son
 Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit
 envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur
 ne peut pas refuser son autorisation sans raison valable.
-7.40.2 Habituellement, la demande d'un congé non rémunéré, contenant un exposé de l'objet, est soumise par écrit a",0.0625,0.0051,0.044,0.0,0.022,0.0606,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.2726,0.6498,9.1647,4467.0,4472.1,853.0,9810.2,6.4,78.4,12288.0,906.0,768.0,,,,bridge,0.0,0.0,0.2,0.5,,,,,,,,
+7.40.2 Habituellement, la demande d'un congé non rémunéré, contenant un exposé de l'objet, est soumise par écrit a",0.0625,0.0051,0.044,0.0,0.022,0.0606,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,1.0,,,,,2.2726,0.6498,9.1647,4467.0,4472.1,853.0,9810.2,6.4,78.4,12288.0,906.0,768.0,,,,bridge,0.0,0.0,0.2,1.0,,,,,,,,
 test_fr_387,test_fr_387,Quelles conditions s’appliquent à congé d'études?,"Selon l'article 13.01 de la Convention collective 2008-11, un congé d'études avec traitement est accordé pour permettre à un membre de poursuivre un programme d'études qui lui bénéficiera et pour permettre à l'Université de satisfaire à des besoins spécifiques.
 
 Les périodes de congé d'études peuvent varier, et l'admissibilité aux vacances est proportionnelle à la longueur du congé.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,2,True,041477a5-52f1-4db5-84b5-791aa3056185,0.5283,0.4226,0.0164,"ARTICLE 13 - CONGÉ D’ÉTUDES
@@ -14743,7 +14743,7 @@ mécanismes appropriés menant",5d6e745e-c348-4f7d-878c-804e0441e2e0,0.4109,0.32
 traitement, et renvoie la personne à la Convention collective pour les avantages sociaux, les fonds de perfectionnement
 professionnel, le statut prioritaire ou l’ancienneté, les heures réputées travaillées et les conditions de résiliation. Un lien
 vers la Convention collective en vigueur accompagne chaque offre d’emploi.",0.129,0.0117,0.1429,0.0208,0.1224,0.1966,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6,,,,,2.7313,3.1381,12.2654,4467.0,4472.1,830.6,9966.1,7.0,82.0,12288.0,856.0,768.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
-test_fr_397,test_fr_397,"Selon la convention, qu’est-ce qui s’applique à congé non rémunéré?","Selon l'article 7.40 de la Convention collective 2011-14, un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Avantages sociaux,medium,3,False,89e7a441-8f86-447c-bd61-bef479329e1c,0.5153,0.438,0.0328,"ARTICLE 7.40 – CONGÉ NON RÉMUNÉRÉ
+test_fr_397,test_fr_397,"Selon la convention, qu’est-ce qui s’applique à congé non rémunéré?","Selon l'article 7.40 de la Convention collective 2011-14, un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Avantages sociaux,medium,3,True,89e7a441-8f86-447c-bd61-bef479329e1c,0.5153,0.438,0.0328,"ARTICLE 7.40 – CONGÉ NON RÉMUNÉRÉ
 7.40.1 Un congé sans rémunération peut être accordé à un Membre, selon des conditions acceptables pour l'Université et
 qui sont spécifiées, au préalable, dans un document écrit envoyé au Syndicat avant la date du congé, et indiquant les
 arrangements au sujet des avantages sociaux. L'Employeur ne peut pas refuser son autorisation sans raison valable.
@@ -14800,7 +14800,7 @@ test_fr_400,test_fr_400,Que prévoit la convention collective concernant comité
 
 Le Comité est composé de membres spécifiques, notamment un représentant qui a la permanence et qui est élu par le Département, deux membres non désignés ayant la permanence ou à l’essai élus, un membre non désigné à plein temps pour agir comme substitut, le Doyen de la Faculté des arts, le Secrétaire général ou un administrateur supérieur chargé des affaires professorales de l'Université, sans droit de vote. (Article 8.02)
 
-Le Comité se réunit au moins une fois par trimestre, sauf s'il n'y a pas de matière à discuter à un trimestre donné. Le quorum est constitué du président et des cinq membres élus du corps professoral pour les questions relatives aux renouvellements, promotions et permanences, et du président et trois membres élus du corps professoral pour toutes autres questions. (Article 8.06)",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Gouvernance,medium,3,False,6969be9d-0715-4f7e-9a89-573ec7b4586d,0.4557,0.3646,0.0313,"ARTICLE 8 – COMITÉ DES AFFAIRES PROFESSORALES
+Le Comité se réunit au moins une fois par trimestre, sauf s'il n'y a pas de matière à discuter à un trimestre donné. Le quorum est constitué du président et des cinq membres élus du corps professoral pour les questions relatives aux renouvellements, promotions et permanences, et du président et trois membres élus du corps professoral pour toutes autres questions. (Article 8.06)",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Gouvernance,medium,3,True,6969be9d-0715-4f7e-9a89-573ec7b4586d,0.4557,0.3646,0.0313,"ARTICLE 8 – COMITÉ DES AFFAIRES PROFESSORALES
 8.01 Objet
 Compte tenu du fait que l’évaluation des demandes de congés sabbatiques, de renouvellement, de promotion et de
 permanence exige une évaluation par les pairs, un Comité des affaires professorales est chargé de faire des
@@ -15087,7 +15087,7 @@ Doyen/Directeur de la bibliothèque des résultats du processus de sélection et
 Comité.
 9.15.10 Si le Doyen/Bibliothécaire en chef est prêt à accepter la recommandation du Comité de sélection, il fera part de
 cette r",0.1869,0.0133,0.1827,0.0291,0.1346,0.1204,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6,,,,,2.8714,3.8483,20.33,4467.0,4472.1,830.6,9824.5,7.5,85.9,12288.0,908.0,768.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
-test_fr_414,test_fr_414,"Selon la convention, qu’est-ce qui s’applique à discipline?","Selon l'article 5.50 - Évaluation des services rendus, les domaines d'activité identifiés dans l'article 10 - Activités universitaires ont des implications diverses pour la charge de travail des membres et peuvent varier selon la discipline d’un membre, d’un membre à l’autre et d’une année à l’autre pour chaque membre.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Discipline,medium,3,False,6aa2efc1-bf6a-4796-959d-686a5b509521,0.4549,0.3867,0.0309,"Les Articles énumérés ci-dessous s'appliquent dans l'interprétation des présentes lignes directrices.
+test_fr_414,test_fr_414,"Selon la convention, qu’est-ce qui s’applique à discipline?","Selon l'article 5.50 - Évaluation des services rendus, les domaines d'activité identifiés dans l'article 10 - Activités universitaires ont des implications diverses pour la charge de travail des membres et peuvent varier selon la discipline d’un membre, d’un membre à l’autre et d’une année à l’autre pour chaque membre.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Discipline,medium,3,True,6aa2efc1-bf6a-4796-959d-686a5b509521,0.4549,0.3867,0.0309,"Les Articles énumérés ci-dessous s'appliquent dans l'interprétation des présentes lignes directrices.
 (a) Article 5.10 – Lignes directrices touchant les titres universitaires.
 (b) Article 5.15 – Droits, obligations et responsabilités du personnel enseignant et des bibliothécaires professionnels.
 (c) Article 5.50 – Évaluation des services rendus.
@@ -15120,7 +15120,7 @@ Convention collective 2017-2020
 (d) Dans le cas des personnes nommées avant le
 1er juillet 2002, l’article 2.20 de la Convention collective 1999-2002 est en vigueur.
 5.10.2 Lignes dire",0.1667,0.0086,0.1667,0.0,0.1429,0.1246,0.0,0.0,0.0,0.0,0.0,0.4,0.2,0.2,,,,,2.2733,2.8883,97.5797,4467.0,4472.1,831.7,9998.9,7.9,90.9,12288.0,6439.0,2254.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
-test_fr_417,test_fr_417,Comment la convention collective traite-t-elle de et du?,"Selon l'article 1.15.2 de la Convention collective, les Parties conviennent de collaborer pour que la version élaborée au cours des négociations soit traduite dans un délai de quatre-vingt-dix (90) jours, dans l’autre langue officielle du Canada, et de partager également le coût de la traduction.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,medium,3,False,7e7703da-812e-4bae-afa7-665541b215c0,0.3878,0.3781,0.0303,"Ce titre sera cité ci-dessous sous la forme de « la Convention collective ». ARTICLE 1.15 – LANGUES OFFICIELLES
+test_fr_417,test_fr_417,Comment la convention collective traite-t-elle de et du?,"Selon l'article 1.15.2 de la Convention collective, les Parties conviennent de collaborer pour que la version élaborée au cours des négociations soit traduite dans un délai de quatre-vingt-dix (90) jours, dans l’autre langue officielle du Canada, et de partager également le coût de la traduction.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,medium,3,True,7e7703da-812e-4bae-afa7-665541b215c0,0.3878,0.3781,0.0303,"Ce titre sera cité ci-dessous sous la forme de « la Convention collective ». ARTICLE 1.15 – LANGUES OFFICIELLES
 1.15.1 Les versions anglaise et française de la Convention collective sont toutes deux officielles et définitives. Les
 deux Parties peuvent utiliser la version anglaise ou la version française lorsqu'elles prennent des mesures en
 rapport avec la Convention collective, et elles appliquent la version de la Convention collective dans laquelle
@@ -15200,7 +15200,7 @@ test_fr_427,test_fr_427,Quelles sont les règles concernant chirurgiens habilit�
 
 Cependant, si vous voulez savoir si les enseignants ou les bibliothécaires ont des expériences pertinentes similaires à celles des chirurgiens, l'article 5.15 - Droits, obligations et responsabilités du personnel enseignant et des bibliothécaires professionnels, peut être pertinent.
 
-Il est possible que les règles concernant les chirurgiens soient spécifiques aux hôpitaux ou aux instituts de santé, et ne sont pas directement liées à la convention collective de l'Université Laurentienne.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,False,ce8451cb-daaf-4f32-8155-f7414f3403de,0.3654,0.3563,0.0164,"CARRIÈRE UNIVERSITAIRE
+Il est possible que les règles concernant les chirurgiens soient spécifiques aux hôpitaux ou aux instituts de santé, et ne sont pas directement liées à la convention collective de l'Université Laurentienne.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Congés,medium,3,True,ce8451cb-daaf-4f32-8155-f7414f3403de,0.3654,0.3563,0.0164,"CARRIÈRE UNIVERSITAIRE
 ARTICLE 5.10 – LIGNES DIRECTRICES TOUCHANT LES TITRES UNIVERSITAIRES
 5.10.1 Les définitions ci-dessous s'appliquent aux fins de la présente Convention collective :
 a) « Doctorat » signifie un PhD ou un autre grade officiellement reconnu comme l'équivalent d'un PhD
@@ -15232,7 +15232,7 @@ test_fr_428,test_fr_428,Que prévoit la convention collective concernant procéd
 3. Si le Vice-recteur aux études et provost ne transmet pas l'affaire au Comité permanent dans les délais prévus, le Membre est considéré gagnant dans cette affaire et l'Université est liée par ce résultat.
 4. Le Comité permanent doit faire des recommandations pour régler la question un (1) mois après avoir été saisi du grief.
 
-Il est important de noter que les délais peuvent être prolongés par accord mutuel.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,hard,3,False,5a77d0eb-ecdd-4b17-a536-fdcfa319bc1f,0.511,0.4472,0.0164,"ARTICLE 23-— GRIEVANCE PROCEDURE
+Il est important de noter que les délais peuvent être prolongés par accord mutuel.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,hard,3,True,5a77d0eb-ecdd-4b17-a536-fdcfa319bc1f,0.511,0.4472,0.0164,"ARTICLE 23-— GRIEVANCE PROCEDURE
 23.01 Definitions
 For the purposes ofarticles 23 and 24 herein, the following terms shall mean:
 (a) Complaint: any difference arising from the interpretation, application, administration or alleged violation ofthe collective
@@ -15479,7 +15479,7 @@ La distribution normale de la charge de travail parmi les trois composantes prin
 * Quarante pour cent (40 %) aux travaux d'érudition, y compris les engagements envers les organismes subventionnaires externes.
 * Vingt pour cent (20 %) à la régie de l'Université, aux tâches administratives et aux autres contributions à l'Université.
 
-Les membres dont la nomination est à durée limitée de douze (12) mois peuvent avoir une charge d'enseignement de trois (3) crédits de plus que la charge normale d'enseignement, dans certaines conditions.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Charge de travail,easy,3,False,43d83be2-d3b7-401b-a811-3b3c760a4954,0.4502,0.3152,0.0295,"Normalement, la distribution de la charge de travail parmi les trois
+Les membres dont la nomination est à durée limitée de douze (12) mois peuvent avoir une charge d'enseignement de trois (3) crédits de plus que la charge normale d'enseignement, dans certaines conditions.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Charge de travail,easy,3,True,43d83be2-d3b7-401b-a811-3b3c760a4954,0.4502,0.3152,0.0295,"Normalement, la distribution de la charge de travail parmi les trois
 (3) composantes principales est la suivante : quarante pour cent (40 %) à l'enseignement ou aux fonctions de
 bibliothécaire ou d'archiviste; quarante pour cent (40
 %) aux travaux d’érudition, y compris les engagements envers les organismes subventionnaires externes; et vingt pour
@@ -15589,7 +15589,7 @@ Le processus de révocation est régi par l'article 9.30.3 qui prévoit les éta
 - Si le Directeur ne démissionne pas de son propre gré, le Vice-recteur aux études et Provost prie le Doyen/Bibliothécaire en chef, après consultation des Membres du Département/de l’École, d'installer un Directeur intérimaire.
 - Le Recteur constitue un comité spécial qui examine la plainte selon les exigences statutaires. À la suite de cet examen, le Recteur rend sa décision sur la question de la révocation.
 
-En fin de compte, la décision du Recteur est sans appel et lie toutes les parties intéressées.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,medium,3,False,4ad3113b-f18b-435f-9029-e8f766c62fdc,0.4702,0.3997,0.0328,"ARTICLE 9.30 – RÉVOCATION DES DIRECTEURS
+En fin de compte, la décision du Recteur est sans appel et lie toutes les parties intéressées.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,medium,3,True,4ad3113b-f18b-435f-9029-e8f766c62fdc,0.4702,0.3997,0.0328,"ARTICLE 9.30 – RÉVOCATION DES DIRECTEURS
 9.30.1 Une procédure visant la révocation d'un
 Directeur peut être entamée :
 (a) En déposant une plainte sous forme écrite auprès du Doyen/Bibliothécaire en chef en spécifiant les motifs. La plainte
@@ -15865,7 +15865,7 @@ professeur adjoint à celui de professeur agrégé, et du rang de professeur agr
 cas des bibliothécaires et des archivistes, du rang de :
 (a) bibliothécaire/archiviste général à celui de bibliothécaire/archiviste adjoint,
 (b) bibliothécaire/archiviste adjoint à celui de bibliot",0.1935,0.01,0.1538,0.0348,0.1026,0.1659,0.2,0.2372,0.0,0.0,0.5,0.2,0.4,1.0,,,,,3.3319,4.143,18.5579,4467.0,4472.1,857.8,9881.8,7.5,87.7,12288.0,911.0,768.0,,,,bridge,0.0,0.0,0.2,0.5,,,,,,,,
-test_fr_473,test_fr_473,Comment la convention collective traite-t-elle de augmentation pour?,Je n'ai trouvé aucune référence à l'augmentation dans les textes fournis. Il semble que les informations relatives aux augmentations soient absentes des documents fournis.,llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,easy,3,False,4f713797-f7e4-4f4f-937e-aaa6178542b0,0.4407,0.3746,0.0164,"Une copie de toutes les lettres de refus d’un congé sabbatique ou de cours en surcharge envoyées aux
+test_fr_473,test_fr_473,Comment la convention collective traite-t-elle de augmentation pour?,Je n'ai trouvé aucune référence à l'augmentation dans les textes fournis. Il semble que les informations relatives aux augmentations soient absentes des documents fournis.,llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Enseignement,easy,3,True,4f713797-f7e4-4f4f-937e-aaa6178542b0,0.4407,0.3746,0.0164,"Une copie de toutes les lettres de refus d’un congé sabbatique ou de cours en surcharge envoyées aux
 Membres. Ces lettres doivent être présentées au Syndicat dans les quinze (15) jours suivant leur envoi.
 (m) Une copie des contrats de brevet et de droits d'auteur en vertu de l'Article 6.30
 – Brevets ainsi que de l’Article 6.35 –
@@ -16024,7 +16024,7 @@ b) Consacrer plus de temps aux travaux d’érudition ou de création;
 c) Renforcer les liens entre l'Université et d'autres universités ou d'autres pays, en tant que professeur ou bibliothécaire invité;
 d) Accroître son expérience pratique ou professionnelle dans un domaine se rapportant à sa spécialité qui lui permette d'enseigner, ou dans le cas de la bibliothèque, d'assurer un service plus complet et mieux adapté aux conditions contemporaines.
 
-Les Membres en congé sabbatique qui choisissent d'être présents sur le campus pendant leur période de congé sont dispensés de la charge usuelle de travail et ne participent pas normalement aux activités universitaires, sauf stipulation contraire dans la Convention collective.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,False,a880a003-2035-4824-af10-583960ffc7e7,0.464,0.3944,0.0303,"À cette fin, le congé sabbatique est défini comme étant une période durant laquelle le
+Les Membres en congé sabbatique qui choisissent d'être présents sur le campus pendant leur période de congé sont dispensés de la charge usuelle de travail et ne participent pas normalement aux activités universitaires, sauf stipulation contraire dans la Convention collective.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Dispositions générales,easy,3,True,a880a003-2035-4824-af10-583960ffc7e7,0.464,0.3944,0.0303,"À cette fin, le congé sabbatique est défini comme étant une période durant laquelle le
 Membre est déchargé de ses fonctions habituelles pour lui permettre de :
 (a) Continuer sa formation, poursuivre ses études à un niveau plus avancé dans un centre de recherches ou d'études
 supérieures, ou suivre des cours de langue;
@@ -16102,7 +16102,7 @@ travaux d’érudition et de service à l’Université, à la profession et à 
 rapportant à l'enseignement et aux traitements) constitue effectivement une crise budgétaire telle que les déficits prévus
 par les méthodes de comptabilité généralement acceptées semblent se prolonger pendant plus de deux (2) années
 fiscales;
-(b) si oui ou non, dans la perspective de la primauté des objectifs pédagogiques de l'Université, la ré",0.1867,0.0352,0.1243,0.0852,0.1073,0.2987,0.0,0.0,0.0,0.0,0.0,1.0,0.6,1.0,,,,,3.2517,3.8925,84.7137,4467.0,4472.1,834.6,10019.6,7.9,93.5,12288.0,4839.0,1694.0,,,,bridge,0.0,0.0,0.0,1.0,,,,,,,,
+(b) si oui ou non, dans la perspective de la primauté des objectifs pédagogiques de l'Université, la ré",0.1867,0.0352,0.1243,0.0852,0.1073,0.2987,0.0,0.0,0.0,0.0,0.0,1.0,0.6,1.0,,,,,3.2517,3.8925,84.7137,4467.0,4472.1,834.6,10019.6,7.9,93.5,12288.0,4839.0,1694.0,,,,bridge,0.0,0.0,0.0,0.5,,,,,,,,
 test_fr_495,test_fr_495,"Selon la convention, qu’est-ce qui s’applique à honoraires arbitre?","Je n'ai pas trouvé d'information spécifique sur ce qui s'applique aux honoraires d'un arbitre selon la Convention collective de l'Association des professeurs et des professeures de l'Université Laurentienne. Cependant, je peux vous dire que les honoraires d'un arbitre sont généralement déterminés par un contrat ou une convention spécifique, et qu'ils peuvent être affectés par des facteurs tels que la gravité du litige, le temps passé par le tribunal, etc.
 
 Il est possible que cette information soit contenue dans un article ou une section de la Convention collective qui n'a pas été fournie dans l'extrait que vous avez joint. Si vous avez besoin d'informations précises sur ce sujet, je vous recommande de consulter la Convention collective en question ou de contacter directement l'un des représentants de l'Université ou du Syndicat pour obtenir plus d'information.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Grief,easy,2,True,57311ae8-4a27-4b98-9473-5823acd89c20,0.3192,0.2713,0.0164,"Si l'auteur décide de ne pas entreprendre la révision, ou s'il n'a pas accepté la demande de révision de
@@ -16124,7 +16124,7 @@ La présente offre d’emploi est valable à condition que vous ayez légalement
 téléphoner si vous vous posez des questions sur votre droit de travailler au Canad",6ec097ff-df32-47f8-b8c9-ebd446f1f7a8,0.3176,0.27,0.0159,"18.03 Members shall have the right to have their files supplemented or corrected in the event of
 error or inadequacy. Members shall have the right to provide additional material for
 inclusion in their personnel files.",0.1731,0.0086,0.1163,0.0235,0.093,0.2184,0.0,0.0,0.0,0.0,0.0,0.6,0.4,0.2,,,,,2.5133,3.495,67.1486,4467.0,4472.1,834.6,10502.9,7.8,90.8,12288.0,4758.0,1665.0,,,,bridge,0.0,0.0,0.0,0.0,,,,,,,,
-test_fr_496,test_fr_496,Que dit la convention collective au sujet de stationnement consultatif?,"Les Membres ayant une invalidité temporaire ou permanente, ou les Membres enceintes, ont droit, sur demande à leur Doyen/Bibliothécaire en chef, à une place de stationnement réservé à proximité de leur bureau.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Gouvernance,medium,3,False,6ad62aa5-f5b6-49be-9199-4db360f95653,0.4021,0.2814,0.0328,"Tout changement à la police d'assurance actuelle
+test_fr_496,test_fr_496,Que dit la convention collective au sujet de stationnement consultatif?,"Les Membres ayant une invalidité temporaire ou permanente, ou les Membres enceintes, ont droit, sur demande à leur Doyen/Bibliothécaire en chef, à une place de stationnement réservé à proximité de leur bureau.",llama3.2:3b-gpu,llama3.2:3b-gpu,fr,tensortemplar/prometheus2:8x7b-Q4_K_S,Gouvernance,medium,3,True,6ad62aa5-f5b6-49be-9199-4db360f95653,0.4021,0.2814,0.0328,"Tout changement à la police d'assurance actuelle
 ne peut être apporté qu'avec l'accord préalable des Parties. ARTICLE 8.70 – STATIONNEMENT
 8.70.1 Les Parties reconnaissent que les Membres désirant réserver une place de stationnement dans un des parcs de
 stationnement du campus doivent payer les frais établis par l'Université. Les frais de stationnement sont établis après
