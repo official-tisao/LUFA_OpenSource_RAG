@@ -26,8 +26,40 @@ The model weights are only ~2 GB, but **SIZE showed 18 GB**. The cause is the
 - Llama 3.x advertises a **131 072-token** context.
 - LlamaIndex's `Ollama` client defaults `context_window = -1`, which makes it send
   `num_ctx = <model maximum>`.
-- A 131 072-token KV cache is ~18 GB. It cannot fit in 6 GB, so Ollama offloads most
-  layers to the CPU, while still reporting the model as "loaded".
+- A 131 072-token KV cache is ~18 GB. It cannot fit in 6 GB, so most of the allocation ends
+  up outside dedicated VRAM while the model still reports as "loaded".
+
+**What the PROCESSOR column does and does not tell you (corrected 2026-08-01).** `85%/15%
+CPU/GPU` is a **memory placement** figure: it reports how much of the allocation llama.cpp
+could not fit in dedicated VRAM. It is **not** a compute split, and it must not be read as
+one. Two different things can happen to the displaced portion:
+
+1. llama.cpp executes non-offloaded layers on its **CPU backend**.
+2. The **WDDM driver pages CUDA allocations into shared GPU memory** (system RAM addressed
+   over PCIe). The GPU still executes those layers, it just fetches the weights across the
+   bus at a few GB/s instead of the card's ~288 GB/s.
+
+Observed while Prometheus-2 8x7B (28 GB, reported `85%/15% CPU/GPU`) was judging:
+
+| Probe | Reading |
+|---|---|
+| `nvidia-smi` utilisation | **100%** |
+| `nvidia-smi` power draw | **28 W** (card TDP is ~120 W) |
+| `nvidia-smi` temperature | 92 °C |
+| `nvidia-smi` dedicated memory | 4 485 / 6 144 MiB |
+| Task Manager shared GPU memory | **23.0 / 23.9 GB** |
+| `llama-server.exe` CPU | **7.7%** (~1 core of 6) |
+
+Mechanism 2 dominates here. A GPU at 100% utilisation and 92 °C is doing the work; 85% of
+the model cannot be running on a process using one core. The **28 W at 100% utilisation** is
+the diagnostic signature: the GPU is resident and busy but starved, stalling on PCIe
+transfers rather than computing. Read power draw, not the utilisation percentage, to tell
+compute-bound from transfer-bound.
+
+An earlier version of this note asserted that the displaced layers "execute on the CPU". That
+was wrong, and the evidence originally cited for it does not support it either: the 71-75%
+figure below is **system-wide** CPU, not scoped to Ollama, so it cannot distinguish the two
+mechanisms. The 8x measurement is unaffected; only the explanation was.
 
 **Fix (two parts, both are required).**
 
@@ -57,12 +89,31 @@ Llama 3.2 3B = **28**, Llama 3.1 8B = **32**, Mistral 7B = **32**.
 |---|---|---|---|
 | End-to-end latency | 82.3 s mean | **~10 s** | **~8× faster** |
 | TTFT | 17.9 s | 2.7-4.9 s | ~4× faster |
-| Ollama CPU | (system 71-75%) | **6.6%** |, |
+| Ollama CPU | (system-wide 71-75%, see caveat) | **6.6%** (Ollama-scoped) | not comparable |
 | GPU utilisation | ~0-20% | **63-79%** |, |
 
-**Thesis consequence.** On the CPU-bound configuration the system missed Chapter 4's
-"end-to-end < 60 s in 75% of queries" target. Correctly configured it passes with a wide
-margin. Publishing the misconfigured numbers would have badly understated the system.
+The two CPU figures are **not like-for-like**: the first is system-wide, the second is scoped
+to the Ollama processes. Do not quote them as a before/after pair. The latency and TTFT rows
+are sound.
+
+**This is the dedicated-versus-shared VRAM comparison.** Both configurations executed on the
+same discrete NVIDIA GPU; what changed is whether the working set fitted in dedicated VRAM or
+was paged into the shared pool across PCIe. On this hardware that is worth roughly **8x** in
+end-to-end latency and **4x** in TTFT.
+
+**The "~10 s" figure is a 2-question probe, not a benchmark result.** Both probe questions
+happened to be answered in a single attempt. Over the full 426-query benchmark the corrected
+System A has a median end-to-end latency of **44.9 s**, because 48% of queries invoke the
+corrective loop and pay for two or three full generation passes. Quote 44.9 s, not 10 s.
+
+**Thesis consequence (corrected 2026-08-01).** On the CPU-bound configuration the system missed
+Chapter 4's "end-to-end < 60 s in 75% of queries" target by a wide margin. Correctly configured
+it **still misses it**: System A reaches 54.7%, System B 18.5%, System C 12.2%. An earlier
+version of this note claimed the fix made the target pass "with a wide margin"; that was
+extrapolated from the 2-question probe before the full run existed, and it is wrong. The GPU fix
+is worth roughly an 8x speed-up and was necessary for the numbers to mean anything, but the
+binding constraint on latency is the corrective loop's repeated generation passes, not the
+device placement. See Chapter 5 Section 5.3.5.
 
 ### `num_gpu` alone is not enough
 `mistral:7b` with no `num_gpu` ran at **17%/83% CPU/GPU** even at a 4096 context -

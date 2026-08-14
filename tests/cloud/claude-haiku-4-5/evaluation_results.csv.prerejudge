@@ -11,7 +11,7 @@ Based on Article 7.20 of the Collective Agreement, the following rules apply:
 
 Additionally, the agreement establishes a grievance procedure under **7.20.7** stating that before a formal general grievance can be submitted in writing, the President and the Thorneloe Steward must have had an opportunity to adjust the complaint as per section 7.20.3. (Collective Agreement 2011-14, p. 118)
 
-*Note: The full text of section 7.20.3 appears to be incomplete in the provided context.*",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,easy,1,False,a5b1681d-616b-4333-87d1-8703d0694b23,0.4033,0.3428,0.0164,"ARTICLE 7.20 – ABSENCE - GENERAL
+*Note: The full text of section 7.20.3 appears to be incomplete in the provided context.*",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Leave,easy,1,False,a5b1681d-616b-4333-87d1-8703d0694b23,0.4033,0.3428,0.0164,"ARTICLE 7.20 – ABSENCE - GENERAL
 7.20.1 The University as a community of scholars requires the availability of its Members on a regular and on-going basis
 to ensure that the activities of the University scheduled and unscheduled can be carried out in an orderly manner.
 7.20.2 Any absence shall not normally interfere with assigned and/or scheduled activities and the harmonious functioning
@@ -46,7 +46,7 @@ of the Department/School.
 118 of 243
 <<>>
 Collective Agreement 2011-14
-7.20.3 Any absence from campu",0.0684,0.0046,0.039,0.0099,0.0293,0.0923,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,1.0,,,,,,,,,,,,,,,,,,,,,0.0,0.0,0.2,1.0,,,,,,,,
+7.20.3 Any absence from campu",0.0684,0.0046,0.039,0.0099,0.0293,0.0923,0.2,0.3869,0.0,0.0,1.0,1.0,1.0,0.6,,,,,,,,,,,,,,,,,,,,,0.0,0.0,0.2,1.0,,,,,,,,
 test_en_002,test_en_002,"What does the collective agreement provide regarding pregnancy, parental and adoption?","# Pregnancy, Parental and Adoption Leaves under the Collective Agreement
 
 ## Pregnancy Leave
@@ -69,7 +69,7 @@ For Members not entitled to take parental leave, pregnancy leave ends on the **l
 According to **Article 14.06** of the collective agreement:
 
 - When adopting a child, a Member who is the parent and has chosen to take parental leave under applicable Employment Insurance laws has the right to **parental leave of a maximum of 35 weeks**
-- The Member receives **100% of nominal salary** for 5 days after the member has worked a **minimum of 12 consecutive months**",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,1,False,8acb9ced-ee51-449a-a962-accd5c9b4313,0.3463,0.2424,0.0313,"In the case where the newborn child is hospitalized, a Member may postpone or interrupt her
+- The Member receives **100% of nominal salary** for 5 days after the member has worked a **minimum of 12 consecutive months**",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Benefits,hard,1,False,8acb9ced-ee51-449a-a962-accd5c9b4313,0.3463,0.2424,0.0313,"In the case where the newborn child is hospitalized, a Member may postpone or interrupt her
 pregnancy leave by the number of weeks the newborn child is hospitalized but it must be taken within the fifty-two (52)
 weeks from the date of the birth of the child.
 (b) The pregnancy leave of a Member who is not entitled to take parental leave shall end on the later of either the day that
@@ -106,14 +106,14 @@ Employer:
 de la Loi sur l’assurance-emploi et de toute autre loi applicable aura droit à un congé parental d’une durée maximale de
 trente-cinq (35) semaines.
 Pendant la durée du congé d’adoption, le membre recevra de l’Employeur 100 % de son salaire nominal pendant cinq
-jours après que le membre a travaillé pendant un minimum de 12 mois consécutifs.",0.259,0.0232,0.2214,0.1,0.1527,0.2702,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,,,,,,,,,,,,,,,,,1.0,0.3333,0.2,0.5,,,,,,,,
+jours après que le membre a travaillé pendant un minimum de 12 mois consécutifs.",0.259,0.0232,0.2214,0.1,0.1527,0.2702,1.0,1.0,1.0,1.0,1.0,0.6,1.0,1.0,,,,,,,,,,,,,,,,,,,,,1.0,0.3333,0.2,0.5,,,,,,,,
 test_en_004,test_en_004,What conditions apply to additional qualifications increments?,"Based on the provided context, additional qualifications increments shall be awarded in an amount of **$2,900**, pursuant to **Article 8.30 – Additional Qualifications Increments**.
 
 However, the specific conditions for awarding these increments are not detailed in the context provided. The document references Article 8.30 for the full conditions, but that article's complete details are not included in the excerpt you've provided.
 
 **Source:** Collective Agreement 2011-14, page 153 of 243
 
-To see the full conditions that apply to additional qualifications increments, you would need to consult Article 8.30 of the full collective agreement document.",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Salary,hard,1,False,f6b446fd-3f2c-4bef-9007-f1486833cc13,0.4282,0.2676,0.031,"The Member’s performance at
+To see the full conditions that apply to additional qualifications increments, you would need to consult Article 8.30 of the full collective agreement document.",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Salary,hard,1,False,f6b446fd-3f2c-4bef-9007-f1486833cc13,0.4282,0.2676,0.031,"The Member’s performance at
 Laurentian University over a three (3) year time period or since the award of the last merit increment, whichever is shorter,
 must be judged clearly above the level for promotion to Full Professor/Librarian, as stated in Article 5.10 – Academic
 Qualifications
@@ -144,14 +144,14 @@ Qualifications Increments in an amount of $2,900.
 (d) Promotion and Merit increments shall be awarded according to Article 8.15- Progress-Through-The-
 Ranks-Increment and Article 8.25 – Merit Increments, regardless of breakpoints
 ARTICLE 8.15 – PROGRESS-THROUGH-THE-RANKS INCREMENTS
-8.15.1 The purpose of these",0.1569,0.0158,0.25,0.0361,0.1548,0.1797,1.0,1.0,1.0,1.0,1.0,0.6,1.0,1.0,,,,,,,,,,,,,,,,,,,,,1.0,0.3333,0.2,0.0,,,,,,,,
+8.15.1 The purpose of these",0.1569,0.0158,0.25,0.0361,0.1548,0.1797,1.0,1.0,1.0,1.0,1.0,0.6,1.0,0.6,,,,,,,,,,,,,,,,,,,,,1.0,0.3333,0.2,0.0,,,,,,,,
 test_en_005,test_en_005,"According to the agreement, what applies to professional development?","According to the Laurentian University Faculty Association collective agreement, the following applies to professional development:
 
 **For Full-Time Members:**
 Each full-time Member is eligible to receive a professional allowance for each contractual year to be spent on expenses related to approved academic research or professional purposes. This allowance is cumulative over two (2) academic years. (LUFA-H Collective Agreement 2016-2020, Article 30.01)
 
 **For Sessional Members:**
-Sessional Members are eligible for professional development money of $250 per each three credit course that they teach, up to a limit of $2,000. Such allowance may be used in the current and subsequent academic year. (LUFA-H Collective Agreement 2016-2020, Article 30.07, page 47)",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Professional Development,medium,1,False,22664915-0de0-412b-a55b-65c78582f319,0.4238,0.3602,0.0164,"ARTICLE 30 — PROFESSIONAL DEVELOPMENT
+Sessional Members are eligible for professional development money of $250 per each three credit course that they teach, up to a limit of $2,000. Such allowance may be used in the current and subsequent academic year. (LUFA-H Collective Agreement 2016-2020, Article 30.07, page 47)",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Professional Development,medium,1,False,22664915-0de0-412b-a55b-65c78582f319,0.4238,0.3602,0.0164,"ARTICLE 30 — PROFESSIONAL DEVELOPMENT
 30.01 Each full-time Member shall be eligible to receive a professional allowance for each
 contractual year, such allowance to be spent for expenses related to approved academic
 research or professional purposes. Such an allowance shall be cumulative over two (2)
@@ -176,10 +176,10 @@ Depart",12089275-858a-4036-bb55-e7d528cd19d8,0.4238,0.3178,0.0159,"ARTICLE 30 �
 30.01 Each full-time Member shall be eligible to receive a professional allowance for each
 contractual year, such allowance to be spent for expenses related to approved academic
 research or professional purposes. Such an allowance shall be cumulative over two (2)
-academic years.",0.172,0.0051,0.1324,0.0,0.0735,0.152,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,,,,,,,,,,,,,,,,,0.0,0.0,0.0,0.0,,,,,,,,
+academic years.",0.172,0.0051,0.1324,0.0,0.0735,0.152,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6,,,,,,,,,,,,,,,,,,,,,0.0,0.0,0.0,0.0,,,,,,,,
 test_en_012,test_en_012,What does the collective agreement provide regarding and shall be granted recall rights to?,"I cannot provide a complete answer to this question based on the context provided. The excerpts provided discuss recall procedures and rights for individuals who are recalled, including provisions about the 30-day acceptance period and return to rank, but they do not contain a complete statement specifying which individuals or groups ""shall be granted recall rights.""
 
-To accurately answer this question with proper citation to the source document and page number, I would need to see the specific provision that states who shall be granted recall rights.",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Salary,hard,1,False,bd4eccb3-05b5-4ae7-88f2-cd8d1f8933e5,0.4575,0.4461,0.0328,"Individuals who accept such positions shall return to the University at the rank they held when their
+To accurately answer this question with proper citation to the source document and page number, I would need to see the specific provision that states who shall be granted recall rights.",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Salary,hard,1,False,bd4eccb3-05b5-4ae7-88f2-cd8d1f8933e5,0.4575,0.4461,0.0328,"Individuals who accept such positions shall return to the University at the rank they held when their
 appointments were terminated, with full recognition for years of service at Laurentian. Disputes arising
 out of these recall procedures are referable to the grievance and arbitration process set out in
 this Collective Agreement. Individuals who are recalled pursuant to this Article shall have up to thirty (30) days to accept such recall
@@ -204,7 +204,7 @@ recall offer, and shall terminate their alternative employment and take up the o
 as they are contractually able to do so but in no instance later than six (6) months after accepting the
 recall offer.
 (c) Reasonable efforts by the Employer to assist a laid-off Member in obtaining alternative employment
-including the use of professional assistance as well as access to Uni",0.2018,0.0253,0.2282,0.0408,0.1611,0.1556,0.0,0.0,0.0,0.0,0.0,0.6,0.4,0.6,,,,,,,,,,,,,,,,,,,,,0.0,0.0,0.0,0.0,,,,,,,,
+including the use of professional assistance as well as access to Uni",0.2018,0.0253,0.2282,0.0408,0.1611,0.1556,0.0,0.0,0.0,0.0,0.0,0.6,1.0,0.6,,,,,,,,,,,,,,,,,,,,,0.0,0.0,0.0,0.0,,,,,,,,
 test_en_014,test_en_014,What does the collective agreement provide regarding promotion procedures. if the?,"Based on the context provided, the collective agreement specifies the following regarding promotion procedures:
 
 **Section 16.03** states that ""Members shall normally apply for their own promotion. Applications may also be submitted by Members or by the President on behalf of Members who have not applied themselves, where the Members have declared their willingness to be considered.""
@@ -213,7 +213,7 @@ test_en_014,test_en_014,What does the collective agreement provide regarding pro
 
 Additionally, **Section 8.04** provides guidance on assessment procedures for promotions (among other matters), requiring that ""all committee members shall use only the standards listed below, as applicable"" when conducting performance assessments, with evaluations based on the member's performance in teaching, scholarly activity, and university, professional and community service.
 
-**Source:** Collective Agreement 2015-2018, page 11 of 59",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Promotion,medium,1,False,528bb61e-3fff-4c73-b5a8-7a9319f8713f,0.4269,0.3735,0.0164,"11.23 Each offer ofappointment shall specify the course number(s), the number of credits, terms and conditions of
+**Source:** Collective Agreement 2015-2018, page 11 of 59",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Promotion,medium,1,False,528bb61e-3fff-4c73-b5a8-7a9319f8713f,0.4269,0.3735,0.0164,"11.23 Each offer ofappointment shall specify the course number(s), the number of credits, terms and conditions of
 employment including salary, and will reference individuals to the collective agreement for benefits, professional
 development funds, establishment/seniority, deemed hours and cancellation conditions. A link ofthe current collective
 agreement shall be sent with every offer ofemployment.",1f43728c-c5cb-4aeb-82b4-e4a2544c8f0e,0.0164,0.0139,0.0164,"Training will include the following:
@@ -249,7 +249,7 @@ According to **ARTICLE 19 — RESIGNATIONS, Section 19.01**, the rules concernin
 
 3. **Termination of Leaves**: **All leaves to which a resigning member would be entitled shall be terminated at that date** (the effective resignation date).
 
-*Note: The context provided does not include explicit page numbers for these articles, only the article and section references.*",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Termination,easy,1,False,e79e77ee-33da-4341-aebd-fd124ff04ac1,0.4718,0.3774,0.0164,"19.03 Normally a member may resign effective 30 June or 30
+*Note: The context provided does not include explicit page numbers for these articles, only the article and section references.*",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Termination,easy,1,False,e79e77ee-33da-4341-aebd-fd124ff04ac1,0.4718,0.3774,0.0164,"19.03 Normally a member may resign effective 30 June or 30
 December, with at least one month’s written notice to the
 President. All leaves to which a resigning member would be entitled must be terminated at that date.",28ed4bab-e025-46bc-a799-e60e8ffc7881,0.0164,0.0115,0.0164,"ARTICLE 3.25 – HEALTH, SAFETY AND SECURITY
 3.25.1 The Employer recognises a responsibility to provide an environment intended to protect the health, safety and
@@ -268,7 +268,7 @@ Safety Act R.S.O 1990 as revised and in effect July
 Health and Safety Committee, which will independently consider matters concerning the h",411ceffc-a645-46a3-8b08-a227d4a2b9f4,0.4786,0.3589,0.0159,"ARTICLE 19 — RESIGNATIONS
 19.01 Normally a Member may resign effective June 30 or December 30, with at least one month’s
 written notice to the President. All leaves to which a resigning Member would be entitled
-shall be terminated at that date.",0.3218,0.1274,0.2727,0.2407,0.2727,0.6277,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,,,,,,,,,,,,,,,,,1.0,0.3333,0.2,0.5,,,,,,,,
+shall be terminated at that date.",0.3218,0.1274,0.2727,0.2407,0.2727,0.6277,1.0,1.0,1.0,1.0,1.0,1.0,0.8,0.6,,,,,,,,,,,,,,,,,,,,,1.0,0.3333,0.2,0.5,,,,,,,,
 test_en_019,test_en_019,"According to the agreement, what applies to hufac?","According to the Laurentian University Faculty Association collective agreement, the following applies to HUFAC:
 
 **Role and Mandate:**
@@ -284,7 +284,7 @@ HUFAC (Huntington University Faculty Affairs Committee) is established to provid
 
 **Conflict of Interest:**
 - Applicants may request that a HUFAC member recuse themselves on grounds of conflict of interest, with the Chair rendering a written decision with reasons (*ARTICLE 14.03, page 25*)
-- The Chair may also independently require a member to recuse themselves on conflict of interest grounds (*ARTICLE 14.03, page 25*)",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Bargaining Unit,medium,1,False,dfc5a563-1284-4229-8300-5581671f947b,0.363,0.3085,0.0315,"ARTICLE 14 — HUFAC
+- The Chair may also independently require a member to recuse themselves on conflict of interest grounds (*ARTICLE 14.03, page 25*)",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Bargaining Unit,medium,1,False,dfc5a563-1284-4229-8300-5581671f947b,0.363,0.3085,0.0315,"ARTICLE 14 — HUFAC
 14.01 Huntington University Faculty Affairs Committee
 In recognition of the centrality of peer evaluation, there shall be a Huntington University
 Faculty Affairs Committee (HUFAC) whose role is to provide recommendations to the
@@ -323,7 +323,7 @@ test_en_020,test_en_020,What does the agreement say about bargaining unit?,"Base
 
 3. **Employer Reporting Obligations**: The Employer undertakes to provide the Union with a list of all Members of the Bargaining Unit, including their workload and actual remuneration. The Employer must also provide aggregate remuneration data for non-Bargaining Unit Members employed by the University. (Source: Section 10.04)
 
-**Note**: The provided context is fragmented and does not include complete page number citations for all excerpts, which limits the comprehensiveness of this answer.",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Bargaining Unit,hard,1,False,8bc8a784-f570-438c-8ce6-7463f4521d47,0.4144,0.404,0.0164,"If there is no vacancy in the Department/School concerned, the additional
+**Note**: The provided context is fragmented and does not include complete page number citations for all excerpts, which limits the comprehensiveness of this answer.",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Bargaining Unit,hard,1,False,8bc8a784-f570-438c-8ce6-7463f4521d47,0.4144,0.404,0.0164,"If there is no vacancy in the Department/School concerned, the additional
 allocation shall not be at the expense of another Department/School allocation.
 c) For all purposes relating to this Collective Agreement, membership in the Bargaining Unit of a Senior
 Academic Administrator shall be reckoned as if they had not been outside the Bargaining Unit during
@@ -348,7 +348,7 @@ or substitute for short periods of time in the place of a Senior Academic
 Administrator. A Member so serving shall not undertake or",ddac8bf1-30ae-4a62-956e-e02bc52af2a7,0.4106,0.349,0.0159,"10.04 The Employer further undertakes to provide the Union with a list of all Members of the
 Bargaining Unit, their workload and actual remuneration. The Employer will also provide the
 aggregate of remuneration provided to non-Bargaining Unit Members employed by the
-University.",0.4444,0.162,0.3038,0.2809,0.2954,0.5983,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,,,,,,,,,,,,,,,,,,,,,1.0,0.3333,0.2,0.5,,,,,,,,
+University.",0.4444,0.162,0.3038,0.2809,0.2954,0.5983,1.0,1.0,1.0,1.0,1.0,0.6,1.0,0.6,,,,,,,,,,,,,,,,,,,,,1.0,0.3333,0.2,0.5,,,,,,,,
 test_en_022,test_en_022,How does the agreement define or describe absence - general?,"Based on the provided context, the agreement describes ""absence - general"" through the following principles:
 
 **ARTICLE 7.20 – ABSENCE - GENERAL** (LUFA-H Collective Agreement 2016-2020, page 61):
@@ -359,7 +359,7 @@ test_en_022,test_en_022,How does the agreement define or describe absence - gene
 
 3. **Teaching/Professional duties impact (7.20.3):** ""Any absence from campus affecting teaching/professional librarian duties sha[text cuts off in provided excerpt]""
 
-In essence, the agreement does not provide an explicit definition of absence but rather establishes that absences must maintain regular member availability and should not disrupt university operations or departmental functioning. The agreement emphasizes that absences should not interfere with assigned activities and the harmonious operation of the Department/School.",claude-haiku-4-5,claude-haiku-4-5,en,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,medium,1,False,de4db1bb-8607-4250-8480-f990485aed94,0.3625,0.1722,0.029,"Both
+In essence, the agreement does not provide an explicit definition of absence but rather establishes that absences must maintain regular member availability and should not disrupt university operations or departmental functioning. The agreement emphasizes that absences should not interfere with assigned activities and the harmonious operation of the Department/School.",claude-haiku-4-5,claude-haiku-4-5,en,tencent/hy3:free,Leave,medium,1,False,de4db1bb-8607-4250-8480-f990485aed94,0.3625,0.1722,0.029,"Both
 parties agree that every reasonable effort will be made to notify the students
 affected. Timetable changes of a permanent nature require the prior
 permission of the Dean. Absences are governed by Article 3.6 - Absence -
@@ -390,7 +390,7 @@ c) Consider strategies for marketing inventions, improvements or discoveries.
 d) Recommend to the Committee Chair any proposals for modifications or changes in
 the patents and copyright articles of this Collective Agreement.
 LUFA-H Collective Agreement 2016-2020 61
-<<>>",0.1452,0.0067,0.1449,0.0098,0.1063,0.167,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,,,,,,,,,,,,,,,,,0.0,0.0,0.0,1.0,,,,,,,,
+<<>>",0.1452,0.0067,0.1449,0.0098,0.1063,0.167,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6,,,,,,,,,,,,,,,,,,,,,0.0,0.0,0.0,0.0,,,,,,,,
 test_en_024,test_en_024,"What does the agreement say about rights, responsibilities and?","Your question appears to be incomplete. However, based on the context provided, here is what the agreement states about rights and responsibilities:
 
 **Article 11.01** states:
