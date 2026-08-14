@@ -30,6 +30,7 @@ Run:  python src/generate_figures.py
 """
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -123,12 +124,39 @@ def _load():
     return ev, lu
 
 
+# The supervisor's review asked for captions below the figure rather than titles baked into
+# the image, so that the caption is a Word caption and appears in the list of figures. Setting
+# LUFA_FIGURE_TITLES=0 strips every in-image title and suptitle at save time. Stripping here
+# rather than at each ax.set_title call keeps the titles available for the HTML dashboards,
+# which have no caption mechanism of their own and do need them.
+STRIP_TITLES = os.environ.get("LUFA_FIGURE_TITLES", "1") == "0"
+
+
+def _strip_titles(fig):
+    """
+    Remove the figure's own title, keep panel labels.
+
+    On a multi-panel figure the per-axes title identifies which system that panel shows, so
+    it is a panel label and must survive; the suptitle is the figure title and goes. On a
+    single-axes figure the axes title IS the figure title, so it goes too. Stripping
+    indiscriminately made the three panels of fig5_3 unidentifiable.
+    """
+    if getattr(fig, "_suptitle", None) is not None:
+        fig._suptitle.set_visible(False)
+    axes = fig.get_axes()
+    if len(axes) == 1:
+        axes[0].set_title("")
+
+
 def _save(fig, name):
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    if STRIP_TITLES:
+        _strip_titles(fig)
     for ext in ("png", "pdf"):
         fig.savefig(OUT_DIR / f"{name}.{ext}", bbox_inches="tight", dpi=300)
     plt.close(fig)
-    print(f"   wrote {OUT_DIR / name}.png / .pdf")
+    print(f"   wrote {OUT_DIR / name}.png / .pdf"
+          + ("  (titles stripped for Word captions)" if STRIP_TITLES else ""))
 
 
 def _means(df, model, cols):
@@ -196,8 +224,14 @@ def fig_agentic_vs_naive(ev, lu):
     pairs = [("A: Llama 3.2 3B", "llama3.2:3b", "naive/llama3.2:3b"),
              ("B: Llama 3.1 8B", "llama3.1:8b", "naive/llama3.1:8b"),
              ("C: Mistral 7B",   "mistral:7b",  "naive/mistral:7b")]
-    metrics = ["mrr", "recall_5", "token_f1_score", "rougeL", "citation_accuracy_regex"]
-    mnames = ["MRR", "Recall@5", "Token-F1", "ROUGE-L", "Citation acc."]
+    # Judge metrics are included now that the naive judge pass is complete for all three
+    # generators. Context precision is the one that matters most here: it is the judged view of
+    # the retrieved context, so its agreement with MRR and Recall@5 is corroboration from a model
+    # that never sees a retrieval score.
+    metrics = ["mrr", "recall_5", "token_f1_score", "rougeL", "citation_accuracy_regex",
+               "context_precision", "faithfulness"]
+    mnames = ["MRR", "Recall@5", "Token-F1", "ROUGE-L", "Citation acc.",
+              "Ctx. precision", "Faithfulness"]
 
     # Only systems with data get a panel. An empty placeholder axis would waste most of the
     # canvas, and clearing its ticks propagates through sharey and strips the y-axis from the
@@ -236,15 +270,19 @@ def fig_agentic_vs_naive(ev, lu):
         ax.set_xticks(x)
         ax.set_xticklabels(mnames, rotation=25, ha="right")
         ax.set_title(f"{lab}  (n = {nb} retry queries)", fontsize=10)
-        ax.set_ylim(0, 0.45)
+        # Scaled to the data: the judge metrics reach ~0.75, so the old fixed 0.45 ceiling
+        # clipped them once context precision and faithfulness were added.
+        ax.set_ylim(0, max(v for v in ag + na if v == v) * 1.22)
     axes[0].set_ylabel("Mean score")
-    axes[0].legend(frameon=False, fontsize=8, loc="upper right")
+    # Upper left: the retrieval metrics plotted there are the lowest bars in every panel, whereas
+    # upper right now holds the judge metrics at ~0.75 and collided with the legend.
+    axes[0].legend(frameon=False, fontsize=8, loc="upper left")
     fig.suptitle("RQ1: agentic loop vs naive single pass, on the queries the reflector sent back",
                  fontsize=11)
     note = ("Restricted to queries with more than one agentic attempt. Queries answered in a single "
             "attempt are excluded because attempt 1 does not invoke the query rewriter, so the two "
-            "systems are identical there by construction. Judge metrics are omitted: the naive judge "
-            "pass over these rows had not completed when this figure was produced.")
+            "systems are identical there by construction. All metrics shown are complete for all "
+            "three generators, judged by Prometheus-2 8x7B with one prompt per metric.")
     if pending:
         note += " Awaiting naive regeneration: " + "; ".join(pending) + "."
     fig.text(0.5, -0.08, note, ha="center", va="top", fontsize=7.5, style="italic",
@@ -347,19 +385,28 @@ def fig_latency(lu):
 
 
 def fig_citation_precision(ev):
-    labels = [l for l, _ in LOCAL_SYSTEMS]
-    models = [m for _, m in LOCAL_SYSTEMS]
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.4))
+    # All six systems, not just the three local ones. The cloud directories were missing the
+    # citation-accuracy and Precision@k columns when this figure was first written; both are now
+    # populated, and the cloud bars carry the study's sharpest result: the system with the highest
+    # judged faithfulness (D) has the lowest citation accuracy of any system.
+    labels = [l for l, _ in SYSTEMS]
+    models = [m for _, m in SYSTEMS]
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 4.4))
 
     ax = axes[0]
     vals = [_means(ev, m, ["citation_accuracy_regex"])[0] for m in models]
-    bars = ax.bar(np.arange(len(labels)), vals, 0.5, color=LOCAL_C)
+    cols = [LOCAL_C] * 3 + [CLOUD_C] * 3
+    bars = ax.bar(np.arange(len(labels)), vals, 0.55, color=cols)
     for b, v in zip(bars, vals):
         ax.text(b.get_x() + b.get_width() / 2, v + 0.006, f"{v:.3f}", ha="center", fontsize=8.5)
     ax.set_xticks(np.arange(len(labels)))
     ax.set_xticklabels(labels, rotation=20, ha="right")
     ax.set_ylabel("Mean citation accuracy")
-    ax.set_ylim(0, 0.45)
+    ax.set_ylim(0, max(v for v in vals if v == v) * 1.30)
+    ax.legend(handles=[plt.Rectangle((0, 0), 1, 1, color=LOCAL_C),
+                       plt.Rectangle((0, 0), 1, 1, color=CLOUD_C)],
+              labels=["Local (agentic)", "Cloud (single-pass)"],
+              frameon=False, fontsize=8, loc="upper right")
     ax.set_title("Citation accuracy: deterministic article and clause matching")
 
     ax = axes[1]
@@ -378,11 +425,13 @@ def fig_citation_precision(ev):
     ax.legend(frameon=False, ncol=3, fontsize=8)
     ax.set_title("Precision@k")
 
-    fig.suptitle("Citation grounding and precision at k, local agentic systems", fontsize=11)
+    fig.suptitle("Citation grounding and precision at k, all six systems", fontsize=11)
     fig.text(0.5, -0.05,
              "Citation accuracy scores 1.0 when the answer cites the gold article and clause, 0.5 when "
-             "the article matches but the clause does not, and 0.0 otherwise. Precision@k is low by "
-             "construction: most questions have a single gold chunk, which caps P@5 at 0.20.",
+             "the article matches but the clause does not, and 0.0 otherwise; it is scored on the 420 "
+             "questions whose gold answer carries a citation. Precision@k is low by construction: most "
+             "questions have a single gold chunk, which caps P@5 at 0.20. The three cloud systems share "
+             "the same retriever and index, so their Precision@k bars are identical by construction.",
              ha="center", va="top", fontsize=7.5, style="italic", color="#444444")
     _save(fig, "fig5_7_citation_precision")
 

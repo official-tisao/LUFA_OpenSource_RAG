@@ -285,16 +285,28 @@ def main():
         A, N = A.loc[both], N.loc[both]
         rec = {"label": lab, "n_retry_total": len(ids), "n_available": len(both)}
         print(f"\n{lab}: {len(both)} of {len(ids)} retry rows available on both sides")
-        print("  metric".ljust(26) + "agentic".rjust(10) + "naive".rjust(10) + "delta".rjust(10))
+        print("  metric".ljust(26) + "agentic".rjust(10) + "naive".rjust(10) +
+              "delta".rjust(10) + "   n_ag/n_na")
         for c in JUDGE + ["token_f1_score", "rougeL", "meteor", "mrr", "recall_5",
                           "citation_accuracy_regex"]:
             a, n = A[c].dropna(), N[c].dropna()
+            # A judge pass in flight leaves a handful of rows scored and the rest masked, which
+            # yields a mean over n=3 that looks like a real result (values of exactly 1.0000 are
+            # the giveaway). Require most of the subset on BOTH sides before reporting, and
+            # always print the pair counts so a partial cell can never be mistaken for a final one.
+            enough = len(a) >= 0.9 * len(both) and len(n) >= 0.9 * len(both)
             if not len(a) or not len(n):
-                print(f"  {c:<24}{'-':>10}{'-':>10}{'  (judge pending)' if c in JUDGE else ''}")
+                print(f"  {c:<24}{'-':>10}{'-':>10}{'':>10}"
+                      f"   {len(a)}/{len(n)}  (judge pending)")
+                continue
+            if not enough:
+                print(f"  {c:<24}{a.mean():10.4f}{n.mean():10.4f}{a.mean() - n.mean():+10.4f}"
+                      f"   {len(a)}/{len(n)}  PARTIAL, DO NOT QUOTE")
                 continue
             rec[c] = {"agentic": round(float(a.mean()), 4), "naive": round(float(n.mean()), 4),
                       "delta": round(float(a.mean() - n.mean()), 4), "n_ag": len(a), "n_na": len(n)}
-            print(f"  {c:<24}{a.mean():10.4f}{n.mean():10.4f}{a.mean() - n.mean():+10.4f}")
+            print(f"  {c:<24}{a.mean():10.4f}{n.mean():10.4f}{a.mean() - n.mean():+10.4f}"
+                  f"   {len(a)}/{len(n)}")
         NL = lu[lu["_key"] == canon(na)].set_index("question_id")
         ALi = AL.set_index("question_id")
         lb = [q for q in both if q in NL.index]

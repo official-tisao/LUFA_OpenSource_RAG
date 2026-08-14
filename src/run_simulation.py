@@ -95,14 +95,29 @@ EVAL_ONLY_METRIC_COLUMNS = [
 #   human_annot{1,2}_relevance — each annotator's binary relevance judgment (for Kappa)
 #   human_citation_accuracy — adjudicated citation-accuracy score
 #   human_appropriateness   — adjudicated binary "fit for real use" score (§4.8.3)
+#   human_annot{1,2}_faithful   — each annotator's binary "every claim supported by the
+#                                 shown context" judgment, validating the LLM judge
+#   human_annot{1,2}_appropriate— each annotator's binary fit-for-real-use judgment
+#   human_annot{1,2}_realistic  — each annotator's binary "a member could plausibly ask
+#                                 this" judgment; the ecological-validity measure (§4.9)
+#   human_faithfulness          — adjudicated faithfulness score
+#   human_question_realistic    — adjudicated realism score
 HUMAN_MANUAL_COLUMNS = [
     "in_human_sample",
     "human_annot1_citation",
     "human_annot2_citation",
     "human_annot1_relevance",
     "human_annot2_relevance",
+    "human_annot1_faithful",
+    "human_annot2_faithful",
+    "human_annot1_appropriate",
+    "human_annot2_appropriate",
+    "human_annot1_realistic",
+    "human_annot2_realistic",
     "human_citation_accuracy",
     "human_appropriateness",
+    "human_faithfulness",
+    "human_question_realistic",
 ]
 
 # Cross-lingual "no-translation" columns. In the no-translation pipeline the query is

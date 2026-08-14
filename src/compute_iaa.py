@@ -134,9 +134,114 @@ def compute_iaa(eval_csv="tests/evaluation_results.csv",
     return rows
 
 
+def _num(v):
+    try:
+        return float(str(v).strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def _adjudicated(df, col):
+    """(question_id, value) pairs for in-sample rows with an adjudicated value."""
+    out = {}
+    if col not in df.columns:
+        return out
+    for _, r in df.iterrows():
+        if not _truthy(r.get("in_human_sample")):
+            continue
+        v = _num(r.get(col))
+        if v is not None:
+            out[r.get("question_id")] = v
+    return out
+
+
+def compute_validation(eval_csv, naive_csv=None,
+                       out_csv="tests/human_eval/validation_summary.csv"):
+    """
+    Compare the automated metrics against the adjudicated human judgments, and report
+    the ecological-validity rate. This is what Chapter 5 §5.3.7 is written from.
+
+    Run only AFTER adjudication: it reads the consensus columns, not the per-annotator
+    ones, because a metric should be validated against the agreed human view.
+    """
+    df = pd.read_csv(eval_csv, low_memory=False)
+    rows = []
+
+    # 1. Deterministic citation regex against the human citation judgment.
+    human_cit = _adjudicated(df, "human_citation_accuracy")
+    pairs = [(_num(r.get("citation_accuracy_regex")), human_cit[r.get("question_id")])
+             for _, r in df.iterrows()
+             if r.get("question_id") in human_cit and _num(r.get("citation_accuracy_regex")) is not None]
+    if pairs:
+        exact = sum(1 for a, b in pairs if a == b) / len(pairs)
+        harsher = sum(1 for a, b in pairs if a < b) / len(pairs)
+        rows.append({"comparison": "citation regex vs human", "n": len(pairs),
+                     "agreement": round(exact, 4),
+                     "detail": f"regex scored LOWER than the human on {harsher:.1%} of items",
+                     "notes": "regex is a string match; a correct but uncited answer scores 0"})
+
+    # 2. LLM judge faithfulness against the human faithfulness judgment.
+    human_f = _adjudicated(df, "human_faithfulness")
+    fp = [(_num(r.get("faithfulness")), human_f[r.get("question_id")])
+          for _, r in df.iterrows()
+          if r.get("question_id") in human_f and _num(r.get("faithfulness")) is not None]
+    if fp:
+        # The judge emits a graded score; the human emits 0/1. Threshold at 0.5.
+        agree = sum(1 for j, h in fp if (j >= 0.5) == (h >= 0.5)) / len(fp)
+        rows.append({"comparison": "judge faithfulness vs human", "n": len(fp),
+                     "agreement": round(agree, 4),
+                     "detail": f"judge mean {sum(j for j, _ in fp)/len(fp):.3f} "
+                               f"vs human mean {sum(h for _, h in fp)/len(fp):.3f}",
+                     "notes": "judge score thresholded at 0.5 to compare with a binary human call"})
+
+    # 3. Ecological validity: the realism rate.
+    real = _adjudicated(df, "human_question_realistic")
+    if real:
+        rate = sum(real.values()) / len(real)
+        rows.append({"comparison": "question realism (ecological validity)", "n": len(real),
+                     "agreement": round(rate, 4),
+                     "detail": f"{int(sum(real.values()))}/{len(real)} judged plausible",
+                     "notes": "Ch4 §4.9 ecological-validity parameter"})
+
+    # 4. Appropriateness, agentic against naive on the same questions.
+    app_a = _adjudicated(df, "human_appropriateness")
+    if naive_csv and Path(naive_csv).exists() and app_a:
+        ndf = pd.read_csv(naive_csv, low_memory=False)
+        app_n = _adjudicated(ndf, "human_appropriateness")
+        both = sorted(set(app_a) & set(app_n))
+        if both:
+            ma = sum(app_a[q] for q in both) / len(both)
+            mn = sum(app_n[q] for q in both) / len(both)
+            rows.append({"comparison": "appropriateness agentic vs naive", "n": len(both),
+                         "agreement": round(ma - mn, 4),
+                         "detail": f"agentic {ma:.3f} vs naive {mn:.3f} (value is the difference)",
+                         "notes": "human corroboration of the RQ1 finding; negative favours naive"})
+
+    out_path = Path(out_csv)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(rows, columns=["comparison", "n", "agreement", "detail",
+                                "notes"]).to_csv(out_path, index=False)
+    for r in rows:
+        print(f"[validate] {r['comparison']:42s} n={r['n']:<4} {r['agreement']}  {r['detail']}")
+    if not rows:
+        print("[validate] no adjudicated values found. Run merge_human_annotations.py "
+              "--adjudicated first.")
+    print(f"[validate] Summary written -> {out_path}")
+    return rows
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compute inter-annotator agreement from human eval columns.")
     parser.add_argument("--eval_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--out_csv", default="tests/human_eval/iaa_summary.csv")
+    parser.add_argument("--validation", action="store_true",
+                        help="after adjudication: compare the automated metrics against "
+                             "the agreed human judgments")
+    parser.add_argument("--naive_csv",
+                        default="tests/naive-rag/llama-3.2-3b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv",
+                        help="naive arm, for the paired appropriateness comparison")
     args = parser.parse_args()
-    compute_iaa(args.eval_csv, args.out_csv)
+    if args.validation:
+        compute_validation(args.eval_csv, args.naive_csv)
+    else:
+        compute_iaa(args.eval_csv, args.out_csv)
