@@ -99,9 +99,12 @@ def merge_raw(key, sheets, dry_run=False):
             print(f"[merge] skip {system}: {path} not found")
             continue
 
-        # Add any missing human columns without disturbing existing data.
+        # Add any missing human columns without disturbing existing data. This writes to
+        # disk, so it must be skipped under --dry_run: a dry run that migrates the schema
+        # of the real evaluation ledger is not dry.
         from evaluate import EVAL_COLUMNS
-        migrate_csv_schema(path, EVAL_COLUMNS)
+        if not dry_run:
+            migrate_csv_schema(path, EVAL_COLUMNS)
 
         df = pd.read_csv(path, low_memory=False)
         # An all-empty human column loads as float64, and pandas refuses to write the
