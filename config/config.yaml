@@ -12,13 +12,34 @@ languages:
 # Model Configuration
 models:
   llm:
-    name: "llama3.2:3b-instruct-q4_K_M"
+    name: "llama3.1:8b-gpu"
     base_url: "http://localhost:11434"
     request_timeout: 240.0
+    # Base context window. Left unset, LlamaIndex requests the model's FULL trained
+    # context (131072), which inflates the KV cache to ~18 GB and forces Ollama to run
+    # most layers on the CPU on a 6 GB GPU (measured: 77%/23% CPU/GPU). This is the
+    # floor; src/llm_utils.py widens it per request when a prompt needs more.
+    context_window: 12288
+    # Ceiling for the automatic widening. Going past the 6 GB card is permitted —
+    # Windows spills into the 24 GB shared pool — and the spill is recorded in
+    # gpu_vram_shared_mb so its cost stays visible rather than hidden.
+    max_context_window: 24576
+    # Predicted generation ("thinking") tokens, as a fraction of the prompt. Typical
+    # for non-reasoning instruct models on extractive RAG QA is ~0.15-0.35; 0.35 is the
+    # conservative end. Clamped by the min/max below.
+    output_reserve_ratio: 0.35
+    output_reserve_min: 768
+    output_reserve_max: 4096
 
   embedding:
     name: "nomic-embed-text-v2-moe"
     base_url: "http://localhost:11434"
+
+  # LLM-as-judge model (RAGAS metrics + citation-accuracy judge). Used when
+  # --judge_llm is NOT passed to evaluate.py / metrics.py. Routing (Ollama vs
+  # OpenAI-compatible) is auto-selected from this model's model_api_auth entry.
+  judge_llm:
+    name: "tensortemplar/prometheus2:8x7b-Q4_K_S"
 
 # Database Configuration
 database:
@@ -45,6 +66,12 @@ data:
 # Agreement Configuration
 agreement:
   default_year_range: "2020 - 2025"
+
+# Evaluation / instrumentation (Ch4 §4.6.4)
+evaluation:
+  # Warm-up protocol: run the first question's retrieval twice, record only the
+  # second pass (discard cold-start); every other question is timed on its first run.
+  warmup_first_query: true
 
 # System Prompts
 prompts:

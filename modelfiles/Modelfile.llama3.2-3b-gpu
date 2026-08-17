@@ -1,0 +1,10 @@
+FROM llama3.2:3b-instruct-q4_K_M
+
+# Force every layer onto the GPU. Llama 3.2 3B has 28 transformer layers, so 33 is
+# above the maximum and Ollama caps it naturally at "all layers".
+PARAMETER num_gpu 33
+
+# Cap the context window. The stock model advertises 131072 tokens, which makes the
+# KV cache ~18 GB and pushes 77% of the model onto the CPU on a 6 GB card. 8192 fits
+# the largest RAG prompt (5-7 chunks x 512 tokens + system + question) plus the answer.
+PARAMETER num_ctx 8192

@@ -303,6 +303,12 @@ if __name__ == "__main__":
     parser.add_argument("--output", default="tests/lufa_out_data.csv",
                         help="Output CSV path for retrieval results")
     parser.add_argument("--top_k", type=int, default=5, help="Number of chunks to retrieve per question")
+    parser.add_argument("--force", action="store_true",
+                        help="Re-retrieve every question, even those already having source scores "
+                             "(needed to (re)capture retrieval_latency_s on a complete CSV).")
+    parser.add_argument("--no_dashboard", action="store_true",
+                        help="Skip the per-row dashboard refresh (much faster on long runs); "
+                             "the dashboard is refreshed once at the end instead.")
     args = parser.parse_args()
 
     from rag_engine import create_rag_engine
@@ -316,8 +322,16 @@ if __name__ == "__main__":
     questions_df = pd.read_csv(input_path)
     print(f"[Retrieval] {len(questions_df)} questions loaded.")
 
-    # Detect old schema → triggers full re-retrieval
-    force_all = False
+    # Two INDEPENDENT concepts:
+    #   migrate_mode — old single-score schema detected; the file is rebuilt from scratch
+    #                  (destructive, carries only a few columns forward).
+    #   force_all    — simply re-retrieve every question, keeping upsert_row semantics so
+    #                  answers and every other column survive untouched.
+    migrate_mode = False
+    force_all = bool(args.force)
+    if force_all:
+        print("[Retrieval] --force set: re-retrieving ALL questions (non-source columns such as "
+              "answer/grounded are preserved by upsert_row).")
     completed_ids = set()
     if output_path.exists() and output_path.stat().st_size > 0:
         try:
@@ -327,6 +341,7 @@ if __name__ == "__main__":
                 print("[Retrieval] Migrating CSV structure and re-running retrieval for ALL rows...")
                 migrated_df = _migrate_old_schema_csv(output_path)
                 migrated_df.to_csv(output_path, index=False)
+                migrate_mode = True
                 force_all = True
             elif "question_id" in existing_df.columns:
                 for i in range(1, 6):
@@ -348,15 +363,17 @@ if __name__ == "__main__":
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # If force_all, we need to re-write the file from scratch with new retrieval
-    if force_all:
+    # Only the OLD-SCHEMA migration rebuilds the file from scratch. A plain --force
+    # must NOT unlink the file — upsert_row updates rows in place and preserves every
+    # column the caller does not supply (answers, translation columns, telemetry, ...).
+    existing_data = {}
+    if migrate_mode:
         backup = output_path.with_suffix(".csv.bak")
         if output_path.exists():
             import shutil
             shutil.copy2(output_path, backup)
             print(f"[Retrieval] Backup saved to {backup}")
         # Read existing data to preserve non-retrieval columns (answer, etc.)
-        existing_data = {}
         try:
             old_df = pd.read_csv(output_path)
             for _, r in old_df.iterrows():
@@ -370,6 +387,12 @@ if __name__ == "__main__":
 
     processed = 0
     skipped = 0
+    # Warm-up protocol (Ch4 §4.6.4): the first question actually retrieved runs twice and
+    # only the warm pass is timed, so cold-start cost (index load, BM25 corpus build, first
+    # embedding) does not inflate the recorded retrieval latency. Measured here at ~7.9s
+    # cold vs ~2.7s warm.
+    warmed_up = False
+
     for idx, row in questions_df.iterrows():
         q_id = str(row.get("id", idx)).strip()
         q_text = str(row.get("question", "")).strip()
@@ -380,9 +403,17 @@ if __name__ == "__main__":
             skipped += 1
             continue
 
+        warmup_flag = ""
+        if not warmed_up:
+            print(f"{counter} [Warmup] Priming retrieval (cold pass discarded)...")
+            engine.warmup_retrieve(q_text, top_k=args.top_k)
+            warmup_flag = 1
+            warmed_up = True
+
         print(f"\n{counter} Retrieving for question {q_id}: \"{q_text[:60]}...\"")
         try:
             nodes = engine._retrieve_nodes(q_text, top_k=args.top_k)
+            retrieval_s = getattr(engine, "_last_retrieval_seconds", "")
             sources = extract_sources_from_nodes(nodes, max_sources=args.top_k)
             source_row = sources_to_csv_row(sources, max_sources=args.top_k)
 
@@ -390,10 +421,12 @@ if __name__ == "__main__":
                 "question_id": q_id,
                 "question": q_text[:500],
                 **source_row,
+                "retrieval_latency_s": retrieval_s,
+                "warmup_applied": warmup_flag,
             }
 
             # If migrating, preserve non-retrieval columns from old data
-            if force_all and q_id in existing_data:
+            if migrate_mode and q_id in existing_data:
                 from csv_utils import resolve_language
                 old_row = existing_data[q_id]
                 for col in ["answer", "base_model_used", "language", "attempts", "grounded"]:
@@ -408,15 +441,24 @@ if __name__ == "__main__":
             # migration mode), so a previously-written answer/grounded is preserved.
             upsert_row(result_row, output_path, OUTPUT_COLUMNS, key_cols=("question_id",))
             processed += 1
-            print(f"   Retrieved {len(sources)} chunks — source columns updated in {output_path}")
-            try:
-                from dashboard_generator import refresh_dashboard
-                refresh_dashboard(lufa_csv=str(output_path))
-            except Exception as _de:
-                print(f"   [Dashboard] refresh skipped: {_de}")
+            print(f"   Retrieved {len(sources)} chunks in {retrieval_s}s — source columns updated in {output_path}")
+            if not args.no_dashboard:
+                try:
+                    from dashboard_generator import refresh_dashboard
+                    refresh_dashboard(lufa_csv=str(output_path))
+                except Exception as _de:
+                    print(f"   [Dashboard] refresh skipped: {_de}")
         except Exception as e:
             print(f"   Error on {q_id}: {e}")
             traceback.print_exc()
         time.sleep(0.1)
+
+    if args.no_dashboard:
+        try:
+            from dashboard_generator import refresh_dashboard
+            refresh_dashboard(lufa_csv=str(output_path))
+            print("[Retrieval] Dashboard refreshed once at end of run.")
+        except Exception as _de:
+            print(f"[Retrieval] Final dashboard refresh skipped: {_de}")
 
     print(f"\n[Retrieval] Done. Processed={processed}, Skipped={skipped}. Results in {output_path}")

@@ -1,0 +1,1223 @@
+question_id,id,question,answer,base_model_used,rag_base_model,language,judge_llm,category,difficulty,attempts,grounded,source1_id,source1_cosine_score,source1_recency_adjusted_cosine_score,source1_rrf_score,source1_text,source2_id,source2_cosine_score,source2_recency_adjusted_cosine_score,source2_rrf_score,source2_text,source3_id,source3_cosine_score,source3_recency_adjusted_cosine_score,source3_rrf_score,source3_text,source4_id,source4_cosine_score,source4_recency_adjusted_cosine_score,source4_rrf_score,source4_text,source5_id,source5_cosine_score,source5_recency_adjusted_cosine_score,source5_rrf_score,source5_text,token_f1_score,sentence_bleu_score,rouge1,rouge2,rougeL,meteor,mrr,ndcg_at_k,recall_1,recall_3,recall_5,answer_relevance,faithfulness,context_precision,translation_applied,translated_question,untranslated_answer,translation_pipeline_language,retrieval_latency_s,ttft_s,end_to_end_latency_s,gpu_vram_mb,gpu_vram_dedicated_mb,gpu_vram_shared_mb,system_ram_mb,cpu_percent,gpu_util_percent,context_window_used,prompt_tokens_est,predicted_output_tokens,warmup_applied,answer_metrics_translation,metrics_language,pipeline_translation_mode,precision_1,precision_3,precision_5,citation_accuracy_regex,citation_accuracy_judge,in_human_sample,human_annot1_citation,human_annot2_citation,human_annot1_relevance,human_annot2_relevance,human_citation_accuracy,human_appropriateness
+test_de_001,test_de_001,Welche Regelungen gelten für Abwesenheiten im Allgemeinen?,"Nach Artikel 7.20 der Kollektivvertragsvereinbarung (Collective Agreement) zwischen dem Laurentian University Faculty Association und dem Board of Governors of Laurentian University (Seite 118) gelten folgende Regelungen für Abwesenheiten im Allgemeinen:
+
+* Die Universität als Gemeinschaft von Gelehrten benötigt die Verfügbarkeit ihrer Mitglieder auf einer regelmäßigen und dauerhaften Basis, um sicherzustellen, dass die Aktivitäten der Universität geplante und ungeplante in einem ordnungsgemäßen Weise durchgeführt werden können (7.20.1).
+* Jede Abwesenheit sollte normalerweise nicht mit den zugewiesenen bzw. geplanten Aktivitäten und dem harmonischen Funktionieren des Departments/Schulverbands kollidieren (7.20.2).
+
+In deutscher Übersetzung lautet Artikel 7.20 wie folgt:
+
+""ARTIKEL 7.20 – ABSENCE - GENERAL
+
+7.20.1 Die Universität als Gemeinschaft von Gelehrten benötigt die Verfügbarkeit ihrer Mitglieder auf einer regelmäßigen und dauerhaften Basis, um sicherzustellen, dass die Aktivitäten der Universität geplante und ungeplante in einem ordnungsgemäßen Weise durchgeführt werden können.
+
+7.20.2 Jede Abwesenheit sollte normalerweise nicht mit den zugewiesenen bzw. geplanten Aktivitäten und dem harmonischen Funktionieren des Departments/Schulverbands kollidieren.""
+
+Quelle: Kollektivvertragsvereinbarung zwischen dem Laurentian University Faculty Association und dem Board of Governors of Laurentian University (Seite 118).",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,easy,1,True,a5b1681d-616b-4333-87d1-8703d0694b23,0.3572,0.3036,0.0164,"ARTICLE 7.20 – ABSENCE - GENERAL
+7.20.1 The University as a community of scholars requires the availability of its Members on a regular and on-going basis
+to ensure that the activities of the University scheduled and unscheduled can be carried out in an orderly manner.
+7.20.2 Any absence shall not normally interfere with assigned and/or scheduled activities and the harmonious functioning
+of the
+Department/School.
+7.20.3 Any absence from campus affecting teaching/professional librarian duties sha",d7a6b9e9-fc09-4b55-89ad-192ec115bf66,0.0164,0.016,0.0164,"<<>>
+COLLECTIVE
+AGREEMENT
+BETWEEN
+THE LAURENTIAN UNIVERSITY FACULTY ASSOCIATION
+AND
+THE BOARD OF GOVERNORS OF LAURENTIAN UNIVERSITY
+1 JULY 2020 TO 30 JUNE 2025
+<<>>
+TABLE OF CONTENTS
+INTRODUCTION .......................................................................................................... 1
+ARTICLE 1.10 – TITLE ............................................................................................................................... 1
+ARTICLE 1.15 – OFFICIAL LANGUAGES ..........",f54e2a7f-64dc-41fc-9ac3-0059dfb86c1b,0.3572,0.3036,0.0161,"ARTICLE 7.20 – ABSENCE - GENERAL
+7.20.1 The University as a community of scholars requires the availability of its Members on a regular and on-going basis
+to ensure that the activities of the University scheduled and unscheduled can be carried out in an orderly manner.
+7.20.2 Any absence shall not normally interfere with assigned and/or scheduled activities and the harmonious functioning
+of the
+Department/School.
+7.20.3 Any absence from campus affecting teaching/professional librarian duties sha",61e470ca-8d46-4082-b958-76bd245c03be,0.0161,0.0157,0.0161,"Hereinafter, this title shall
+be referred to as the Collective Agreement. ARTICLE 1.15 – OFFICIAL LANGUAGES
+1.15.1 Both the English and French versions of the Collective Agreement shall be official and definitive versions. Both
+Parties may use either the English or the French version in any proceedings arising out of the Collective
+Agreement, and shall apply the version of the Collective Agreement in which formal grievance/arbitration
+proceedings were initiated.
+1.15.2 The Parties agree to coope",662d98cf-7c04-4e49-a6e5-acef360ceef0,0.361,0.2527,0.0159,"ARTICLE 7.20 – ABSENCE - GENERAL
+7.20.1 The University as a community of scholars requires the availability of its Members on a regular and on-going basis
+to ensure that the activities of the
+University scheduled and unscheduled can be carried out in an orderly manner.
+7.20.2 Any absence shall not normally interfere with assigned and/or scheduled activities and the harmonious functioning
+of the Department/School.
+118 of 243
+<<>>
+Collective Agreement 2011-14
+7.20.3 Any absence from campus affecti",0.0714,0.0044,0.0302,0.0102,0.0302,0.0627,0.2,0.3869,0.0,0.0,1.0,0.8,1.0,1.0,,,,,2.8046,14.5303,53.9166,5712.0,5717.8,1183.1,1818.6,7.5,84.3,12288.0,951.0,768.0,1.0,"According to Article 7.20 of the Collective Agreement between the Laurentian University Faculty Association and the Board of Governors of Laurentian University (Page 118), the following regulations apply for absences in general:
+
+* The university as a community of scholars requires the availability of its members on a regular and ongoing basis, so that university activities, planned and unplanned, can be carried out in an orderly manner (7.20.1).
+* Every absence should normally not conflict with assigned or planned activities and the harmonious functioning of the Department/Faculty (7.20.2).
+
+Article 7.20 is translated from German as follows:
+
+""ARTICLE 7.20 – ABSENCE - GENERAL
+
+7.20.1 The university as a community of scholars requires the availability of its members on a regular and ongoing basis, so that university activities, planned and unplanned, can be carried out in an orderly manner.
+
+7.20.2 Every absence should normally not conflict with assigned or planned activities and the harmonious functioning of the Department/Faculty.""
+
+Source: Collective Agreement between the Laurentian University Faculty Association and the Board of Governors of Laurentian University (Page 118).",en,none,0.0,0.0,0.2,0.0,,,,,,,,
+test_de_002,test_de_002,Was sieht der Tarifvertrag in Bezug auf Schwangerschaft\,"Laut Artikel 7.60 des Tarifvertrags hat eine schwangere Vollzeitmitarbeiterin oder Master-Lecturer-Mitarbeiterin Anspruch auf 17 Wochen Schwangerschaftsurlaub (Pregnancy Leave). Während dieser Zeit erhält sie von der Arbeitgeberin:
+
+* Für die erste Woche 100% ihrer Nettosumme
+* Für maximal 16 weitere Wochen den Betrag, der dem Unterschied zwischen den von ihr empfangenen Arbeitslosenversicherungszahlungen und 100% ihrer Nettosumme entspricht
+* Sollte das Government of Canada ihre Arbeitslosenversicherungsansprüche reduzieren oder die Höhe der Leistungen ändern, erhält sie den Betrag, der notwendig ist, um sicherzustellen, dass sie die oben beschriebene Top-up erhält.
+
+Wenn eine Mitarbeiterin aufgrund von Schwierigkeiten während der Schwangerschaft, einer Geburt, Stillgeburt oder Fehlgeburten ihre Arbeit aufgeben muss, gelten die oben genannten Anforderungen nicht.",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,2,True,8beb3c8d-785b-40f5-904b-06cf1b3808eb,0.3414,0.3329,0.0164,"ARTICLE 7.60 – PREGNANCY, PARENTAL AND ADOPTION LEAVES
+7.60.1 Pregnancy Leave
+(a) A pregnant full-time Member or pregnant Master Lecturer Member shall be entitled to seventeen (17)
+weeks pregnancy leave.
+(b) During the period of pregnancy leave as specified in Article 7.60.1 (a) above, the Member shall
+receive from the Employer:
+(i) For the first week, one-hundred percent (100%) of her nominal salary;
+(ii) For up to a maximum of sixteen (16) additional weeks, an amount equal to the difference
+be",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.0164,0.016,0.0164,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+BETWEEN:
+Laurentian University
+and
+The Laurentian University Faculty Association
+Before: William Kaplan
+Sole Arbitrator
+Appearances
+For the University: Michael Kennedy
+Hicks Morley
+Barristers & Solicitors
+For the Association: David Wright
+Mae J. Nam
+Ryder Wright Blair & Holmes
+Barristers & Solicitor",bfd36600-502d-4e61-8325-09ab253cbd0b,0.3414,0.3329,0.0161,"ARTICLE 7.60 – PREGNANCY, PARENTAL AND ADOPTION LEAVES
+7.60.1 Pregnancy Leave
+(a) A pregnant full-time Member or pregnant Master Lecturer Member shall be entitled to seventeen (17)
+weeks pregnancy leave.
+(b) During the period of pregnancy leave as specified in Article 7.60.1 (a) above, the Member shall
+receive from the Employer:
+(i) For the first week, one-hundred percent (100%) of her nominal salary;
+(ii) For up to a maximum of sixteen (16) additional weeks, an amount equal to the difference
+be",2f2855bb-8fd0-475b-b9a3-02d5b3e4f442,0.0161,0.0121,0.0161,"16.05 Unless otherwise stated in this Agreement, promotions shall be effective on 1 July of the
+academic year following the year in which the application was made and approved. A
+Lecturer who obtains a doctoral degree shall have an approved promotion to Assistant
+Professor. The promotion shall be effective the first day of the month following the
+University receiving a diploma or a letter from the University where the doctorate was
+obtained, that indicates all conditions for the doctorate have b",2659b34a-8e48-4c3f-9616-ae79f1f6972a,0.3356,0.2936,0.0159,"The member shall notify the Chair ofthe member’s
+Department and the President and shall supply the
+President with a copy ofthe summons. The member and the Department shall make alternative arrangements to meet the
+member’s responsibilities, Members on Court
+Leave shall accumulate credit in all matters as ifthey had not been granted any form ofleave and will lose no rights or
+privileges as a result ofbeing on court leave.
+14.04 Pregnancy Leave
+(a) Up to seventeen weeks ofPregnancy Leave will be g",0.3273,0.0518,0.3353,0.1404,0.2659,0.3423,0.0,0.0,0.0,0.0,0.0,1.0,0.4,1.0,,,,,2.1378,9.9794,157.914,5712.0,5717.8,1195.4,2228.9,7.6,86.4,12288.0,3579.0,1253.0,,"According to Article 7.60 of the Collective Agreement, a full-time pregnant employee or Master Lecturer has a right to 17 weeks' pregnancy leave (Pregnancy Leave). During this time she will receive from her employer:
+
+* For the first week 100% of her net pay
+* For up to 16 additional weeks the amount which is the difference between the Employment Insurance benefits she receives and 100% of her net pay
+* If the Government of Canada reduces or changes the level of Employment Insurance benefits, she will receive the amount necessary to ensure that she continues to receive the above-described top-up.
+
+If an employee has to give up work due to pregnancy difficulties, a birth, miscarriage or stillbirth, the above requirements do not apply.",en,none,0.0,0.0,0.0,0.5,,,,,,,,
+test_de_004,test_de_004,Welche Bedingungen gelten für Gehaltsstufen bei Zusatzqualifikationen?,"Laut dem Tarifvertrag (Collective Agreement) werden Gehaltsstufen für Zusatzqualifikationen gemäß Artikel 8.30 - Augmentations pour qualifications supplémentaires wie folgt berechnet:
+
+- Die Wertigkeit dieser Erhöhung beträgt 2 900 $.
+- Diese Erhöhung wird an alle Mitglieder vergeben, die eine Zusatzqualifikation erworben haben.
+
+Dieses Vorhaben ist in dem Tarifvertrag für die Jahre 2017-2020 (Article 8.10.3) und weiteren Jahren wie z.B. für die Jahre 2024 (Article 8.10.5) festgelegt.
+(Quelle: Convention collective 2011-14, Seite ??; Convention collective 2017-2020, Artikel 8.10.3, Seite 78; Collective Agreement 2011-14, Schedule “H”, Annex “H”)",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Salary,hard,2,True,38a56827-6108-42cb-bc41-23283c850ebe,0.4127,0.4024,0.0164,"La valeur de cette augmentation est de 2 900 $.
+(c) Les augmentations pour qualifications additionnelles sont attribuées
+selon l’article 8.30 – Augmentations pour qualifications supplémentaires au
+montant de 2 900 $.
+(d) Les augmentations pour promotion ou au mérite sont attribuées
+selon l'article 8.15 - Augmentations en vertu du progrès dans les rangs. Augmentations au mérite malgré les points de rupture.
+8.10.5 Le salaire de chaque Membre comprendra son salaire de base au 30 juin 2024 tel
+que ",0916bde9-6602-48a6-993b-632e33cb35d4,0.0164,0.0115,0.0164,"ARTICLE 4.60 – PHYSICAL EDUCATION FACILITIES FOR
+SESSIONAL MEMBERS
+4.60.1 Sessional Members and their spouse and dependants as defined for full-time Members are eligible for Physical
+Education Centre membership and lockerette for the academic year in which they are employed, subject to the payment
+of the annual service fee and lockerette rental fee as established by the Division of Physical Education. ARTICLE 4.65 – EXEMPTION FROM TUITION FEES FOR
+SESSIONAL MEMBERS
+4.65.1 Sessional Lecturers sha",013ba60d-6200-4a42-a7da-c2e5c649d216,0.4167,0.3542,0.0161,"À
+tous les rangs, lorsque le salaire du Membre dépasse 164 136 $ par année, il n’y a pas de telle augmentation.
+78
+<<>>
+Convention collective 2017-2020
+(c) Les augmentations pour qualifications additionnelles sont attribuées selon l’article 8.30 – Augmentation pour
+qualifications supplémentaires.
+(d) Nonobstant les limites imposées, les augmentations au mérite et pour les promotions sont attribuées selon l’Article
+8.15 ainsi que l’article 8.25 –
+Augmentation au mérite.
+8.10.2 Le plancher salaria",ca0b8962-5f01-45c7-8c43-ca1fd40c7e35,0.0161,0.0113,0.0161,"ARTICLE 4.60 – PHYSICAL EDUCATION FACILITIES FOR
+SESSIONAL MEMBERS
+4.60.1 Sessional Members and their spouse and dependants as defined for full-time Members are eligible for Physical
+Education Centre membership and lockerette for the academic year in which they are employed, subject to the payment
+of the annual service fee and lockerette rental fee as established by the Division of Physical Education. ARTICLE 4.65 – EXEMPTION FROM TUITION FEES FOR
+SESSIONAL MEMBERS
+4.65.1 Sessional Lecturers sha",9c7c6a4e-6cb3-4603-a681-43ad2976b912,0.4167,0.3542,0.0159,"À
+tous les rangs, lorsque le salaire du Membre dépasse 164 136 $ par année, il n’y a pas de telle augmentation.
+78
+<<>>
+Convention collective 2017-2020
+(c) Les augmentations pour qualifications additionnelles sont attribuées selon l’article 8.30 – Augmentation pour
+qualifications supplémentaires.
+(d) Nonobstant les limites imposées, les augmentations au mérite et pour les promotions sont attribuées selon l’Article
+8.15 ainsi que l’article 8.25 –
+Augmentation au mérite.
+8.10.2 Le plancher salaria",0.2202,0.0155,0.1905,0.0361,0.1429,0.1659,0.0,0.0,0.0,0.0,0.0,1.0,0.4,0.6,,,,,2.933,10.3713,272.5981,5712.0,5715.8,1160.0,2646.2,8.0,93.1,12288.0,5355.0,1874.0,,"According to the Collective Agreement (Tarifvertrag), salary steps for additional qualifications are calculated as follows, in accordance with Article 8.30 - Augmentations pour qualifications supplémentaires:
+
+- The value of this increase is $2,900.
+- This increase will be granted to all members who have acquired an additional qualification.
+
+This provision was specified in the Collective Agreement for the years 2017-2020 (Article 8.10.3) and further years such as 2024 (Article 8.10.5).
+(Source: Convention collective 2011-14, page ??; Convention collective 2017-2020, Article 8.10.3, page 78; Collective Agreement 2011-14, Schedule “H”, Annex “H”)",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_005,test_de_005,Was gilt laut Vereinbarung für die berufliche Weiterbildung?,"Laut der Vereinbarung gilt folgendes:
+
+Sessionelle Mitglieder sind für Gelder zur beruflichen Weiterbildung von 250 Dollar pro jeder drei Kredit-Veranstaltung bis zu einer Obergrenze von 2.000 Dollar pro Jahr berechtigt (ARTICLE 30 - PROFESSIONAL DEVELOPMENT, LUFA-H Collective Agreement 2016-2020, Seite 47).
+
+ Vollzeit-Mitglieder sind hingegen für die berufliche Weiterbildung nur für jedes Vertragsjahr berechtigt und erhalten eine Zulage in Höhe von einer nicht bestimmten Summe (ARTICLE 30 - PROFESSIONAL DEVELOPMENT, LUFA-H Collective Agreement 2016-2020, Seite 47).
+
+ Es wird erwähnt, dass diese Zulage für Ausgaben im Zusammenhang mit genehmigten akademischen Forschungen oder beruflichen Zwecken verwendet werden soll und kumulativ über zwei akademische Jahre gilt (ARTICLE 30 - PROFESSIONAL DEVELOPMENT, LUFA-H Collective Agreement 2016-2020, Seite 47).
+
+Diplomierte Dozenten werden automatisch zu Assistenzprofessoren befördert. Die Beförderung tritt jedoch erst am ersten Tag des Monats in Kraft, nachdem die Universität einen Abschlusszeugnis oder eine Bestätigung von der Universität erhalten hat, an der der Doktortitel erworben wurde, dass alle Bedingungen für den Doktorgrad erfüllt sind (ARTICLE 16.05, LUFA-H Collective Agreement 2016-2020).
+
+ Die relevanten Texte in deutscher Übersetzung laut Artikel 30:
+
+Jedes Vollzeit-Mitglied hat Anspruch auf eine berufliche Zulage pro Vertragsjahr für Ausgaben im Zusammenhang mit genehmigten akademischen Forschungen oder beruflichen Zwecken. Diese Zulage gilt kumulativ über zwei (2) akademische Jahre.
+
+ Die Übersetzung von Artikel 16.05:
+
+Es wird davon ausgegangen, dass es keine explizite Erwähnung in der Vereinbarung gibt, die eine Beförderung wirksam macht, es sei denn, dies ist an anderer Stelle im Vertrag festgelegt. In jedem Fall gilt für Dozenten, die einen Doktortitel erworben haben, eine automatische Beförderung zum Assistenzprofessor. Die Beförderung tritt in Kraft mit dem ersten Tag des Monats, nachdem der Universität ein Abschlusszeugnis oder eine Bestätigung von der Universität vorliegt, an der der Doktortitel erworben wurde, dass alle Bedingungen für den Doktorgrad erfüllt sind.",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Professional Development,medium,1,True,9e63d0bc-1639-442e-b04e-e2b12c6fd7b5,0.3339,0.2838,0.0164,"30.07 Sessional Members shall be eligible for professional development money of two hundred and
+fifty (250) dollars, per each three credit course that they teach up to a limit of two thousand
+(2,000) dollars. Such an allowance shall be used in the current and subsequent academic
+year.
+LUFA-H Collective Agreement 2016-2020 47
+<<>>",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.0164,0.016,0.0164,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+BETWEEN:
+Laurentian University
+and
+The Laurentian University Faculty Association
+Before: William Kaplan
+Sole Arbitrator
+Appearances
+For the University: Michael Kennedy
+Hicks Morley
+Barristers & Solicitors
+For the Association: David Wright
+Mae J. Nam
+Ryder Wright Blair & Holmes
+Barristers & Solicitor",22664915-0de0-412b-a55b-65c78582f319,0.3271,0.2781,0.0161,"ARTICLE 30 — PROFESSIONAL DEVELOPMENT
+30.01 Each full-time Member shall be eligible to receive a professional allowance for each
+contractual year, such allowance to be spent for expenses related to approved academic
+research or professional purposes. Such an allowance shall be cumulative over two (2)
+academic years.",2f2855bb-8fd0-475b-b9a3-02d5b3e4f442,0.0161,0.0121,0.0161,"16.05 Unless otherwise stated in this Agreement, promotions shall be effective on 1 July of the
+academic year following the year in which the application was made and approved. A
+Lecturer who obtains a doctoral degree shall have an approved promotion to Assistant
+Professor. The promotion shall be effective the first day of the month following the
+University receiving a diploma or a letter from the University where the doctorate was
+obtained, that indicates all conditions for the doctorate have b",12089275-858a-4036-bb55-e7d528cd19d8,0.3271,0.2453,0.0159,"ARTICLE 30 — PROFESSIONAL DEVELOPMENT
+30.01 Each full-time Member shall be eligible to receive a professional allowance for each
+contractual year, such allowance to be spent for expenses related to approved academic
+research or professional purposes. Such an allowance shall be cumulative over two (2)
+academic years.",0.1127,0.0022,0.0492,0.0,0.0369,0.0928,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6,,,,,2.2846,8.5741,208.223,5710.0,5715.8,1144.7,2984.1,8.1,98.0,12288.0,784.0,768.0,,"According to the agreement, the following applies:
+
+Sessional members are entitled to funds for professional development of $250 per every three credit events up to a maximum of $2,000 per year (ARTICLE 30 - PROFESSIONAL DEVELOPMENT, LUFA-H Collective Agreement 2016-2020, Page 47).
+
+On the other hand, full-time members are only entitled to professional development for each contract year and receive an allowance in an unspecified amount (ARTICLE 30 - PROFESSIONAL DEVELOPMENT, LUFA-H Collective Agreement 2016-2020, Page 47).
+
+It is mentioned that this allowance should be used for expenses related to approved academic research or professional purposes and applies cumulatively over two academic years (ARTICLE 30 - PROFESSIONAL DEVELOPMENT, LUFA-H Collective Agreement 2016-2020, Page 47).
+
+Diploma holders are automatically promoted to assistant professors. However, the promotion only takes effect on the first day of the month after the university has received a degree certificate or confirmation from the university where the doctoral title was obtained that all conditions for the doctorate have been met (ARTICLE 16.05, LUFA-H Collective Agreement 2016-2020).
+
+The relevant texts in German translation according to Article 30:
+
+Each full-time member is entitled to a professional allowance per contract year for expenses related to approved academic research or professional purposes. This allowance applies cumulatively over two (2) academic years.
+
+The translation of Article 16.05:
+
+It is assumed that there is no explicit mention in the agreement that makes promotion effective, unless this is specified elsewhere in the contract. In any case, diploma holders who have obtained a doctoral title are automatically promoted to assistant professor. The promotion takes effect on the first day of the month after the university has received a degree certificate or confirmation from the university where the doctoral title was obtained that all conditions for the doctorate have been met.",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_012,test_de_012,Was sieht der Tarifvertrag bezüglich des Rechts auf Rückruf vor?,"Laut Artikel 11.10.14 erhalten Mitglieder, deren Anstellung beendet wurde und die wieder eingestellt werden möchten, folgende Rechte:
+
+* Sie behalten ihren aktuellen Rang und alle damit verbundenen Rechte.
+* Die Universität stellt ihnen einen maximal einjährigen Konkursurlaub zur Verfügung, während dessen sie einen vollen Lohn und alle Vorteile erhalten.
+
+Diese Bestimmungen gelten für Mitglieder mit Daueranstellung (permanent), die in einem anderen pädagogischen Bereich teilweise oder vollständig übertragen werden. (Quelle: Tarifvertrag zwischen Laurentian University und dem Laurentian University Faculty Association, Seite 124)",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Salary,hard,1,True,8dc9737a-f29b-43b5-8600-69e398c5f929,0.3374,0.3289,0.0164,"All Members who are on tenured or three (3) year probationary appointments, and whose appointments are
+terminated pursuant to this Article shall have rights as set out hereafter:
+(a) (i) Twelve (12) months' notice in writing or any equivalent combination of notice plus salary
+followed by
+(ii) Six (6) months' salary plus one (1) month's salary for each year as a full-time employee
+provided that no Member on a three (3) year probationary appointment receives less than nine
+(9) months' salary and n",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.0164,0.016,0.0164,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+BETWEEN:
+Laurentian University
+and
+The Laurentian University Faculty Association
+Before: William Kaplan
+Sole Arbitrator
+Appearances
+For the University: Michael Kennedy
+Hicks Morley
+Barristers & Solicitors
+For the Association: David Wright
+Mae J. Nam
+Ryder Wright Blair & Holmes
+Barristers & Solicitor",bd4eccb3-05b5-4ae7-88f2-cd8d1f8933e5,0.3306,0.3223,0.0161,"Individuals who accept such positions shall return to the University at the rank they held when their
+appointments were terminated, with full recognition for years of service at Laurentian. Disputes arising
+out of these recall procedures are referable to the grievance and arbitration process set out in
+this Collective Agreement. Individuals who are recalled pursuant to this Article shall have up to thirty (30) days to accept such recall
+offer, and shall terminate their alternative employment and",2f2855bb-8fd0-475b-b9a3-02d5b3e4f442,0.0161,0.0121,0.0161,"16.05 Unless otherwise stated in this Agreement, promotions shall be effective on 1 July of the
+academic year following the year in which the application was made and approved. A
+Lecturer who obtains a doctoral degree shall have an approved promotion to Assistant
+Professor. The promotion shall be effective the first day of the month following the
+University receiving a diploma or a letter from the University where the doctorate was
+obtained, that indicates all conditions for the doctorate have b",ae91cec4-dd77-4337-9941-99f2b252b05e,0.3254,0.3172,0.0159,"Le Membre bénéficie tant d'une indemnité de rupture de contrat, que des droits de rappel,
+selon les dispositions de l’Article 11.10.18 ci-dessous.
+124
+<<>>
+11.10.14 Un Membre ayant la permanence qui accepte de se faire transférer partiellement ou intégralement à un
+autre secteur pédagogique retient son rang et tous ses droits actuels. Le cas échéant, l'Université lui accorde
+un congé de recyclage d'un (1) an au maximum, durant lequel il bénéficie d'un traitement entier et de tous
+les avantages s",0.2261,0.0131,0.2432,0.0137,0.1216,0.1415,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6,,,,,2.7497,9.5747,66.4844,5712.0,5717.8,1124.1,3331.8,8.1,96.3,12288.0,953.0,768.0,,"According to Article 11.10.14, members whose appointment has ended and who wish to be reinstated are entitled to the following rights:
+
+* They retain their current rank and all associated rights.
+* The university provides them with a maximum one-year leave of absence during which they receive full pay and all benefits.
+
+These provisions apply to members on permanent tenure (permanent) who are being partially or completely transferred to another pedagogical field. (Source: Collective Agreement between Laurentian University and the Laurentian University Faculty Association, page 124)",en,none,0.0,0.0,0.0,0.5,,,,,,,,
+test_de_014,test_de_014,Was sieht der Tarifvertrag bezüglich der Beförderungsverfahren vor\,"Laut Artikel 16.05 des Tarifvertrags (S. 8) sehen wir folgende Regelung vor:
+
+""Beförderungen gelten, sofern nicht anders im Tarifvertrag geregelt ist, ab dem 1. Juli des akademischen Jahres, das auf das Jahr folgt, in dem die Bewerbung eingereicht und genehmigt wurde.
+
+Ein Lecturer, der einen Doktortitel erworben hat, wird automatisch zum Assistant Professor befördert. Die Beförderung tritt am ersten Tag des Monats in Kraft, nachdem die Universität eine Diplomurkunde oder einen Brief von der Universität erhalten hat, an der der Doktorat erworben wurde, mit der besagten, dass alle Bedingungen für den Doktortitel erfüllt sind.""
+
+Quelle: ""IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36 und IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES RELATED TO THE COLLECTIVE AGREEMENT zwischen Laurentian University und The Laurentian University Faculty Association"" (S. 8)",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Promotion,medium,1,True,8bebedaa-ec9c-492a-a778-cf6ea6134dae,0.2718,0.265,0.0164,"Les parties conviennent que les griefs portant sur des questions
+Griefs
+non monétaires ou n'impliquant pas de dépenses d'argent, telles
+que l'accommodement, le refus de titularisation ou le
+congédiement injuste, qui surviennent le 1er février 2021 ou
+après cette date, ne seront pas suspendus en raison de la
+procédure de la LACC et pourront suivre leur cours normal. Accord intégral La présente Fiche de conditions et ses Annexes constituent
+l'intégralité de l'accord entre les parties concernant l'",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.0164,0.016,0.0164,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+BETWEEN:
+Laurentian University
+and
+The Laurentian University Faculty Association
+Before: William Kaplan
+Sole Arbitrator
+Appearances
+For the University: Michael Kennedy
+Hicks Morley
+Barristers & Solicitors
+For the Association: David Wright
+Mae J. Nam
+Ryder Wright Blair & Holmes
+Barristers & Solicitor",57da985e-117f-4c5d-b50c-4523054bfcc7,0.2636,0.257,0.0161,"This report shall be posted on the Equity, Diversity and Human Rights website.
+r) A copy of advertisements for faculty positions and Professional Staff shall be sent to the Union once they
+have been approved by the Office of the Vice-President, Academic and Provost for Faculty and Human
+Resources for Professional Staff.
+s) A copy of any mailings forwarded by the Employer to the majority of the Members or intended for the
+majority of Members, within the University, a Faculty/Library, or unit, to ",2f2855bb-8fd0-475b-b9a3-02d5b3e4f442,0.0161,0.0121,0.0161,"16.05 Unless otherwise stated in this Agreement, promotions shall be effective on 1 July of the
+academic year following the year in which the application was made and approved. A
+Lecturer who obtains a doctoral degree shall have an approved promotion to Assistant
+Professor. The promotion shall be effective the first day of the month following the
+University receiving a diploma or a letter from the University where the doctorate was
+obtained, that indicates all conditions for the doctorate have b",1a1d0168-9255-4ed4-bd53-00cd93a8c6b2,0.2596,0.2532,0.0159,"Les parties conviendront d'un maximum de quatre (4) dates de médi-arbitrage
+accéléré pour chaque année de la durée de la Convention collective.
+3. Au moins soixante (60) jours avant chaque date de médi-arbitrage accéléré, les
+parties s'entendront sur les griefs qui seront traités ce jour-là.
+4. Les parties prévoient jusqu'à trois (3) griefs à entendre à chaque date de médi-
+arbitrage accéléré.
+5. Quarante-cinq (45) jours avant chaque date de médi-arbitrage accéléré, une partie
+peut faire des dem",0.0571,0.0035,0.0488,0.0,0.0488,0.0633,0.0,0.0,0.0,0.0,0.0,0.2,1.0,0.4,,,,,2.2253,9.799,91.2443,5712.0,5717.8,1056.1,3613.3,8.1,96.9,12288.0,954.0,768.0,,"According to Article 16.05 of the Collective Agreement (p. 8), we have the following regulation:
+
+""Promotions are effective, unless otherwise provided in the Collective Agreement, from July 1 of the academic year that follows the year in which the application was submitted and approved.
+
+A Lecturer who has earned a doctoral degree is automatically promoted to Assistant Professor. The promotion takes effect on the first day of the month following receipt by the university of a diploma or letter from the university where the doctorate was earned, stating that all requirements for the doctoral degree have been fulfilled.""
+
+Source: ""IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36 and IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES RELATED TO THE COLLECTIVE AGREEMENT between Laurentian University and The Laurentian University Faculty Association"" (p. 8)",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_018,test_de_018,Welche Regelungen gelten für den Rücktritt/die Kündigung?,"Nach Artikel 13.10.1 der Collective Agreement ist es zwischen dem University und der Union vereinbart, dass während der Gültigkeitsdauer dieser Vereinbarung keine Schließung durch die Universität oder ein Streik von Mitgliedern des Verbandes stattfinden dürfen.
+
+Darüber hinaus behandelt Artikel 19 die Regelungen für den Special Voluntary Early Retirement (SVER). Danach werden folgende Bedingungen für den SVER festgelegt:
+
+* Die Antragsfrist für den SVER läuft von Juli 1, 2000 bis Juni 30, 2005.
+* Der SVER gilt nur innerhalb dieses Zeitraums und wird danach überprüft, falls sich der Regelaltersgrenze von 65 Jahren ändert oder wenn die Laurentian University Retirement Plan Änderungen enthält, die eine frühere Pensionierung ermöglichen.
+* Die Antragsfrist für den SVER läuft bis zum Ende des Kalenderjahres, in dem der Antrag gestellt wird.
+* Der SVER kann nur einmal innerhalb eines bestimmten Zeitraums beantragt werden.
+
+Außerdem gibt es Regelungen für die Beendigung des SVER:
+
+* Wenn ein Mitglied während des SVER-Vertrags verstirbt, wird die Zahlung eingestellt und die Mitgliedschaft beendet.
+* Die Altersrente und der Pensionbeitrag werden ab dem Monat der Mitgliederentlassung eingestellt.
+
+Es ist zu beachten, dass diese Regelungen speziell für den SVER gelten und nicht auf alle Beendigungsarten anwendbar sind.",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Termination,easy,2,True,baf49d2d-eb16-4e2a-bdee-afcce79c9859,0.4104,0.4002,0.0164,"13.10.1 The University and the Union hereby agree that there shall not be, during the currency of this Collective
+Agreement, any lockout by the University or any strike by Members of the Union.",deffb3e5-e2c9-4eec-b9a5-a2eb8a1c51a8,0.0164,0.0078,0.0164,"If improvements in benefits are
+provided in subsequent Collective Agreements these improvements shall be
+extended to the retirees on Special Voluntary Early Retirement. Members
+who go on Special Voluntary Early Retirement will not be eligible for sick
+leave. The employer's cost of those benefit plans in which the Member does
+not retain participation will be added to the early retirement incentive. The
+employer's cost will be based on the premium charged by the carrier and will
+not include the Pr",bd4eccb3-05b5-4ae7-88f2-cd8d1f8933e5,0.4036,0.3935,0.0161,"Individuals who accept such positions shall return to the University at the rank they held when their
+appointments were terminated, with full recognition for years of service at Laurentian. Disputes arising
+out of these recall procedures are referable to the grievance and arbitration process set out in
+this Collective Agreement. Individuals who are recalled pursuant to this Article shall have up to thirty (30) days to accept such recall
+offer, and shall terminate their alternative employment and",ba368931-6491-4919-b2aa-17541bf64043,0.0161,0.0125,0.0161,"If the member is entitled to benefits under the Retirees Health Plan, this subsidy would not
+apply.
+2014-2017 Thorneloe-LUFA Collective Agreement 76
+<<>>
+15. Should the Member die during the Special Voluntary Early Retirement Period, the payment will
+cease at the end of the month the death occurred. Benefits and Pension contributions will also
+terminate as of the end of the month of the Member’s death.
+16. A Member taking Special Voluntary Early Retirement would enjoy all retiree privileges as w",1988caac-859c-4cc7-9e9e-abc97373fb22,0.4236,0.3706,0.0159,"ARTICLE 0 - PREAMBULE
+ARTICLE 1 - OBJECTIFS ET DEFINITIONS w
+ARTICLE 2 - LANGUES + k
+ARTICLE 3 — ENVIRONNEMENT DE TRAVAIL a
+ARTICLE 4 — RECONNAISSANCE
+ARTICLE 5 - DROITS DE L'ADMINISTRATION
+ARTICLE 6 — DROITS ET PRIVILEGES DE L'ASSOCIATION
+ARTICLE 7 - COMITÉ CONJOINT SYNDICAL-PATRONAL
+ARTICLE 8 - COMITÉ DES AFFAIRES PROFESSORALES
+ARTICLE 9 - DIRECTION DU DÉPARTEMENT 16
+ARTICLE 10 — ACTIVITÉS UNIVERSITAIRES 7
+ARTICLE 11 - NOMINATION DES PROFESSEURS 24
+ARTICLE 12 - CONGES SABBATIQUES 34
+ARTICLE 13",0.1429,0.0034,0.0952,0.0,0.0667,0.1479,0.0,0.0,0.0,0.0,0.0,0.4,0.2,0.4,,,,,2.6802,8.8444,235.2038,5712.0,5715.8,1053.5,3890.5,7.9,93.4,12288.0,4545.0,1591.0,,"In accordance with Article 13.10.1 of the Collective Agreement, it is agreed between the University and the Union that during the validity period of this agreement, no closure by the University or a strike by members of the Association may take place.
+
+Furthermore, Article 19 deals with the regulations for Special Voluntary Early Retirement (SVER). According to these regulations:
+
+* The application deadline for SVER runs from July 1, 2000 to June 30, 2005.
+* SVER is only valid within this time frame and will be reviewed if the statutory retirement age of 65 changes or if the Laurentian University Retirement Plan contains amendments that enable early pensioning.
+* The application deadline for SVER expires at the end of the calendar year in which the application is made.
+* SVER can only be applied for once within a certain time frame.
+
+In addition, there are regulations governing the termination of SVER:
+
+* If a member dies during the SVER contract, payments will be stopped and membership terminated.
+* Pension payment and pension contribution will cease from the month of membership termination.
+
+Note that these regulations specifically apply to SVER and do not apply to all types of terminations.",en,none,0.0,0.0,0.0,0.5,,,,,,,,
+test_de_019,test_de_019,Was gilt laut Vereinbarung für hufac?,"Laut der Vereinbarung gilt Folgendes für HUFAC:
+
+* Die Mitglieder von HUFAC sollen sich zurückziehen, wenn ein Konflikt des Interesses besteht (14.03).
+* Ein Antragsteller kann um die Rückziehung eines HUFAC-Mitglieds bitten und seine Gründe schriftlich an den Vorsitzenden der Kommission übermitteln (14.03).
+* Der Vorsitzende der Kommission muss eine Entscheidung mit Gründen schriftlich an den Antragsteller und das betroffene Mitglied weiterleiten (14.03).
+* Auch ohne Anfrage des Antragstellers kann der Vorsitzende von HUFAC ein Mitglied zurückziehen, wenn ein Konflikt des Interesses besteht (14.03).
+* Die Mitglieder von HUFAC sollen sich aus freien Stücken zurückziehen können (14.03).
+
+Die Zusammensetzung von HUFAC lautet wie folgt:
+
+* Der Vorsitzende von HUFAC wird vom Präsidenten der Universität ernannt und ist kein Mitglied der Laurentian University Faculty Association (14.02 a).
+* Die Kommission besteht aus fünf (5) befristeten Huntington-Mitgliedern, dem Vorsitzenden plus (14.02 b).
+* Bei einem Mangel an Huntington-Mitgliedern werden mit Genehmigung des Joint Labour Management Committee Mitglieder aus den federierten Universitäten oder von Laurentian University (Fakultäten für Geisteswissenschaften und Sozialwissenschaften) berufen (14.02 b i).
+* Im Falle der Beurteilung eines Bibliothekars soll ein befristeter Bibliothekar von Laurentian University Mitglied sein (14.02 b ii).
+* Im Falle der Beurteilung einer Person aus Gerontologie kann der Beurteile eine Tenured-Fakultätsmitglied aus der Fakultät für Gesundheit verlangen und dies wird nicht unvernünftig abgelehnt (14.02 b iii).
+* Im Falle der Beurteilung einer Person aus Kommunikationswissenschaft oder Religionswissenschaft kann der Beurteile eine Tenured-Fakultätsmitglied aus der Fakultät für Geisteswissenschaften verlangen und dies wird nicht unvernünftig abgelehnt (14.02 b iv).
+
+Quelle: LUFA-H Collective Agreement 2016-2020, Seite 24",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Bargaining Unit,medium,2,True,dc39cc7e-c8c0-46bd-a5b9-c3cf88ade00b,0.353,0.3,0.0313,"14.03 An applicant may ask that a HUFAC Member recuse herself/himself on the grounds that a
+conflict of interest exists. The applicant shall state the reasons in writing to the Chair of the
+Committee. The Chair shall render a decision with reasons in writing to the applicant and the
+Member in question. Even without a request from the applicant, the Chair of HUFAC may
+require a Membetor recuse herself/himself on the grounds that a conflict of interest exists.
+A Member may recuse herself/himself o",dfc5a563-1284-4229-8300-5581671f947b,0.3373,0.2867,0.0312,"ARTICLE 14 — HUFAC
+14.01 Huntington University Faculty Affairs Committee
+In recognition of the centrality of peer evaluation, there shall be a Huntington University
+Faculty Affairs Committee (HUFAC) whose role is to provide recommendations to the
+President on such applications from Faculty, including:
+Renewal of probationary appointments;
+Promotion;
+Tenure.",3704d258-e3df-4087-bc97-0f5fe5cdd9ca,0.3458,0.2594,0.0311,"14.02 HUFAC Membership
+a) The Chair of the HUFAC shall be the designate appointed by the President of the
+University. The Chair of HUFAC shall appoint the committee Membership with the
+approval of the Joint Labour Management Committee.
+b) The committee shall consist of five (5) tenured Huntington Members. Any shortfall in
+Huntington Members shall be selected with the approval of the Joint Labour
+Management Committee, drawn from tenured Members of the Federated
+Universities or, if not available, ",89232e11-4f84-4e0d-a479-128971b29d95,0.3373,0.253,0.0304,"ARTICLE 14 — HUFAC
+14.01 Huntington University Faculty Affairs Committee
+In recognition of the centrality of peer evaluation, there shall be a Huntington University
+Faculty Affairs Committee (HUFAC) whose role is to provide recommendations to the
+President on such applications from Faculty, including:
+Renewal of probationary appointments;
+Promotion;
+Tenure.",439c1958-e4c9-461e-82f9-a2896bcfc751,0.3513,0.2634,0.0301,"14.03 An applicant may ask that a HUFAC Member recuse herself/himself on the grounds that a
+conflict of interest exists. The applicant shall state the reasons in writing to the Chair of the
+Committee. The Chair shall render a decision with reasons in writing to the applicant and the
+Member in question. Even without a request from the applicant, the Chair of HUFAC may
+require a Member to recuse herself/himself on the grounds that a conflict of interest exists.
+A Member may recuse herself/himself ",0.2424,0.0326,0.1429,0.0813,0.0994,0.3174,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,,,,,2.2788,7.4967,274.8285,5712.0,5715.8,1049.9,2703.5,7.9,94.0,12288.0,1366.0,768.0,,"According to the agreement, the following applies to HUFAC:
+
+* Members of HUFAC shall withdraw if a conflict of interest arises (14.03).
+* An applicant can request the withdrawal of a HUFAC member and submit their reasons in writing to the Chairperson of the Commission (14.03).
+* The Chairperson of the Commission must forward a decision with reasons in writing to the applicant and the affected member (14.03).
+* Without the applicant's request, the Chairperson of HUFAC can withdraw a member if a conflict of interest arises (14.03).
+* Members of HUFAC should be able to withdraw voluntarily (14.03).
+
+The composition of HUFAC is as follows:
+
+* The Chairperson of HUFAC is appointed by the University President and is not a member of the Laurentian University Faculty Association (14.02 a).
+* The Commission consists of five (5) temporary members, including the Chairperson plus (14.02 b).
+* In the event of a shortage of Huntington members, with approval from the Joint Labour Management Committee, members from federated universities or from Laurentian University (Faculty of Arts and Social Sciences) are appointed (14.02 b i).
+* In the case of an evaluation of a librarian, a temporary librarian from Laurentian University should be a member (14.02 b ii).
+* In the case of an evaluation of a person from Gerontology, the evaluator can request a tenured faculty member from the Faculty of Health and this will not be unreasonably refused (14.02 b iii).
+* In the case of an evaluation of a person from Communication Studies or Religious Studies, the evaluator can request a tenured faculty member from the Faculty of Arts and this will not be unreasonably refused (14.02 b iv).
+
+Source: LUFA-H Collective Agreement 2016-2020, page 24",en,none,0.0,0.0,0.0,1.0,,,,,,,,
+test_de_020,test_de_020,Was sagt die Vereinbarung über die Tarifeinheit aus?,"Entschuldigung, aber ich verstehe nicht genau, was Sie mit ""Was sagt die Vereinbarung über die Tarifeinheit aus?"" meinen. Könnten Sie Ihre Frage präziser formulieren oder vielleicht eine andere Frage stellen?
+
+Wenn ich jedoch nach dem Artikel 10 - ACTIVITES UNIVERSITAIRES suchen soll, könnte ich antworten:
+
+ARTICLE 10 - ACTIVITÉS UNIVERSITAIRES
+
+10.01 En tant qu’universitaires, les membres de l’unité de négociation se consacrent à la transmission et à l’expression créatrice du savoir, à son éclaircissement et à l’élargissement de ses frontières, à l’administration universitaire et au service à la profession et à la communauté. Ils ont le droit d’exercer les activités suivantes et l’on s’attend à ce qu’ils s’y engagent, dans des proportions raisonnables, variant selon les personnes :
+(a) ils effectuent les tâches d’enseignement attribuées conformément à la présente Convention collective;
+(b) ils font de la recherche et poursuivent des travaux d’érudition et de création;
+(c) ils fournissent leurs services à l’Université;
+(d) ils fournissent leurs services à la profession et à la communauté.
+
+Die Vereinbarung beschreibt die verschiedenen Aktivitäten, die sich die Mitglieder der Einigungseinheit widmen sollen. Dazu gehören das Lehren, Forschen und die Dienstleistungen an der Universität, in der Professsion und in der Gemeinschaft erbringen.",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Bargaining Unit,hard,2,True,2722ba9a-2f56-4f46-aa50-8d201abbe577,0.4071,0.3562,0.0164,"ARTICLE 10 - ACTIVITES UNIVERSITAIRES
+10.01 En tant qu’universitaires, les membres de l’unité de négociation se consacrent à la transmission et à l’expression
+créatrice du savoir, à son éclaircissement et à l'élargissement de ses frontières, à l’administration universitaire et au
+service à la profession et à la communauté, Ils ont le droit d’exercer les activités suivantes et l’on s’attend à ce qu’ils s’y
+engagent, dans des proportions raisonnables, variant selon les personnes :
+(a) _ ils effect",0073964a-94d9-44c7-b7ae-824e7f121629,0.0164,0.0102,0.0164,"Grievance of Appointment Decision of Sessional Members
+4.15.25 In the event that an unsuccessful applicant for a sessional teaching position believes that someone else was
+appointed to the position in violation of the provisions of this Collective Agreement, she/he may request within one (1)
+month of the decision a review of the appointment with the view of establishing whether the Employer acted in accordance
+with the provisions of this Collective
+Agreement when not appointing the unsuccessful ",cb41c9a8-be88-4cd7-8993-41b59a6226d3,0.4071,0.3562,0.0161,"ARTICLE 10 - ACTIVITES UNIVERSITAIRES
+10.01 En tant qu’universitaires, les membres de l’unité de négociation se consacrent à la transmission et à l’expression
+créatrice du savoir, à son éclaircissement et à l'élargissement de ses frontières, à l’administration universitaire et au
+service à la profession et à la communauté, Ils ont le droit d’exercer les activités suivantes et l’on s’attend à ce qu’ils s’y
+engagent, dans des proportions raisonnables, variant selon les personnes :
+(a) _ ils effect",9c235f0e-4fce-42ea-9be1-b89131d9bb9e,0.0161,0.0101,0.0161,"Grievance of Appointment Decision of Sessional Members
+4.15.25 In the event that an unsuccessful applicant for a sessional teaching position believes that someone else was
+appointed to the position in violation of the provisions of this Collective Agreement, she/he may request within one (1)
+month of the decision a review of the appointment with the view of establishing whether the Employer acted in accordance
+with the provisions of this Collective
+Agreement when not appointing the unsuccessful ",42ee7fca-13f4-4de3-bf01-0929c4bd9d95,0.4122,0.3298,0.0159,"ARTICLE 10 - ACTIVITÉS UNIVERSITAIRES
+10.01 En tant qu’universitaires, les membres de l’unité de négociation se consacrent à la transmission et à l’expression
+créatrice du savoir, à son éclaircissement et à l’élargissement de ses frontières, à l’administration universitaire et au
+service à la profession et à la communauté. Ils ont le droit d’exercer les activités suivantes et l’on s’attend à ce qu’ils s’y
+engagent, dans des proportions raisonnables, variant selon les personnes :
+(a) ils effectue",0.209,0.0195,0.1682,0.0377,0.0841,0.2142,0.0,0.0,0.0,0.0,0.0,0.2,0.2,0.2,,,,,2.6886,8.3668,222.2928,5712.0,5715.8,1049.9,2336.8,8.0,92.7,12288.0,3731.0,1306.0,,"Sorry, but I don't quite understand what you mean by ""What does the agreement say about the tariff unity?"" Could you please formulate your question more precisely or perhaps ask a different one?
+
+If I were to search for Article 10 - UNIVERSITY ACTIVITIES, I could respond:
+
+ARTICLE 10 - UNIVERSITY ACTIVITIES
+
+10.01 As university members, those of the negotiation unit dedicate themselves to the transmission and creative expression of knowledge, its clarification and expansion of its frontiers, university administration and service to profession and community. They have the right to exercise the following activities and are expected to engage in them, in reasonable proportions varying according to persons:
+(a) they perform teaching tasks assigned according to this Collective Agreement;
+(b) they conduct research and pursue scholarly and creative works;
+(c) they provide services to the University;
+(d) they provide services to the profession and community.
+
+The agreement describes various activities that members of the negotiation unit should dedicate themselves to, including teaching, research, and providing services at the university, in the profession, and in the community.",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_022,test_de_022,Wie definiert oder beschreibt die Vereinbarung Abwesenheit im Allgemeinen?,"Die Vereinbarung definisiert Abwesenheit im Allgemeinen in Artikel 7.20 als folgt:
+
+""ARTICLE 7.20 – ABSENCE - GENERAL (deutsch: ARTIKEL 7.20 – ABSENCES - GÉNÉRALITÉS)
+7.20.1 L'Université, en tant que communauté de savants, doit compter sur la disponibilité de ses Membres sur une base régulière et continue pour que toutes les activités universitaires, qu'elles soient prévues au calendrier ou non, puissent se poursuivre de façon bien ordonnée. (deutsch: Die Universität als Gemeinschaft der Gelehrten muss sich auf die Verfügbarkeit ihrer Mitglieder auf einer regelmäßigen und kontinuierlichen Basis verlassen, damit alle universitären Aktivitäten, sei es im Lehrplan oder nicht, in einem ordnungsgemäßen Rahmen durchgeführt werden können.)
+
+7.20.2 Les absences ne doivent normalement porter atteinte ni aux fonctions attribuées ni aux activités prévues dans l'horaire ni au fonctionnement harmonieux du Département/de l’École. (deutsch: Abwesenheiten dürfen normalerweise weder die zugewiesenen Aufgaben noch die im Stundenplan vorgesehenen Aktivitäten noch das harmonische Funktionieren des Departments/Schule beeinträchtigen.)
+
+7.20.3 Any absence from campus affecting teaching/professional librarian duties shall be subject to the approval of the Department Chair. (deutsch: Jede Abwesenheit vom Campus, die sich auf Lehr- bzw. Bibliotheksdiensttätigkeiten auswirkt, bedarf der Zustimmung des Departementsleiters.)""
+
+Quelle: Thorneloe-LUFA Collective Agreement 76, Seite 76",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,medium,1,True,a5b1681d-616b-4333-87d1-8703d0694b23,0.3644,0.3097,0.0164,"ARTICLE 7.20 – ABSENCE - GENERAL
+7.20.1 The University as a community of scholars requires the availability of its Members on a regular and on-going basis
+to ensure that the activities of the University scheduled and unscheduled can be carried out in an orderly manner.
+7.20.2 Any absence shall not normally interfere with assigned and/or scheduled activities and the harmonious functioning
+of the
+Department/School.
+7.20.3 Any absence from campus affecting teaching/professional librarian duties sha",deffb3e5-e2c9-4eec-b9a5-a2eb8a1c51a8,0.0164,0.0078,0.0164,"If improvements in benefits are
+provided in subsequent Collective Agreements these improvements shall be
+extended to the retirees on Special Voluntary Early Retirement. Members
+who go on Special Voluntary Early Retirement will not be eligible for sick
+leave. The employer's cost of those benefit plans in which the Member does
+not retain participation will be added to the early retirement incentive. The
+employer's cost will be based on the premium charged by the carrier and will
+not include the Pr",f54e2a7f-64dc-41fc-9ac3-0059dfb86c1b,0.3644,0.3097,0.0161,"ARTICLE 7.20 – ABSENCE - GENERAL
+7.20.1 The University as a community of scholars requires the availability of its Members on a regular and on-going basis
+to ensure that the activities of the University scheduled and unscheduled can be carried out in an orderly manner.
+7.20.2 Any absence shall not normally interfere with assigned and/or scheduled activities and the harmonious functioning
+of the
+Department/School.
+7.20.3 Any absence from campus affecting teaching/professional librarian duties sha",ba368931-6491-4919-b2aa-17541bf64043,0.0161,0.0125,0.0161,"If the member is entitled to benefits under the Retirees Health Plan, this subsidy would not
+apply.
+2014-2017 Thorneloe-LUFA Collective Agreement 76
+<<>>
+15. Should the Member die during the Special Voluntary Early Retirement Period, the payment will
+cease at the end of the month the death occurred. Benefits and Pension contributions will also
+terminate as of the end of the month of the Member’s death.
+16. A Member taking Special Voluntary Early Retirement would enjoy all retiree privileges as w",655bd051-7849-4157-ab8b-53de90467685,0.3585,0.3047,0.0159,"ARTICLE 7.20 – ABSENCES - GÉNÉRALITÉS
+7.20.1 L'Université, en tant que communauté de savants, doit compter sur la disponibilité de ses Membres sur une base
+régulière et continue pour que toutes les activités universitaires, qu'elles soient prévues au calendrier ou non, puissent se
+poursuivre de façon bien ordonnée.
+7.20.2 Les absences ne doivent normalement porter atteinte ni aux fonctions attribuées ni aux activités prévues dans
+l'horaire ni au fonctionnement harmonieux du
+Département/de l’Écol",0.202,0.0121,0.2069,0.028,0.1379,0.1799,0.0,0.0,0.0,0.0,0.0,0.2,1.0,1.0,,,,,2.3804,9.0734,116.9092,5712.0,5717.8,1056.6,2683.6,8.1,96.9,12288.0,956.0,768.0,,"The agreement defines absence in general terms in Article 7.20 as follows:
+
+""ARTICLE 7.20 – ABSENCE - GENERAL
+7.20.1 The University, as a community of scholars, must rely on the regular and continuous availability of its Members to ensure that all university activities, whether scheduled or not, can continue in an orderly manner.
+
+7.20.2 Absences should normally neither impair the functions assigned nor the activities scheduled in the timetable nor the harmonious functioning of the Department/School.
+
+7.20.3 Any absence from campus affecting teaching/professional librarian duties shall be subject to the approval of the Department Chair.""
+
+Source: Thorneloe-LUFA Collective Agreement 76, page 76",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_024,test_de_024,Was sagt die Vereinbarung über Rechte\,"Die Vereinbarung spricht in Artikel 6 - MANAGEMENT RIGHTS (Seite 4) von den Rechten des Arbeitgebers. Dieser hat alle Rechte und Funktionen, Befugnisse, Privilegien und Autoritäten, die er vor dem Abschluss dieser Vereinbarung mit der Gewerkschaft besaß.
+
+6.01: Die Gewerkschaft erkennt an, dass der Arbeitgeber alle Rechte und Funktionen behalten hat und ausüben wird, die der Universität vor dem Unterzeichnen dieses Vertrags mit der Gewerkschaft zustanden, außer denen, die in dieser Vereinbarung klar und spezifisch abgetreten oder eingeschränkt sind oder durch Gesetz geändert wurden. Der Arbeitgeber hat das Recht, für gerechtfertigten Anlass zu disziplinieren.
+
+Übersetzung: ""Die Vereinbarung sagt aus, dass der Arbeitgeber alle seine Rechte und Befugnisse beibehalten und ausüben wird."" (Seite 4)",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,1,True,ebfc7453-86f6-41d8-8af7-c7ea61a59bf7,0.3041,0.2661,0.0164,"ARTICLE 1 - PURPOSE AND DEFINITIONS
+1.01 It is the purpose ofthis Collective Agreement to set forth the terms and conditions ofemployment and other specific
+contractual provisions, to promote and maintain harmonious relationships between the Parties, to facilitate the Parties in
+working together to encourage the development ofresearch and teaching necessary for the provision ofhigh quality
+education to students, and to provide a means for settling such disputes as may arise from time to time.",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.0164,0.016,0.0164,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+BETWEEN:
+Laurentian University
+and
+The Laurentian University Faculty Association
+Before: William Kaplan
+Sole Arbitrator
+Appearances
+For the University: Michael Kennedy
+Hicks Morley
+Barristers & Solicitors
+For the Association: David Wright
+Mae J. Nam
+Ryder Wright Blair & Holmes
+Barristers & Solicitor",64bc7595-b4b5-4c50-b7db-a8736ea1afa5,0.3041,0.2661,0.0161,"ARTICLE 1 - PURPOSE AND DEFINITIONS
+1.01 It is the purpose ofthis Collective Agreement to set forth the terms and conditions ofemployment and other specific
+contractual provisions, to promote and maintain harmonious relationships between the Parties, to facilitate the Parties in
+working together to encourage the development ofresearch and teaching necessary for the provision ofhigh quality
+education to students, and to provide a means for settling such disputes as may arise from time to time.",2f2855bb-8fd0-475b-b9a3-02d5b3e4f442,0.0161,0.0121,0.0161,"16.05 Unless otherwise stated in this Agreement, promotions shall be effective on 1 July of the
+academic year following the year in which the application was made and approved. A
+Lecturer who obtains a doctoral degree shall have an approved promotion to Assistant
+Professor. The promotion shall be effective the first day of the month following the
+University receiving a diploma or a letter from the University where the doctorate was
+obtained, that indicates all conditions for the doctorate have b",e49f26ae-6185-4256-aba6-e68509ba2036,0.301,0.2558,0.0159,"ARTICLE 6 — MANAGEMENT RIGHTS
+6.01 The Union recognizes that the Employer has retained and shall possess and exercise all rights
+and functions, powers, privileges, and authority that the University possessed prior to the
+signing of this Agreement with the Union, excepting those that are clearly and specifically
+relinquished or restricted in this Agreement, or modified by statute. The Employer shall have
+the right to discipline for just cause. The Employer undertakes that all rights and functions",0.1867,0.0109,0.1565,0.0177,0.087,0.1466,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6,,,,,2.6275,8.1698,77.5402,5712.0,5717.8,1057.5,2974.1,8.0,95.9,12288.0,943.0,768.0,,"The agreement states in Article 6 - MANAGEMENT RIGHTS (Page 4) of the rights of the employer. This has all rights and functions, powers, privileges and authorities which it possessed before the conclusion of this agreement with the union.
+
+6.01: The union recognizes that the employer retains and will exercise all rights and functions vested in the university prior to signing this contract with the union, except those clearly and specifically waived or restricted by this agreement or changed by law. The employer has the right to discipline for just cause.",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_026,test_de_026,Welche Regelungen gelten für die Anzahl der Bedingungen?,"Laut dem Collective Agreement von 2017-2020 gilt folgende Regelung:
+
+""Die Mitglieder haben Anspruch auf eine bestimmte Anzahl an Urlaubstagen. Für jeden vollständigen Jahr des Dienstes erhalten sie zwei zusätzliche Urlaubstage, bis hin zu einem maximalen von 35 Arbeitstagen pro Jahr.""
+
+Dies ist zu finden in Artikel 7.15.3 Collective Agreement 2017-2020.
+
+Es wird jedoch auch erwähnt, dass die Anzahl der Bedingungen abhängig vom Dienstalter des Mitglieds ist:
+
+""Bei fünf vollständigen aufeinanderfolgenden Jahren des Dienstes erhalten die Mitglieder zwei zusätzliche Urlaubstage pro Jahr, bis hin zu einem maximalen von 35 Arbeitstagen pro Jahr.""
+
+Dies ist zu finden in Artikel 7.15 Collective Agreement 2017-2020.
+
+Es wird auch erwähnt, dass die Mitglieder nicht ihre Urlaubszeit zurücklegen können, sondern sie innerhalb eines bestimmten Zeitraums nehmen müssen:
+
+""Die Urlaubstage dürfen nicht von Jahr zu Jahr übertragen werden. Die Mitglieder müssen ihren Urlaub zwischen der Spring Convocation und Labour Day nehmen, es sei denn, es wurde vorher eine Ausnahme durch den Dekan oder die Universitätsbibliothek genehmigt.""
+
+Dies ist zu finden in Artikel 7.15.4 Collective Agreement 2017-2020.
+
+Zusammenfassend gilt also:
+
+* Bei fünf vollständigen aufeinanderfolgenden Jahren des Dienstes erhalten die Mitglieder zwei zusätzliche Urlaubstage pro Jahr, bis hin zu einem maximalen von 35 Arbeitstagen pro Jahr (Artikel 7.15 Collective Agreement 2017-2020)
+* Die Anzahl der Urlaubstage wird durch das Dienstalter bestimmt (Artikel 7.15.3 Collective Agreement 2017-2020)
+* Die Mitglieder müssen ihren Urlaub innerhalb eines bestimmten Zeitraums nehmen, es sei denn, es wurde vorher eine Ausnahme genehmigt (Artikel 7.15.4 Collective Agreement 2017-2020)",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,hard,3,False,6257333c-025f-4b91-a12a-d3b8f2589407,0.3713,0.362,0.0164,"However, any overtime shall be divided fairly
+among the employees in the department in similar positions and with similar qualifications, who normally
+perform the work, and who are available and qualified to perform the work. Seniority shall be the deciding
+factor in the event of a scheduling conflict amongst those qualified to perform the work. Where practicable if overtime is required the University shall request overtime from amongst those
+employees who normally perform the work. Employees sh",7c9cb1b5-37b5-4ecb-94b7-eeea2f4bfd9f,0.0164,0.0139,0.0164,"RELATED POLICIES, PROCEDURE, LEGISLATION AND OTHER DOCUMENTS
+Integrated Accessibility Standards Regulation (IASR) Policies
+Accessibility for Ontarians with Disabilities Act, 2005 (""AODA’)
+Ontario Regulation 429/07 (Accessibility Standards for Customer Service)
+Human Rights Code (Ontario)
+Policy on Accessibility Standards for Customer Service (Laurentian University)
+Policies and Guidelines on Students with Special Needs (Laurentian University)
+Policy on a Respectful Workplace and Learning Environ",61e470ca-8d46-4082-b958-76bd245c03be,0.369,0.3598,0.0161,"Hereinafter, this title shall
+be referred to as the Collective Agreement. ARTICLE 1.15 – OFFICIAL LANGUAGES
+1.15.1 Both the English and French versions of the Collective Agreement shall be official and definitive versions. Both
+Parties may use either the English or the French version in any proceedings arising out of the Collective
+Agreement, and shall apply the version of the Collective Agreement in which formal grievance/arbitration
+proceedings were initiated.
+1.15.2 The Parties agree to coope",deffb3e5-e2c9-4eec-b9a5-a2eb8a1c51a8,0.0161,0.0077,0.0161,"If improvements in benefits are
+provided in subsequent Collective Agreements these improvements shall be
+extended to the retirees on Special Voluntary Early Retirement. Members
+who go on Special Voluntary Early Retirement will not be eligible for sick
+leave. The employer's cost of those benefit plans in which the Member does
+not retain participation will be added to the early retirement incentive. The
+employer's cost will be based on the premium charged by the carrier and will
+not include the Pr",93431465-eba1-43f7-b8ac-93267cb0bfac,0.3674,0.3582,0.0159,"Article 13– Strikes and Lockouts, Article 14– Validity, Duration and Continuance of the Collective Agreement. With the exception of Article 4 – Sessional Members, the parties agree that the above noted Articles will
+apply to Full Time Professional Staff. In addition the parties agree that the following Articles
+shall also apply: Article 5.85 - Resignation, 5.90 - Retirement, 6.45 – Professional Development
+Expenditures (Full Time Clinicians only), 7.15 – Vacation (Full Time Clinicians only), 7.5",0.1912,0.0161,0.1184,0.0376,0.0935,0.1844,0.0,0.0,0.0,0.0,0.0,0.2,0.8,0.4,,,,,2.2106,8.3066,468.2029,5712.0,5715.8,1056.2,3216.2,7.9,94.0,12288.0,6851.0,2398.0,,"According to the Collective Agreement of 2017-2020, the following regulation applies:
+
+""Members are entitled to a certain number of vacation days. For every complete year of service they receive two additional vacation days, up to a maximum of 35 workdays per year.""
+
+This can be found in Article 7.15.3 of the Collective Agreement 2017-2020.
+
+However, it is also mentioned that the number of conditions depends on the member's length of service:
+
+""For five consecutive years of service, members receive two additional vacation days per year, up to a maximum of 35 workdays per year.""
+
+This can be found in Article 7.15 of the Collective Agreement 2017-2020.
+
+It is also mentioned that members cannot carry over their vacation time from one year to another but must take it within a certain period:
+
+""Vacation days may not be transferred from year to year. Members must take their vacation between Spring Convocation and Labour Day, unless an exception has been granted by the Dean or University Library beforehand.""
+
+This can be found in Article 7.15.4 of the Collective Agreement 2017-2020.
+
+In summary:
+
+* For five consecutive years of service, members receive two additional vacation days per year, up to a maximum of 35 workdays per year (Article 7.15 of the Collective Agreement 2017-2020)
+* The number of vacation days is determined by length of service (Article 7.15.3 of the Collective Agreement 2017-2020)
+* Members must take their vacation within a certain period, unless an exception has been granted beforehand (Article 7.15.4 of the Collective Agreement 2017-2020)",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_027,test_de_027,Was wird über den Urlaub gesagt?,"Entschuldigung, ich habe mich geirrt. Da der Kontext in Englisch ist und Sie auf die Antwort in Deutsch bestehen, werde ich dies tun. Allerdings müssen wir uns auf das Thema ""LEAVES"" beschränken.
+
+Gemäß Artikel 7.10 - RECOGNIZED AND OTHER HOLIDAYS im Kollektivvertrag steht folgendes:
+
+Die anerkannten Feiertage und die Tage, an denen Bundes- oder Provinzbehörden allgemein Feiertage erklärt haben, sind als Feiertage anerkannt. Die Mitglieder erhalten daher bezahlten Urlaub auf:
+
+(a) Family Day, Good Friday, Ostersonntag, Victoria Day, Canada Day, August-Civic-Holiday, Labour Day, Thanksgiving Day, Weihnachtenstag, Boxing Day und Neujahr.
+
+(b) Und auf andere Feiertage, die der Arbeitgeber erklärt, einschließlich des cu (es wird jedoch nicht klar, was ""cu"" bedeutet).
+
+Es ist wichtig zu beachten, dass Artikel 7.10 nur die anerkannten Feiertage auflistet und nicht explizit darüber spricht, wie mit dem Urlaub umgegangen wird.
+
+Zusätzlich gibt es Artikel 17.04 im Kollektivvertrag, der besagt: ""Les membres continuent de recevoir leur traitement habituel pendant les périodes de vacances, mais aucune rémunération ne remplace les vacances au cas où un membre choisit de ne pas prendre les vacances auxquelles il a droit."" (Die Mitglieder erhalten ihren normalen Gehalt während der Urlaubszeit, aber keine Entschädigung ersetzt die Urlaubstage, wenn ein Mitglied nicht die an sich stehenden Urlaubstage nimmt.)
+
+Daher lautet meine Antwort:
+
+Gemäß dem Kollektivvertrag (kein spezifisches Dokument und Seitenzahl angegeben) erhalten Mitglieder bezahlten Urlaub auf bestimmten Feiertagen. Es gibt jedoch keine explizite Regelung darüber, wie mit dem Urlaub umgegangen wird.
+
+Ich hoffe, dies hilft!",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Leave,hard,1,True,91c53945-cdc4-4dc9-a0e1-566699643f33,0.3307,0.3225,0.0164,"LEAVES
+ARTICLE 7.10 – RECOGNIZED AND OTHER HOLIDAYS
+7.10.1 The following days and all days generally declared to be recognised holidays by Federal or Provincial
+authorities are recognised holidays and paid time off shall therefore be given to the Members on:
+(a) Family Day, Good Friday, Easter Monday, Victoria Day, Canada Day, August Civic Holiday, Labour
+Day, Thanksgiving Day, Christmas Day, Boxing Day, New Year's Day.
+(b) And on such other holidays as declared by the Employer, including the cu",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.0164,0.016,0.0164,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+BETWEEN:
+Laurentian University
+and
+The Laurentian University Faculty Association
+Before: William Kaplan
+Sole Arbitrator
+Appearances
+For the University: Michael Kennedy
+Hicks Morley
+Barristers & Solicitors
+For the Association: David Wright
+Mae J. Nam
+Ryder Wright Blair & Holmes
+Barristers & Solicitor",65ff40a1-8baa-47fe-b89e-6d4a62773491,0.3307,0.3225,0.0161,"LEAVES
+ARTICLE 7.10 – RECOGNIZED AND OTHER HOLIDAYS
+7.10.1 The following days and all days generally declared to be recognised holidays by Federal or Provincial
+authorities are recognised holidays and paid time off shall therefore be given to the Members on:
+(a) Family Day, Good Friday, Easter Monday, Victoria Day, Canada Day, August Civic Holiday, Labour
+Day, Thanksgiving Day, Christmas Day, Boxing Day, New Year's Day.
+(b) And on such other holidays as declared by the Employer, including the cu",2f2855bb-8fd0-475b-b9a3-02d5b3e4f442,0.0161,0.0121,0.0161,"16.05 Unless otherwise stated in this Agreement, promotions shall be effective on 1 July of the
+academic year following the year in which the application was made and approved. A
+Lecturer who obtains a doctoral degree shall have an approved promotion to Assistant
+Professor. The promotion shall be effective the first day of the month following the
+University receiving a diploma or a letter from the University where the doctorate was
+obtained, that indicates all conditions for the doctorate have b",3bd38b38-2176-4e5e-aee8-b1a308319b07,0.3209,0.2567,0.0159,"17.04 Les membres continuent de recevoir leur traitement habituel pendant les périodes de vacances, mais aucune
+rémunération ne remplace les vacances au cas où un membre choisit de ne pas prendre les vacances auxquelles il a
+droit.",0.1443,0.0031,0.1126,0.0067,0.0728,0.1517,1.0,1.0,1.0,1.0,1.0,0.6,0.2,0.2,,,,,2.7078,8.5465,167.4443,5710.0,5715.8,1056.1,3252.3,8.2,97.4,12288.0,859.0,768.0,,"Apologies, I was mistaken. Since the context is in English and you insist on a response in German, I will do so nonetheless. However, we'll have to confine ourselves to the topic of ""LEAVES"".
+
+According to Article 7.10 - RECOGNIZED AND OTHER HOLIDAYS in the Collective Agreement it states:
+
+The recognized holidays and days when federal or provincial authorities generally declare a holiday are recognized as such. Members will therefore receive paid leave on:
+
+(a) Family Day, Good Friday, Easter Sunday, Victoria Day, Canada Day, August-Civic-Holiday, Labour Day, Thanksgiving Day, Christmas Day, Boxing Day and New Year's Day.
+
+(b) And other holidays declared by the employer, including cu (it is however unclear what ""cu"" refers to).
+
+It is essential to note that Article 7.10 only lists recognized holidays without explicitly addressing how leave is handled.
+
+Additionally, there is Article 17.04 in the Collective Agreement which states: ""Les membres continuent de recevoir leur traitement habituel pendant les périodes de vacances, mais aucune rémunération ne remplace les vacances au cas où un membre choisit de ne pas prendre les vacances auxquelles il a droit."" (Members will continue to receive their regular pay during vacation periods but no compensation replaces the leave days if a member chooses not to take the leave due.)
+
+Therefore, my answer is:
+
+According to the Collective Agreement (no specific document and page number provided) members receive paid leave on certain holidays. However, there is no explicit regulation regarding how leave is handled.
+
+I hope this helps!",en,none,1.0,0.3333,0.2,0.5,,,,,,,,
+test_de_028,test_de_028,Was sieht der Tarifvertrag bezüglich des akademischen Arbeitspensums vor?,"Laut Artikel 10.15.4 sehen die Bestimmungen für Clinician vor, dass ihre Pflichten eine Kombination aus folgenden Aufgaben umfassen können:
+
+i. Durchführung von Beurteilungen, Diagnosen, Interventionen und Beratungsleistungen;
+ii. Zusammenarbeit mit dem interdisziplinären Team (z.B. Lehrer, Schulleiter, andere Gesundheitsberufe usw.), soweit erforderlich.
+iii. Überwachung von Studierenden, die im Rahmen eines Praktikums oder eines Ausbildungsprogramms an der Klinik tätig sind.
+
+In Zusammenarbeit mit dem Department ist das Verfahren für diese Ernennungen wie bei der Ernennung von Betreuern folgt (CA).
+
+Darüber hinaus hat Artikel 10.15.3 über akademische Freiheit vor, dass Professoren an einer Universität akademische Freiheit haben und diese nicht eingeschränkt werden kann.",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Workload,medium,2,True,26a8c9e7-a781-4199-9c01-a645a3a51349,0.4255,0.4149,0.0164,"Article 13– Strikes and Lockouts, Article 14– Validity, Duration and Continuance of the Forced Contract. With the exception of Article 4 – Sessional Members, the parties agree that the above noted Articles will
+apply to Full Time Professional Staff. In addition the parties agree that the following Articles
+shall also apply: Article 5.85 - Resignation, 5.90 - Retirement, 6.45 – Professional Development
+Expenditures (Full Time Clinicians only), 7.15 – Vacation (Full Time Clinicians only), 7.55 – P",7c9cb1b5-37b5-4ecb-94b7-eeea2f4bfd9f,0.0164,0.0139,0.0164,"RELATED POLICIES, PROCEDURE, LEGISLATION AND OTHER DOCUMENTS
+Integrated Accessibility Standards Regulation (IASR) Policies
+Accessibility for Ontarians with Disabilities Act, 2005 (""AODA’)
+Ontario Regulation 429/07 (Accessibility Standards for Customer Service)
+Human Rights Code (Ontario)
+Policy on Accessibility Standards for Customer Service (Laurentian University)
+Policies and Guidelines on Students with Special Needs (Laurentian University)
+Policy on a Respectful Workplace and Learning Environ",93431465-eba1-43f7-b8ac-93267cb0bfac,0.4074,0.3972,0.0161,"Article 13– Strikes and Lockouts, Article 14– Validity, Duration and Continuance of the Collective Agreement. With the exception of Article 4 – Sessional Members, the parties agree that the above noted Articles will
+apply to Full Time Professional Staff. In addition the parties agree that the following Articles
+shall also apply: Article 5.85 - Resignation, 5.90 - Retirement, 6.45 – Professional Development
+Expenditures (Full Time Clinicians only), 7.15 – Vacation (Full Time Clinicians only), 7.5",56f3df33-7ec3-46c1-8103-4d4e2237aabf,0.0161,0.0137,0.0161,"The contributions will be
+based on the salary of the last year of his/her full-time employment escalated annually by the
+percentage increase of the faculty salary scale. Furthermore, the Member will be eligible for the
+minimum guaranteed pension based upon the aforementioned escalated salary and years of
+Special Voluntary Early Retirement of paid pension contributions. In this case the Member will
+be considered to be on leave with pay and will be required to pay CPP and EI contributions
+and will",692d41a9-ab16-4c89-bd74-9e38dea8d056,0.384,0.3744,0.0159,"ARTICLE 10.40 – PROFESSIONAL DEVELOPMENT EXPENDITURE
+10.40.1 Expenditure
+The parties agree that the University is best served when staff have the opportunities for personal
+development and career advancement and to work in an environment that will encourage them to develop
+their abilities and leadership potential.
+10.40.2 Counsellors
+In order to further the objectives of the University, the activities of each full time Counsellor shall be supported
+by $500 in expenditures in each contractual yea",0.0755,0.0092,0.1504,0.0153,0.1053,0.1864,0.0,0.0,0.0,0.0,0.0,0.4,0.4,0.4,,,,,2.3355,8.9718,267.8036,5712.0,5717.8,1056.2,3573.4,7.9,94.1,12288.0,5734.0,2007.0,,"According to Article 10.15.4, the regulations for clinicians stipulate that their duties may include:
+
+i. Conducting evaluations, diagnoses, interventions and counseling services;
+ii. Collaboration with the interdisciplinary team (e.g. teachers, school principals, other healthcare professionals etc.), as required.
+
+In addition, monitoring students who are involved in internships or training programs at the clinic is also part of their responsibilities.
+
+The procedures for these appointments will be carried out in collaboration with the department, following the same guidelines as those for the appointment of tutors (CA).
+
+Furthermore, Article 10.15.3 provides that professors at a university have academic freedom and it cannot be restricted.",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_029,test_de_029,Was wird über das Verbot von Diskriminierung\,"Nach Artikel 3.15.2 des Kollektivvertrags (Collective Agreement) und Artikel 3.01 der Ontario Human Rights Code (Menschenrechtscode von Ontario) besteht ein Verbot von Diskriminierung und Belästigung in Bezug auf:
+
+* Gehälter
+* Rang
+* Einstellungen, Beförderungen
+* Tenure
+* Wiederberufung
+* Entlassungen
+* Urlaube
+* Vorteile
+* Jede andere Angelegenheit, die sich aus diesem Kollektivvertrag (Collective Agreement) ergibt.
+
+In Artikel 3.01 wird spezifisch erwähnt, dass es kein Diskriminierung oder Belästigung geben darf, die auf Grund von:
+* Alter
+* Rasse
+* Sprache
+* Glaube
+* Farbe
+* Abstammung
+* ethnischer oder kultureller Herkunft
+* nationaler Herkunft
+* politischen Überzeugungen
+* Geschlecht
+
+Quelle: Artikel 3.15.2 des Kollektivvertrags (Collective Agreement) und Artikel 3.01 der Ontario Human Rights Code (Menschenrechtscode von Ontario).",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,easy,1,True,4f269396-c101-4bbc-9133-9abbd04fd702,0.3287,0.3205,0.0164,"To that end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor
+and has created a discrimination and harassment policy.
+3.15.2 The Parties agree that in accordance with the provisions of the Human Rights Code of Ontario there shall
+be no discrimination or harassment exercised or practiced with respect to any Member in regard to
+salaries, rank, appointment, promotion, tenure, reappointment, dismissal, leaves, benefits, or any other
+matter arising from this Collec",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.0164,0.016,0.0164,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+BETWEEN:
+Laurentian University
+and
+The Laurentian University Faculty Association
+Before: William Kaplan
+Sole Arbitrator
+Appearances
+For the University: Michael Kennedy
+Hicks Morley
+Barristers & Solicitors
+For the Association: David Wright
+Mae J. Nam
+Ryder Wright Blair & Holmes
+Barristers & Solicitor",fbe12a26-27c9-4ab4-985b-27d9809cb72f,0.3243,0.3161,0.0161,"To that end, the Employer has established a Human Rights Office, headed by a Human Rights Advisor
+and has created a discrimination and harassment policy.
+3.15.2 The Parties agree that in accordance with the provisions of the Human Rights Code of Ontario there shall
+be no discrimination or harassment exercised or practiced with respect to any Member in regard to
+salaries, rank, appointment, promotion, tenure, reappointment, dismissal, leaves, benefits, or any other
+matter arising from this Forced",2f2855bb-8fd0-475b-b9a3-02d5b3e4f442,0.0161,0.0121,0.0161,"16.05 Unless otherwise stated in this Agreement, promotions shall be effective on 1 July of the
+academic year following the year in which the application was made and approved. A
+Lecturer who obtains a doctoral degree shall have an approved promotion to Assistant
+Professor. The promotion shall be effective the first day of the month following the
+University receiving a diploma or a letter from the University where the doctorate was
+obtained, that indicates all conditions for the doctorate have b",658662d3-0c53-4e6f-85e3-dd2d824a87ea,0.338,0.2873,0.0159,"ARTICLE 3 — NO DISCRIMINATION
+3.01 Human Rights Code: The Parties agree to abide by the Ontario Human Rights Code. There
+shall be no discrimination or harassment exercised or practiced with respect to any Member
+regardless of salary, rank, appointment, promotion, tenure, reappointment, dismissal,
+leaves, benefits, or any other matter arising from this Collective Agreement, for reasons of
+age, race, language, creed, colour, ancestry, ethnic or cultural background, national origin,
+political or re",0.1538,0.0118,0.1391,0.0354,0.1217,0.2742,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.8,,,,,2.6227,8.4769,95.1476,5712.0,5717.8,1056.1,3032.6,8.1,96.4,12288.0,947.0,768.0,,"Pursuant to Article 3.15.2 of the Collective Agreement and Section 3.01 of the Ontario Human Rights Code, there is a prohibition against discrimination and harassment in respect of:
+
+* Wages
+* Rank
+* Appointments, promotions
+* Tenure
+* Reappointment
+* Termination
+* Leave
+* Benefits
+* Any other matter that arises from this Collective Agreement.
+
+Section 3.01 specifically states that there shall be no discrimination or harassment based on:
+* Age
+* Race
+* Language
+* Creed
+* Colour
+* Ancestry
+* Ethnic or cultural origin
+* National origin
+* Political convictions
+* Sex
+
+Source: Article 3.15.2 of the Collective Agreement and Section 3.01 of the Ontario Human Rights Code.",en,none,1.0,0.3333,0.2,1.0,,,,,,,,
+test_de_030,test_de_030,Was wird über die Vergütungssätze für befristete Lehrbeauftragte gesagt?,"Die entsprechende Regelung in der Vereinbarung finden wir im Artikel 5.35 - Membres nouvellement engagés.
+
+Es ist festgelegt, dass alle Professoren, die während des Verhandlungszeitraums einer neuen Kollektivvereinbarung eingesetzt werden und deren Anstellung am 1. Juli beginnt oder vor der Unterzeichnung der neuen Vereinbarung, alle Gehaltserhöhungen erhalten, die ab dem 1. Juli gelten, mit Ausnahme von:
+
+- Der Progressivitätszuwachs zum gleichen Rang
+- Der Verdienstzuwachszuweisung
+- Jeder anderen Erhöhung, die in der neuen Vereinbarung ausdrücklich ausgeschlossen ist.
+
+Quelle: 2014-2017 Thorneloe-LUFA Collective Agreement 76",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Salary,hard,2,True,9857e318-03d7-4687-9b67-93d41928203b,0.4009,0.3909,0.0164,"Sauf et excepté :
+Le personnel administratif au rang de Directeur ou à un rang plus élevé;
+Le personnel enseignant au rang de doyen associé ou à un rang plus élevé;
+Le secrétaire général, le conseiller spécial auprès du recteur, le directeur des relations professionnelles,
+les traducteurs, le bibliothécaire en chef, et le Directeur du Bureau des services de recherche;
+Les Membres du Conseil des gouverneurs;
+Les entraîneurs sportifs qui, dans le cadre de leurs fonctions, doivent donner des cours ",56f3df33-7ec3-46c1-8103-4d4e2237aabf,0.0164,0.0139,0.0164,"The contributions will be
+based on the salary of the last year of his/her full-time employment escalated annually by the
+percentage increase of the faculty salary scale. Furthermore, the Member will be eligible for the
+minimum guaranteed pension based upon the aforementioned escalated salary and years of
+Special Voluntary Early Retirement of paid pension contributions. In this case the Member will
+be considered to be on leave with pay and will be required to pay CPP and EI contributions
+and will",51c0c6a0-fc61-41e9-bb5c-14581b3fc22f,0.3971,0.3871,0.0161,"Sauf et excepté :
+Le personnel administratif au rang de Directeur ou à un rang plus élevé;
+Le personnel enseignant au rang de doyen associé ou à un rang plus élevé;
+Le secrétaire général, le conseiller spécial auprès du recteur, le directeur des relations professionnelles,
+les traducteurs, le bibliothécaire en chef, et le Directeur du Bureau des services de recherche;
+Les Membres du Conseil des gouverneurs;
+Les entraîneurs sportifs qui, dans le cadre de leurs fonctions, doivent donner des cours ",deffb3e5-e2c9-4eec-b9a5-a2eb8a1c51a8,0.0161,0.0077,0.0161,"If improvements in benefits are
+provided in subsequent Collective Agreements these improvements shall be
+extended to the retirees on Special Voluntary Early Retirement. Members
+who go on Special Voluntary Early Retirement will not be eligible for sick
+leave. The employer's cost of those benefit plans in which the Member does
+not retain participation will be added to the early retirement incentive. The
+employer's cost will be based on the premium charged by the carrier and will
+not include the Pr",dd07aa18-d246-416c-b9f4-e83d8f4242eb,0.3901,0.3804,0.0159,"L’Employeur et le Syndicat conviendront des détails du programme en consultation avec le Bureau du
+vice-rectorat associé à l’enseignement et aux programmes autochtones. ARTICLE 5.35 – MEMBRES NOUVELLEMENT ENGAGÉS
+5.35.1 Au cours de l’année pendant laquelle la Convention collective est négociée, tous les professeurs
+nouvellement engagés dont la nomination commence le 1er juillet, ou avant la signature ratifiant la nouvelle
+Convention collective, reçoivent toutes les augmentations de rémunération ",0.1296,0.0125,0.1842,0.0133,0.1184,0.1372,0.0,0.0,0.0,0.0,0.0,0.4,0.6,0.2,,,,,2.4564,11.2553,270.9595,5712.0,5717.8,1056.2,3347.2,8.0,94.3,12288.0,6266.0,2193.0,,"The relevant regulation in the agreement is found in Article 5.35 - Newly engaged members.
+
+It is specified that all professors who are appointed during the negotiations period of a new collective agreement and whose appointment begins on July 1 or prior to signing the new agreement, receive all salary increases applicable as of July 1, with the exception of:
+
+- The progression increase to the same rank
+- The merit-based salary increment
+- Any other increase specifically excluded in the new agreement.
+
+Source: 2014-2017 Thorneloe-LUFA Collective Agreement 76",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_031,test_de_031,Was wird über gesetzliche Feiertage gesagt?,"Laut Artikel 20.01 der Kollektivvereinbarung (Seite nicht angegeben) werden die folgenden Tage und alle Tage, die von Bundesebene oder Provinzbehörden als anerkannte Feiertage erklärt wurden, als anerkannte Feiertage anerkannt:
+
+a) Family Day
+B. Karfreitag
+c) Ostersonntag
+d) Victoria-Tag
+e) Canada-Tag
+f) August-Civic-Holiday
+g) Labour-Day
+h) Thanksgiving-Day
+i) Weihnachtstag (Christmas Day)
+j) Boxings-Day
+
+Außerdem werden alle Tage anerkannt, die von Bundesebene oder Provinzbehörden als anerkannte Feiertage erklärt wurden.
+
+Quelle: Seite nicht angegeben",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,General Provisions,medium,1,True,6f26e509-5ca4-4751-8297-1225e090b010,0.3423,0.2996,0.0164,"ARTICLE 16— DESIGNATED HOLIDAYS
+16.01 The following are designated holidays at the University:
+New Year’s Day Family Day
+Good Friday Easter Monday
+Victoria Day Canada Day
+August Civic Holiday Labour Day
+Thanksgiving Day Christmas Day
+Boxing Day",d4a59e09-d098-4089-a8e5-a5837a1af91d,0.0164,0.016,0.0164,"<<>>
+IN THE MATTER OF THE COMPANIES’ CREDITORS ARRANGEMENT ACT, R.S.C. 1985, c. C-36
+and
+IN THE MATTER OF AN INTEREST ARBITRATION TO RESOLVE THE OUTSTANDING ISSUES
+RELATED TO THE COLLECTIVE AGREEMENT
+BETWEEN:
+Laurentian University
+and
+The Laurentian University Faculty Association
+Before: William Kaplan
+Sole Arbitrator
+Appearances
+For the University: Michael Kennedy
+Hicks Morley
+Barristers & Solicitors
+For the Association: David Wright
+Mae J. Nam
+Ryder Wright Blair & Holmes
+Barristers & Solicitor",5efdc219-0f81-4c74-b305-04c40cad84e4,0.3423,0.2996,0.0161,"ARTICLE 16— DESIGNATED HOLIDAYS
+16.01 The following are designated holidays at the University:
+New Year’s Day Family Day
+Good Friday Easter Monday
+Victoria Day Canada Day
+August Civic Holiday Labour Day
+Thanksgiving Day Christmas Day
+Boxing Day",2f2855bb-8fd0-475b-b9a3-02d5b3e4f442,0.0161,0.0121,0.0161,"16.05 Unless otherwise stated in this Agreement, promotions shall be effective on 1 July of the
+academic year following the year in which the application was made and approved. A
+Lecturer who obtains a doctoral degree shall have an approved promotion to Assistant
+Professor. The promotion shall be effective the first day of the month following the
+University receiving a diploma or a letter from the University where the doctorate was
+obtained, that indicates all conditions for the doctorate have b",af87d170-aebb-4f73-a2cf-97e7f9d06a3e,0.3499,0.2974,0.0159,"19.02 Employment may be terminated at any time by mutual written agreement between a
+Member and the President.
+ARTICLE 20 — DESIGNATED HOLIDAYS
+20.01 The following days and all days generally declared to be recognized holidays by Federal or
+Provincial authorities are recognized holidays, and paid time off shall therefore be give to
+Members:
+a) Family Day, Good Friday, Easter Monday, Victoria Day, Canada Day, August Civic
+Holiday, Labour Day, Thanksgiving Day, Christmas Day, Boxing Day, New Year'",0.2432,0.0164,0.2178,0.0606,0.1782,0.2803,0.0,0.0,0.0,0.0,0.0,1.0,0.8,1.0,,,,,2.5878,7.3839,65.1084,5712.0,5717.8,1056.1,2976.6,8.1,95.4,12288.0,786.0,768.0,,"Pursuant to Article 20.01 of the Collective Agreement (no page number provided), the following days and all days that have been declared public holidays by federal or provincial authorities are recognized as public holidays:
+
+a) Family Day
+b) Good Friday
+c) Easter Sunday
+d) Victoria Day
+e) Canada Day
+f) August Civic Holiday
+g) Labour Day
+h) Thanksgiving Day
+i) Christmas Day (Christmas)
+j) Boxing Day
+
+In addition, all days that are declared public holidays by federal or provincial authorities are recognized.",en,none,0.0,0.0,0.0,0.0,,,,,,,,
+test_de_035,test_de_035,Was wird über Ernennung und Verlängerung gesagt?,"Laut Artikel 5.20.15 der Collective Agreement 2002-2005 ist eine Term-Arbeitsaufgabe auf höchstens drei Jahre beschränkt, es sei denn die Parteien einigen sich schriftlich auf eine Verlängerung.
+
+Die erste Term-Aufgabe kann kürzer als ein ganzes akademisches Jahr sein, aber bei einer Wiederanstellung soll sie normalerweise für einen Zeitraum von zwölf Monaten erfolgen. Die drei- oder fünfjährige Frist gilt unabhängig davon, ob die Term-Arbeitsaufgaben hintereinander liegen oder nicht.
+
+Laut Artikel 5.20.16 kann eine Nichtverlängerung einer Term-Arbeitsaufgabe nicht durch einen Konflikt geltend gemacht werden.
+
+Zusätzlich wird in Artikel 11.06 der Collective Agreement 2018-2021 erwähnt, dass ein Mitglied, das auf eine dauerhafte Stelle übernommen wird, bereit ist zu einer Probezeit (Probation) mit einer Dauer von höchstens fünf Jahren zu wechseln.
+
+Die Probezeit kann auch für einen kürzeren Zeitraum verlängert werden, wenn das Mitglied seine Leistungen verbessern kann.",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Appointments,medium,3,True,6a64a7fc-776f-4600-b6fc-da6ee7cac626,0.378,0.3686,0.0164,"A Member so reappointed may, subsequent to
+reappointment, also apply for a promotion as per Article 5.65 – Promotion Procedures. If the Member is
+granted a promotion, the said promotion shall be retroactive to the date of the Member's reappointment.
+5.20.15 Term appointments shall be limited to a total of three (3) years, except by agreement of the Parties. In cases
+where the limited term appointment is a replacement for an academic administrator, the appointment may
+be for a term up to five (5)",deffb3e5-e2c9-4eec-b9a5-a2eb8a1c51a8,0.0164,0.0078,0.0164,"If improvements in benefits are
+provided in subsequent Collective Agreements these improvements shall be
+extended to the retirees on Special Voluntary Early Retirement. Members
+who go on Special Voluntary Early Retirement will not be eligible for sick
+leave. The employer's cost of those benefit plans in which the Member does
+not retain participation will be added to the early retirement incentive. The
+employer's cost will be based on the premium charged by the carrier and will
+not include the Pr",ec91a0b8-55c0-4000-a279-b3f60f36bea6,0.3779,0.3684,0.0161,"Les annonces doivent contenir
+un article indiquant que l'Université Laurentienne s'est engagée à respecter l'équité en matière
+d'emploi.
+b) Les initiatives d'équité doivent être prioritaires dans le processus d'embauche.
+c) Avant d'embaucher un nouveau conseiller, un comité d'embauche sera formé et au moins un conseiller
+en poste fera partie du comité.
+d) Normalement, les qualifications minimales requises pour un conseiller de carrière sont une maîtrise
+complétée en psychologie du counseling, un",ba368931-6491-4919-b2aa-17541bf64043,0.0161,0.0125,0.0161,"If the member is entitled to benefits under the Retirees Health Plan, this subsidy would not
+apply.
+2014-2017 Thorneloe-LUFA Collective Agreement 76
+<<>>
+15. Should the Member die during the Special Voluntary Early Retirement Period, the payment will
+cease at the end of the month the death occurred. Benefits and Pension contributions will also
+terminate as of the end of the month of the Member’s death.
+16. A Member taking Special Voluntary Early Retirement would enjoy all retiree privileges as w",cdc45fe2-1bec-4f14-8870-d11ccaf225c5,0.3744,0.3651,0.0159,"Les annonces doivent contenir
+un article indiquant que l'Université Laurentienne s'est engagée à respecter l'équité en matière
+d'emploi.
+b) Les initiatives d'équité doivent être prioritaires dans le processus d'embauche.
+c) Avant d'embaucher un nouveau conseiller, un comité d'embauche sera formé et au moins un conseiller
+en poste fera partie du comité.
+d) Normalement, les qualifications minimales requises pour un conseiller de carrière sont une maîtrise
+complétée en psychologie du counseling, un",0.1416,0.0044,0.1333,0.0,0.1,0.1609,0.0,0.0,0.0,0.0,0.0,1.0,0.2,0.4,,,,,2.1545,10.5225,576.8459,5712.0,5717.8,1062.4,3274.3,8.0,94.8,12288.0,6735.0,2357.0,,"According to Article 5.20.15 of the Collective Agreement 2002-2005, a term task is limited to no more than three years, unless the parties agree in writing on an extension.
+
+The first term task can be shorter than a full academic year, but upon reappointment it should normally last for a period of twelve months. The three- or five-year deadline applies regardless of whether the term tasks are consecutive or not.
+
+According to Article 5.20.16, non-extension of a term task cannot be claimed due to a conflict.
+
+In addition, Article 11.06 of the Collective Agreement 2018-2021 mentions that a member who is taken over for a permanent position is willing to switch to a probation period (Probation) with a maximum duration of five years.
+
+The probation period can also be extended for a shorter period if the member is able to improve their performance.",en,none,0.0,0.0,0.0,1.0,,,,,,,,
+test_de_038,test_de_038,Wie definiert oder beschreibt die Vereinbarung die Auswahl von Vorsitzenden/Direktoren?,"Die Vereinbarung definiert die Auswahl von Vorsitzenden/Direktoren in Artikel 9.15 - SÉLECTION DES DIRECTEURS. Der Vize-Rector für Studien und Provost wählt den Direktor des Departements oder der Schule in Übereinstimmung mit den Modalitäten, die in diesem Artikel angegeben sind.
+
+Gemäß Absatz 9.15.2 werden die folgenden Modalitäten eingeleitet durch den Doyen/Directeur der Bibliothek mindestens sechs (6) Monate vor Ablauf des Mandats eines Direktors oder sofort wenn ein Posten von einem Direktor vakant wird.
+
+Die Modalitäten umfassen:
+
+* Die Bildung eines Auswahlkomitees, das innerhalb von fünf (5) Monaten vor Ablauf des Mandats eines Direktors oder sofort wenn der Posten vakant ist eingesetzt werden muss.
+* Das Komitee besteht aus:
+ + Ein Drittel (1/3) der Vollzeitmitglieder des Departements oder der Schule, das auf die nächste ganze Zahl gerundet wird. Die Mitglieder des Komitees sind Professoren oder Bibliothekare mit permanentem Status oder einem probatorischen Vertrag, wenn möglich.
+ + Der Doyen/Bibliothekar als Mitglied ohne Stimmrecht.
+ + Ein Direktor eines anderen Departements oder einer anderen Schule, der vom Doyen/Bibliothekar in Absprache mit dem betreffenden Department oder School ernannt wird.
+ + Mindestens eine (1) Frau muss Mitglied des Komitees sein. Wenn es keine Frauen im Department oder der Schule gibt und keine Frau dem Komitee angehört, wird vom Doyen/Directeur der Bibliothek in Absprache mit dem Department oder School eine Frau ernannt.
+* Der Vorsitzende des Auswahlkomitees wird von den Mitgliedern des Komitees gewählt.
+
+Ziel der Modalitäten ist es, einen fairen und repräsentativen Prozess für die Auswahl von Direktoren sicherzustellen.",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Governance,hard,2,True,861e4641-a260-4f2d-9fce-4892cf977a6f,0.4738,0.4028,0.0164,"Les
+bulletins de vote sont dépouillés en présence du Comité de sélection.
+9.15.9 Le président du Comité de sélection doit informer le Doyen/Directeur de la bibliothèque des résultats du processus
+de sélection et de la recommandation du Comité.
+9.15.10 Si le Doyen/Bibliothécaire en chef est prêt à accepter la recommandation du Comité de sélection, il fera part de
+cette recommandation et de la sienne au Vice-recteur aux études et
+Provost qui décidera de la nomination.
+9.15.11 Si le Doyen/Bibliothé",7c9cb1b5-37b5-4ecb-94b7-eeea2f4bfd9f,0.0164,0.0139,0.0164,"RELATED POLICIES, PROCEDURE, LEGISLATION AND OTHER DOCUMENTS
+Integrated Accessibility Standards Regulation (IASR) Policies
+Accessibility for Ontarians with Disabilities Act, 2005 (""AODA’)
+Ontario Regulation 429/07 (Accessibility Standards for Customer Service)
+Human Rights Code (Ontario)
+Policy on Accessibility Standards for Customer Service (Laurentian University)
+Policies and Guidelines on Students with Special Needs (Laurentian University)
+Policy on a Respectful Workplace and Learning Environ",4b721f11-91fc-47fe-a273-6f495feb4004,0.4738,0.4028,0.0161,"Les
+bulletins de vote sont dépouillés en présence du Comité de sélection.
+9.15.9 Le président du Comité de sélection doit informer le Doyen/Directeur de la bibliothèque des résultats du processus
+de sélection et de la recommandation du Comité.
+9.15.10 Si le Doyen/Bibliothécaire en chef est prêt à accepter la recommandation du Comité de sélection, il fera part de
+cette recommandation et de la sienne au Vice-recteur aux études et
+Provost qui décidera de la nomination.
+9.15.11 Si le Doyen/Bibliothé",5d438e9a-212c-4204-8602-005667b157ca,0.0161,0.0129,0.0161,"11.23 L’Université n’est pas responsable des dépenses que le membre à temps partiel engage pour aller au travail, peu
+importe le lieu, à moins d’une entente mutuelle entre les
+Parties.",06173dba-5360-45cf-8828-6f04087fe046,0.4651,0.3953,0.0159,"Le rapport est distribué aux Membres du Département/École avant
+d’être présenté au doyen/bibliothécaire en chef.
+(l) Il est responsable de présenter, s’il y a lieu, les programmes d’études du
+Département/École pour approbation ou agrément aux organismes externes.
+(m) Il maintient des liens entre le
+Département/École et les agences et organismes professionnels de l’extérieur ainsi que la communauté, le cas échéant,
+et pourvoit à la représentation du Département/École auprès de ces organismes.
+(n)",0.3357,0.0584,0.246,0.1368,0.1877,0.4041,0.0,0.0,0.0,0.0,0.0,1.0,0.4,0.6,,,,,2.8638,9.5048,365.1411,5712.0,5715.8,1056.2,3070.6,8.0,95.6,12288.0,3962.0,1387.0,,"The agreement defines the selection of Chairmen/Directors in Article 9.15 - SELECTION OF DIRECTORS. The Vice-Rector for Studies and Provost appoints the Department or School Director in accordance with the modalities specified in this article.
+
+In accordance with Section 9.15.2, the following modalities are initiated by the Dean/Director of the Library at least six (6) months before the end of a Director's mandate or immediately if a position becomes vacant.
+
+The modalities include:
+
+* The formation of a selection committee, which must be set up within five (5) months of the end of a Director's mandate or immediately if the post is vacant.
+* The Committee consists of:
+  + A third (1/3) of the full-time members of the Department or School, rounded to the nearest whole number. The committee members are professors or librarians with permanent status or probationary contracts, whenever possible.
+  + The Dean/Librarian as a member without voting rights.
+  + A Director of another department or school, appointed by the Dean/Librarian in consultation with the relevant department or school.
+  + At least one (1) woman must be a member of the committee. If there are no women in the Department or School and no woman is a member of the committee, a woman will be appointed by the Dean/Director of the Library in consultation with the Department or School.
+* The Chairperson of the Selection Committee is elected by the members of the Committee.
+
+The aim of these modalities is to ensure a fair and representative process for the selection of Directors.",en,none,0.0,0.0,0.0,0.5,,,,,,,,
+test_de_044,test_de_044,Was sagt die Vereinbarung über die Vergütungssätze für befristete Lehrbeauftragte?,"Die Vereinbarung regelt die Vergütungssätze für Sessional Lecturers wie folgt:
+
+* Befristete Lehrbeauftragte ohne Seniorität oder Einrichtungsstatus (Artikel 20):
+ + Basislohn: $6.941
+ + 4% Ersatz für Ferien: $278
+ + 4% Ersatz für Benefits: $278
+ + Gesamtarbeitsentgelt: $7.497 (Quelle: Thorneloe-LUFA Collective Agreement, Seite 76)
+* Befristete Lehrbeauftragte mit Seniorität, Einrichtungsstatus und Rentnern (Artikel 20):
+ + Basislohn: $7.288
+ + 6% Ersatz für Ferien: $437
+ + 4% Ersatz für Benefits: $292
+ + Gesamtarbeitsentgelt: $8.017
+* Es wird auch erwähnt, dass Sessional Lecturers an bestimmten Kursen im School of Human Kinetics mit einem Gewicht von 2,25 Credits bezahlt werden (Artikel 4.5.5):
+ + Befristete Lehrbeauftragte ohne Seniorität oder Einrichtungsstatus:
+ - Basislohn: $5.206
+ - 4% Ersatz für Ferien: $208
+ - 4% Ersatz für Benefits: $209
+ - Gesamtarbeitsentgelt: $693
+
+Quelle: Thorneloe-LUFA Collective Agreement",llama3.1:8b-gpu,llama3.1:8b-gpu,German,tensortemplar/prometheus2:8x7b-Q4_K_S,Benefits,medium,1,True,316bdde7-d516-4b3e-8d77-7642140948c8,0.3361,0.3277,0.0164,"Human Kinetics activity
+courses will be weighted at 2.25 credits.
+20
+<<>>
+a) Sessional Lecturers without Seniority or Establishment
+Base Rate $6941
+Four (4%) percent in lieu of vacation $278
+Four (4%) percent in lieu of benefits $278
+Totat rate of pay $7497
+b) Sessional Lecturers with Seniority, Establishment and Retirees
+Base Rate $7288
+Six (6) percent in lieu of vacation $437
+Four (4) percent in lieu of benefits $292
+Totat rate of pay $8017
+Sessional Lecturers are also entitled to the assignme",deffb3e5-e2c9-4eec-b9a5-a2eb8a1c51a8,0.0164,0.0078,0.0164,"If improvements in benefits are
+provided in subsequent Collective Agreements these improvements shall be
+extended to the retirees on Special Voluntary Early Retirement. Members
+who go on Special Voluntary Early Retirement will not be eligible for sick
+leave. The employer's cost of those benefit plans in which the Member does
+not retain participation will be added to the early retirement incentive. The
+employer's cost will be based on the premium charged by the carrier and will
+not include the Pr",b3947dc8-9d01-4942-84eb-0692783689bc,0.3354,0.327,0.0161,"Human Kinetics activity
+courses will be weighted at 2.25 credits.
+a) Sessional Lecturers without Seniority or Establishment
+20
+<<>>
+Base Rate $6941
+Four (4%) percent in lieu of vacation $278
+Four (4%) percent in lieu of benefits $278
+Totat rate of pay $7497
+b) Sessional Lecturers with Seniority, Establishment and Retirees
+Base Rate $7288
+Six (6) percent in lieu of vacation $437
+Four (4) percent in lieu of benefits $292
+Totat rate of pay $8017
+Sessional Lecturers are also entitled to the assignme",ba368931-6491-4919-b2aa-17541bf64043,0.0161,0.0125,0.0161,"If the member is entitled to benefits under the Retirees Health Plan, this subsidy would not
+apply.
+2014-2017 Thorneloe-LUFA Collective Agreement 76
+<<>>
+15. Should the Member die during the Special Voluntary Early Retirement Period, the payment will
+cease at the end of the month the death occurred. Benefits and Pension contributions will also
+terminate as of the end of the month of the Member’s death.
+16. A Member taking Special Voluntary Early Retirement would enjoy all retiree privileges as w",1c355672-25f1-4ed9-879d-a9ae312936d1,0.3346,0.3263,0.0159,"Base Rate $629.62
+Six (6%) percent in lieu of vacation $37.77
+Four (4%) percent in lieu of benefits $25.19
+Total rate of pay $693
+21
+<<>>
+4.55.5 The Parties agree that the rates of pay for Sessional Lecturers teaching activity courses in the School of
+Human Kinetics shall be weighted at 2.25 credits as following:
+a) Sessional Lecturers without Seniority or Establishment teaching activity courses in the School of
+Human Kinetics
+Base Rate $5206
+Four (4%) percent in lieu of vacation $208
+Four (4%) ",0.1609,0.0045,0.1282,0.0,0.0897,0.2006,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.6,,,,,2.1105,9.6855,129.6596,5710.0,5715.8,1064.1,3102.0,8.1,97.6,12288.0,958.0,768.0,,"The agreement governs the pay rates for Sessional Lecturers as follows:
+
+* Term contract instructors without seniority or institutional status (Article 20):
+ + Base salary: $6,941
+ + 4% replacement for holidays: $278
+ + 4% replacement for benefits: $278
+ + Total earnings: $7,497 (Source: Thorneloe-LUFA Collective Agreement, page 76)
+* Term contract instructors with seniority, institutional status and retirees (Article 20):
+ + Base salary: $7,288
+ + 6% replacement for holidays: $437
+ + 4% replacement for benefits: $292
+ + Total earnings: $8,017
+* It is also noted that Sessional Lecturers will be paid at a weight of 2.25 credits on certain courses in the School of Human Kinetics (Article 4.5.5):
+ + Term contract instructors without seniority or institutional status:
+ - Base salary: $5,206
+ - 4% replacement for holidays: $208
+ - 4% replacement for benefits: $209
+ - Total earnings: $693
+
+Source: Thorneloe-LUFA Collective Agreement",en,none,0.0,0.0,0.0,0.5,,,,,,,,

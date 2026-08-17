@@ -36,14 +36,29 @@ import pandas as pd
 #  METRIC DEFINITIONS  (single source of truth, shared by Python + embedded JS)
 # ─────────────────────────────────────────────────────────────────────────────
 # Per-row numeric metric columns that the dashboard knows how to aggregate.
+# New Chapter-4 instrumentation metrics surfaced in the dashboard.
+PRECISION_METRICS = ["precision_1", "precision_3", "precision_5"]
+CITATION_METRICS = ["citation_accuracy_regex", "citation_accuracy_judge"]
+LATENCY_METRICS = ["retrieval_latency_s", "ttft_s", "end_to_end_latency_s"]
+HW_METRICS = ["gpu_vram_mb", "gpu_vram_dedicated_mb", "gpu_vram_shared_mb",
+              "system_ram_mb", "cpu_percent", "gpu_util_percent",
+              "context_window_used", "prompt_tokens_est", "predicted_output_tokens"]
+
+# Metrics whose average must EXCLUDE blanks (unmeasured / no-gold cells) rather
+# than treat a blank as 0 — precision/citation/latency/VRAM/RAM. A genuine 0.0
+# (e.g. no relevant chunk, or a wrong citation) is still counted; only truly
+# missing cells (old rows, cloud VRAM, no-gold citation) are skipped. Keeps old
+# rows / cloud runs from dragging the means down.
+BLANK_EXCLUDE_METRICS = set(PRECISION_METRICS + CITATION_METRICS + LATENCY_METRICS + HW_METRICS)
+
 NUMERIC_METRICS = [
     "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL",
     "meteor", "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision",
-]
+] + PRECISION_METRICS + CITATION_METRICS + LATENCY_METRICS + HW_METRICS
 
 GEN_METRICS = ["token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor"]
-RET_METRICS = ["mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5"]
+RET_METRICS = ["mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5"] + PRECISION_METRICS
 JUDGE_METRICS = ["answer_relevance", "faithfulness", "context_precision"]
 
 # Columns carried into each embedded row.  The JS layer recomputes *everything*
@@ -55,7 +70,7 @@ ROW_COLUMNS = [
     "meteor", "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision",
     "grounded", "attempts",
-]
+] + PRECISION_METRICS + CITATION_METRICS + LATENCY_METRICS + HW_METRICS
 
 # The 13 headline averages the supervisor asked to always see (req. 1).
 # (key, label, kind)  kind drives formatting: "score" 0-1, "pct" %, "num" raw.
@@ -72,6 +87,7 @@ KPI_DEFS = [
     ("answer_relevance",   "Relevance",   "score"),
     ("faithfulness",       "Faithful",    "score"),
     ("context_precision",  "Precision",   "score"),
+    ("precision_3",        "P@3",         "score"),
     ("__grounded__",       "Grounded",    "pct"),
     ("attempts",           "Avg Attempts","num"),
 ]
@@ -117,23 +133,34 @@ def _to_num_scalar(v, default=0.0):
         return default
 
 
+def _num_for_metric(series, metric):
+    """Coerce a metric column to numeric. For BLANK_EXCLUDE_METRICS blanks are
+    dropped (NaN kept) so they are skipped by mean(); others fill blanks with 0
+    to preserve the historical dashboard behaviour."""
+    s = pd.to_numeric(series, errors="coerce")
+    return s if metric in BLANK_EXCLUDE_METRICS else s.fillna(0.0)
+
+
 def _avg_by(df, group_col, metric):
     if group_col not in df.columns or metric not in df.columns:
         return {}
     tmp = df.copy()
-    tmp[metric] = _to_num(tmp[metric])
+    tmp[metric] = _num_for_metric(tmp[metric], metric)
     return {
         str(k): round(float(v), 4)
         for k, v in tmp.groupby(group_col)[metric].mean().items()
-        if str(k).strip() != "" and str(k).strip().lower() != "nan"
+        if str(k).strip() != "" and str(k).strip().lower() != "nan" and v == v  # drop NaN groups
     }
 
 
 def _overall_avgs(df):
     out = {}
     for m in NUMERIC_METRICS:
-        if m in df.columns:
-            out[m] = round(float(_to_num(df[m]).mean()), 4) if len(df) else 0.0
+        if m in df.columns and len(df):
+            v = _num_for_metric(df[m], m).mean()
+            out[m] = round(float(v), 4) if v == v else 0.0   # NaN-safe (all-blank)
+        elif m in df.columns:
+            out[m] = 0.0
     return out
 
 
@@ -154,7 +181,9 @@ def df_to_js_data(df):
 
     for m in NUMERIC_METRICS:
         if m in cleaned.columns:
-            cleaned[m] = _to_num(cleaned[m])
+            # Keep blanks as NaN for latency/VRAM/citation so they're excluded from
+            # means (and render blank per-row); zero-fill the rest as before.
+            cleaned[m] = _num_for_metric(cleaned[m], m)
 
     models = [m for m in cleaned.get("rag_base_model", pd.Series(dtype=str)).dropna().unique().tolist()
               if str(m).strip() != ""]
@@ -319,6 +348,74 @@ def _build_static_charts_html(data):
     return {"gen": gen, "ret": ret, "judge": judge, "lang": lang, "diff": diff, "cat": cat}
 
 
+def _build_perf_section(data):
+    """Always-visible (JS-independent) section for the new Chapter-4 metrics:
+    Precision@k + citation accuracy (0–1 bars, overall) and a per-model latency /
+    hardware table. Latency/VRAM/RAM means exclude blank cells, so old rows and
+    cloud runs (no VRAM) simply don't contribute."""
+    ov = data["overall"]
+    bm = data.get("by_model", {})
+    models = data.get("models", [])
+
+    prec = _bars([("P@1", ov.get("precision_1", 0.0)),
+                  ("P@3 (primary)", ov.get("precision_3", 0.0)),
+                  ("P@5", ov.get("precision_5", 0.0))], ["#3b82f6", "#2563eb", "#3b82f6"])
+    cite = _bars([("Citation — regex", ov.get("citation_accuracy_regex", 0.0)),
+                  ("Citation — judge", ov.get("citation_accuracy_judge", 0.0))],
+                 ["#10b981", "#f59e0b"])
+
+    def _cell(m, key, fmt):
+        v = (bm.get(key) or {}).get(m)
+        if v is None or v == "":
+            return "&mdash;"
+        try:
+            return fmt.format(float(v))
+        except Exception:
+            return "&mdash;"
+
+    if models:
+        body = "".join(
+            "<tr><td class='pm'>" + _esc(m) + "</td>"
+            f"<td>{_cell(m, 'retrieval_latency_s', '{:.3f}')}</td>"
+            f"<td>{_cell(m, 'ttft_s', '{:.3f}')}</td>"
+            f"<td>{_cell(m, 'end_to_end_latency_s', '{:.2f}')}</td>"
+            f"<td>{_cell(m, 'gpu_vram_mb', '{:.0f}')}</td>"
+            f"<td>{_cell(m, 'gpu_vram_shared_mb', '{:.0f}')}</td>"
+            f"<td>{_cell(m, 'system_ram_mb', '{:.0f}')}</td>"
+            f"<td>{_cell(m, 'gpu_util_percent', '{:.0f}%')}</td>"
+            f"<td>{_cell(m, 'cpu_percent', '{:.0f}%')}</td>"
+            f"<td>{_cell(m, 'context_window_used', '{:.0f}')}</td></tr>"
+            for m in models
+        )
+        table = ("<table class='perf-table'><thead><tr>"
+                 "<th>Model</th><th>Retrieval&nbsp;(s)</th><th>TTFT&nbsp;(s)</th>"
+                 "<th>End-to-end&nbsp;(s)</th><th>GPU&nbsp;VRAM&nbsp;(MB)</th>"
+                 "<th>Shared&nbsp;VRAM&nbsp;(MB)</th><th>Ollama&nbsp;RAM&nbsp;(MB)</th>"
+                 "<th>GPU&nbsp;util</th><th>Ollama&nbsp;CPU</th><th>Ctx&nbsp;used</th>"
+                 "</tr></thead><tbody>" + body + "</tbody></table>")
+    else:
+        table = "<div class='sbar-empty'>No data</div>"
+
+    style = ("<style>#perf-section .perf-table{width:100%;border-collapse:collapse;"
+             "font-size:13px;margin-top:6px}#perf-section .perf-table th,"
+             "#perf-section .perf-table td{border:1px solid var(--border);padding:6px 10px;"
+             "text-align:right}#perf-section .perf-table th{background:rgba(148,163,184,.12);"
+             "text-align:right}#perf-section .perf-table td.pm,#perf-section .perf-table "
+             "thead th:first-child{text-align:left}</style>")
+
+    return (
+        style
+        + "<div class='grid2'>"
+        + "<div class='card'><div class='section-title'>Precision@k (overall)</div>" + prec + "</div>"
+        + "<div class='card'><div class='section-title'>Citation Accuracy (overall)</div>" + cite + "</div>"
+        + "</div>"
+        + "<div class='card' style='margin-bottom:26px;'>"
+        + "<div class='section-title'>Latency &amp; Hardware by Model "
+        + "<span style='font-weight:400;opacity:.7'>(means exclude blank cells; VRAM/RAM local only)</span></div>"
+        + table + "</div>"
+    )
+
+
 def _build_static_table_html(data):
     """Full detailed results table, theme-coloured, JS-free."""
     rows = data["rows"]
@@ -370,6 +467,7 @@ def generate_dashboard(df, output_path):
 
     static_kpis = _build_kpi_html(data)
     static_charts = _build_static_charts_html(data)
+    static_perf = _build_perf_section(data)
     static_table = _build_static_table_html(data)
 
     html = (DASHBOARD_TEMPLATE
@@ -382,6 +480,7 @@ def generate_dashboard(df, output_path):
             .replace("__STATIC_LANG__", static_charts["lang"])
             .replace("__STATIC_DIFF__", static_charts["diff"])
             .replace("__STATIC_CAT__", static_charts["cat"])
+            .replace("__STATIC_PERF__", static_perf)
             .replace("__STATIC_TABLE__", static_table))
 
     with open(output_path, "w", encoding="utf-8") as f:

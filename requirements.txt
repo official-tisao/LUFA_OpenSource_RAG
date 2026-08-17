@@ -25,3 +25,5 @@ llama-index-embeddings-huggingface>=0.2.0
 ocrmypdf>=17.7.0
 reportlab>=5.0.0
 rank_bm25>=0.2.2
+matplotlib>=3.8.0
+psutil>=5.9.0  # system RAM utilisation probe (src/system_metrics.py)

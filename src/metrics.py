@@ -91,6 +91,13 @@ def recall_at_k(retrieved, ground_truth, k):
         return 0.0
     relevant_at_k = set(retrieved[:k]) & set(ground_truth)
     return len(relevant_at_k) / len(ground_truth)
+def precision_at_k(retrieved, ground_truth, k):
+    """Precision@k (Ch4 §4.6.1; P@3 primary): relevant fraction of the top-k."""
+    topk = retrieved[:k]
+    if not topk or not ground_truth:
+        return 0.0
+    relevant = set(topk) & set(ground_truth)
+    return len(relevant) / len(topk)
 def mrr(retrieved, ground_truth):
     """Calculate Mean Reciprocal Rank."""
     gt_set = set(ground_truth)
@@ -260,13 +267,37 @@ if __name__ == "__main__":
     parser.add_argument("--out_csv", default="tests/evaluation_results.csv",
                         help="Output CSV for computed metrics")
     parser.add_argument("--judge_llm", default=None,
-                        help="Ollama model for LLM-as-judge scoring (skipped if not set)")
+                        help="Judge model override. Defaults to models.judge_llm.name "
+                             "(prometheus2:8x7b) when omitted.")
+    parser.add_argument("--no_judge", action="store_true",
+                        help="Disable LLM-judge scoring (RAGAS + citation judge) entirely.")
+    parser.add_argument("--separate_prompts", action="store_true",
+                        help="Score each judge metric with its OWN prompt (one LLM call per "
+                             "metric) instead of a single combined prompt.")
+    parser.add_argument("--force_det", action="store_true",
+                        help="Recompute the deterministic metrics (lexical, retrieval, "
+                             "precision@k, citation regex) even when a non-zero value is "
+                             "stored. Required after answers have been regenerated.")
+    parser.add_argument("--force_judge", action="store_true",
+                        help="Re-judge every row even when a non-zero score already exists. "
+                             "Required after regenerating answers, since the stored judge "
+                             "scores then refer to the OLD answers.")
+    parser.add_argument("--citation_judge", action="store_true",
+                        help="Also score citation accuracy with the judge (own prompt). Off by "
+                             "default: citation_accuracy_regex is deterministic and free.")
+    parser.add_argument("--no_dashboard", action="store_true",
+                        help="Skip the per-row dashboard refresh (much faster on long runs).")
     args = parser.parse_args()
 
     from retrieval import has_old_schema
     from csv_utils import migrate_csv_schema, resolve_language
     from evaluate import EVAL_COLUMNS
-    from run_simulation import TRANSLATION_COLUMNS
+    from run_simulation import TRANSLATION_COLUMNS, SYSTEM_METRIC_COLUMNS, CROSSLINGUAL_COLUMNS
+    from citation_metrics import citation_accuracy_regex, citation_accuracy_judge
+    from config_loader import cfg
+
+    # Judge defaults to prometheus2:8x7b unless --judge_llm overrides; --no_judge disables.
+    judge_model = None if args.no_judge else (args.judge_llm or cfg("models.judge_llm.name"))
 
     lufa_path = Path(args.lufa_csv)
     test_path = Path(args.test_csv)
@@ -287,8 +318,13 @@ if __name__ == "__main__":
     DETERMINISTIC_METRICS = [
         "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor",
         "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
+        "precision_1", "precision_3", "precision_5", "citation_accuracy_regex",
     ]
+    # citation_accuracy_judge only counts as a judge metric when explicitly requested;
+    # otherwise its permanent blankness would make every row look "needs judging".
     JUDGE_METRICS = ["answer_relevance", "faithfulness", "context_precision"]
+    if args.citation_judge:
+        JUDGE_METRICS = JUDGE_METRICS + ["citation_accuracy_judge"]
 
     def _is_zero_or_blank(v):
         """True when a metric cell is missing, empty, or numerically zero."""
@@ -381,16 +417,53 @@ if __name__ == "__main__":
         pd.read_csv(out_path, on_bad_lines="skip").to_csv(bak, index=False)
         print(f"[Metrics] Backed up previous evaluation -> {bak}")
 
-    def _persist_and_refresh():
-        """Write the full ledger to disk and regenerate the dashboard (per-row safe)."""
+    # Rewriting the whole ledger after EVERY row means O(n^2) I/O: ~426 rewrites of a
+    # ~1.7 MB file. On Windows that rapid open/replace cycle intermittently fails with
+    # "OSError: [Errno 22] Invalid argument", which killed a run mid-pass. Two fixes:
+    #   * write to a temp file then os.replace() — atomic, so a failure can never leave a
+    #     truncated ledger — and retry a few times on OSError;
+    #   * throttle. The judge pass spends ~70 s per row so a per-row flush is free, but the
+    #     deterministic pass does hundreds of rows a minute and only needs periodic flushes.
+    _PERSIST_EVERY = 1 if judge_model else 25
+    _rows_since_flush = {"n": 0}
+
+    def _atomic_write(df_out, attempts=5):
+        import os as _os
+        import time as _time
+        tmp = out_path.with_suffix(out_path.suffix + ".tmp")
+        last = None
+        for i in range(attempts):
+            try:
+                df_out.to_csv(tmp, index=False)
+                _os.replace(tmp, out_path)
+                return True
+            except OSError as e:
+                last = e
+                _time.sleep(0.4 * (i + 1))
+        print(f"      [Metrics] WARNING: could not persist ledger after {attempts} attempts: {last}")
+        try:
+            if tmp.exists():
+                tmp.unlink()
+        except OSError:
+            pass
+        return False
+
+    def _persist_and_refresh(final: bool = False):
+        """Write the full ledger to disk and regenerate the dashboard.
+        Writes are atomic and throttled (see _PERSIST_EVERY); `final=True` always flushes.
+        With --no_dashboard the HTML is only rebuilt on the final call."""
         df_out = pd.DataFrame([results[k] for k in sorted(results)], columns=EVAL_COLUMNS)
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        df_out.to_csv(out_path, index=False)
-        try:
-            from dashboard_generator import refresh_dashboard
-            refresh_dashboard(eval_csv=str(out_path), lufa_csv=str(lufa_path))
-        except Exception as _de:
-            print(f"      [Dashboard] refresh skipped: {_de}")
+        _rows_since_flush["n"] += 1
+        if final or _rows_since_flush["n"] >= _PERSIST_EVERY:
+            _atomic_write(df_out)
+            _rows_since_flush["n"] = 0
+        if not (args.no_dashboard and not final):
+            try:
+                from dashboard_generator import refresh_dashboard
+                refresh_dashboard(eval_csv=str(out_path), lufa_csv=str(lufa_path))
+            except Exception as _de:
+                print(f"      [Dashboard] refresh skipped: {_de}")
         return df_out
 
     total = len(test_df)
@@ -422,12 +495,16 @@ if __name__ == "__main__":
 
         # Recompute deterministic metrics when the row is new OR any deterministic
         # cell is zero/blank. (These are cheap, so we refresh the whole group.)
-        need_det = is_new or any(_is_zero_or_blank(prev.get(m)) for m in DETERMINISTIC_METRICS)
+        # --force_det is required whenever ANSWERS have changed: the stored lexical and
+        # citation scores then describe a previous answer, and because they are non-zero
+        # the zero/blank gate would silently keep them.
+        need_det = (is_new or args.force_det
+                    or any(_is_zero_or_blank(prev.get(m)) for m in DETERMINISTIC_METRICS))
         # Recompute judge cells only when a judge model is available AND some judge
         # cell is zero/blank; non-zero judge scores are always preserved.
         judge_zero = any(_is_zero_or_blank(prev.get(m)) for m in JUDGE_METRICS)
         #no_naive_judge = args.mode == "local-naive"
-        need_judge = bool(args.judge_llm) and (is_new or judge_zero)
+        need_judge = bool(judge_model) and (is_new or judge_zero or args.force_judge)
 
         if not need_det and not need_judge:
             unchanged += 1
@@ -438,26 +515,55 @@ if __name__ == "__main__":
         context = _build_context(rag)
         retrieved_ids = _get_retrieved_ids(rag)
         ground_truth_ids = _get_ground_truth_ids(row)
+        gold_text = "" if pd.isna(row.get("ground_source_truth")) else str(row.get("ground_source_truth", ""))
 
         if str(prev.get("translation_applied")).strip().lower() == "true":
             prediction = str(prev.get("untranslated_answer", prediction))
             question = str(prev.get("translated_question", question))
 
+        # ── Cross-lingual no-translation runs ───────────────────────────────────
+        # The answer is in the QUESTION's language while expected_answer /
+        # ground_source_truth are in the benchmark language (English). Lexical overlap
+        # and the citation regex therefore run against the post-hoc rendering, while the
+        # judge keeps scoring the NATIVE answer against the NATIVE question — otherwise
+        # we would be judging a translation rather than the system's actual output.
+        prediction_judge = prediction
+        prediction_lexical = prediction
+        _mt = rag.get("answer_metrics_translation", "")
+        _mt = "" if (_mt is None or (not isinstance(_mt, (list, dict)) and pd.isna(_mt))) else str(_mt).strip()
+        if _mt:
+            prediction_lexical = _mt
+            print(f"   [Cross-lingual] lexical metrics use the "
+                  f"{_safe(rag.get('metrics_language')) or 'benchmark'}-language rendering; "
+                  f"judge uses the native answer.")
+
         print(f"\n{counter} {q_id}: \"{question[:55]}...\" (deterministic={need_det}, judge={need_judge})")
 
         # ---- deterministic metrics ----
         if need_det:
-            f1_val = round(token_f1(prediction, reference), 4)
-            bleu_val = round(compute_bleu(prediction, reference), 4)
-            rouge_scores = compute_rouge(prediction, reference)
-            meteor_val = round(compute_meteor(prediction, reference), 4)
+            f1_val = round(token_f1(prediction_lexical, reference), 4)
+            bleu_val = round(compute_bleu(prediction_lexical, reference), 4)
+            rouge_scores = compute_rouge(prediction_lexical, reference)
+            meteor_val = round(compute_meteor(prediction_lexical, reference), 4)
             mrr_val = round(mrr(retrieved_ids, ground_truth_ids), 4)
             ndcg_val = ndcg_at_k(retrieved_ids, ground_truth_ids, k=5)
             rec1 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=1), 4)
             rec3 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=3), 4)
             rec5 = round(recall_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
+            prec1 = round(precision_at_k(retrieved_ids, ground_truth_ids, k=1), 4)
+            prec3 = round(precision_at_k(retrieved_ids, ground_truth_ids, k=3), 4)
+            prec5 = round(precision_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
+            # Citation numbers are language-independent, but run the regex on both the
+            # native and the benchmark-language rendering and keep the better score, so a
+            # correct citation is not missed just because of the language it was written in.
+            cit_regex = citation_accuracy_regex(prediction_judge, gold_text)
+            if prediction_lexical is not prediction_judge:
+                _alt = citation_accuracy_regex(prediction_lexical, gold_text)
+                if _alt != "" and (cit_regex == "" or _alt > cit_regex):
+                    cit_regex = _alt
             print(f"   F1={f1_val} BLEU={bleu_val} R1={rouge_scores['rouge1']} METEOR={meteor_val} "
-                  f"| MRR={mrr_val} NDCG@5={ndcg_val} R@1/3/5={rec1}/{rec3}/{rec5}")
+                  f"| MRR={mrr_val} NDCG@5={ndcg_val} R@1/3/5={rec1}/{rec3}/{rec5} "
+                  f"| P@1/3/5={prec1}/{prec3}/{prec5} cite_regex={cit_regex}")
             recomputed_det += 1
         else:
             f1_val = _safe_float(prev.get("token_f1_score")) or 0.0
@@ -473,19 +579,32 @@ if __name__ == "__main__":
             rec1 = _safe_float(prev.get("recall_1")) or 0.0
             rec3 = _safe_float(prev.get("recall_3")) or 0.0
             rec5 = _safe_float(prev.get("recall_5")) or 0.0
+            prec1 = _safe_float(prev.get("precision_1")) or 0.0
+            prec3 = _safe_float(prev.get("precision_3")) or 0.0
+            prec5 = _safe_float(prev.get("precision_5")) or 0.0
+            cit_regex = prev.get("citation_accuracy_regex", "")
 
         # ---- judge metrics: preserve non-zero, fill zero cells when judge model set ----
         ar = _safe_float(prev.get("answer_relevance")) or 0.0
         faith = _safe_float(prev.get("faithfulness")) or 0.0
         cp = _safe_float(prev.get("context_precision")) or 0.0
+        cit_judge = prev.get("citation_accuracy_judge", "")
+        cit_judge = "" if (cit_judge is None or (not isinstance(cit_judge, (list, dict)) and pd.isna(cit_judge))) else cit_judge
 
-        # is_grounded = False
-        # check_grounded = False
-        new_grounded =prev.get("grounded")
-        if str(prev.get("grounded")).lower() == "false":
-            new_grounded = "true" if float(cp) > 0.4 else "false"
+        # grounded / attempts belong to the GENERATION run, so take them from the lufa
+        # row first and only fall back to the previous eval row. (Reading `prev` alone
+        # would carry stale values forward after answers are regenerated.)
+        _lufa_grounded = _safe(rag.get("grounded"))
+        # `grounded` is the reflector's verdict and is carried through UNCHANGED from the
+        # lufa row. It used to be overwritten with `context_precision > 0.4` whenever the
+        # stored value was false, which silently turned a reflector output into a
+        # judge-derived threshold — making the column mean two different things depending
+        # on the row, and inflating reported groundedness. Removed: the reflector verdict
+        # is reported as measured.
+        new_grounded = _lufa_grounded if str(_lufa_grounded).strip() != "" else prev.get("grounded")
 
-        real_attempts = prev.get("attempts")
+        _lufa_attempts = _safe(rag.get("attempts"))
+        real_attempts = _lufa_attempts if str(_lufa_attempts).strip() != "" else prev.get("attempts")
         try:
             real_attempts = int(real_attempts)
             if real_attempts < 1 and (prediction != ""):
@@ -495,17 +614,34 @@ if __name__ == "__main__":
             real_attempts = 1
 
         if need_judge:
-            print(f"   Running LLM judge ({args.judge_llm}) on zero cells...")
+            _mode = "separate prompts" if args.separate_prompts else "combined prompt"
+            _scope = "ALL cells (forced)" if args.force_judge else "zero/blank cells"
+            print(f"   Running LLM judge ({judge_model}, {_mode}) on {_scope}...")
             try:
-                j = combined_judge_llm_scores(question, prediction, context, args.judge_llm)
-                if _is_zero_or_blank(prev.get("answer_relevance")):
+                if args.separate_prompts:
+                    # One dedicated prompt per metric — slower but avoids the single
+                    # combined prompt having to reason about three criteria at once.
+                    j = judge_llm_scores(question, prediction_judge, context, judge_model)
+                else:
+                    j = combined_judge_llm_scores(question, prediction_judge, context, judge_model)
+
+                # With --force_judge the stored scores belong to a PREVIOUS answer and
+                # must be replaced outright; otherwise only zero/blank cells are filled.
+                if args.force_judge or _is_zero_or_blank(prev.get("answer_relevance")):
                     ar = j.get("answer_relevance", ar)
-                if _is_zero_or_blank(prev.get("faithfulness")):
+                if args.force_judge or _is_zero_or_blank(prev.get("faithfulness")):
                     faith = j.get("faithfulness", faith)
-                if _is_zero_or_blank(prev.get("context_precision")):
+                if args.force_judge or _is_zero_or_blank(prev.get("context_precision")):
                     cp = j.get("context_precision", cp)
+
+                # Citation accuracy via the SAME judge model (dedicated prompt) — opt-in.
+                if args.citation_judge and (args.force_judge or _is_zero_or_blank(prev.get("citation_accuracy_judge"))):
+                    _jc = _load_judge_model(judge_model)
+                    _cj = citation_accuracy_judge(_jc, prediction_judge, gold_text)
+                    if _cj != "":
+                        cit_judge = _cj
                 judged += 1
-                print(f"   relevance={ar} faithfulness={faith} context_precision={cp}")
+                print(f"   relevance={ar} faithfulness={faith} context_precision={cp} cite_judge={cit_judge}")
             except Exception as je:
                 print(f"   [Judge Warning] {je}")
 
@@ -550,16 +686,29 @@ if __name__ == "__main__":
             "answer_relevance": ar,
             "faithfulness": faith,
             "context_precision": cp,
+            "precision_1": prec1,
+            "precision_3": prec3,
+            "precision_5": prec5,
+            "citation_accuracy_regex": cit_regex,
+            "citation_accuracy_judge": cit_judge,
         })
+        # Stamp the judge model actually used (falls back to prior value).
+        out_row["judge_llm"] = judge_model or _safe(prev.get("judge_llm"))
         # Carry cross-lingual translation columns straight from the lufa row.
         for _tc in TRANSLATION_COLUMNS:
             out_row[_tc] = _safe(rag.get(_tc))
+        # Carry sim-time performance columns (latency / VRAM / RAM) from lufa.
+        for _sc in SYSTEM_METRIC_COLUMNS:
+            out_row[_sc] = _safe(rag.get(_sc))
+        # Carry the cross-lingual no-translation columns from lufa.
+        for _cc in CROSSLINGUAL_COLUMNS:
+            out_row[_cc] = _safe(rag.get(_cc))
         results[q_id] = out_row
         # Persist this row immediately (crash-safe) and refresh the dashboard.
         _persist_and_refresh()
 
     # Final consolidated write (also covers the no-rows-processed case).
-    out_df = _persist_and_refresh()
+    out_df = _persist_and_refresh(final=True)
 
     print(f"\n[Metrics] Done. Deterministic recomputed: {recomputed_det} | judged: {judged} "
           f"| already-complete: {unchanged} | total rows: {len(out_df)}.")

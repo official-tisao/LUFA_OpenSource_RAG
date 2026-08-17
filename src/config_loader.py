@@ -42,7 +42,7 @@ _CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
 # ── Default fallback values (used when config.yaml is missing keys) ──────────
 _DEFAULTS = {
     "models.judge_llm.name": "tensortemplar/prometheus2:8x7b-Q4_K_S",
-    "models.llm.name": "llama3.2:3b-instruct-q4_K_M",
+    "models.llm.name": "llama3.1:8b-gpu",
     "models.llm.base_url": "http://localhost:11434",
     "models.llm.request_timeout": 240.0,
     "models.embedding.name": "nomic-embed-text-v2-moe",
@@ -102,9 +102,18 @@ def _env_override(dotted_key: str, value: Any) -> Any:
     """
     Check for an environment variable override.
     Dotted key "models.llm.name" → env var "LUFA_MODELS_LLM_NAME"
+
+    The documented (and preferred) form is the LUFA_-prefixed name; this module and
+    CLAUDE.md both advertise it, but only the un-prefixed name was ever read, so the
+    documented form silently did nothing. Both are now accepted, LUFA_ first, and the
+    bare name is kept for backward compatibility with any existing setup.
     """
-    env_key = dotted_key.upper().replace(".", "_")
-    env_val = os.environ.get(env_key)
+    base_key = dotted_key.upper().replace(".", "_")
+    env_val = None
+    for env_key in (f"LUFA_{base_key}", base_key):
+        env_val = os.environ.get(env_key)
+        if env_val is not None:
+            break
     if env_val is not None:
         # Try to cast to the same type as the original value
         if isinstance(value, bool):

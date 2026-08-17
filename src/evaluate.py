@@ -25,7 +25,11 @@ from nltk.translate.meteor_score import meteor_score
 from rouge_score import rouge_scorer
 
 # Dynamic simulation hooks
-from run_simulation import query_single_record, TRANSLATION_COLUMNS
+from run_simulation import (query_single_record, TRANSLATION_COLUMNS,
+                            SYSTEM_METRIC_COLUMNS, EVAL_ONLY_METRIC_COLUMNS,
+                            HUMAN_MANUAL_COLUMNS, CROSSLINGUAL_COLUMNS)
+from citation_metrics import (citation_accuracy_regex, citation_accuracy_judge,
+                              extract_gold_citation)
 
 warnings.filterwarnings("ignore")
 
@@ -64,7 +68,7 @@ LUFA_COLUMNS = [
     "source4_id", "source4_cosine_score", "source4_recency_adjusted_cosine_score", "source4_rrf_score", "source4_text",
     "source5_id", "source5_cosine_score", "source5_recency_adjusted_cosine_score", "source5_rrf_score", "source5_text",
     "answer", "base_model_used", "language", "attempts", "grounded",
-] + TRANSLATION_COLUMNS
+] + TRANSLATION_COLUMNS + SYSTEM_METRIC_COLUMNS + CROSSLINGUAL_COLUMNS
 
 EVAL_COLUMNS = [
     "question_id", "id", "question", "answer", "base_model_used", "rag_base_model",
@@ -77,7 +81,8 @@ EVAL_COLUMNS = [
     "token_f1_score", "sentence_bleu_score", "rouge1", "rouge2", "rougeL", "meteor",
     "mrr", "ndcg_at_k", "recall_1", "recall_3", "recall_5",
     "answer_relevance", "faithfulness", "context_precision",
-] + TRANSLATION_COLUMNS
+] + TRANSLATION_COLUMNS + SYSTEM_METRIC_COLUMNS + CROSSLINGUAL_COLUMNS \
+  + EVAL_ONLY_METRIC_COLUMNS + HUMAN_MANUAL_COLUMNS   # human cols stay LAST
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -307,6 +312,17 @@ def recall_at_k(retrieved, ground_truth, k):
     return len(relevant_at_k) / len(ground_truth)
 
 
+def precision_at_k(retrieved, ground_truth, k):
+    """Precision@k (Ch4 §4.6.1): fraction of the top-k retrieved chunks that are
+    relevant. P@3 is the primary retrieval metric. Denominator is the number of
+    chunks actually present in the top-k (== k whenever ≥k were retrieved)."""
+    topk = retrieved[:k]
+    if not topk or not ground_truth:
+        return 0.0
+    relevant = set(topk) & set(ground_truth)
+    return len(relevant) / len(topk)
+
+
 def mrr(retrieved, ground_truth):
     gt_set = set(ground_truth)
     for rank, doc_id in enumerate(retrieved, start=1):
@@ -362,12 +378,21 @@ def extract_score(text):
     return float(match.group(1)) / 5.0 if match else 0.5
 
 
-def judge_llm_scores(question, answer, context, judge_llm_model="None"):
+def get_judge_client(judge_llm_model=None, request_timeout=240.0):
+    """Resolve and load the judge LLM client. The model name defaults to
+    cfg('models.judge_llm.name') (prometheus2:8x7b) when not supplied, and routing
+    (Ollama vs OpenAI-compatible) is auto-selected from the resolved api_base via
+    get_llm_client — so a --judge_llm override pointed at a cloud/OpenRouter model
+    works here too (fixes the previous Ollama-only hardcoding)."""
     judge_llm_model = judge_llm_model or cfg("models.judge_llm.name")
-    """Use local Ollama model as judge. Returns normalized 0–1 scores."""
-    from llama_index.llms.ollama import Ollama
-    from model_api_auth import get_ollama_client
-    llm = get_ollama_client(judge_llm_model, request_timeout=240.0)
+    from model_api_auth import get_llm_client
+    return get_llm_client(judge_llm_model, request_timeout=request_timeout)
+
+
+def judge_llm_scores(question, answer, context, judge_llm_model="None", judge_client=None):
+    """Score the three RAGAS metrics with the judge LLM. Returns normalized 0–1
+    scores. `judge_client` may be a pre-loaded client (reused across calls)."""
+    llm = judge_client or get_judge_client(judge_llm_model)
     scores = {}
     for metric, prompt_template in JUDGE_LLM_PROMPTS.items():
         try:
@@ -449,11 +474,17 @@ def run_evaluation(
         judge_llm_model=None,
         llm_model=None,
         sim_mode="local",
-        api_url="http://localhost:8000"
+        api_url="http://localhost:8000",
+        no_judge=False,
 ):
     llm_model = llm_model or cfg("models.llm.name")
-    #judge_llm_model = judge_llm_model or cfg("models.judge_llm.name")
-    
+    # Judge defaults to prometheus2:8x7b (cfg('models.judge_llm.name')) unless a
+    # --judge_llm override is passed; --no_judge disables judge scoring entirely.
+    if no_judge:
+        judge_llm_model = None
+    else:
+        judge_llm_model = judge_llm_model or cfg("models.judge_llm.name")
+
     print(f"[Eval] Verifying ground truth data file from: {test_csv}")
     if not Path(test_csv).exists():
         raise FileNotFoundError(
@@ -484,6 +515,7 @@ def run_evaluation(
             lufa_records[s_qid] = lufa_row.to_dict()
 
     completed_ids = set()
+    existing_eval_rows = {}   # q_id -> prior eval row (used to preserve manual human columns)
     out_path = Path(out_csv)
 
     chroma_cached_data = None
@@ -507,6 +539,14 @@ def run_evaluation(
                     ((mrr_s > 0.0) | (ndcg_s > 0.0))
                     ]
                 completed_ids = set(valid_completions["question_id"].dropna().astype(str).str.strip().tolist())
+
+                # Snapshot prior rows so any hand-entered human/IAA columns survive
+                # a re-run (align_and_append + dedup-keep-last would otherwise drop
+                # them when an incomplete row is re-appended).
+                for _, erow in existing_df.iterrows():
+                    eid = str(erow.get("question_id", "")).strip()
+                    if eid and eid != "nan":
+                        existing_eval_rows[eid] = erow.to_dict()
 
                 total_rows = len(existing_df["question_id"].dropna().unique())
                 zero_count = total_rows - len(completed_ids)
@@ -616,9 +656,20 @@ def run_evaluation(
             except Exception as repair_err:
                 print(f"      [Live Repair Error] Single row recovery pass failed: {repair_err}")
 
+        # Precision@k (Ch4 §4.6.1; P@3 primary) — uses the final (possibly repaired) IDs.
+        prec1 = round(precision_at_k(retrieved_ids, ground_truth_ids, k=1), 4)
+        prec3 = round(precision_at_k(retrieved_ids, ground_truth_ids, k=3), 4)
+        prec5 = round(precision_at_k(retrieved_ids, ground_truth_ids, k=5), 4)
+
+        # Citation accuracy — deterministic regex now; judge score below if enabled.
+        gold_text = "" if pd.isna(row.get("ground_source_truth")) else str(row.get("ground_source_truth"))
+        cit_regex = citation_accuracy_regex(prediction, gold_text)
+
         print(f"      * Mean Reciprocal Rank (MRR): {mrr_val}")
         print(f"      * NDCG@5 Index: {ndcg_val}")
         print(f"      * Recall Distribution -> Recall@1: {rec1} | Recall@3: {rec3} | Recall@5: {rec5}")
+        print(f"      * Precision Distribution -> P@1: {prec1} | P@3: {prec3} | P@5: {prec5}")
+        print(f"      * Citation Accuracy (regex): {cit_regex}")
 
         for si in range(1, 6):
             cos_v = safe_float(active_rag_data.get(f"source{si}_cosine_score", 0.0))
@@ -655,6 +706,20 @@ def run_evaluation(
         rec["recall_3"] = rec3
         rec["recall_5"] = rec5
 
+        # Precision@k + citation (deterministic regex); judge citation filled below.
+        rec["precision_1"] = prec1
+        rec["precision_3"] = prec3
+        rec["precision_5"] = prec5
+        rec["citation_accuracy_regex"] = cit_regex
+        rec["citation_accuracy_judge"] = ""
+
+        # Human/IAA manual columns: carry forward any hand-entered values from a
+        # prior run for this question; otherwise leave blank for the researcher.
+        _prev_eval = existing_eval_rows.get(q_id, {})
+        for _hc in HUMAN_MANUAL_COLUMNS:
+            _pv = _prev_eval.get(_hc, "")
+            rec[_hc] = "" if (pd.isna(_pv) if not isinstance(_pv, (list, dict)) else False) else _pv
+
         rec["answer_relevance"] = 0.0
         rec["faithfulness"] = 0.0
         rec["context_precision"] = 0.0
@@ -662,17 +727,18 @@ def run_evaluation(
         if judge_llm_model and prediction and prediction != "" and prediction != "ERROR":
             print(f"   -> Dispatching prompt topologies to Judge Model ({judge_llm_model})...")
             try:
-                judge = {
-                    "answer_relevance": 0.0,
-                    "faithfulness": 0.0,
-                    "context_precision": 0.0,
-                }
-                judge = judge_llm_scores(question, prediction, context, judge_llm_model)
+                judge_client = get_judge_client(judge_llm_model)
+                judge = judge_llm_scores(question, prediction, context, judge_llm_model,
+                                         judge_client=judge_client)
                 rec["answer_relevance"] = judge.get("answer_relevance", 0.0)
                 rec["faithfulness"] = judge.get("faithfulness", 0.0)
                 rec["context_precision"] = judge.get("context_precision", 0.0)
                 print(
                     f"      * Judge Feedback -> Relevance: {rec['answer_relevance']} | Faithfulness: {rec['faithfulness']} | Precision: {rec['context_precision']}")
+                # Citation accuracy via the SAME judge model (own dedicated prompt).
+                cit_judge = citation_accuracy_judge(judge_client, prediction, gold_text)
+                rec["citation_accuracy_judge"] = cit_judge
+                print(f"      * Citation Accuracy (judge): {cit_judge}")
             except Exception as e:
                 print(f"      [Judge Model Connection Error] Skipping scoring pass on entry {q_id}: {e}")
 
@@ -788,7 +854,11 @@ if __name__ == "__main__":
     parser.add_argument("--test_csv", default="tests/combined_test_data_and_ground_truth.csv")
     parser.add_argument("--out_csv", default="tests/evaluation_results.csv")
     parser.add_argument("--dashboard", default="dashboard/index.html")
-    parser.add_argument("--judge_llm", default=None)
+    parser.add_argument("--judge_llm", default=None,
+                        help="Judge model override. Defaults to models.judge_llm.name "
+                             "(prometheus2:8x7b) when omitted.")
+    parser.add_argument("--no_judge", action="store_true",
+                        help="Disable LLM-judge scoring (RAGAS + citation judge) entirely.")
     parser.add_argument("--llm_model", default=None)
     parser.add_argument("--sim_mode", choices=["local", "local-naive", "api", "frontier"], default="local")
     parser.add_argument("--api_url", default="http://localhost:8000")
@@ -802,5 +872,6 @@ if __name__ == "__main__":
         judge_llm_model=args.judge_llm,
         llm_model=args.llm_model,
         sim_mode=args.sim_mode,
-        api_url=args.api_url
+        api_url=args.api_url,
+        no_judge=args.no_judge,
     )
