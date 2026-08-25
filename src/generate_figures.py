@@ -140,11 +140,18 @@ def _strip_titles(fig):
     it is a panel label and must survive; the suptitle is the figure title and goes. On a
     single-axes figure the axes title IS the figure title, so it goes too. Stripping
     indiscriminately made the three panels of fig5_3 unidentifiable.
+
+    The exception is a figure that sets _lufa_keep_axes_title. fig5_3a to fig5_3c are
+    single-axes figures whose title still names the generator rather than describing the
+    figure, and they are near-identical in every other respect: same metrics, same colours,
+    same shared y-axis. Strip that title and three interchangeable charts go into the
+    document with nothing but a Word caption to tell them apart, which is one misplaced
+    caption away from mislabelling a result.
     """
     if getattr(fig, "_suptitle", None) is not None:
         fig._suptitle.set_visible(False)
     axes = fig.get_axes()
-    if len(axes) == 1:
+    if len(axes) == 1 and not getattr(fig, "_lufa_keep_axes_title", False):
         axes[0].set_title("")
 
 
@@ -219,25 +226,28 @@ def fig_retrieval(ev):
     _save(fig, "fig5_2_retrieval")
 
 
-def fig_agentic_vs_naive(ev, lu):
-    """RQ1 on the retry subset. See rule 2 in the module docstring."""
-    pairs = [("A: Llama 3.2 3B", "llama3.2:3b", "naive/llama3.2:3b"),
-             ("B: Llama 3.1 8B", "llama3.1:8b", "naive/llama3.1:8b"),
-             ("C: Mistral 7B",   "mistral:7b",  "naive/mistral:7b")]
-    # Judge metrics are included now that the naive judge pass is complete for all three
-    # generators. Context precision is the one that matters most here: it is the judged view of
-    # the retrieved context, so its agreement with MRR and Recall@5 is corroboration from a model
-    # that never sees a retrieval score.
-    metrics = ["mrr", "recall_5", "token_f1_score", "rougeL", "citation_accuracy_regex",
-               "context_precision", "faithfulness"]
-    mnames = ["MRR", "Recall@5", "Token-F1", "ROUGE-L", "Citation acc.",
-              "Ctx. precision", "Faithfulness"]
+AN_PAIRS = [("A: Llama 3.2 3B", "llama3.2:3b", "naive/llama3.2:3b"),
+            ("B: Llama 3.1 8B", "llama3.1:8b", "naive/llama3.1:8b"),
+            ("C: Mistral 7B",   "mistral:7b",  "naive/mistral:7b")]
+# Judge metrics are included now that the naive judge pass is complete for all three
+# generators. Context precision is the one that matters most here: it is the judged view of
+# the retrieved context, so its agreement with MRR and Recall@5 is corroboration from a model
+# that never sees a retrieval score.
+AN_METRICS = ["mrr", "recall_5", "token_f1_score", "rougeL", "citation_accuracy_regex",
+              "context_precision", "faithfulness"]
+AN_MNAMES = ["MRR", "Recall@5", "Token-F1", "ROUGE-L", "Citation acc.",
+             "Ctx. precision", "Faithfulness"]
+AN_NOTE = ("Restricted to queries with more than one agentic attempt. Queries answered in a single "
+           "attempt are excluded because attempt 1 does not invoke the query rewriter, so the two "
+           "systems are identical there by construction. All metrics shown are complete for all "
+           "three generators, judged by Prometheus-2 8x7B with one prompt per metric.")
 
-    # Only systems with data get a panel. An empty placeholder axis would waste most of the
-    # canvas, and clearing its ticks propagates through sharey and strips the y-axis from the
-    # panels that do have data.
+
+def _agentic_naive_panels(ev, lu):
+    """Resolve the retry subset per generator. Shared by the combined and split figures so
+    the two can never drift apart on which rows they count."""
     panels, pending = [], []
-    for lab, ag, na in pairs:
+    for lab, ag, na in AN_PAIRS:
         AL = lu[lu._key == canon(ag)]
         ids = set(AL.loc[AL["attempts"] > 1, "question_id"])
         A = ev[(ev._key == canon(ag)) & ev.question_id.isin(ids)].set_index("question_id")
@@ -247,6 +257,78 @@ def fig_agentic_vs_naive(ev, lu):
             panels.append((lab, A.loc[both], N.loc[both], len(both)))
         else:
             pending.append(f"{lab} ({len(ids)} retry queries)")
+    return panels, pending
+
+
+def _an_shared_ymax(panels):
+    """One ceiling across every generator.
+
+    In the combined figure sharey did this for free. Split apart into three separate images
+    the reader can no longer see them side by side, so a per-figure ceiling would make a 0.20
+    bar in one figure look the same height as a 0.65 bar in another. The axis has to be
+    identical in all three or the split is actively misleading.
+    """
+    vals = [v for _, A, N, _ in panels
+            for c in AN_METRICS
+            for v in (A[c].mean(), N[c].mean()) if v == v]
+    return max(vals) * 1.22 if vals else 1.0
+
+
+def _an_bars(ax, A, N, ymax):
+    x = np.arange(len(AN_METRICS))
+    w = 0.38
+    ag = [A[c].mean() for c in AN_METRICS]
+    na = [N[c].mean() for c in AN_METRICS]
+    ax.bar(x - w / 2, ag, w, label="Agentic (up to 3 passes)", color=LOCAL_C)
+    ax.bar(x + w / 2, na, w, label="Naive (single pass)", color=NAIVE_C)
+    for i, (a, b) in enumerate(zip(ag, na)):
+        if a == a:
+            ax.text(x[i] - w / 2, a + 0.008, f"{a:.2f}", ha="center", fontsize=7)
+        if b == b:
+            ax.text(x[i] + w / 2, b + 0.008, f"{b:.2f}", ha="center", fontsize=7)
+    ax.set_xticks(x)
+    ax.set_xticklabels(AN_MNAMES, rotation=25, ha="right")
+    ax.set_ylim(0, ymax)
+    return ag, na
+
+
+def fig_agentic_vs_naive_split(ev, lu):
+    """The same comparison as fig5_3, one generator per figure.
+
+    Written for the thesis body, where three panels across a portrait page leave the metric
+    labels too small to read. Each figure carries its own legend and y-label because there is
+    no neighbouring panel to borrow them from, and the y-axis is pinned to the same ceiling in
+    all three by _an_shared_ymax.
+    """
+    panels, _ = _agentic_naive_panels(ev, lu)
+    if not panels:
+        print("   skipped fig5_3a-c: no retry rows available on both sides yet")
+        return
+    ymax = _an_shared_ymax(panels)
+    for letter, (lab, A, N, nb) in zip("abc", panels):
+        fig, ax = plt.subplots(figsize=(6.4, 4.2))
+        _an_bars(ax, A, N, ymax)
+        ax.set_ylabel("Mean score")
+        # The "A: " / "B: " / "C: " prefix identified a panel within the combined figure and
+        # means nothing on a figure standing alone, so only the generator name is kept.
+        generator = lab.split(": ", 1)[-1]
+        ax.set_title(f"{generator}  (n = {nb} retry queries)", fontsize=11, fontweight="bold")
+        # Survives LUFA_FIGURE_TITLES=0: this names the generator, it does not describe the
+        # figure. See _strip_titles.
+        fig._lufa_keep_axes_title = True
+        ax.legend(frameon=False, fontsize=8, loc="upper left")
+        # No in-image note here. The combined figure carries it once; repeating four sentences
+        # under each of three figures is noise, and the caption is the right home for it.
+        _save(fig, f"fig5_3{letter}_agentic_vs_naive")
+
+
+def fig_agentic_vs_naive(ev, lu):
+    """RQ1 on the retry subset. See rule 2 in the module docstring."""
+    metrics, mnames = AN_METRICS, AN_MNAMES
+    # Only systems with data get a panel. An empty placeholder axis would waste most of the
+    # canvas, and clearing its ticks propagates through sharey and strips the y-axis from the
+    # panels that do have data.
+    panels, pending = _agentic_naive_panels(ev, lu)
 
     if not panels:
         print("   skipped fig5_3: no retry rows available on both sides yet")
@@ -279,10 +361,7 @@ def fig_agentic_vs_naive(ev, lu):
     axes[0].legend(frameon=False, fontsize=8, loc="upper left")
     fig.suptitle("RQ1: agentic loop vs naive single pass, on the queries the reflector sent back",
                  fontsize=11)
-    note = ("Restricted to queries with more than one agentic attempt. Queries answered in a single "
-            "attempt are excluded because attempt 1 does not invoke the query rewriter, so the two "
-            "systems are identical there by construction. All metrics shown are complete for all "
-            "three generators, judged by Prometheus-2 8x7B with one prompt per metric.")
+    note = AN_NOTE
     if pending:
         note += " Awaiting naive regeneration: " + "; ".join(pending) + "."
     fig.text(0.5, -0.08, note, ha="center", va="top", fontsize=7.5, style="italic",
@@ -451,6 +530,7 @@ def main():
     fig_answer_quality(ev)
     fig_retrieval(ev)
     fig_agentic_vs_naive(ev, lu)
+    fig_agentic_vs_naive_split(ev, lu)
     fig_language(ev)
     fig_crosslingual(ev)
     fig_latency(lu)

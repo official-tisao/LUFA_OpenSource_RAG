@@ -273,7 +273,7 @@ def fig_query_flow():
     arrow(ax, (cx - 1.43, 7.48), (1.95, 7.48))
     ax.text(2.20, 7.58, "yes", fontsize=7.4, color="#B04A00", style="italic")
     box(ax, 0.18, 7.06, 1.77, 0.84,
-        "Rewrite the query\nand widen\nk := 5 + (attempt - 1)", INSTR, 6.9)
+        "Rewrite the query\nusing the rejected answer\nand the provision titles", INSTR, 6.9)
     route(ax, [(1.07, 7.06), (1.07, 6.60), (cx - W / 2, 6.60)])
     arrow(ax, (cx, 7.15), (cx, 6.86))
     ax.text(cx + 0.14, 7.00, "no", fontsize=7.4, color="#1B7F5A", style="italic")

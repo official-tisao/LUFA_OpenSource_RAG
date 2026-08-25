@@ -282,3 +282,16 @@ config.py
 /backfill_backup/20260725_201131/mistral-7b/Judge-Prometheus-8x7b-v2.0/evaluation_results.csv.metricsbak
 /backfill_backup/20260725_201131/mistral-7b/Judge-Prometheus-8x7b-v2.0/index.html
 /backfill_backup/20260725_201131/mistral-7b/Judge-Prometheus-8x7b-v2.0/lufa_out_data.csv
+
+# Human validation working files (Ch4 §4.8.3 study). The protocol and the raw
+# annotator sheets stay local: the sheets contain unadjudicated per-person
+# judgments, and sample_key.csv would break the blinding if circulated.
+/thesis/HUMAN_VALIDATION_PROTOCOL.md
+/thesis/HUMAN_VALIDATION_PROTOCOL.docx
+/thesis/ANNOTATOR_GUIDE.md
+/thesis/ANNOTATOR_GUIDE.docx
+/tests/human_eval/
+
+# Generated candidate store for the gold-repair tool (12 MB, rebuild with
+# python src/export_chunk_store.py)
+/reports/chunk_store.json
