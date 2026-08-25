@@ -67,7 +67,7 @@ def generate_agentic_answer(engine,
 
     # from language_detector import detect_full_language
     from translator import needs_translation, translate_to_english, translate_to_target, LANGUAGE_NAMES
-    from query_rewriter import rewrite_query
+    from query_rewriter import rewrite_query, build_headers
     from reflector import reflect
 
     # from language_detector import detect_full_language
@@ -95,12 +95,14 @@ def generate_agentic_answer(engine,
     import time as _time
     from system_metrics import ResourceSampler
 
-    current_query = processing_query
     rewritten_query = processing_query
     nodes = []
     answer = ""
     is_grounded = False
     real_attempt = 0;
+    # Carried into the NEXT attempt's rewrite. Empty on attempt 1, so attempt 1 never rewrites.
+    prev_headers = []
+    prev_answer = ""
     # Ch4 §4.6.4 timing: first-pass retrieval latency + TTFT, and end-to-end.
     first_retrieval_s = ""
     first_ttft_s = ""
@@ -113,17 +115,29 @@ def generate_agentic_answer(engine,
         print(f"[AnswerGenerator] Attempt {attempt}/{max_retries}")
 
         if attempt > 1:
-            rewritten_query = rewrite_query(current_query, pipeline_lang, engine.llm)
+            # Rewrite from `processing_query`, the original question, never from the previous
+            # rewrite: feeding the rewrite back made attempt 3 a rewrite of a rewrite and
+            # drifted further from what was asked on every pass. The rewriter is given the
+            # provision titles the previous pass actually found (headers only, never the noisy
+            # chunk bodies) plus the answer the reflector rejected.
+            rewritten_query = rewrite_query(
+                processing_query, pipeline_lang, engine.llm,
+                headers=prev_headers, prev_answer=prev_answer, attempt=attempt,
+            )
             print(f"[AnswerGenerator] Rewritten: {rewritten_query}")
 
-        # First pass reuses the cached top-K from lufa_out (no re-retrieval).
-        # Retries (attempt > 1) regenerate the top-K by re-retrieving with a wider k.
+        # First pass reuses the cached top-K from lufa_out (no re-retrieval). Since attempt 1
+        # performs no rewrite, that cached retrieval is the naive pipeline's retrieval, which
+        # is what makes the agentic first pass identical to the naive arm by construction.
         if cached_nodes and attempt == 1:
             nodes = cached_nodes
             print(
                 f"[AnswerGenerator] Reusing {len(nodes)} cached top-K chunks from lufa_out (first pass, no re-retrieval).")
         else:
-            top_k = engine.similarity_top_k + (attempt - 1)
+            # Fixed top_k on every attempt. Widening it by (attempt-1) admitted progressively
+            # weaker chunks, giving a retry a second way to end up worse than its own first
+            # pass and confounding the comparison against the naive arm.
+            top_k = engine.similarity_top_k
             nodes = engine._retrieve_nodes(rewritten_query, top_k=top_k)
             if attempt == 1:
                 first_retrieval_s = getattr(engine, "_last_retrieval_seconds", "")
@@ -132,8 +146,8 @@ def generate_agentic_answer(engine,
         answer = engine._generate_from_nodes(processing_query, nodes, pipeline_lang)
         if attempt == 1:
             first_ttft_s = getattr(engine, "_last_ttft_seconds", "")
-        # Context budget chosen for the LAST generation call — on a retry this is the
-        # widest one (top_k grows to 7 chunks), which is the figure worth recording.
+        # Context budget chosen for the LAST generation call. top_k is now fixed at 5 on every
+        # attempt, so this no longer grows with retries.
         ctx_used = getattr(engine.llm, "_last_context_window", "")
         ptok_used = getattr(engine.llm, "_last_prompt_tokens", "")
         otok_pred = getattr(engine.llm, "_last_predicted_output_tokens", "")
@@ -151,7 +165,10 @@ def generate_agentic_answer(engine,
             if is_grounded:
                 break
 
-            current_query = rewritten_query
+            # Rejected. Hand the next rewrite what was actually found and what was wrongly
+            # said, so it can target a real provision instead of inventing one.
+            prev_headers = build_headers(nodes)
+            prev_answer = answer
         else:
             is_grounded = False
             real_attempt = attempt
