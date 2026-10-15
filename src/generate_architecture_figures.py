@@ -7,6 +7,11 @@ diagram tooling is required (graphviz and mermaid-cli are not installed here), s
 diagrams are laid out with matplotlib primitives and exported in the same style as the
 Chapter 5 result figures.
 
+SUPERSEDED by generate_architecture_figures_split.py, which produces the eight figures the
+chapter now uses. These two are kept for reference and write into thesis/figures/superseded/
+so they cannot overwrite a current figure: after "Query process flow diagram" moved to Sec
+3.2.3 the name fig3_2_query_flow belongs to a different diagram.
+
   fig3_1_architecture.*   layered system architecture: ingestion -> vector store ->
                           hybrid retrieval -> generation / agentic control -> evaluation,
                           plus the cross-cutting instrumentation strip
@@ -94,9 +99,11 @@ def numbered(ax, x, y, n, color="#222222"):
 
 
 def save(fig, name):
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    # mkdir on the FILE's parent, not on OUT_DIR, so `name` may include a subfolder.
     for ext in ("png", "pdf"):
-        fig.savefig(OUT_DIR / f"{name}.{ext}", bbox_inches="tight", dpi=300)
+        target = OUT_DIR / f"{name}.{ext}"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(target, bbox_inches="tight", dpi=300)
     plt.close(fig)
     print(f"   wrote {OUT_DIR / name}.png / .pdf")
 
@@ -181,7 +188,7 @@ def fig_architecture():
     # rewriter loops back into retrieval with a widened k, routed up the right margin
     route(ax, [(7.62, 4.42), (7.62, 4.90), (8.62, 4.90), (8.62, 5.62), (8.00, 5.62)],
           color=INSTR, ls="--")
-    ax.text(8.72, 5.16, "re-retrieve, k + 1", fontsize=6.9, color=INSTR, style="italic")
+    ax.text(8.72, 5.16, "re-retrieve, same k", fontsize=6.9, color=INSTR, style="italic")
     box(ax, 0.42, 2.50, 6.60, 0.74,
         "Cross-lingual handling.  bridge mode: translate query to English, translate answer back\n"
         "no-translation mode: retrieve with the raw query, answer in the question's own language",
@@ -226,7 +233,7 @@ def fig_architecture():
 
     ax.set_title("Figure 3.1: Architecture of the implemented bilingual agentic RAG system",
                  fontsize=12, fontweight="bold", pad=14)
-    save(fig, "fig3_1_architecture")
+    save(fig, "superseded/fig3_1_architecture_OLD_COMBINED")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -318,7 +325,7 @@ def fig_query_flow():
 
     ax.set_title("Figure 3.2: Query-time processing flow, including the corrective agentic loop",
                  fontsize=12, fontweight="bold", pad=14)
-    save(fig, "fig3_2_query_flow")
+    save(fig, "superseded/fig3_2_query_flow_OLD_COMBINED")
 
 
 def main():

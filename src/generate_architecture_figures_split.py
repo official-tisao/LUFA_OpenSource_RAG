@@ -15,14 +15,18 @@ the label sizes below are the sizes the reader actually sees. Nothing is scaled 
 No figure carries a title: captions belong below the figure in the Word document, not
 baked into the image.
 
+Numbering follows the chapter after "Query process flow diagram" was moved from Sec 3.8 up
+to Sec 3.2.3. That section carries TWO figures, the query path and the instrumentation, so
+both move ahead of the old Figure 3.2 and everything from 3.2 through 3.6 shifts by two.
+
   fig3_1_overview          five subsystems end to end, no internals        -> Sec 3.2.2
-  fig3_2_ingestion         PDF to indexed clause chunk (Subsystems 1, 2)   -> Sec 3.3.2
-  fig3_3_chunk_metadata    the metadata record carried by every chunk      -> Sec 3.3.3
-  fig3_4_hybrid_retrieval  dense + sparse + recency + RRF (Subsystem 3)    -> Sec 3.4.3
-  fig3_5_agentic_loop      generate, reflect, rewrite, re-retrieve (Sub 4) -> Sec 3.5.3
-  fig3_6_crosslingual      the two cross-lingual handling modes            -> Sec 3.5.5
-  fig3_7_query_flow        the query-time path as a numbered flowchart     -> Sec 3.6.3
-  fig3_8_instrumentation   telemetry and the offline harness (Subsystem 5) -> Sec 3.7.5
+  fig3_2_query_flow        the query-time path as a numbered flowchart     -> Sec 3.2.3
+  fig3_3_instrumentation   telemetry and the offline harness (Subsystem 5) -> Sec 3.2.3
+  fig3_4_ingestion         PDF to indexed clause chunk (Subsystems 1, 2)   -> Sec 3.3.2
+  fig3_5_chunk_metadata    the metadata record carried by every chunk      -> Sec 3.3.3
+  fig3_6_hybrid_retrieval  dense + sparse + recency + RRF (Subsystem 3)    -> Sec 3.4.3
+  fig3_7_agentic_loop      generate, reflect, rewrite, re-retrieve (Sub 4) -> Sec 3.5.3
+  fig3_8_crosslingual      the two cross-lingual handling modes            -> Sec 3.6.2
 
 Outputs PNG (300 dpi) + PDF (vector) into thesis/figures/.
 Run:  python src/generate_architecture_figures_split.py
@@ -126,34 +130,85 @@ def fig_ingestion():
         arrow(ax, (x + bw / 2, top), (x + bw / 2, bot))
     edge(ax, x + bw + 0.10, 1.84, "4,591 clause\nchunks", ha="left")
     edge(ax, x + bw + 0.10, 0.54, "768-dim\nvectors", ha="left")
-    save(fig, "fig3_2_ingestion")
+    save(fig, "fig3_4_ingestion")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  3.3  the per-chunk metadata record
 # ─────────────────────────────────────────────────────────────────────────────
 def fig_chunk_metadata():
-    fig, ax = blank(W, 2.7)
-    box(ax, 0.15, 1.60, 2.9, 0.85,
-        "Clause text\n(the embedded payload)", INGEST, fontsize=FS)
-    embedded = ["article_number", "clause_id", "section_title", "language"]
-    excluded = ["page_no", "end_year", "recency_weight",
-                "token_count", "chunk_index", "doc_source"]
-    box(ax, 3.35, 1.60, 3.0, 0.85,
-        "Embedded metadata\n" + ",  ".join(embedded[:2]) + "\n" + ",  ".join(embedded[2:]),
+    """
+    Redrawn after the supervisor's review of Figure 3.3, which asked whether the two halves
+    were connected, noted that no arrow ran from the upper boxes to the lower ones, and asked
+    what "retained but excluded from the vector" meant.
+
+    The previous version placed four boxes in a 2x2 grid with one arrow along the top row and
+    one along the bottom row pointing the opposite way. Nothing represented the record itself,
+    so the two rows read as two unrelated layers, and the reader was invited to look for a
+    cycle that does not exist.
+
+    This version makes the single record the origin and lets both paths descend from it, so
+    the structure states the actual claim: ONE record, TEN fields, all stored, split only by
+    whether a field is allowed to reach the encoder. Every arrow now points down.
+    """
+    fig, ax = blank(W, 4.15)
+
+    # column geometry: two branches under one record
+    lx, rx, cw = 0.20, 3.35, 2.95
+    lc, rc = lx + cw / 2, rx + cw / 2          # branch centre lines
+    rec_x, rec_w = 0.85, 4.80
+    rec_c = rec_x + rec_w / 2
+
+    # ── the record: the thing the whole figure is about ──────────────────────
+    rec_y, rec_h = 3.46, 0.52
+    box(ax, rec_x, rec_y, rec_w, rec_h,
+        "Metadata record carried by every chunk  (10 fields)\n"
+        "all of it written to ChromaDB, all of it returned at query time",
         STORE, fontsize=FSS)
-    box(ax, 3.35, 0.32, 3.0, 1.00,
-        "Retained but excluded from the vector\n"
-        + ",  ".join(excluded[:2]) + "\n"
-        + ",  ".join(excluded[2:4]) + "\n"
-        + ",  ".join(excluded[4:]),
+
+    # ── row 2: where each field goes ─────────────────────────────────────────
+    f2_y, f2_h = 2.16, 1.02
+    box(ax, lx, f2_y, cw, f2_h,
+        "ENTERS THE EMBEDDING\n\n"
+        "clause text\n"
+        "article_number,  clause_id\n"
+        "section_title,  language",
+        INGEST, fontsize=FSS)
+    box(ax, rx, f2_y, cw, f2_h,
+        "STORED, NEVER EMBEDDED\n\n"
+        "page_no,  end_year\n"
+        "recency_weight,  token_count\n"
+        "chunk_index,  doc_source",
         EVAL, fontsize=FSS)
-    box(ax, 0.15, 0.32, 2.9, 1.00,
-        "Used for citation rendering,\nrecency tie-breaking and\nper-query telemetry,\n"
-        "never for similarity", GENERATE, fontsize=FSS)
-    arrow(ax, (3.05, 2.02), (3.35, 2.02))
-    arrow(ax, (3.35, 0.82), (3.05, 0.82))
-    save(fig, "fig3_3_chunk_metadata")
+
+    # ── row 3: what that means downstream ────────────────────────────────────
+    f3_y, f3_h = 0.30, 1.22
+    box(ax, lx, f3_y, cw, f3_h,
+        "Encoded into one\n768-dimension vector\n\n"
+        "This is the only text\nsimilarity search compares",
+        RETRIEVE, fontsize=FSS)
+    box(ax, rx, f3_y, cw, f3_h,
+        "Read only AFTER retrieval\n\n"
+        "citation rendering, recency\ntie-breaking, per-query telemetry\n\n"
+        "cannot influence the ranking",
+        INSTR, fontsize=FSS)
+
+    # ── the split: one record, two destinations. Both arrows descend. ────────
+    bus_y = 3.30                                # horizontal bus below the record
+    arrow(ax, (rec_c, rec_y), (rec_c, bus_y + 0.02))
+    ax.plot([lc, rc], [bus_y, bus_y], color="#333333", linewidth=1.2, zorder=2)
+    arrow(ax, (lc, bus_y), (lc, f2_y + f2_h))
+    arrow(ax, (rc, bus_y), (rc, f2_y + f2_h))
+
+    # ── each destination to its consequence ──────────────────────────────────
+    arrow(ax, (lc, f2_y), (lc, f3_y + f3_h))
+    arrow(ax, (rc, f2_y), (rc, f3_y + f3_h))
+
+    mid = (f2_y + f3_y + f3_h) / 2
+    edge(ax, lc - 0.16, mid, "concatenated,\nthen encoded", ha="right")
+    edge(ax, rc + 0.16, mid, "withheld from\nthe encoded string", ha="left")
+
+    save(fig, "fig3_5_chunk_metadata")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -181,7 +236,7 @@ def fig_hybrid_retrieval():
     route(ax, [(1.52, 1.10), (1.52, 0.71), (1.05, 0.71)])
     route(ax, [(4.75, 1.86), (4.75, 0.71), (5.05, 0.71)])
     arrow(ax, (3.05, 0.50), (3.05, 0.38))
-    save(fig, "fig3_4_hybrid_retrieval")
+    save(fig, "fig3_6_hybrid_retrieval")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -198,28 +253,52 @@ def fig_agentic_loop():
             "Reflector:\nis every claim\nsupported by the\nretrieved context?", GENERATE,
             fontsize=FSS)
     box(ax, 3.55, 0.10, 2.2, 0.46, "Answer + citations", STORE, fontsize=FSS)
-    box(ax, 0.30, 0.42, 2.5, 0.52,
-        "Query rewriter\nthen re-retrieve at k + 1", INSTR, fontsize=FSS)
+    # The rewriter box previously read "then re-retrieve at k + 1". k no longer grows with the
+    # attempt: widening it admitted progressively weaker chunks, which gave a retry a second
+    # way to end up worse than its own first pass and confounded the comparison against the
+    # single-pass configuration. The rewriter is also no longer blind; from attempt 2 it is
+    # given the answer the reflector rejected and the titles of the provisions that were
+    # actually retrieved, so it can target a real provision instead of inventing one.
+    box(ax, 0.30, 0.32, 2.85, 0.72,
+        "Query rewriter, given the rejected\nanswer and the retrieved clause titles\n"
+        "re-retrieve at the same k",
+        INSTR, fontsize=FSS)
 
     arrow(ax, (1.55, 2.80), (1.55, 2.57))
     arrow(ax, (1.55, 2.05), (1.55, 1.82))
     arrow(ax, (2.80, 1.57), (3.40, 1.57))
     route(ax, [(4.65, 0.92), (4.65, 0.56)])
     edge(ax, 4.95, 0.74, "grounded", color="#1B7F4B", ha="left")
-    route(ax, [(3.40, 1.57), (3.10, 1.57), (3.10, 0.68), (2.80, 0.68)],
+    # Leave the diamond on its lower-left EDGE, not its left vertex: the incoming arrow from
+    # the LLM already terminates at that vertex, and two connectors meeting at one point read
+    # as a single line.
+    route(ax, [(4.02, 1.245), (4.02, 0.68), (3.15, 0.68)], color=INSTR, ls="--")
+    edge(ax, 4.10, 0.95, "ungrounded", color=INSTR, ha="left")
+    # The retry re-enters at RETRIEVAL, not at prompt assembly: a rewritten query is only
+    # useful if it is used to search again.
+    route(ax, [(0.55, 1.04), (0.12, 1.04), (0.12, 3.02), (0.30, 3.02)],
           color=INSTR, ls="--")
-    edge(ax, 3.15, 1.05, "ungrounded", color=INSTR, ha="left")
-    route(ax, [(0.55, 0.94), (0.12, 0.94), (0.12, 2.31), (0.30, 2.31)],
-          color=INSTR, ls="--")
-    ax.text(0.02, 1.62, "retry, max 3 attempts", ha="center", va="center",
+    ax.text(0.02, 2.03, "retry, max 3 attempts", ha="center", va="center",
             fontsize=FSE, color=INSTR, style="italic", rotation=90)
-    save(fig, "fig3_5_agentic_loop")
+    save(fig, "fig3_7_agentic_loop")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  3.6  the two cross-lingual handling modes
 # ─────────────────────────────────────────────────────────────────────────────
 def fig_crosslingual():
+    """
+    The lower-right box used to read "German evaluation set runs without the bridge (see
+    Chapter 4)". Both halves of that were wrong for a design chapter: it named a specific
+    evaluation set, which is an experimental choice belonging to a later chapter, and it
+    forwarded the reader to a chapter that has not been read yet. The supervisor's review
+    asked for both to go.
+
+    What the box should carry is the same thing its left-hand twin carries: the consequence
+    of the branch above it. So the two lower boxes are now parallel statements of where
+    retrieval and generation actually happen in each mode, which is a Chapter 3 fact and needs
+    no reference to anything outside it.
+    """
     fig, ax = blank(W, 2.8)
     box(ax, 1.85, 2.30, 2.8, 0.40, "Query language detected", RETRIEVE, fontsize=FS)
 
@@ -232,12 +311,13 @@ def fig_crosslingual():
     box(ax, 0.10, 0.52, 3.0, 0.56,
         "Retrieval crosses languages\nin the shared embedding space", RETRIEVE, fontsize=FSS)
     box(ax, 3.40, 0.52, 3.0, 0.56,
-        "German evaluation set runs\nwithout the bridge (see Chapter 4)", INSTR, fontsize=FSS)
+        "Retrieval and generation run in\nEnglish; the answer is translated back",
+        XLING, fontsize=FSS)
     arrow(ax, (3.25, 2.30), (1.60, 1.97))
     arrow(ax, (3.25, 2.30), (4.90, 1.97))
     arrow(ax, (1.60, 1.35), (1.60, 1.08))
     arrow(ax, (4.90, 1.35), (4.90, 1.08))
-    save(fig, "fig3_6_crosslingual")
+    save(fig, "fig3_8_crosslingual")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -269,12 +349,13 @@ def fig_query_flow():
     route(ax, [(x + bw, ys[6] + bh / 2), (6.30, ys[6] + bh / 2),
                (6.30, ys[3] + bh / 2), (x + bw, ys[3] + bh / 2)],
           color=INSTR, ls="--")
-    ax.text(6.42, (ys[6] + ys[3]) / 2 + bh / 2, "UNGROUNDED: retry at k + 1",
+    # k is fixed at 5 on every attempt; only the query changes between passes.
+    ax.text(6.42, (ys[6] + ys[3]) / 2 + bh / 2, "UNGROUNDED: retry, same k",
             ha="center", va="center", fontsize=FSE, color=INSTR,
             style="italic", rotation=90)
     edge(ax, x - 0.42, ys[7] + bh + 0.09, "GROUNDED, or\nattempt 3 reached",
          color="#1B7F4B", ha="right")
-    save(fig, "fig3_7_query_flow")
+    save(fig, "fig3_2_query_flow")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -305,19 +386,20 @@ def fig_instrumentation():
     for i in range(3):
         arrow(ax, (4.98, 2.32 - i * 0.72), (4.98, 2.32 - (i + 1) * 0.72 + 0.58))
     arrow(ax, (3.20, 2.61), (3.55, 2.61))
-    save(fig, "fig3_8_instrumentation")
+    save(fig, "fig3_3_instrumentation")
 
 
 def main():
     print("[arch-split] generating the eight Chapter 3 diagrams...")
-    fig_overview()
-    fig_ingestion()
-    fig_chunk_metadata()
-    fig_hybrid_retrieval()
-    fig_agentic_loop()
-    fig_crosslingual()
-    fig_query_flow()
-    fig_instrumentation()
+    # generated in the order the figures now appear in the chapter
+    fig_overview()          # 3.1
+    fig_query_flow()        # 3.2
+    fig_instrumentation()   # 3.3
+    fig_ingestion()         # 3.4
+    fig_chunk_metadata()    # 3.5
+    fig_hybrid_retrieval()  # 3.6
+    fig_agentic_loop()      # 3.7
+    fig_crosslingual()      # 3.8
     print(f"[arch-split] done -> {OUT_DIR}/")
 
 
