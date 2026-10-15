@@ -295,3 +295,4 @@ config.py
 # Generated candidate store for the gold-repair tool (12 MB, rebuild with
 # python src/export_chunk_store.py)
 /reports/chunk_store.json
+.claude/
