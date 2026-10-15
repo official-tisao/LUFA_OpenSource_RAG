@@ -463,13 +463,23 @@ if __name__ == "__main__":
                 # reached), so plain resume would skip everything while --force would
                 # restart all 426. A row counts as done only when THIS run measured it —
                 # i.e. it has generation telemetry (ttft_s) and a usable answer.
-                tel = (existing_df["ttft_s"].astype(str).str.strip()
-                       if "ttft_s" in existing_df.columns else pd.Series("", index=existing_df.index))
+                #
+                # NA has to collapse to "" BEFORE astype(str). Under the pyarrow string
+                # backend astype(str) PRESERVES NA rather than producing the literal "nan"
+                # that object dtype gives, so the old `isin(["nan","none"])` guard matched
+                # nothing and every blank cell counted as measured. That made --resume_regen
+                # skip the entire file, silently, on any pandas build using Arrow strings.
+                def _blankish(col):
+                    if col not in existing_df.columns:
+                        return pd.Series("", index=existing_df.index)
+                    s = existing_df[col]
+                    return s.where(s.notna(), "").astype(str).str.strip()
+
+                tel = _blankish("ttft_s")
+                ans = _blankish("answer")
                 measured = existing_df[
-                    tel.ne("") & ~tel.str.lower().isin(["nan", "none"])
-                    & existing_df["answer"].notna()
-                    & existing_df["answer"].astype(str).str.strip().ne("")
-                    & existing_df["answer"].astype(str).str.strip().ne("ERROR")
+                    tel.ne("") & ~tel.str.lower().isin(["nan", "none", "nat"])
+                    & ans.ne("") & ans.ne("ERROR")
                 ]
                 completed_ids = set(measured["question_id"].dropna().astype(str).tolist())
                 print(f"[AnswerGenerator] --resume_regen: {len(completed_ids)} rows already "
