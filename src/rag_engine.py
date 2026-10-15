@@ -9,7 +9,7 @@ from llama_index.core.schema import NodeWithScore
 from typing import List, Optional
 from language_detector import detect_language
 from query_handler import QueryHandler
-from query_rewriter import rewrite_query
+from query_rewriter import rewrite_query, build_headers
 from reflector import reflect
 from translator import (
     detect_full_language,
@@ -45,7 +45,7 @@ try:
     from src.translator import get_system_prompt as _get_system_prompt
 except ImportError:
     # Fallback to basic implementations if imports fail
-    def _rewrite_query(query, lang, llm):
+    def _rewrite_query(query, lang, llm, headers=None, prev_answer=None, attempt=1):
         return query
 
     def _reflect(answer, chunks, llm):
@@ -354,7 +354,6 @@ Answer:"""
 
         print(f"[AgenticRAG] Pipeline language: {pipeline_lang}")
 
-        current_query    = processing_query
         rewritten_query  = processing_query
         nodes            = []
         answer           = ""
@@ -362,15 +361,29 @@ Answer:"""
         # Ch4 §4.6.4 timing: record the FIRST-pass retrieval latency + TTFT only.
         first_retrieval_s = ""
         first_ttft_s      = ""
+        # Carried into the NEXT attempt's rewrite. Empty on attempt 1, which is why attempt 1
+        # performs no rewrite at all.
+        prev_headers = []
+        prev_answer  = ""
 
         for attempt in range(1, max_retries + 1):
             print(f"[AgenticRAG] Attempt {attempt}/{max_retries}")
-            rewritten_query = rewrite_query(current_query, pipeline_lang, self.llm)
+            # Always rewrite from `processing_query`, the original question. Feeding the
+            # previous rewrite back in made attempt 3 a rewrite of a rewrite of a rewrite,
+            # drifting further from what was actually asked on every pass.
+            rewritten_query = rewrite_query(
+                processing_query, pipeline_lang, self.llm,
+                headers=prev_headers, prev_answer=prev_answer, attempt=attempt,
+            )
+            if attempt == 1:
+                print("[AgenticRAG] Attempt 1: no rewrite (identical to the naive pipeline)")
+            else:
+                print(f"[AgenticRAG] Rewritten: {rewritten_query}")
 
-
-            print(f"[AgenticRAG] Rewritten: {rewritten_query}")
-
-            top_k = self.similarity_top_k + (attempt-1)
+            # Fixed top_k on every attempt. Widening it by (attempt-1) admitted progressively
+            # weaker chunks, which was a second way for a retry to end up worse than its own
+            # first pass and confounded the comparison against the naive arm.
+            top_k = self.similarity_top_k
             nodes = self._retrieve_nodes(rewritten_query, top_k=top_k)
             if attempt == 1:
                 first_retrieval_s = getattr(self, "_last_retrieval_seconds", "")
@@ -387,7 +400,11 @@ Answer:"""
             if is_grounded:
                 break
 
-            current_query = rewritten_query
+            # The reflector rejected this answer. Hand the next rewrite the provision titles
+            # that were actually found (headers only, never the noisy bodies) plus the failed
+            # answer, so it can target a real provision instead of inventing one.
+            prev_headers = build_headers(nodes)
+            prev_answer  = answer
 
         final_answer = answer
         if translation_applied:

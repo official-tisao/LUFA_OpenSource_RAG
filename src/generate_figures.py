@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-generate_figures.py: publication-quality result figures for the thesis, computed directly
-from reports/general_evaluation_results.csv and reports/general_lufa_out_data.csv (produced
-by generate_report.py).
+generate_figures.py: publication-quality result figures for the thesis. Most figures are
+computed from reports/general_evaluation_results.csv and reports/general_lufa_out_data.csv
+(produced by generate_report.py). Figures 5.1, 5.2, and 5.3 use the frozen final thesis
+statistics dump, which matches the values already reported in Chapter 5.
 
 Outputs PNG (300 dpi) + PDF (vector) into thesis/figures/ (override with --out):
   fig5_1_answer_quality        judge metrics per system
@@ -26,11 +27,15 @@ Two data-integrity rules are enforced here, not left to the caller:
    can distinguish the two systems.
 
 Run:  python src/generate_figures.py
+      python src/generate_figures.py --only-retrieval
+      python src/generate_figures.py --only-answer-quality
+      python src/generate_figures.py --only-agentic-naive
       python src/generate_figures.py --out thesis/staging/figures
 """
 
 import argparse
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -99,6 +104,22 @@ NUMERIC = JUDGE + [
 ]
 
 OUT_DIR = Path("thesis/figures")
+THESIS_STATS_TXT = Path("logs/thesis_stats_v3_final.txt")
+
+# Figure 5.2 follows the final Chapter 5 statistics snapshot. The live report CSVs were
+# subsequently regenerated and no longer reproduce the numbers printed in the thesis PDF.
+# Keep display order and source labels explicit so the chart stays aligned with Table 5.2.
+RETRIEVAL_SYSTEMS = [
+    ("A: Llama 3.2 3B", "A: Llama 3.2 3B (agentic)"),
+    ("B: Llama 3.1 8B", "B: Llama 3.1 8B (agentic)"),
+    ("C: Mistral 7B", "C: Mistral 7B (agentic)"),
+    ("D: GPT-5.4 Mini", "D: GPT-5.4-mini (cloud)"),
+    ("E: Claude Haiku 4.5", "E: Claude Haiku 4.5 (cloud)"),
+    ("F: Gemini 3.1 Flash-Lite", "F: Gemini 3.1 FL (cloud)"),
+    ("A-N: Llama 3.2 3B", "Naive: Llama 3.2 3B"),
+    ("B-N: Llama 3.1 8B", "Naive: Llama 3.1 8B"),
+    ("C-N: Mistral 7B", "Naive: Mistral 7B"),
+]
 
 
 def _load():
@@ -140,11 +161,18 @@ def _strip_titles(fig):
     it is a panel label and must survive; the suptitle is the figure title and goes. On a
     single-axes figure the axes title IS the figure title, so it goes too. Stripping
     indiscriminately made the three panels of fig5_3 unidentifiable.
+
+    The exception is a figure that sets _lufa_keep_axes_title. fig5_3a to fig5_3c are
+    single-axes figures whose title still names the generator rather than describing the
+    figure, and they are near-identical in every other respect: same metrics, same colours,
+    same shared y-axis. Strip that title and three interchangeable charts go into the
+    document with nothing but a Word caption to tell them apart, which is one misplaced
+    caption away from mislabelling a result.
     """
     if getattr(fig, "_suptitle", None) is not None:
         fig._suptitle.set_visible(False)
     axes = fig.get_axes()
-    if len(axes) == 1:
+    if len(axes) == 1 and not getattr(fig, "_lufa_keep_axes_title", False):
         axes[0].set_title("")
 
 
@@ -191,53 +219,174 @@ def _grouped_bars(labels, series, series_names, title, ylabel, colors=None,
 
 # ----------------------------------------------------------------------------------
 def fig_answer_quality(ev):
-    labels = [l for l, _ in SYSTEMS]
-    models = [m for _, m in SYSTEMS]
-    n = [int(ev[(ev._key == canon(m))]["faithfulness"].notna().sum()) for m in models]
-    series = [[_means(ev, m, [c])[0] for m in models] for c in JUDGE]
-    counts = ", ".join(f"{lab.split(':')[0]}={c}" for lab, c in zip(labels, n))
-    fig = _grouped_bars(labels, series,
-                        ["Answer relevance", "Faithfulness", "Context precision"],
-                        "Answer quality by system: judge is Prometheus-2 8x7B",
-                        "Mean score", colors=ACCENT,
-                        note=f"Judged rows per system: {counts}. "
-                             "All systems, local and cloud, were scored by the same judge model.")
+    del ev  # Keep the existing call signature; this thesis figure uses frozen reported values.
+    fig_answer_quality_snapshot()
+
+
+ANSWER_QUALITY_SYSTEMS = [
+    ("A: Llama 3.2 3B", "A: Llama 3.2 3B (agentic)"),
+    ("B: Llama 3.1 8B", "B: Llama 3.1 8B (agentic)"),
+    ("C: Mistral 7B", "C: Mistral 7B (agentic)"),
+    ("D: GPT-5.4-mini", "D: GPT-5.4-mini (cloud)"),
+    ("E: Claude Haiku 4.5", "E: Claude Haiku 4.5 (cloud)"),
+    ("F: Gemini 3.1 FL", "F: Gemini 3.1 FL (cloud)"),
+    ("A-N: Llama 3.2 3B", "Naive: Llama 3.2 3B"),
+    ("B-N: Llama 3.1 8B", "Naive: Llama 3.1 8B"),
+    ("C-N: Mistral 7B", "Naive: Mistral 7B"),
+]
+
+
+def _thesis_answer_quality_values():
+    """Read the nine Chapter 5 judge-metric rows from the frozen final statistics."""
+    text = THESIS_STATS_TXT.read_text(encoding="utf-8")
+    marker = "### Judge metrics (Prometheus-2 8x7B, 3 separate prompts)"
+    if marker not in text:
+        raise ValueError(f"Judge metrics section missing from {THESIS_STATS_TXT}")
+    section = text.split(marker, 1)[1].split("\n### ", 1)[0]
+    lines = [line.strip() for line in section.splitlines() if line.strip()]
+
+    rows = []
+    for display_label, source_label in ANSWER_QUALITY_SYSTEMS:
+        row_pattern = re.compile(rf"^{re.escape(source_label)}\s+\d+\s+")
+        matches = [line for line in lines if row_pattern.match(line)]
+        if len(matches) != 1:
+            raise ValueError(
+                f"Expected one judge-metric row for {source_label!r} in {THESIS_STATS_TXT}; "
+                f"found {len(matches)}"
+            )
+        fields = matches[0][len(source_label):].split()
+        if len(fields) < 4:
+            raise ValueError(f"Incomplete judge-metric row for {source_label!r}")
+        count = int(fields[0])
+        values = [float(value) for value in fields[1:4]]
+        rows.append((display_label, count, values))
+    return rows
+
+
+def fig_answer_quality_snapshot():
+    rows = _thesis_answer_quality_values()
+    labels = [row[0] for row in rows]
+    metric_names = ["Answer relevance", "Faithfulness", "Context precision"]
+    y = np.arange(len(rows))
+    bar_h = 0.22
+    fig, ax = plt.subplots(figsize=(9.5, 5.8))
+    for i, metric_name in enumerate(metric_names):
+        values = [row[2][i] for row in rows]
+        positions = y + (i - 1) * bar_h
+        bars = ax.barh(positions, values, height=bar_h * 0.88,
+                       label=metric_name, color=ACCENT[i])
+        for bar, value in zip(bars, values):
+            ax.text(value + 0.012, bar.get_y() + bar.get_height() / 2,
+                    f"{value:.2f}", va="center", fontsize=7)
+
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 1.08)
+    ax.set_xlabel("Mean score")
+    fig.suptitle("Answer quality by system: judge is Prometheus-2 8x7B", y=0.98)
+    ax.legend(frameon=False, ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.025),
+              fontsize=8)
+    fig.text(0.5, 0.01,
+             "N denotes the naive single-pass baseline. Each system was judged on 426 questions.",
+             ha="center", fontsize=8, style="italic", color="#444444")
+    fig.subplots_adjust(left=0.25, right=0.98, top=0.80, bottom=0.10)
     _save(fig, "fig5_1_answer_quality")
 
 
-def fig_retrieval(ev):
-    labels = [l for l, _ in SYSTEMS]
-    models = [m for _, m in SYSTEMS]
-    mrr = [_means(ev, m, ["mrr"])[0] for m in models]
-    ndcg = [_means(ev, m, ["ndcg_at_k"])[0] for m in models]
-    r5 = [_means(ev, m, ["recall_5"])[0] for m in models]
-    fig = _grouped_bars(labels, [mrr, ndcg, r5], ["MRR", "nDCG@5", "Recall@5"],
-                        "Retrieval performance by system", "Mean score",
-                        colors=ACCENT, ymax=0.45,
-                        note="Systems D-F share one retrieval pass: the cloud arms reuse the same local "
-                             "hybrid retriever, so their retrieval scores are identical by construction.")
+def _thesis_retrieval_values():
+    """Read the nine Chapter 5 retrieval rows from the frozen final statistics dump."""
+    if not THESIS_STATS_TXT.exists():
+        raise FileNotFoundError(f"Final thesis statistics not found: {THESIS_STATS_TXT}")
+
+    text = THESIS_STATS_TXT.read_text(encoding="utf-8")
+    marker = "### Retrieval metrics"
+    if marker not in text:
+        raise ValueError(f"Retrieval metrics section missing from {THESIS_STATS_TXT}")
+    section = text.split(marker, 1)[1].split("\n### ", 1)[0]
+    lines = [line.strip() for line in section.splitlines() if line.strip()]
+
+    values = []
+    for display_label, source_label in RETRIEVAL_SYSTEMS:
+        matches = [line for line in lines if line.startswith(source_label)]
+        if len(matches) != 1:
+            raise ValueError(
+                f"Expected one retrieval row for {source_label!r} in {THESIS_STATS_TXT}; "
+                f"found {len(matches)}"
+            )
+        fields = matches[0][len(source_label):].split()
+        if len(fields) < 9:
+            raise ValueError(f"Incomplete retrieval row for {source_label!r}: {matches[0]}")
+        n = int(fields[0])
+        mrr, ndcg, recall5 = float(fields[1]), float(fields[2]), float(fields[5])
+        if n != 426:
+            raise ValueError(f"Expected 426 queries for {source_label!r}, found {n}")
+        if not all(np.isfinite(v) and 0 <= v <= 1 for v in (mrr, ndcg, recall5)):
+            raise ValueError(f"Invalid retrieval score for {source_label!r}")
+        values.append((display_label, mrr, ndcg, recall5))
+    return values
+
+
+def fig_retrieval():
+    rows = _thesis_retrieval_values()
+    labels = [row[0] for row in rows]
+    series = [
+        [row[1] for row in rows],
+        [row[2] for row in rows],
+        [row[3] for row in rows],
+    ]
+
+    # A horizontal layout keeps all nine system names readable at thesis-page width.
+    y = np.arange(len(labels))
+    bar_h = 0.22
+    fig, ax = plt.subplots(figsize=(8.6, 5.6))
+    for i, (vals, name) in enumerate(zip(series, ["MRR", "nDCG@5", "Recall@5"])):
+        bars = ax.barh(y + (i - 1) * bar_h, vals, height=bar_h * 0.88,
+                       label=name, color=ACCENT[i])
+        for bar, value in zip(bars, vals):
+            ax.text(value + 0.004, bar.get_y() + bar.get_height() / 2,
+                    f"{value:.3f}", ha="left", va="center", fontsize=8)
+
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels, fontsize=9)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 0.43)
+    ax.set_xlabel("Mean score")
+    # Figure 5.2's descriptive title is the Word caption, so the plot itself stays untitled.
+    ax.grid(axis="x", alpha=0.3)
+    ax.grid(axis="y", visible=False)
+    ax.axhline(5.5, color="#777777", linewidth=0.9, linestyle=(0, (3, 2)))
+    ax.legend(frameon=False, ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.01),
+              fontsize=8.5)
+    fig.text(0.5, 0.015,
+             "A-C are agentic; N marks naive single-pass RAG. D-F share one retriever.",
+             ha="center", va="bottom", fontsize=8, style="italic", color="#444444")
+    fig.subplots_adjust(left=0.34, right=0.97, top=0.89, bottom=0.13)
     _save(fig, "fig5_2_retrieval")
 
 
-def fig_agentic_vs_naive(ev, lu):
-    """RQ1 on the retry subset. See rule 2 in the module docstring."""
-    pairs = [("A: Llama 3.2 3B", "llama3.2:3b", "naive/llama3.2:3b"),
-             ("B: Llama 3.1 8B", "llama3.1:8b", "naive/llama3.1:8b"),
-             ("C: Mistral 7B",   "mistral:7b",  "naive/mistral:7b")]
-    # Judge metrics are included now that the naive judge pass is complete for all three
-    # generators. Context precision is the one that matters most here: it is the judged view of
-    # the retrieved context, so its agreement with MRR and Recall@5 is corroboration from a model
-    # that never sees a retrieval score.
-    metrics = ["mrr", "recall_5", "token_f1_score", "rougeL", "citation_accuracy_regex",
-               "context_precision", "faithfulness"]
-    mnames = ["MRR", "Recall@5", "Token-F1", "ROUGE-L", "Citation acc.",
-              "Ctx. precision", "Faithfulness"]
+AN_PAIRS = [("A: Llama 3.2 3B", "llama3.2:3b", "naive/llama3.2:3b"),
+            ("B: Llama 3.1 8B", "llama3.1:8b", "naive/llama3.1:8b"),
+            ("C: Mistral 7B",   "mistral:7b",  "naive/mistral:7b")]
+# Judge metrics are included now that the naive judge pass is complete for all three
+# generators. Context precision is the one that matters most here: it is the judged view of
+# the retrieved context, so its agreement with MRR and Recall@5 is corroboration from a model
+# that never sees a retrieval score.
+AN_METRICS = ["mrr", "recall_5", "token_f1_score", "rougeL", "citation_accuracy_regex",
+              "context_precision", "faithfulness"]
+AN_MNAMES = ["MRR", "Recall@5", "Token-F1", "ROUGE-L", "Citation acc.",
+             "Ctx. precision", "Faithfulness"]
+AN_NOTE = ("Restricted to queries with more than one agentic attempt. Queries answered in a single "
+           "attempt are excluded because attempt 1 does not invoke the query rewriter, so the two "
+           "systems are identical there by construction. All metrics shown are complete for all "
+           "three generators, judged by Prometheus-2 8x7B with one prompt per metric.")
 
-    # Only systems with data get a panel. An empty placeholder axis would waste most of the
-    # canvas, and clearing its ticks propagates through sharey and strips the y-axis from the
-    # panels that do have data.
+
+def _agentic_naive_panels(ev, lu):
+    """Resolve the retry subset per generator. Shared by the combined and split figures so
+    the two can never drift apart on which rows they count."""
     panels, pending = [], []
-    for lab, ag, na in pairs:
+    for lab, ag, na in AN_PAIRS:
         AL = lu[lu._key == canon(ag)]
         ids = set(AL.loc[AL["attempts"] > 1, "question_id"])
         A = ev[(ev._key == canon(ag)) & ev.question_id.isin(ids)].set_index("question_id")
@@ -247,6 +396,127 @@ def fig_agentic_vs_naive(ev, lu):
             panels.append((lab, A.loc[both], N.loc[both], len(both)))
         else:
             pending.append(f"{lab} ({len(ids)} retry queries)")
+    return panels, pending
+
+
+def _retry_snapshot_panels():
+    """Load Figure 5.3 values from the frozen thesis statistics, not live report CSVs."""
+    stats_path = Path("logs/thesis_stats_v3_final.txt")
+    text = stats_path.read_text(encoding="utf-8")
+    marker = "RETRY SUBSET (attempts > 1 in the agentic run): the only rows where RQ1 can differ"
+    if marker not in text:
+        raise ValueError(f"Retry-subset section not found in {stats_path}")
+    section = text.split(marker, 1)[1]
+    heading_re = re.compile(
+        r"(?m)^([A-Za-z][^\n]*):\s+(\d+)\s+of\s+\d+ retry rows available on both sides\s*$"
+    )
+    headings = list(heading_re.finditer(section))
+    if len(headings) < len(AN_PAIRS):
+        raise ValueError(f"Expected three retry-subset system headings in {stats_path}")
+
+    panels = []
+    for lab, _, _ in AN_PAIRS:
+        generator = lab.split(": ", 1)[-1]
+        heading = next((m for m in headings if m.group(1) == generator), None)
+        if heading is None:
+            raise ValueError(f"Retry-subset statistics for {generator} not found")
+        next_heading = next((m for m in headings if m.start() > heading.start()), None)
+        block = section[heading.end():next_heading.start() if next_heading else len(section)]
+        values = {}
+        for line in block.splitlines():
+            columns = line.split()
+            if len(columns) >= 3 and columns[0] in AN_METRICS:
+                values[columns[0]] = (float(columns[1]), float(columns[2]))
+        missing = [metric for metric in AN_METRICS if metric not in values]
+        if missing:
+            raise ValueError(f"Missing {', '.join(missing)} for {generator} in {stats_path}")
+
+        n = int(heading.group(2))
+        agentic = {metric: values[metric][0] for metric in AN_METRICS}
+        naive = {metric: values[metric][1] for metric in AN_METRICS}
+        panels.append((lab, pd.DataFrame([agentic]), pd.DataFrame([naive]), n))
+    return panels
+
+
+def _an_shared_ymax(panels):
+    """One ceiling across every generator.
+
+    In the combined figure sharey did this for free. Split apart into three separate images
+    the reader can no longer see them side by side, so a per-figure ceiling would make a 0.20
+    bar in one figure look the same height as a 0.65 bar in another. The axis has to be
+    identical in all three or the split is actively misleading.
+    """
+    vals = [v for _, A, N, _ in panels
+            for c in AN_METRICS
+            for v in (A[c].mean(), N[c].mean()) if v == v]
+    return max(vals) * 1.22 if vals else 1.0
+
+
+def _an_bars(ax, A, N, ymax):
+    x = np.arange(len(AN_METRICS))
+    w = 0.38
+    ag = [A[c].mean() for c in AN_METRICS]
+    na = [N[c].mean() for c in AN_METRICS]
+    ax.bar(x - w / 2, ag, w, label="Agentic (up to 3 passes)", color=LOCAL_C)
+    ax.bar(x + w / 2, na, w, label="Naive (single pass)", color=NAIVE_C)
+    for i, (a, b) in enumerate(zip(ag, na)):
+        if a == a:
+            ax.text(x[i] - w / 2, a + 0.008, f"{a:.2f}", ha="center", fontsize=7)
+        if b == b:
+            ax.text(x[i] + w / 2, b + 0.008, f"{b:.2f}", ha="center", fontsize=7)
+    ax.set_xticks(x)
+    ax.set_xticklabels(AN_MNAMES, rotation=25, ha="right")
+    ax.set_ylim(0, ymax)
+    return ag, na
+
+
+def _draw_agentic_vs_naive_split(panels):
+    """Draw the three thesis panels with one shared y-axis scale."""
+    if not panels:
+        print("   skipped fig5_3a-c: no retry rows available on both sides yet")
+        return
+    ymax = _an_shared_ymax(panels)
+    for letter, (lab, A, N, nb) in zip("abc", panels):
+        fig, ax = plt.subplots(figsize=(6.4, 4.2))
+        _an_bars(ax, A, N, ymax)
+        ax.set_ylabel("Mean score")
+        # The "A: " / "B: " / "C: " prefix identified a panel within the combined figure and
+        # means nothing on a figure standing alone, so only the generator name is kept.
+        generator = lab.split(": ", 1)[-1]
+        ax.set_title(f"{generator}  (n = {nb} retry queries)", fontsize=11, fontweight="bold")
+        # Survives LUFA_FIGURE_TITLES=0: this names the generator, it does not describe the
+        # figure. See _strip_titles.
+        fig._lufa_keep_axes_title = True
+        ax.legend(frameon=False, fontsize=8, loc="upper left")
+        # No in-image note here. The combined figure carries it once; repeating four sentences
+        # under each of three figures is noise, and the caption is the right home for it.
+        _save(fig, f"fig5_3{letter}_agentic_vs_naive")
+
+
+def fig_agentic_vs_naive_split(ev, lu):
+    """The same comparison as fig5_3, one generator per figure.
+
+    Written for the thesis body, where three panels across a portrait page leave the metric
+    labels too small to read. Each figure carries its own legend and y-label because there is
+    no neighbouring panel to borrow them from, and the y-axis is pinned to the same ceiling in
+    all three by _an_shared_ymax. This full-report path remains available for exploratory
+    regeneration; the thesis-only command uses the frozen final statistics snapshot.
+    """
+    panels, _ = _agentic_naive_panels(ev, lu)
+    _draw_agentic_vs_naive_split(panels)
+
+
+def fig_agentic_vs_naive_split_snapshot():
+    _draw_agentic_vs_naive_split(_retry_snapshot_panels())
+
+
+def fig_agentic_vs_naive(ev, lu):
+    """RQ1 on the retry subset. See rule 2 in the module docstring."""
+    metrics, mnames = AN_METRICS, AN_MNAMES
+    # Only systems with data get a panel. An empty placeholder axis would waste most of the
+    # canvas, and clearing its ticks propagates through sharey and strips the y-axis from the
+    # panels that do have data.
+    panels, pending = _agentic_naive_panels(ev, lu)
 
     if not panels:
         print("   skipped fig5_3: no retry rows available on both sides yet")
@@ -279,10 +549,7 @@ def fig_agentic_vs_naive(ev, lu):
     axes[0].legend(frameon=False, fontsize=8, loc="upper left")
     fig.suptitle("RQ1: agentic loop vs naive single pass, on the queries the reflector sent back",
                  fontsize=11)
-    note = ("Restricted to queries with more than one agentic attempt. Queries answered in a single "
-            "attempt are excluded because attempt 1 does not invoke the query rewriter, so the two "
-            "systems are identical there by construction. All metrics shown are complete for all "
-            "three generators, judged by Prometheus-2 8x7B with one prompt per metric.")
+    note = AN_NOTE
     if pending:
         note += " Awaiting naive regeneration: " + "; ".join(pending) + "."
     fig.text(0.5, -0.08, note, ha="center", va="top", fontsize=7.5, style="italic",
@@ -440,17 +707,39 @@ def main():
     global OUT_DIR
     ap = argparse.ArgumentParser(description="Regenerate the thesis result figures.")
     ap.add_argument("--out", default="thesis/figures")
+    ap.add_argument("--only-retrieval", action="store_true",
+                    help="Generate only Figure 5.2 from the final thesis statistics snapshot.")
+    ap.add_argument("--only-answer-quality", action="store_true",
+                    help="Generate only Figure 5.1 for systems A-F and A-N/B-N/C-N.")
+    ap.add_argument("--only-agentic-naive", action="store_true",
+                    help="Generate only Figures 5.3a-c from the final thesis statistics snapshot.")
     args = ap.parse_args()
     OUT_DIR = Path(args.out)
+
+    if args.only_answer_quality:
+        fig_answer_quality_snapshot()
+        print(f"\n[figures] Done. Figure 5.1 (PNG + PDF) in {OUT_DIR}/")
+        return 0
+
+    if args.only_retrieval:
+        fig_retrieval()
+        print(f"\n[figures] Done. Figure 5.2 (PNG + PDF) in {OUT_DIR}/")
+        return 0
+
+    if args.only_agentic_naive:
+        fig_agentic_vs_naive_split_snapshot()
+        print(f"\n[figures] Done. Figures 5.3a-c (PNG + PDF) in {OUT_DIR}/")
+        return 0
 
     if not Path(EVAL_CSV).exists():
         print(f"[figures] {EVAL_CSV} not found. Run: python src/generate_report.py")
         return 1
     ev, lu = _load()
 
-    fig_answer_quality(ev)
-    fig_retrieval(ev)
+    fig_answer_quality_snapshot()
+    fig_retrieval()
     fig_agentic_vs_naive(ev, lu)
+    fig_agentic_vs_naive_split(ev, lu)
     fig_language(ev)
     fig_crosslingual(ev)
     fig_latency(lu)

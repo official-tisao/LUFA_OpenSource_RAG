@@ -1,0 +1,22 @@
+id,lang,cat,dif,q,n,arts,hdr,L,al,starts
+test_de_001,German,Leave,easy,Welche Regelungen gelten für Abwesenheiten im Allgemeinen?,3,5.15/7.20/7.25,ARTICLE 7.20 – ABSENCE - GENERAL,3422,100,True
+test_de_002,German,Benefits,hard,Was sieht der Tarifvertrag in Bezug auf Schwangerschaft\,0,,,2792,100,False
+test_de_004,German,Salary,hard,Welche Bedingungen gelten für Gehaltsstufen bei Zusatzqualifikationen?,6,5.10/5.40/5.50/8.15/8.30/8.35,Article 5.10 – Academic,3141,100,False
+test_de_005,German,Professional Development,medium,Was gilt laut Vereinbarung für die berufliche Weiterbildung?,2,6.40.3/6.45,Article 6.40.3 (d) below.,3283,100,False
+test_de_012,German,Salary,hard,Was sieht der Tarifvertrag bezüglich des Rechts auf Rückruf vor?,1,11.15,Article 11.15 – Arbitration Procedure.,3076,100,False
+test_de_014,German,Promotion,medium,Was sieht der Tarifvertrag bezüglich der Beförderungsverfahren vor\,5,13/15/5.10/5.50/5.65,"Article 15, Renewal and Tenure Evaluation, an application for",3713,80,False
+test_de_018,German,Termination,easy,Welche Regelungen gelten für den Rücktritt/die Kündigung?,0,,,219,100,False
+test_de_019,German,Bargaining Unit,medium,Was gilt laut Vereinbarung für hufac?,0,,,1470,100,False
+test_de_020,German,Bargaining Unit,hard,Was sagt die Vereinbarung über die Tarifeinheit aus?,5,2.30/2.30.1/2.35/5.20.8/5.40.8,Article 5.40.8 (d) of Article 5.40 – Academic Workload) and shall be,3274,100,False
+test_de_022,German,Leave,medium,Wie definiert oder beschreibt die Vereinbarung Abwesenheit im Allgemeinen?,3,5.15/7.20/7.25,ARTICLE 7.20 – ABSENCE - GENERAL,3423,100,True
+test_de_024,German,General Provisions,medium,Was sagt die Vereinbarung über Rechte\,3,4.10/4.20/5,ARTICLE 4.20 - ASSESSMENT OF A MEMBER’S PERFORMANCE,3975,81,False
+test_de_026,German,Benefits,hard,Welche Regelungen gelten für die Anzahl der Bedingungen?,0,,,404,100,False
+test_de_027,German,Leave,hard,Was wird über den Urlaub gesagt?,2,7.10/7.15,ARTICLE 7.10 – RECOGNIZED AND OTHER HOLIDAYS,2638,100,False
+test_de_028,German,Workload,medium,Was sieht der Tarifvertrag bezüglich des akademischen Arbeitspensums vor?,2,5.35/5.40,ARTICLE 5.35 – NEWLY HIRED MEMBERS,3330,100,True
+test_de_029,German,General Provisions,easy,Was wird über das Verbot von Diskriminierung\,3,1.30/3.20/5.15,Article 1.30 – Definitions.,3555,100,False
+test_de_030,German,Salary,hard,Was wird über die Vergütungssätze für befristete Lehrbeauftragte gesagt?,2,4.15/4.55,ARTICLE 4.55 – RATES OF PAY FOR SESSIONAL,1731,100,True
+test_de_031,German,General Provisions,medium,Was wird über gesetzliche Feiertage gesagt?,1,16,ARTICLE 16 – DESIGNATED HOLIDAYS,252,100,True
+test_de_035,German,Appointments,medium,Was wird über Ernennung und Verlängerung gesagt?,2,2.15/5.65,Article 2.15 –,3190,100,False
+test_de_038,German,Governance,hard,Wie definiert oder beschreibt die Vereinbarung die Auswahl von Vorsitzenden/Direktoren?,1,9.15,ARTICLE 9.15 – SELECTION OF CHAIRS/DIRECTORS,3464,100,False
+test_de_044,German,Benefits,medium,Was sagt die Vereinbarung über die Vergütungssätze für befristete Lehrbeauftragte?,1,4.15,"Article
+4.15 – Appointment and Renewal for Sessional",2850,100,False

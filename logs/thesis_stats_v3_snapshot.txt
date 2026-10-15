@@ -1,0 +1,197 @@
+[stats] masked 1 not-yet-judged rows (all three judge cells zero) out of 3854
+====================================================================================================
+THESIS STATISTICS DUMP
+source: reports/general_evaluation_results.csv (3854 rows) + reports/general_lufa_out_data.csv (3854 rows)
+====================================================================================================
+
+### Judge metrics (Prometheus-2 8x7B, 3 separate prompts)
+system                             n  answer_rele  faithfulnes  context_pre
+A: Llama 3.2 3B (agentic)        426       0.8695       0.7836       0.7272
+B: Llama 3.1 8B (agentic)        426       0.9188       0.7869       0.7192
+C: Mistral 7B (agentic)          426       0.8995       0.9282       0.7347
+D: GPT-5.4-mini (cloud)          426       0.9380       0.9526       0.6934
+E: Claude Haiku 4.5 (cloud)      426       0.8969       0.8972       0.6904
+F: Gemini 3.1 FL (cloud)         426       0.9451       0.9789       0.6995
+Naive: Llama 3.2 3B              426       0.8981       0.8235       0.7643
+Naive: Llama 3.1 8B              426       0.9272       0.8169       0.7563
+Naive: Mistral 7B                426       0.8972       0.9249       0.7413
+X-ling: Llama 3.1 8B (DE)         20       0.7200       0.6800       0.6000
+
+judged-row counts (blank judge cells excluded from the means above):
+  A: Llama 3.2 3B (agentic)      AR n=426  faith n=426  ctxp n=426
+  B: Llama 3.1 8B (agentic)      AR n=426  faith n=426  ctxp n=426
+  C: Mistral 7B (agentic)        AR n=426  faith n=426  ctxp n=426
+  D: GPT-5.4-mini (cloud)        AR n=426  faith n=426  ctxp n=426
+  E: Claude Haiku 4.5 (cloud)    AR n=425  faith n=425  ctxp n=425
+  F: Gemini 3.1 FL (cloud)       AR n=426  faith n=426  ctxp n=426
+  Naive: Llama 3.2 3B            AR n=426  faith n=426  ctxp n=426
+  Naive: Llama 3.1 8B            AR n=426  faith n=426  ctxp n=426
+  Naive: Mistral 7B              AR n=426  faith n=426  ctxp n=426
+  X-ling: Llama 3.1 8B (DE)      AR n=20  faith n=20  ctxp n=20
+
+### Lexical overlap vs human gold answers
+system                             n  token_f1_sc  sentence_bl       rouge1       rouge2       rougeL       meteor
+A: Llama 3.2 3B (agentic)        426       0.2071       0.0338       0.1910       0.0630       0.1382       0.2281
+B: Llama 3.1 8B (agentic)        426       0.1994       0.0319       0.1735       0.0594       0.1251       0.2260
+C: Mistral 7B (agentic)          426       0.2003       0.0304       0.1837       0.0594       0.1296       0.2318
+D: GPT-5.4-mini (cloud)          426       0.2152       0.0392       0.2050       0.0701       0.1478       0.2374
+E: Claude Haiku 4.5 (cloud)      426       0.1937       0.0303       0.1682       0.0600       0.1224       0.2301
+F: Gemini 3.1 FL (cloud)         426       0.2029       0.0313       0.1819       0.0611       0.1315       0.2261
+Naive: Llama 3.2 3B              426       0.2237       0.0448       0.2034       0.0793       0.1501       0.2498
+Naive: Llama 3.1 8B              426       0.2152       0.0400       0.1855       0.0726       0.1380       0.2458
+Naive: Mistral 7B                426       0.2027       0.0323       0.1855       0.0622       0.1320       0.2343
+X-ling: Llama 3.1 8B (DE)         20       0.1787       0.0153       0.1548       0.0335       0.1094       0.1927
+
+### Retrieval metrics
+system                             n          mrr    ndcg_at_k     recall_1     recall_3     recall_5  precision_1  precision_3  precision_5
+A: Llama 3.2 3B (agentic)        426       0.2224       0.2335       0.1573       0.2371       0.3024       0.1714       0.0884       0.0685
+B: Llama 3.1 8B (agentic)        426       0.1806       0.1906       0.1205       0.1991       0.2531       0.1338       0.0751       0.0577
+C: Mistral 7B (agentic)          426       0.2246       0.2372       0.1573       0.2383       0.3106       0.1714       0.0892       0.0704
+D: GPT-5.4-mini (cloud)          426       0.2701       0.2857       0.1866       0.3005       0.3728       0.2019       0.1111       0.0845
+E: Claude Haiku 4.5 (cloud)      426       0.2701       0.2857       0.1866       0.3005       0.3728       0.2019       0.1111       0.0845
+F: Gemini 3.1 FL (cloud)         426       0.2701       0.2857       0.1866       0.3005       0.3728       0.2019       0.1111       0.0845
+Naive: Llama 3.2 3B              426       0.2725       0.2881       0.1890       0.3028       0.3752       0.2042       0.1119       0.0850
+Naive: Llama 3.1 8B              426       0.2515       0.2661       0.1725       0.2805       0.3494       0.1878       0.1041       0.0789
+Naive: Mistral 7B                426       0.2350       0.2473       0.1667       0.2535       0.3200       0.1808       0.0939       0.0723
+X-ling: Llama 3.1 8B (DE)         20       0.1100       0.1193       0.1000       0.1000       0.1500       0.1000       0.0333       0.0300
+
+### Citation accuracy (deterministic regex)
+system                             n  citation_ac
+A: Llama 3.2 3B (agentic)        426       0.2381
+B: Llama 3.1 8B (agentic)        426       0.2595
+C: Mistral 7B (agentic)          426       0.2095
+D: GPT-5.4-mini (cloud)          426       0.1274
+E: Claude Haiku 4.5 (cloud)      426       0.2500
+F: Gemini 3.1 FL (cloud)         426       0.1976
+Naive: Llama 3.2 3B              426       0.2667
+Naive: Llama 3.1 8B              426       0.3036
+Naive: Mistral 7B                426       0.2238
+X-ling: Llama 3.1 8B (DE)         20       0.2500
+
+### Latency and hardware (from the lufa ledger)
+system                            e2e_med   e2e_mean    e2e_p95      %<60s   ttft_med   retr_med    vram_pk          n
+A: Llama 3.2 3B (agentic)            44.9       75.6      207.3       54.7        3.3        2.8     4528.0        426
+B: Llama 3.1 8B (agentic)           177.2      271.7      774.4       18.5       12.7        2.8     5942.0        426
+C: Mistral 7B (agentic)              90.7      113.1      316.0       12.2       15.9        2.8     5826.0        426
+D: GPT-5.4-mini (cloud)                 -          -          -          -          -          -          -          0
+E: Claude Haiku 4.5 (cloud)             -          -          -          -          -          -          -          0
+F: Gemini 3.1 FL (cloud)                -          -          -          -          -          -          -          0
+Naive: Llama 3.2 3B                  34.8       69.1      238.6       64.1        5.0        3.0     4979.0        426
+Naive: Llama 3.1 8B                 147.0      189.3      511.4       18.5       31.9        3.5     5919.0        426
+Naive: Mistral 7B                    90.7      130.8      464.9       12.2       16.2        2.8     5892.0        426
+X-ling: Llama 3.1 8B (DE)           187.8      209.2      473.6        5.0        9.0        2.5     5712.0         20
+
+### Agentic loop behaviour
+system                          attempts_mean   rows>1   grounded  grounded%
+A: Llama 3.2 3B (agentic)               1.775      204    347/426       81.5
+B: Llama 3.1 8B (agentic)               1.664      204    391/426       91.8
+C: Mistral 7B (agentic)                 1.085       32    425/426       99.8
+D: GPT-5.4-mini (cloud)                 1.000        0      0/426        0.0
+E: Claude Haiku 4.5 (cloud)             1.000        0      0/426        0.0
+F: Gemini 3.1 FL (cloud)                1.000        0      0/426        0.0
+Naive: Llama 3.2 3B                     1.000        0    288/426       67.6
+Naive: Llama 3.1 8B                     1.000        0    344/426       80.8
+Naive: Mistral 7B                       1.000        0    424/426       99.5
+X-ling: Llama 3.1 8B (DE)               1.600       10      19/20       95.0
+
+### Per-language breakdown
+system                                 n_en     faith_en        f1_en       mrr_en         n_fr     faith_fr        f1_fr       mrr_fr
+A: Llama 3.2 3B (agentic)               226       0.8000       0.2044       0.2230          200       0.7650       0.2102       0.2217
+B: Llama 3.1 8B (agentic)               226       0.7956       0.1967       0.1771          200       0.7770       0.2025       0.1845
+C: Mistral 7B (agentic)                 226       0.9363       0.1926       0.2254          200       0.9190       0.2089       0.2237
+D: GPT-5.4-mini (cloud)                 226       0.9442       0.2159       0.2710          200       0.9620       0.2144       0.2692
+E: Claude Haiku 4.5 (cloud)             226       0.8680       0.1850       0.2710          200       0.9300       0.2034       0.2692
+F: Gemini 3.1 FL (cloud)                226       0.9779       0.1937       0.2710          200       0.9800       0.2132       0.2692
+Naive: Llama 3.2 3B                     226       0.8319       0.2183       0.2754          200       0.8140       0.2297       0.2692
+Naive: Llama 3.1 8B                     226       0.8257       0.2173       0.2558          200       0.8070       0.2128       0.2467
+Naive: Mistral 7B                       226       0.9319       0.1954       0.2394          200       0.9170       0.2110       0.2300
+X-ling: Llama 3.1 8B (DE)                 -            -            -            -            -            -            -            -
+
+====================================================================================================
+MATCHED-PAIR AGENTIC vs NAIVE (RQ1): same question_ids, judged on both sides
+====================================================================================================
+
+Llama 3.2 3B: 426 matched pairs (100.0% of 426)
+  metric                     agentic     naive     delta  (delta = agentic - naive)
+  answer_relevance            0.8695    0.8981   -0.0286
+  faithfulness                0.7836    0.8235   -0.0399
+  context_precision           0.7272    0.7643   -0.0371
+  token_f1_score              0.2071    0.2237   -0.0166
+  rougeL                      0.1382    0.1501   -0.0119
+  meteor                      0.2281    0.2498   -0.0217
+  mrr                         0.2224    0.2725   -0.0501
+  recall_5                    0.3024    0.3752   -0.0728
+  citation_accuracy_regex     0.2381    0.2667   -0.0286
+  e2e_latency_s (median)       44.89     34.84    +10.06
+
+Llama 3.1 8B: 426 matched pairs (100.0% of 426)
+  metric                     agentic     naive     delta  (delta = agentic - naive)
+  answer_relevance            0.9188    0.9272   -0.0085
+  faithfulness                0.7869    0.8169   -0.0300
+  context_precision           0.7192    0.7563   -0.0371
+  token_f1_score              0.1994    0.2152   -0.0157
+  rougeL                      0.1251    0.1380   -0.0129
+  meteor                      0.2260    0.2458   -0.0197
+  mrr                         0.1806    0.2515   -0.0710
+  recall_5                    0.2531    0.3494   -0.0962
+  citation_accuracy_regex     0.2595    0.3036   -0.0440
+  e2e_latency_s (median)      177.24    147.04    +30.20
+
+Mistral 7B: 426 matched pairs (100.0% of 426)
+  metric                     agentic     naive     delta  (delta = agentic - naive)
+  answer_relevance            0.8995    0.8972   +0.0023
+  faithfulness                0.9282    0.9249   +0.0033
+  context_precision           0.7347    0.7413   -0.0066
+  token_f1_score              0.2003    0.2027   -0.0025
+  rougeL                      0.1296    0.1320   -0.0023
+  meteor                      0.2318    0.2343   -0.0025
+  mrr                         0.2246    0.2350   -0.0104
+  recall_5                    0.3106    0.3200   -0.0094
+  citation_accuracy_regex     0.2095    0.2238   -0.0143
+  e2e_latency_s (median)       90.70     90.70     +0.00
+
+====================================================================================================
+RETRY SUBSET (attempts > 1 in the agentic run): the only rows where RQ1 can differ
+====================================================================================================
+
+Llama 3.2 3B: 204 of 204 retry rows available on both sides
+  metric                     agentic     naive     delta   n_ag/n_na
+  answer_relevance            0.8667    0.9265   -0.0598   204/204
+  faithfulness                0.6324    0.7157   -0.0833   204/204
+  context_precision           0.6755    0.7529   -0.0775   204/204
+  token_f1_score              0.2014    0.2360   -0.0346   204/204
+  rougeL                      0.1299    0.1547   -0.0248   204/204
+  meteor                      0.2292    0.2744   -0.0452   204/204
+  mrr                         0.1441    0.2488   -0.1047   204/204
+  recall_5                    0.1961    0.3480   -0.1520   204/204
+  citation_accuracy_regex     0.2388    0.2836   -0.0448   201/201
+  e2e_latency_s (median)      118.00    100.69    +17.32
+  attempts (agentic)            2.62      1.00
+
+Llama 3.1 8B: 204 of 204 retry rows available on both sides
+  metric                     agentic     naive     delta   n_ag/n_na
+  answer_relevance            0.9245    0.9422   -0.0176   204/204
+  faithfulness                0.6294    0.6922   -0.0627   204/204
+  context_precision           0.6598    0.7373   -0.0775   204/204
+  token_f1_score              0.2054    0.2383   -0.0329   204/204
+  rougeL                      0.1275    0.1544   -0.0269   204/204
+  meteor                      0.2404    0.2816   -0.0412   204/204
+  mrr                         0.1337    0.2819   -0.1482   204/204
+  recall_5                    0.1904    0.3913   -0.2010   204/204
+  citation_accuracy_regex     0.2906    0.3645   -0.0739   203/203
+  e2e_latency_s (median)      409.95    270.91   +139.04
+  attempts (agentic)            2.39      1.00
+
+Mistral 7B: 32 of 32 retry rows available on both sides
+  metric                     agentic     naive     delta   n_ag/n_na
+  answer_relevance            0.9125    0.8813   +0.0312   32/32
+  faithfulness                0.6500    0.6062   +0.0437   32/32
+  context_precision           0.4688    0.5562   -0.0875   32/32
+  token_f1_score              0.2061    0.2390   -0.0329   32/32
+  rougeL                      0.1304    0.1616   -0.0312   32/32
+  meteor                      0.2389    0.2722   -0.0333   32/32
+  mrr                         0.1646    0.3031   -0.1385   32/32
+  recall_5                    0.2656    0.3906   -0.1250   32/32
+  citation_accuracy_regex     0.1935    0.2097   -0.0161   31/31
+  e2e_latency_s (median)      360.48    604.32   -243.84
+  attempts (agentic)            2.12      1.00

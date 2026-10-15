@@ -29,7 +29,7 @@ def streaming_enabled() -> bool:
 # Sizing happens HERE, at the boundary where a request leaves Python, because only
 # here is the fully-assembled prompt known (all retrieved chunks + the rewritten
 # query + the system prompt). A fixed window either wastes VRAM or silently truncates
-# the longest agentic retries (top_k grows to 7 chunks on the third attempt).
+# the longest prompts, since clause chunks vary widely in length even at a fixed top_k of 5.
 #
 # The window must cover the prompt AND the tokens the model still has to emit, so a
 # generation reserve is added before rounding up to the next power-of-two bucket.

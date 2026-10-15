@@ -70,6 +70,11 @@ LUFA_COLUMNS = [
     "answer", "base_model_used", "language", "attempts", "grounded",
 ] + TRANSLATION_COLUMNS + SYSTEM_METRIC_COLUMNS + CROSSLINGUAL_COLUMNS
 
+# Question ids whose ground_source_truth carries no article or clause number, so
+# citation_accuracy_regex returns "" and the row leaves the citation mean altogether. Collected
+# per run and reported at the end; see the note beside the citation print in the metric loop.
+_CITATION_UNSCORABLE = []
+
 EVAL_COLUMNS = [
     "question_id", "id", "question", "answer", "base_model_used", "rag_base_model",
     "language", "judge_llm", "category", "difficulty", "attempts", "grounded",
@@ -477,6 +482,7 @@ def run_evaluation(
         api_url="http://localhost:8000",
         no_judge=False,
 ):
+    _CITATION_UNSCORABLE.clear()
     llm_model = llm_model or cfg("models.llm.name")
     # Judge defaults to prometheus2:8x7b (cfg('models.judge_llm.name')) unless a
     # --judge_llm override is passed; --no_judge disables judge scoring entirely.
@@ -669,7 +675,16 @@ def run_evaluation(
         print(f"      * NDCG@5 Index: {ndcg_val}")
         print(f"      * Recall Distribution -> Recall@1: {rec1} | Recall@3: {rec3} | Recall@5: {rec5}")
         print(f"      * Precision Distribution -> P@1: {prec1} | P@3: {prec3} | P@5: {prec5}")
-        print(f"      * Citation Accuracy (regex): {cit_regex}")
+        # An unscorable row is NOT a zero: it drops out of the citation mean entirely, so a
+        # corpus whose gold text has lost its article numbers silently shrinks the denominator
+        # rather than lowering the score. Count and report it instead of letting it pass.
+        if cit_regex == "":
+            _CITATION_UNSCORABLE.append(str(q_id))
+            print(f"      * Citation Accuracy (regex): NOT SCORABLE — no article or clause "
+                  f"number in ground_source_truth, so this row is excluded from the citation "
+                  f"mean rather than counted as 0")
+        else:
+            print(f"      * Citation Accuracy (regex): {cit_regex}")
 
         for si in range(1, 6):
             cos_v = safe_float(active_rag_data.get(f"source{si}_cosine_score", 0.0))
@@ -779,6 +794,25 @@ def run_evaluation(
             if col in final_results_df.columns:
                 num_series = pd.to_numeric(final_results_df[col], errors='coerce')
                 print(f"  {col:<22}: {num_series.mean():.4f}")
+
+        if "citation_accuracy_regex" in final_results_df.columns:
+            cit = pd.to_numeric(final_results_df["citation_accuracy_regex"], errors='coerce')
+            print(f"  {'citation_accuracy_regex':<22}: {cit.mean():.4f}"
+                  f"   (over {cit.notna().sum()} of {len(final_results_df)} rows)")
+
+    # Unscorable rows are excluded from the citation mean, not counted as zero, so the mean
+    # above can look healthy while resting on a shrunken denominator. Say so explicitly.
+    if _CITATION_UNSCORABLE:
+        n = len(_CITATION_UNSCORABLE)
+        print("\n" + "!" * 60)
+        print(f"CITATION ACCURACY: {n} row(s) could not be scored at all, because their "
+              f"ground_source_truth contains no article or clause number for "
+              f"extract_gold_citation to match against.")
+        print("These rows are EXCLUDED from the citation mean rather than counted as 0, so the "
+              "mean is computed over a smaller sample than the row count suggests.")
+        print("First affected question ids: " + ", ".join(_CITATION_UNSCORABLE[:10])
+              + (" ..." if n > 10 else ""))
+        print("!" * 60)
 
     return final_results_df
 
