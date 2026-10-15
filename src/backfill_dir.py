@@ -156,6 +156,11 @@ def backfill(key, batches, regenerate, max_retries, top_k, dry_run, no_reuse=Fal
     if "2b" in batches:
         cmd = PYU + ["src/metrics.py", "--lufa_csv", str(lufa), "--test_csv", str(test),
                "--out_csv", str(evalr), "--no_judge", "--no_dashboard"]
+        if regenerate:
+            # Mandatory once answers have changed. The stored lexical and citation scores
+            # then describe a PREVIOUS answer, and being non-zero they pass the zero/blank
+            # gate in metrics.py, so without this they are silently kept.
+            cmd.append("--force_det")
         if _run(f"{key} batch2b deterministic", cmd, dry_run):
             return 1
 
