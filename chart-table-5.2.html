@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Retrieval heatmap</title>
+<style>
+  body { font-family: "Times New Roman", serif; margin: 24px; background:#fff; color:#111; }
+  .wrap { max-width: 760px; margin: auto; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p.sub { font-size: 13px; color:#555; margin: 0 0 14px; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th { padding: 8px 10px; border-bottom: 2px solid #111; text-align: center; }
+  th:first-child, td:first-child { text-align: left; }
+  td { padding: 9px 10px; text-align: center; border-bottom: 1px solid #fff; font-variant-numeric: tabular-nums; }
+  td:first-child { white-space: nowrap; background:#fff; }
+  tr.sep td { border-top: 2px dashed #777; }
+  .group td:first-child { font-weight: bold; }
+  .legend { display:flex; align-items:center; gap:8px; margin-top:14px; font-size:12px; }
+  .bar { height:12px; width:240px; background: linear-gradient(to right, #fde725, #5ec962, #21918c, #3b528b, #440154); background: linear-gradient(to right,#440154,#3b528b,#21918c,#5ec962,#fde725); }
+  .note { font-size: 12px; color:#555; margin-top: 10px; font-style: italic; }
+  b.best { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Naive single-pass RAG matches or beats agentic RAG for small open models</h1>
+  <p class="sub">Mean retrieval score per model (higher is better). One shared color scale, 0 to 0.40.</p>
+  <table id="t">
+    <thead><tr><th>Model</th><th>MRR</th><th>nDCG@5</th><th>Recall@5</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <div class="legend"><span>0.00</span><div class="bar"></div><span>0.40</span></div>
+  <div class="note">A–C are agentic; N marks naive single-pass RAG. D–F share one retriever. Underlined = best in column.</div>
+</div>
+
+<script>
+const data = [
+  ["A: Llama 3.2 3B",        0.222, 0.234, 0.302],
+  ["B: Llama 3.1 8B",        0.181, 0.191, 0.253],
+  ["C: Mistral 7B",          0.225, 0.237, 0.311],
+  ["D: GPT-5.4 Mini",        0.270, 0.286, 0.373],
+  ["E: Claude Haiku 4.5",    0.270, 0.286, 0.373],
+  ["F: Gemini 3.1 Flash-Lite",0.270, 0.286, 0.373],
+  ["A-N: Llama 3.2 3B",      0.273, 0.288, 0.375],
+  ["B-N: Llama 3.1 8B",      0.252, 0.266, 0.349],
+  ["C-N: Mistral 7B",        0.235, 0.247, 0.320]
+];
+const MAX = 0.40;
+const stops = [[68,1,84],[59,82,139],[33,145,140],[94,201,98],[253,231,37]]; // viridis
+function color(v){
+  const x = Math.min(Math.max(v/MAX,0),1)*(stops.length-1);
+  const i = Math.min(Math.floor(x), stops.length-2), f = x-i;
+  return stops[i].map((c,k)=>Math.round(c+(stops[i+1][k]-c)*f));
+}
+function textColor([r,g,b]){ return (0.299*r+0.587*g+0.114*b) > 150 ? "#111" : "#fff"; }
+const best = [1,2,3].map(c => Math.max(...data.map(r=>r[c])));
+const tb = document.querySelector("#t tbody");
+data.forEach((row,i)=>{
+  const tr = document.createElement("tr");
+  if(i===6) tr.className="sep";
+  const th = document.createElement("td"); th.textContent=row[0]; tr.appendChild(th);
+  for(let c=1;c<=3;c++){
+    const td=document.createElement("td"), rgb=color(row[c]);
+    td.style.background=`rgb(${rgb})`; td.style.color=textColor(rgb);
+    td.innerHTML = row[c]===best[c-1] ? `<b class="best">${row[c].toFixed(3)}</b>` : row[c].toFixed(3);
+    tr.appendChild(td);
+  }
+  tb.appendChild(tr);
+});
+</script>
+</body>
+</html>
