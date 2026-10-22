@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Retry subset: change vs. baseline</title>
+<style>
+  body{margin:0;background:#080c16;color:#e6ecf5;font-family:Segoe UI,Arial,sans-serif;padding:24px}
+  h1{font-size:24px;margin:0 0 4px}
+  p.sub{margin:0 0 16px;color:#97a3b8;font-size:14px}
+  .legend{display:flex;gap:20px;margin-bottom:8px;font-size:13px;flex-wrap:wrap}
+  .legend span{display:flex;align-items:center;gap:6px}
+  svg{width:100%;max-width:980px;height:auto;background:#0d1426;border-radius:10px}
+  .note{font-size:12px;color:#97a3b8;margin-top:10px;max-width:980px}
+</style>
+</head>
+<body>
+<h1>Retry subset: change vs. baseline</h1>
+<p class="sub">Retrieval metrics fall most; Llama 3.1 8B is hit hardest on most metrics.</p>
+<div class="legend" id="legend"></div>
+<svg id="chart" viewBox="0 0 980 520"></svg>
+<div class="note">Mistral (n=32) is drawn hollow to signal lower confidence. Median end-to-end increase: 3B +17.3 s, 8B +139.0 s, Mistral +243.8 s. Answer relevance (3B): -0.060.</div>
+
+<script>
+const models = [
+  {name:"Llama 3.2 3B (n=204)", color:"#22d3ee", hollow:false},
+  {name:"Llama 3.1 8B (n=204)", color:"#60a5fa", hollow:false},
+  {name:"Mistral 7B (n=32)",    color:"#fbbf24", hollow:true}
+];
+const metrics = [
+  {name:"MRR",               v:[-0.105,-0.148,-0.139]},
+  {name:"Recall@5",          v:[-0.152,-0.201,-0.125]},
+  {name:"Context precision", v:[-0.078,-0.078,-0.088]},
+  {name:"Faithfulness",      v:[-0.083,-0.063, 0.044]},
+  {name:"Citation accuracy", v:[-0.045,-0.074,-0.016]}
+];
+const W=980,H=520,L=170,R=40,T=30,B=60, xmin=-0.25, xmax=0.05;
+const x=v=>L+(v-xmin)/(xmax-xmin)*(W-L-R);
+const rowH=(H-T-B)/metrics.length, off=[-16,0,16];
+const NS="http://www.w3.org/2000/svg";
+const svg=document.getElementById("chart");
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt)e.textContent=txt;svg.appendChild(e);return e}
+
+for(let v=-0.25; v<=0.0501; v+=0.05){
+  const p=x(v);
+  el("line",{x1:p,x2:p,y1:T,y2:H-B,stroke:"#1f2a44","stroke-width":1});
+  el("text",{x:p,y:H-B+20,fill:"#97a3b8","font-size":12,"text-anchor":"middle"},(v>0.001?"+":"")+v.toFixed(2));
+}
+el("text",{x:(L+W-R)/2,y:H-14,fill:"#97a3b8","font-size":13,"text-anchor":"middle"},"Change vs. baseline (retried questions)");
+
+metrics.forEach((m,i)=>{
+  const cy=T+rowH*i+rowH/2;
+  if(i%2==0) el("rect",{x:0,y:T+rowH*i,width:W,height:rowH,fill:"#ffffff08"});
+  el("text",{x:L-14,y:cy+5,fill:"#e6ecf5","font-size":15,"font-weight":600,"text-anchor":"end"},m.name);
+  m.v.forEach((val,j)=>{
+    const md=models[j], y=cy+off[j], px=x(val), p0=x(0);
+    el("line",{x1:p0,x2:px,y1:y,y2:y,stroke:md.color,"stroke-width":2,"stroke-opacity":md.hollow?0.5:0.9,
+      "stroke-dasharray":md.hollow?"4 3":"none"});
+    const hl = m.name==="Faithfulness" && val>0;
+    if(hl){
+      el("circle",{cx:px,cy:y,r:13,fill:"none",stroke:md.color,"stroke-width":1.5,"stroke-opacity":0.6});
+    }
+    el("circle",{cx:px,cy:y,r:7,fill:md.hollow?"#0d1426":md.color,stroke:md.color,"stroke-width":2.5});
+    const left=val<0;
+    el("text",{x:left?px-14:px+(hl?20:14),y:y+4,fill:md.color,"font-size":12,"font-weight":600,
+      "text-anchor":left?"end":"start"},(val>0?"+":"")+val.toFixed(3));
+  });
+  if(m.name==="Faithfulness")
+    el("text",{x:x(0.044)-4,y:cy-32,fill:"#fbbf24","font-size":11,"text-anchor":"middle"},"only gain");
+});
+
+el("line",{x1:x(0),x2:x(0),y1:T-6,y2:H-B,stroke:"#e6ecf5","stroke-width":3});
+el("text",{x:x(0),y:T-12,fill:"#e6ecf5","font-size":12,"text-anchor":"middle"},"0 = no change");
+
+const lg=document.getElementById("legend");
+models.forEach(m=>{
+  const s=document.createElement("span");
+  s.innerHTML=`<svg width="16" height="16" style="background:none"><circle cx="8" cy="8" r="6" fill="${m.hollow?'none':m.color}" stroke="${m.color}" stroke-width="2.5"/></svg>${m.name}`;
+  lg.appendChild(s);
+});
+</script>
+</body>
+</html>

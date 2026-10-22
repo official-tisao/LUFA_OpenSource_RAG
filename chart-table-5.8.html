@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Table 5.8</title></head>
+<body style="margin:0;padding:24px;background:#080a12;color:#e2e8f4;font-family:Arial,sans-serif">
+<h2 style="margin:0 0 4px">Table 5.8: local vs cloud, by metric</h2>
+<p style="margin:0 0 12px;color:#9aa6bd">Sorted by absolute gap. Grey rows: no meaningful difference (|diff| &lt; 0.005).</p>
+<p style="margin:0 0 10px;font-size:14px"><span style="color:#facc15">&#9679; Local</span> &nbsp; <span style="color:#3b9eff">&#9679; Cloud</span> &nbsp; <span style="color:#aab2c2">&#9679; Tie</span></p>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="510" viewBox="0 0 900 510" style="background:#0c1426;border-radius:10px;display:block">
+<line x1="170" x2="170" y1="50" y2="470" stroke="#1d2840"/><text x="170" y="490" text-anchor="middle" fill="#7f8ba3" font-size="13">0.0</text>
+<line x1="286" x2="286" y1="50" y2="470" stroke="#1d2840"/><text x="286" y="490" text-anchor="middle" fill="#7f8ba3" font-size="13">0.2</text>
+<line x1="402" x2="402" y1="50" y2="470" stroke="#1d2840"/><text x="402" y="490" text-anchor="middle" fill="#7f8ba3" font-size="13">0.4</text>
+<line x1="518" x2="518" y1="50" y2="470" stroke="#1d2840"/><text x="518" y="490" text-anchor="middle" fill="#7f8ba3" font-size="13">0.6</text>
+<line x1="634" x2="634" y1="50" y2="470" stroke="#1d2840"/><text x="634" y="490" text-anchor="middle" fill="#7f8ba3" font-size="13">0.8</text>
+<line x1="750" x2="750" y1="50" y2="470" stroke="#1d2840"/><text x="750" y="490" text-anchor="middle" fill="#7f8ba3" font-size="13">1.0</text>
+<text x="825" y="38" text-anchor="middle" fill="#e2e8f4" font-size="13" font-weight="bold">Diff (cloud - local)</text>
+
+<line x1="162" x2="750" y1="85" y2="85" stroke="#3a4766" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="156" y="90" text-anchor="end" fill="#e2e8f4" font-size="14" font-weight="600">Faithfulness</text>
+<line x1="653.1" x2="710.6" y1="85" y2="85" stroke="#e2e8f4" stroke-width="4" stroke-linecap="round"/>
+<circle cx="653.1" cy="85" r="7" fill="#facc15" stroke="#0c1426" stroke-width="2"/><circle cx="710.6" cy="85" r="7" fill="#3b9eff" stroke="#0c1426" stroke-width="2"/>
+<text x="641.1" y="73" text-anchor="end" fill="#aab2c2" font-size="12">0.833</text><text x="722.6" y="73" fill="#aab2c2" font-size="12">0.932</text>
+<text x="825" y="90" text-anchor="middle" fill="#3b9eff" font-size="15" font-weight="bold">+0.099</text>
+
+<line x1="162" x2="750" y1="135" y2="135" stroke="#3a4766" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="156" y="140" text-anchor="end" fill="#e2e8f4" font-size="14" font-weight="600">Recall@5</text>
+<line x1="337.6" x2="386.3" y1="135" y2="135" stroke="#e2e8f4" stroke-width="4" stroke-linecap="round"/>
+<circle cx="337.6" cy="135" r="7" fill="#facc15" stroke="#0c1426" stroke-width="2"/><circle cx="386.3" cy="135" r="7" fill="#3b9eff" stroke="#0c1426" stroke-width="2"/>
+<text x="325.6" y="123" text-anchor="end" fill="#aab2c2" font-size="12">0.289</text><text x="398.3" y="123" fill="#aab2c2" font-size="12">0.373</text>
+<text x="825" y="140" text-anchor="middle" fill="#3b9eff" font-size="15" font-weight="bold">+0.084</text>
+
+<line x1="162" x2="750" y1="185" y2="185" stroke="#3a4766" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="156" y="190" text-anchor="end" fill="#e2e8f4" font-size="14" font-weight="600">Context precision</text>
+<line x1="591.7" x2="614.9" y1="185" y2="185" stroke="#e2e8f4" stroke-width="4" stroke-linecap="round"/>
+<circle cx="591.7" cy="185" r="7" fill="#facc15" stroke="#0c1426" stroke-width="2"/><circle cx="614.9" cy="185" r="7" fill="#3b9eff" stroke="#0c1426" stroke-width="2"/>
+<text x="579.7" y="173" text-anchor="end" fill="#aab2c2" font-size="12">0.727</text><text x="626.9" y="173" fill="#aab2c2" font-size="12">0.767</text>
+<text x="825" y="190" text-anchor="middle" fill="#3b9eff" font-size="15" font-weight="bold">+0.040</text>
+
+<line x1="162" x2="750" y1="235" y2="235" stroke="#3a4766" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="156" y="240" text-anchor="end" fill="#e2e8f4" font-size="14" font-weight="600">Citation accuracy</text>
+<line x1="306.9" x2="284.3" y1="235" y2="235" stroke="#e2e8f4" stroke-width="4" stroke-linecap="round"/>
+<circle cx="306.9" cy="235" r="7" fill="#facc15" stroke="#0c1426" stroke-width="2"/><circle cx="284.3" cy="235" r="7" fill="#3b9eff" stroke="#0c1426" stroke-width="2"/>
+<text x="272.3" y="223" text-anchor="end" fill="#aab2c2" font-size="12">0.197</text><text x="318.9" y="223" fill="#aab2c2" font-size="12">0.236</text>
+<text x="825" y="240" text-anchor="middle" fill="#facc15" font-size="15" font-weight="bold">-0.039</text>
+
+<line x1="162" x2="750" y1="285" y2="285" stroke="#3a4766" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="156" y="290" text-anchor="end" fill="#e2e8f4" font-size="14" font-weight="600">Answer relevance</text>
+<line x1="689.7" x2="672.9" y1="285" y2="285" stroke="#e2e8f4" stroke-width="4" stroke-linecap="round"/>
+<circle cx="689.7" cy="285" r="7" fill="#facc15" stroke="#0c1426" stroke-width="2"/><circle cx="672.9" cy="285" r="7" fill="#3b9eff" stroke="#0c1426" stroke-width="2"/>
+<text x="660.9" y="273" text-anchor="end" fill="#aab2c2" font-size="12">0.867</text><text x="701.7" y="273" fill="#aab2c2" font-size="12">0.896</text>
+<text x="825" y="290" text-anchor="middle" fill="#facc15" font-size="15" font-weight="bold">-0.029</text>
+
+<line x1="162" x2="750" y1="335" y2="335" stroke="#3a4766" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="156" y="340" text-anchor="end" fill="#e2e8f4" font-size="14" font-weight="600">P@5</text>
+<line x1="208.3" x2="219.3" y1="335" y2="335" stroke="#e2e8f4" stroke-width="4" stroke-linecap="round"/>
+<circle cx="208.3" cy="335" r="7" fill="#facc15" stroke="#0c1426" stroke-width="2"/><circle cx="219.3" cy="335" r="7" fill="#3b9eff" stroke="#0c1426" stroke-width="2"/>
+<text x="196.3" y="323" text-anchor="end" fill="#aab2c2" font-size="12">0.066</text><text x="231.3" y="323" fill="#aab2c2" font-size="12">0.085</text>
+<text x="825" y="340" text-anchor="middle" fill="#3b9eff" font-size="15" font-weight="bold">+0.019</text>
+
+<line x1="162" x2="750" y1="385" y2="385" stroke="#3a4766" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="156" y="390" text-anchor="end" fill="#7f8ba3" font-size="14" font-weight="600">ROUGE-L</text>
+<line x1="246" x2="247.7" y1="385" y2="385" stroke="#6b7588" stroke-width="4" stroke-linecap="round"/>
+<circle cx="246" cy="385" r="7" fill="#8a8f9c" stroke="#0c1426" stroke-width="2"/><circle cx="247.7" cy="385" r="7" fill="#aab2c2" stroke="#0c1426" stroke-width="2"/>
+<text x="234" y="373" text-anchor="end" fill="#aab2c2" font-size="12">0.131</text><text x="259.7" y="373" fill="#aab2c2" font-size="12">0.134</text>
+<text x="825" y="385" text-anchor="middle" fill="#7f8ba3" font-size="15" font-weight="bold">+0.003</text>
+<text x="825" y="400" text-anchor="middle" fill="#7f8ba3" font-size="11">no meaningful diff.</text>
+
+<line x1="162" x2="750" y1="435" y2="435" stroke="#3a4766" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="156" y="440" text-anchor="end" fill="#7f8ba3" font-size="14" font-weight="600">Token-F1</text>
+<line x1="287.2" x2="288.3" y1="435" y2="435" stroke="#6b7588" stroke-width="4" stroke-linecap="round"/>
+<circle cx="287.2" cy="435" r="7" fill="#8a8f9c" stroke="#0c1426" stroke-width="2"/><circle cx="288.3" cy="435" r="7" fill="#aab2c2" stroke="#0c1426" stroke-width="2"/>
+<text x="275.2" y="423" text-anchor="end" fill="#aab2c2" font-size="12">0.202</text><text x="300.3" y="423" fill="#aab2c2" font-size="12">0.204</text>
+<text x="825" y="435" text-anchor="middle" fill="#7f8ba3" font-size="15" font-weight="bold">+0.002</text>
+<text x="825" y="450" text-anchor="middle" fill="#7f8ba3" font-size="11">no meaningful diff.</text>
+</svg>
+<p style="color:#9aa6bd;font-size:13px;max-width:900px">Diff = cloud - local. No per-query scores, so no confidence intervals; small gaps (e.g. context precision 0.727 vs 0.767) cannot be called significant.</p>
+</body></html>
